@@ -1,0 +1,63 @@
+package com.daniel99j.dungeongame.ui.screenss;
+
+import com.daniel99j.djutil.maths.MathsContext;
+import com.daniel99j.djutil.maths.MathsInterpreter;
+import com.hugo99j.chaosparty.GameData;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class ScreenSS {
+    private final Map<String, String> getters;
+    private final Map<String, CacheKey> cache = new HashMap<>();
+    private boolean center;
+
+    protected ScreenSS(Map<String, String> getters) {
+        this.center = getters.getOrDefault("center", "false").equals("true");
+        getters.remove("center");
+        this.getters = getters;
+    }
+
+    public int getAsInt(String name) {
+        return (int) get(name);
+    }
+
+    public double get(String name) {
+        if(cache.containsKey(name)) {
+            CacheKey key = cache.get(name);
+            if(key.time != GameData.time) {
+                cache.remove(name);
+            } else {
+                return key.result;
+            }
+        }
+        if(getters.containsKey(name)) {
+            double result = MathsInterpreter.eval(getters.get(name), this.createContext(name));
+            cache.put(name, new CacheKey(result, GameData.time));
+            return result;
+        } else throw new IllegalArgumentException("Unknown getter: " + name);
+    }
+
+    public Map<String, String> getGetters() {
+        return getters;
+    }
+
+    protected MathsContext createContext(String name) {
+        return MathsContext.create().withGlobalVariable("vw", String.valueOf(GameData.width)).withGlobalVariable("vh", String.valueOf(GameData.height)).withGlobalVariable("time", String.valueOf(GameData.time));
+    }
+
+    public int getX() {
+        return getAsInt("x") - (center ? getXSize()/2 : 0);
+    }
+    public int getY() {
+        return getAsInt("y") - (center ? getYSize()/2 : 0);
+    }
+    public int getXSize() {
+        return getAsInt("xSize");
+    }
+    public int getYSize() {
+        return getAsInt("ySize");
+    }
+
+    private record CacheKey(double result, float time) {}
+}

@@ -1,0 +1,62 @@
+
+main.png
+size: 512, 512
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+button
+  rotate: false
+  xy: 260, 344
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+gameyay
+  rotate: false
+  xy: 2, 120
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+particle
+  rotate: false
+  xy: 2, 20
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+particle-star
+  rotate: false
+  xy: 2, 54
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+player
+  rotate: false
+  xy: 2, 2
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+tilesets/kitchen_tiles
+  rotate: false
+  xy: 294, 360
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+ui/button
+  rotate: false
+  xy: 68, 102
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+ui/button_hovered
+  rotate: false
+  xy: 260, 326
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1

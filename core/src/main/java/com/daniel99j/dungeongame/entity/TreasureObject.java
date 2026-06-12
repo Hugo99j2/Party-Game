@@ -1,0 +1,85 @@
+package com.daniel99j.dungeongame.entity;
+
+import box2dLight.PointLight;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.Vector2;
+import com.hugo99j.chaosparty.GameData;
+import com.daniel99j.dungeongame.level.SaveConfig;
+import com.daniel99j.dungeongame.util.GlobalRunnables;
+import com.daniel99j.dungeongame.util.RenderLayer;
+import com.google.gson.JsonObject;
+import com.hugo99j.chaosparty.entity.ObjectTypes;
+
+public class TreasureObject extends AdvancedObject {
+    private final Runnable onPickup;
+    private final String sprite;
+    private final Color colour;
+    private PointLight glow;
+
+    public TreasureObject(Runnable onPickup, String sprite, Color colour) {
+        this.onPickup = onPickup;
+        this.sprite = sprite;
+        this.colour = colour;
+        this.setSaveConfig(SaveConfig.BETWEEN_SESSIONS);
+    }
+
+    @Override
+    public void setPos(Vector2 pos) {
+        super.setPos(pos);
+        if(this.glow != null) this.glow.setPosition(this.getPos().add(0.5f, 0.5f));
+    }
+
+    @Override
+    public void onAdd(boolean fromLoad) {
+        super.onAdd(fromLoad);
+        boolean add = true;
+        for (AdvancedObject advancedObject : this.getLevel().getAdvancedObjects()) {
+            if(advancedObject instanceof TreasureObject t && t.glow != null && t.colour.equals(this.colour) && t.getPos().dst(this.getPos()) < 1.5f) {
+                add = false;
+                break;
+            }
+        }
+        if(add) {
+            this.glow = this.getLevel().addLight((handler) -> new PointLight(handler, 10, Color.valueOf("#FFAF0065"), 2.46f, this.getPos().x + 0.5f, this.getPos().y + 0.5f), SaveConfig.NEVER).light();
+            this.glow.setStaticLight(false);
+            this.glow.setXray(true);
+        }
+    }
+
+    @Override
+    public void render() {
+        GameData.spriteBatch.draw(GameData.atlas.findRegion(sprite), this.getPos().x, this.getPos().y, 1, 1);
+    }
+
+    @Override
+    public void writeAdditional(JsonObject object) {
+        object.addProperty("sprite", sprite);
+        object.addProperty("runnableName", GlobalRunnables.codeToName.get(onPickup));
+        object.addProperty("colour", this.colour.toString());
+    }
+
+    public static TreasureObject read(JsonObject object) {
+        return new TreasureObject(GlobalRunnables.nameToCode.get(object.get("runnableName").getAsString()), object.get("sprite").getAsString(), Color.valueOf(object.get("colour").getAsString()));
+    }
+
+    @Override
+    public ObjectType<TreasureObject> getType() {
+        return ObjectTypes.TREASURE;
+    }
+
+    @Override
+    public float getLayer() {
+        return RenderLayer.COLLECTABLES;
+    }
+
+    @Override
+    public void dispose() {
+        if(this.glow != null) this.getLevel().removeLight(this.glow);
+        super.dispose();
+    }
+
+    @Override
+    protected PhysicsSettings createPhysics() {
+        return null;
+    }
+}

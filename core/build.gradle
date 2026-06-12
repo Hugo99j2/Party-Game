@@ -10,6 +10,9 @@ dependencies {
   api "com.badlogicgames.box2dlights:box2dlights:$box2dlightsVersion"
   api "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
   api "com.badlogicgames.gdx:gdx:$gdxVersion"
+  implementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
+  implementation "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
+  compileOnly 'org.jetbrains:annotations:26.0.2'
 
   api "io.github.spair:imgui-java-binding:$imguiVersion"
   api "io.github.spair:imgui-java-lwjgl3:$imguiVersion"

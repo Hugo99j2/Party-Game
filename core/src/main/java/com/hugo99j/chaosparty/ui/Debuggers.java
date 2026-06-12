@@ -84,6 +84,7 @@ public class Debuggers {
             debugOptions.put("markers", new ValueHolder<>(false));
             debugOptions.put("invulnerable", new ValueHolder<>(false));
             debugOptions.put("pauseTimers", new ValueHolder<>(false));
+            debugOptions.put("pixelPerfect", new ValueHolder<>(false));
 
             for (FileHandle e : Gdx.files.internal(PathUtil.asset("sounds/")).list()) {
                 audioNames.add(e.name());
@@ -812,7 +813,7 @@ public class Debuggers {
         }
     }
 
-    public static boolean isEnabled(String noclip) {
-        return debugOptions.get(noclip).object;
+    public static boolean isEnabled(String option) {
+        return debugOptions.get(option).object;
     }
 }

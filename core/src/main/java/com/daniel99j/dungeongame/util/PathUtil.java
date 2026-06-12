@@ -18,7 +18,9 @@ public class PathUtil {
     public static String codingDir(String old) {
         if(Objects.equals(System.getenv("CODING_GAME"), "1")) {
             String p = Path.of(old).toAbsolutePath().toString();
-            return MiscUtils.getTextBetween(p, "", "Party-Game")+"Party-Game/core/src/main/resources/"+old;
+            if(p.contains("Party-Game")) return MiscUtils.getTextBetween(p, "", "Party-Game")+"Party-Game/core/src/main/resources/"+old;
+            if(p.contains("Chaos Party")) return MiscUtils.getTextBetween(p, "", "Chaos Party")+"Chaos Party/core/src/main/resources/"+old;
+            throw new IllegalStateException("Incorrect path");
         }
         throw new RuntimeException("Game is not being developed");
     }

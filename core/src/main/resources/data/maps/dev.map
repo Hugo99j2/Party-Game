@@ -1,8 +1,8 @@
 {
   "objects": [
     {
-      "x": 3.1660485,
-      "y": 3.885457,
+      "x": 3.1692622,
+      "y": 4.046164,
       "uuid": "f04eda4c-7780-4b80-905e-34fe94000d0a",
       "type": "player",
       "custom_data": {}
@@ -20,7 +20,7 @@
       "uuid": "151283cf-b175-447d-a518-213dedb95bf6",
       "type": "tileset",
       "custom_data": {
-        "width": 10,
+        "width": 16,
         "height": 16,
         "sprite": "tilesets/kitchen_tiles"
       }

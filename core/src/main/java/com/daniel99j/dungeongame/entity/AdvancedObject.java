@@ -7,10 +7,7 @@ import com.hugo99j.chaosparty.GameData;
 
 public abstract class AdvancedObject extends AbstractObject {
     @Override
-    public void render() {
-        Vector2 pos = this.getPos();
-        GameData.spriteBatch.draw(GameData.atlas.findRegion("player"), pos.x, pos.y, 1, 1);
-    }
+    public abstract void render();
 
     @Override
     public void onAdd(boolean fromLoad) {

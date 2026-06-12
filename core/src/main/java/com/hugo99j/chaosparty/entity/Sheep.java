@@ -1,26 +1,24 @@
 package com.hugo99j.chaosparty.entity;
 
-import box2dLight.PointLight;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.controllers.Controllers;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.daniel99j.djutil.NumberUtils;
-import com.daniel99j.dungeongame.entity.*;
-import com.daniel99j.dungeongame.level.SaveConfig;
+import com.daniel99j.dungeongame.entity.AdvancedObject;
+import com.daniel99j.dungeongame.entity.ObjectType;
+import com.daniel99j.dungeongame.entity.PhysicsSettings;
 import com.daniel99j.dungeongame.sounds.SoundManager;
-import com.hugo99j.chaosparty.ui.Debuggers;
 import com.daniel99j.dungeongame.util.GlobalRunnables;
 import com.daniel99j.dungeongame.util.RenderLayer;
 import com.daniel99j.dungeongame.util.ScheduledRunnables;
 import com.google.gson.JsonObject;
 import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.Main;
+import com.hugo99j.chaosparty.ui.Debuggers;
 
-public class Player extends AdvancedObject {
+public class Sheep extends AdvancedObject {
     public static float MAX_HEALTH = 100.0f;
 
     public float health = MAX_HEALTH;
@@ -73,14 +71,8 @@ public class Player extends AdvancedObject {
             pos.x = Math.round(pos.x/m)*m;
             pos.y = Math.round(pos.y/m)*m;
         }
-        GameData.spriteBatch.draw(GameData.atlas.findRegion("player"), pos.x, pos.y, 1, 1);
+        GameData.spriteBatch.draw(GameData.atlas.findRegion("sheep"), pos.x, pos.y, 1, 1);
         //pixelPerfect
-    }
-
-    @Override
-    public void onAdd(boolean fromLoad) {
-        super.onAdd(fromLoad);
-        Main.tempPlayer = this;
     }
 
     @Override
@@ -95,8 +87,8 @@ public class Player extends AdvancedObject {
 
     }
 
-    public static Player read(JsonObject object) {
-        return new Player();
+    public static Sheep read(JsonObject object) {
+        return new Sheep();
     }
 
     public void damage(float amount) {
@@ -109,17 +101,17 @@ public class Player extends AdvancedObject {
     }
 
     @Override
-    public ObjectType<Player> getType() {
-        return ObjectTypes.PLAYER;
+    public ObjectType<Sheep> getType() {
+        return ObjectTypes.SHEEP;
     }
 
     @Override
     public float getLayer() {
-        return RenderLayer.PLAYER;
+        return RenderLayer.NPC;
     }
 
     @Override
     public String toString() {
-        return "Player";
+        return "Sheep";
     }
 }

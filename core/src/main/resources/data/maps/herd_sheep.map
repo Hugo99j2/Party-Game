@@ -1,0 +1,51 @@
+{
+  "objects": [
+    {
+      "x": 2.6177595,
+      "y": 3.3673184,
+      "uuid": "f04eda4c-7780-4b80-905e-34fe94000d0a",
+      "type": "player",
+      "custom_data": {}
+    },
+    {
+      "x": 11.447,
+      "y": 0.7379999,
+      "uuid": "d21e211f-4939-4e2e-8bbf-9ba5489824e6",
+      "type": "sheep",
+      "custom_data": {}
+    },
+    {
+      "x": 9.214,
+      "y": 4.582,
+      "uuid": "d7ead148-cae0-44ad-95a0-e8158b222a2d",
+      "type": "sheep",
+      "custom_data": {}
+    },
+    {
+      "x": 6.424,
+      "y": 1.707,
+      "uuid": "3c507f3f-18e0-4b1f-811d-32499002ad67",
+      "type": "sheep",
+      "custom_data": {}
+    },
+    {
+      "x": 11.168,
+      "y": 3.2074995,
+      "uuid": "65abd641-929e-41b4-ad55-12c75d3f5b5a",
+      "type": "sheep",
+      "custom_data": {}
+    },
+    {
+      "x": -0.0,
+      "y": -7.0,
+      "uuid": "f33e3a0e-d62f-49ca-87dc-491f40578537",
+      "type": "tileset",
+      "custom_data": {
+        "width": 16,
+        "height": 16,
+        "sprite": "tilesets/grass"
+      }
+    }
+  ],
+  "lights": []
+}

@@ -164,4 +164,5 @@ Thumbs.db
 **/resource-config.json
 /imgui.ini
 /run/
-/run/
+/core/src/main/resources/folders.txt
+/core/src/main/resources/tree.txt

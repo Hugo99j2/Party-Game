@@ -111,12 +111,8 @@ public class Debuggers {
             imGuiGlfw.init(windowHandle, true);
             imGuiGl3.init("#version 150");
 
-            try {
-                for (FileHandle e : Gdx.files.internal(PathUtil.data("maps")).list()) {
-                    newMapNames.add(e.name().replace(".map", ""));
-                }
-            } catch (Exception e) {
-                throw new RuntimeException(e);
+            for (String e : PathUtil.getFilesIn(PathUtil.data("maps"))) {
+                newMapNames.add(e.replace("data/maps/", "").replace(".map", ""));
             }
         }
     }
@@ -847,7 +843,7 @@ public class Debuggers {
         long t = System.currentTimeMillis();
         t += 1;
         if (t >= System.currentTimeMillis() - 10) {
-            Logger.error("Make sure to add breakpoint here!");
+            Logger.error("Make sure to run breakpoint here!");
         }
     }
 

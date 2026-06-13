@@ -1,21 +1,17 @@
 package com.hugo99j.chaosparty.entity;
 
-import box2dLight.PointLight;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.controllers.Controllers;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.daniel99j.djutil.NumberUtils;
 import com.daniel99j.dungeongame.entity.*;
-import com.daniel99j.dungeongame.level.SaveConfig;
 import com.daniel99j.dungeongame.sounds.SoundManager;
 import com.hugo99j.chaosparty.ui.Debuggers;
 import com.daniel99j.dungeongame.util.GlobalRunnables;
 import com.daniel99j.dungeongame.util.RenderLayer;
-import com.daniel99j.dungeongame.util.ScheduledRunnables;
+import com.daniel99j.dungeongame.util.ToRun;
 import com.google.gson.JsonObject;
 import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.Main;
@@ -104,7 +100,7 @@ public class Player extends AdvancedObject {
         health-=amount;
         SoundManager.getSound("hurt").play(1);
         if(health <= 0) {
-            ScheduledRunnables.add(GlobalRunnables.FAIL_RUN);
+            ToRun.run(GlobalRunnables.FAIL_RUN);
         }
     }
 

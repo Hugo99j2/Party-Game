@@ -8,9 +8,7 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class PathUtil {
     private static final Map<String, String> files = new HashMap<>();
@@ -39,6 +37,15 @@ public class PathUtil {
 
     public static String generated(String old) {
         return "gen/"+old;
+    }
+
+    public static List<String> getFilesIn(String p) {
+        String folders = get("tree.txt", true);
+        List<String> paths = new ArrayList<>();
+        folders.lines().forEach((l) -> {
+            if(l.startsWith(p)) paths.add(l);
+        });
+        return paths;
     }
 
     public static String get(String p, boolean cache) {

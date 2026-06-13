@@ -5,6 +5,7 @@ import com.daniel99j.dungeongame.ui.renderable.RenderState;
 import com.daniel99j.dungeongame.ui.screenss.CombinedScreenSS;
 import com.daniel99j.dungeongame.ui.screenss.ScreenSSBuilder;
 import com.daniel99j.dungeongame.util.RenderUtil;
+import com.daniel99j.dungeongame.util.ToRun;
 import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.Main;
 import com.hugo99j.chaosparty.ui.Timer;
@@ -40,7 +41,7 @@ public class HerdSheepMinigame extends AbstractMinigame {
     @Override
     public void tick() {
         if(timer.getSeconds() <= 0) {
-            Main.run(() -> {
+            ToRun.run(() -> {
                 GameData.setCurrentGame(null);
                 GameData.MAIN_INSTANCE.setScreen(new WinScreen());
             });
@@ -48,7 +49,8 @@ public class HerdSheepMinigame extends AbstractMinigame {
     }
 
     @Override
-    public void render(float delta) {
+    public void renderSegment(float delta, int segment) {
+        super.renderSegment(delta, segment);
         GameData.spriteBatch.begin();
         timer.render(new RenderState(false, false, false, false, false, false, 0, 0, delta));
         RenderUtil.renderText("Score: "+this.getScore(0), ss.get("score").getX(), ss.get("score").getY(), 1f, 100, Align.left, false);
@@ -58,5 +60,10 @@ public class HerdSheepMinigame extends AbstractMinigame {
     @Override
     public void dispose() {
 
+    }
+
+    @Override
+    public MinigameScreenLayout getLayout() {
+        return MinigameScreenLayout.FOUR_CORNERS;
     }
 }

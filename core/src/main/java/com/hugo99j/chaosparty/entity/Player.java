@@ -23,7 +23,7 @@ public class Player extends AdvancedObject {
 
     @Override
     public void tick() {
-        float speed = Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) ? 6 : 4;
+        float speed = Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) ? 500 : 300 ;
         float move = Math.max(speed-this.getVelocity().len(), 0);
 
         Vector2 movement = new Vector2(0, 0);
@@ -53,7 +53,7 @@ public class Player extends AdvancedObject {
             float mul = 0.25f;
             Debuggers.freecam.add(new Vector2(movement.x*mul, movement.y*mul));
         }
-        else if(movement.len() > 0) this.getPhysics().setLinearVelocity(movement.x*move, movement.y*move);
+        else if(movement.len() > 0) this.getPhysics().applyForceToCenter(new Vector2(movement.x*move, movement.y*move), true);
         super.tick();
 
         if(GameData.DEBUGGING) {

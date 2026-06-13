@@ -94,4 +94,8 @@ public class GameData {
         FONT.getData().markupEnabled = true;
         FONT_CACHE = new BitmapFontCache(FONT);
     }
+
+    public static float px(int pixels) {
+        return pixels*0.0625f;
+    }
 }

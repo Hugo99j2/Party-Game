@@ -9,6 +9,8 @@ import com.daniel99j.dungeongame.util.RenderLayer;
 import com.google.gson.JsonObject;
 import com.hugo99j.chaosparty.GameData;
 
+import static com.hugo99j.chaosparty.GameData.px;
+
 public class Sheep extends AdvancedObject {
     private int sheepTime = 0;
     private Vector2 move = Vector2.Zero;
@@ -37,7 +39,7 @@ public class Sheep extends AdvancedObject {
 
     @Override
     protected PhysicsSettings createPhysics() {
-        return PhysicsSettings.create(1, 1, 0.5f, 0.5f, 0.5f, 0.5f);
+        return PhysicsSettings.create(px(14), 1, px(1), 0, 0.5f, 0.5f);
     }
 
     @Override

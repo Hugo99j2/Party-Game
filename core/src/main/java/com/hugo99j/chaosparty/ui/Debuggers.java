@@ -39,14 +39,12 @@ import imgui.gl3.ImGuiImplGl3;
 import imgui.glfw.ImGuiImplGlfw;
 import imgui.type.ImInt;
 import imgui.type.ImString;
+import org.lwjgl.opengl.GL30;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class Debuggers {
@@ -70,7 +68,8 @@ public class Debuggers {
     public static Vector2 freecam = Vector2.Zero;
     private static float lastTime = 0;
     private static ArrayList<String> audioNames = new ArrayList<>();
-    private static String newMapEditorName = "dev";
+    private static int newMapEditorName = 0;
+    private static List<String> newMapNames = new ArrayList<>();
     private static boolean forceShow = false;
 
     static {
@@ -90,6 +89,7 @@ public class Debuggers {
             debugOptions.put("invulnerable", new ValueHolder<>(false));
             debugOptions.put("pauseTimers", new ValueHolder<>(false));
             debugOptions.put("pixelPerfect", new ValueHolder<>(false));
+            debugOptions.put("wireframe", new ValueHolder<>(false));
 
             for (FileHandle e : Gdx.files.internal(PathUtil.asset("sounds/")).list()) {
                 audioNames.add(e.name());
@@ -110,6 +110,14 @@ public class Debuggers {
             io.getFonts().build();
             imGuiGlfw.init(windowHandle, true);
             imGuiGl3.init("#version 150");
+
+            try {
+                for (FileHandle e : Gdx.files.internal(PathUtil.data("maps")).list()) {
+                    newMapNames.add(e.name().replace(".map", ""));
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -127,6 +135,8 @@ public class Debuggers {
                 return;
             }
         }
+
+        GL30.glPolygonMode(GL30.GL_FRONT_AND_BACK, isEnabled("wireframe") ? GL30.GL_LINE : GL30.GL_FILL);
 
         GameData.gameViewport.apply();
 
@@ -232,15 +242,16 @@ public class Debuggers {
 
                 if (ImGui.button("Load map")) {
                     try {
-                        GameData.setCurrentGame(new MapEditor(newMapEditorName));
+                        GameData.setCurrentGame(new MapEditor(newMapNames.get(newMapEditorName)));
                     } catch (Exception e) {
                         Logger.error("Error loading map", e);
                     }
                 }
                 ImGui.sameLine();
-                ImString newName = new ImString(newMapEditorName, 10);
-                ImGui.inputText("Map", newName);
-                newMapEditorName = newName.get();
+                ImInt newName = new ImInt(newMapEditorName);
+                if(ImGui.combo("Map", newName, newMapNames.toArray(new String[0]))) {
+                    newMapEditorName = newName.get();
+                }
 
                 debugOptions.forEach((s, valueHolder) -> {
                     if (!s.equals("showing") && !s.equals("selecting") && !s.equals("selectingLight"))

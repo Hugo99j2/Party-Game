@@ -22,7 +22,7 @@ dependencies {
 
   api "com.google.code.gson:gson:2.13.2"
 
-  implementation "com.daniel99j:djutil:1.6.9"
+  implementation "com.daniel99j:djutil:1.7.0"
 
   implementation "com.badlogicgames.gdx-controllers:gdx-controllers-core:$gdxControllers"
   implementation "com.badlogicgames.gdx-controllers:gdx-controllers-desktop:$gdxControllers"

@@ -69,7 +69,7 @@ public class Player extends AdvancedObject {
     public void render() {
         Vector2 pos = this.getPos();
         if(GameData.DEBUGGING && Debuggers.isEnabled("pixelPerfect")) {
-            float m = 0.05f;
+            float m = 0.0625f;
             pos.x = Math.round(pos.x/m)*m;
             pos.y = Math.round(pos.y/m)*m;
         }

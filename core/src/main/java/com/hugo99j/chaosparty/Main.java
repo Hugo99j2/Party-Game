@@ -127,7 +127,7 @@ public class Main extends Game {
                 Gdx.graphics.setWindowedMode(oldXSize, oldYSize);
             }
         }
-        fbo.begin();
+        //fbo.begin();
         toRun.forEach(Runnable::run);
         toRun.clear();
 
@@ -217,18 +217,18 @@ public class Main extends Game {
 
         if(Gdx.input.isKeyJustPressed(Input.Keys.F2)) RenderUtil.takeScreenshot();
 
-        fbo.end();
-
-        Gdx.gl.glClearColor(1, 1, 1, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        GameData.uiViewport.apply();
-        GameData.spriteBatch.begin();
-        GameData.spriteBatch.draw(new TextureRegion(fbo.getColorBufferTexture()), 0, GameData.height, 0, 0, GameData.width, GameData.height, 0.5f, -0.5f, 0);
-        GameData.spriteBatch.draw(new TextureRegion(fbo.getColorBufferTexture()), 0, GameData.height-GameData.height/2f, 0, 0, GameData.width, GameData.height, 0.5f, -0.5f, 0);
-        GameData.spriteBatch.draw(new TextureRegion(fbo.getColorBufferTexture()), GameData.width/2f, GameData.height, 0, 0, GameData.width, GameData.height, 0.5f, -0.5f, 0);
-        GameData.spriteBatch.draw(new TextureRegion(fbo.getColorBufferTexture()), GameData.width/2f, GameData.height-GameData.height/2f, 0, 0, GameData.width, GameData.height, 0.5f, -0.5f, 0);
-        GameData.spriteBatch.end();
+//        fbo.end();
+//
+//        Gdx.gl.glClearColor(1, 1, 1, 1);
+//        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+//
+//        GameData.uiViewport.apply();
+//        GameData.spriteBatch.begin();
+//        GameData.spriteBatch.draw(new TextureRegion(fbo.getColorBufferTexture()), 0, GameData.height, 0, 0, GameData.width, GameData.height, 0.5f, -0.5f, 0);
+//        GameData.spriteBatch.draw(new TextureRegion(fbo.getColorBufferTexture()), 0, GameData.height-GameData.height/2f, 0, 0, GameData.width, GameData.height, 0.5f, -0.5f, 0);
+//        GameData.spriteBatch.draw(new TextureRegion(fbo.getColorBufferTexture()), GameData.width/2f, GameData.height, 0, 0, GameData.width, GameData.height, 0.5f, -0.5f, 0);
+//        GameData.spriteBatch.draw(new TextureRegion(fbo.getColorBufferTexture()), GameData.width/2f, GameData.height-GameData.height/2f, 0, 0, GameData.width, GameData.height, 0.5f, -0.5f, 0);
+//        GameData.spriteBatch.end();
         Debuggers.render();
     }
 

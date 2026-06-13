@@ -66,13 +66,7 @@ public class Sheep extends AdvancedObject {
     @Override
     public void render() {
         Vector2 pos = this.getPos();
-        if(GameData.DEBUGGING && Debuggers.isEnabled("pixelPerfect")) {
-            float m = 0.05f;
-            pos.x = Math.round(pos.x/m)*m;
-            pos.y = Math.round(pos.y/m)*m;
-        }
         GameData.spriteBatch.draw(GameData.atlas.findRegion("sheep"), pos.x, pos.y, 1, 1);
-        //pixelPerfect
     }
 
     @Override

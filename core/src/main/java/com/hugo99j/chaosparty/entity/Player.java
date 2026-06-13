@@ -93,7 +93,7 @@ public class Player extends AdvancedObject {
 
     @Override
     public void writeAdditional(JsonObject object) {
-
+//
     }
 
     public static Player read(JsonObject object) {

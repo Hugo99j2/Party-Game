@@ -15,9 +15,12 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.Vector4;
 import com.badlogic.gdx.physics.box2d.*;
+import com.daniel99j.djutil.MiscUtils;
 import com.daniel99j.djutil.ValueHolder;
 import com.daniel99j.djutil.pathfinder.PathfindDebugPos;
 import com.daniel99j.djutil.pathfinder.PathfindDebugType;
+import com.daniel99j.dungeongame.NoDebugOption;
+import com.daniel99j.dungeongame.RequiresRefresh;
 import com.daniel99j.dungeongame.sounds.SoundInstance;
 import com.daniel99j.dungeongame.sounds.SoundManager;
 import com.hugo99j.chaosparty.GameData;
@@ -32,17 +35,18 @@ import com.daniel99j.dungeongame.level.SaveConfig;
 import com.google.gson.JsonObject;
 import com.hugo99j.chaosparty.minigame.DevMinigame;
 import com.hugo99j.chaosparty.minigame.MapEditor;
-import imgui.ImGui;
-import imgui.ImGuiIO;
-import imgui.ImVec2;
-import imgui.ImVec4;
+import imgui.*;
 import imgui.flag.*;
 import imgui.gl3.ImGuiImplGl3;
 import imgui.glfw.ImGuiImplGlfw;
+import imgui.type.ImDouble;
+import imgui.type.ImFloat;
 import imgui.type.ImInt;
 import imgui.type.ImString;
 import org.lwjgl.opengl.GL30;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
@@ -512,6 +516,33 @@ public class Debuggers {
                 intInput("Height", tilesetObject.getHeight(), tilesetObject::setHeight);
             }
 
+            ImGui.separatorText("Java variables");
+            if(ImGui.collapsingHeader("Show")) addVariables(selectedObject, selectedObject.getClass());
+
+            ImGui.separatorText("Data");
+            if (data != null) {
+                ImString input = new ImString(data, data.length() + 10000);
+
+                ImGui.inputTextMultiline(" ", input, ImGuiInputTextFlags.None);
+
+                data = input.get();
+            }
+            JsonObject object = selectedObject.write();
+            data = GsonUtil.PARSER.toJson(object);
+
+            if (ImGui.button("Refresh")) {
+                try {
+                    JsonObject data = selectedObject.write();
+                    AbstractObject o = LevelLoader.createObject(data, GameData.level);
+                    selectedObject.dispose();
+                    selectedObjectId = o.getUUID();
+                } catch (Exception e) {
+                    Logger.error("Error refreshing object", e);
+                }
+            }
+
+            ImGui.sameLine();
+
             if (ImGui.button("Duplicate")) {
                 if(selectedObject instanceof PositionMarker m) {
                     GameData.level.addObject(new PositionMarker(m));
@@ -519,9 +550,8 @@ public class Debuggers {
                     try {
                         JsonObject data = selectedObject.write();
                         data.addProperty("uuid", UUID.randomUUID().toString());
-                        AbstractObject object = LevelLoader.createObject(data, GameData.level);
-                        assert object != null;
-                        selectedObjectId = object.getUUID();
+                        AbstractObject o = LevelLoader.createObject(data, GameData.level);
+                        selectedObjectId = o.getUUID();
                     } catch (Exception e) {
                         Logger.error("Error duplicating object", e);
                     }
@@ -535,16 +565,6 @@ public class Debuggers {
                 GameData.level.removeObject(selectedObject);
             }
 
-            ImGui.separatorText("Data");
-            if (data != null) {
-                ImString input = new ImString(data, data.length() + 10000);
-
-                ImGui.inputTextMultiline(" ", input, ImGuiInputTextFlags.None);
-
-                data = input.get();
-            }
-            JsonObject object = selectedObject.write();
-            data = GsonUtil.PARSER.toJson(object);
         }
 
         ImGui.endChild();
@@ -878,5 +898,84 @@ public class Debuggers {
 
     public static boolean isEnabled(String option) {
         return debugOptions.get(option).object;
+    }
+
+
+    private static void addVariables(AbstractObject selectedObject, Class<?> clazz) {
+        for (Field declaredField : clazz.getDeclaredFields()) {
+            if(declaredField.getAnnotation(NoDebugOption.class) != null || Modifier.isStatic(declaredField.getModifiers()) || Modifier.isFinal(declaredField.getModifiers())) continue;
+            declaredField.setAccessible(true);
+            if(declaredField.getAnnotation(RequiresRefresh.class) != null) {
+                ImGui.textColored(255, 0, 0, 255, "R");
+                ImGui.setItemTooltip("Requires refresh");
+                ImGui.sameLine();
+            }
+            try {
+                addVariable(declaredField.getName(), declaredField.getType(), declaredField.get(selectedObject), (t) -> {
+                    try {
+                        declaredField.set(selectedObject, t);
+                    } catch (IllegalAccessException e) {
+                        Logger.error("Error setting variable", e);
+                    }
+                });
+            } catch (Exception e) {
+                Logger.error("Error adding variable", e);
+                ImGui.text("Error adding variable: " + e.getMessage());
+            }
+        }
+
+        if(clazz.getSuperclass() != null) addVariables(selectedObject, clazz.getSuperclass());
+    }
+
+    private static <T> void addVariable(String name, Class<?> clazz, T current, Consumer<T> setter) {
+        //noinspection unchecked
+        addVariable2(name, (Class<T>) clazz, current, setter);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T> void addVariable2(String name, Class<T> clazz, T current, Consumer<T> setter) {
+        if(current == null) {
+            ImGui.text(name + " (null)");
+            return;
+        }
+        Class<?> type = MiscUtils.getClassNonPrimitive(clazz);
+        if(type.equals(Integer.class)) {
+            ImInt check = new ImInt((Integer) current);
+            if(ImGui.inputInt(name, check)) {
+                setter.accept((T) (Object) check.get());
+            }
+        } else if(type.equals(Float.class)) {
+            ImFloat check = new ImFloat((Float) current);
+            if(ImGui.inputFloat(name, check)) {
+                setter.accept((T) (Object) check.get());
+            }
+        } else if(type.equals(Double.class)) {
+            ImDouble check = new ImDouble((Double) current);
+            if(ImGui.inputDouble(name, check)) {
+                setter.accept((T) (Object) check.get());
+            }
+        } else if(type.equals(String.class)) {
+            ImString check = new ImString((String) current);
+            if(ImGui.inputText(name, check)) {
+                setter.accept((T) check.get());
+            }
+        } else if(type.equals(UUID.class)) {
+            ImString check = new ImString(current.toString());
+            if(ImGui.inputText(name, check)) {
+                setter.accept((T) UUID.fromString(check.get()));
+            }
+        } else if(type.equals(Boolean.class)) {
+            if(ImGui.checkbox(name, (Boolean) current)) {
+                setter.accept((T) ((Boolean) !((Boolean) current)));
+            }
+        } else if(type.equals(Vector2.class)) {
+            float[] check = {((Vector2) current).x, ((Vector2) current).y};
+            if(ImGui.inputFloat2(name, check)) {
+                ((Vector2) current).x = check[0];
+                ((Vector2) current).y = check[1];
+            }
+        } else {
+            ImGui.text("Unsupported type: " + name + " (value: " + current + ")");
+        }
     }
 }

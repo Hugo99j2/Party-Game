@@ -6,6 +6,7 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Disposable;
 import com.daniel99j.djutil.Either;
 import com.daniel99j.djutil.UsageLimited;
+import com.daniel99j.dungeongame.NoDebugOption;
 import com.daniel99j.dungeongame.level.Level;
 import com.daniel99j.dungeongame.level.SaveConfig;
 import com.google.gson.JsonObject;
@@ -16,7 +17,9 @@ import java.util.Objects;
 import java.util.UUID;
 
 public abstract class AbstractObject implements Disposable {
+    @NoDebugOption
     private Level level;
+    @NoDebugOption
     private Either<PositionHolder, Body> physics;
     private Vector2 beforeLoadPos = null;
     private boolean fromWorldLoad = false;
@@ -60,10 +63,12 @@ public abstract class AbstractObject implements Disposable {
 
     @Override
     public void dispose() {
+        if(this.removed) return;
+        this.removed = true;
         if(this.physics.isRight()) this.getLevel().getBox2dWorld().destroyBody(this.physics.getRight());
         this.physics = null;
+        if(this.level != null) this.level.removeObject(this);
         this.level = null;
-        this.removed = true;
     }
 
     public @NotNull Level getLevel() {

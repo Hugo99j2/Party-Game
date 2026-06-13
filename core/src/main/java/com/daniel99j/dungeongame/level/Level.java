@@ -39,10 +39,6 @@ public class Level implements Disposable {
         this.rayHandler.setAmbientLight(1);
         RayHandler.useDiffuseLight(false);
         this.rayHandler.setShadows(true);
-
-        SoundManager.getSound("test").playSingle(1, 1, 0, () -> {
-            Logger.info("hi");
-        });
     }
 
     public void tickWorld() {

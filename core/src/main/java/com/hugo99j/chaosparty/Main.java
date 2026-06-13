@@ -1,11 +1,12 @@
 package com.hugo99j.chaosparty;
 
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Graphics;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.tools.texturepacker.TexturePacker;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -35,8 +36,11 @@ public class Main extends Game {
     private static final List<Runnable> toRun = new ArrayList<>();
     private float activeTimer;
     private float tickTimer;
+    private int oldXSize, oldYSize;
 
     public static Player tempPlayer;
+
+    private FrameBuffer fbo;
 
     public static void run(Runnable o) {
         toRun.add(o);
@@ -44,6 +48,7 @@ public class Main extends Game {
 
     @Override
     public void create() {
+        //Makes errors send to the logger instead
         glfwErrorCallback = GLFWErrorCallback.createPrint(new PrintStream(new OutputStream() {
             private final StringBuilder buffer = new StringBuilder();
 
@@ -78,6 +83,7 @@ public class Main extends Game {
         glfwErrorCallback.set();
 
         if(Objects.equals(System.getenv("CODING_GAME"), "1")) {
+            //Create atlases
             TexturePacker.Settings settings = new TexturePacker.Settings();
             settings.combineSubdirectories = true;
             TexturePacker.process(settings, PathUtil.codingDir(PathUtil.asset("textures")), PathUtil.codingDir(PathUtil.generated("atlases")), "main");
@@ -101,6 +107,8 @@ public class Main extends Game {
         GameData.width = width;
         GameData.height = height;
 
+        fbo = new FrameBuffer(Pixmap.Format.RGBA8888, GameData.width, GameData.height, false);
+
         // Resize your screen here. The parameters represent the new window size.
         GameData.gameViewport.update(width, height, true);
         GameData.uiViewport.update(width, height, true);
@@ -110,6 +118,16 @@ public class Main extends Game {
 
     @Override
     public void render() {
+        if(Gdx.input.isKeyJustPressed(Input.Keys.F11)) {
+            if (!Gdx.graphics.isFullscreen()) {
+                oldXSize = GameData.width;
+                oldYSize = GameData.height;
+                Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
+            } else {
+                Gdx.graphics.setWindowedMode(oldXSize, oldYSize);
+            }
+        }
+        fbo.begin();
         toRun.forEach(Runnable::run);
         toRun.clear();
 
@@ -197,9 +215,21 @@ public class Main extends Game {
 
         this.screen.render(Gdx.graphics.getDeltaTime());
 
-        Debuggers.render();
-
         if(Gdx.input.isKeyJustPressed(Input.Keys.F2)) RenderUtil.takeScreenshot();
+
+        fbo.end();
+
+        Gdx.gl.glClearColor(1, 1, 1, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        GameData.uiViewport.apply();
+        GameData.spriteBatch.begin();
+        GameData.spriteBatch.draw(new TextureRegion(fbo.getColorBufferTexture()), 0, GameData.height, 0, 0, GameData.width, GameData.height, 0.5f, -0.5f, 0);
+        GameData.spriteBatch.draw(new TextureRegion(fbo.getColorBufferTexture()), 0, GameData.height-GameData.height/2f, 0, 0, GameData.width, GameData.height, 0.5f, -0.5f, 0);
+        GameData.spriteBatch.draw(new TextureRegion(fbo.getColorBufferTexture()), GameData.width/2f, GameData.height, 0, 0, GameData.width, GameData.height, 0.5f, -0.5f, 0);
+        GameData.spriteBatch.draw(new TextureRegion(fbo.getColorBufferTexture()), GameData.width/2f, GameData.height-GameData.height/2f, 0, 0, GameData.width, GameData.height, 0.5f, -0.5f, 0);
+        GameData.spriteBatch.end();
+        Debuggers.render();
     }
 
     @Override

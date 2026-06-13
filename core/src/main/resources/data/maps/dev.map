@@ -20,8 +20,8 @@
       "uuid": "151283cf-b175-447d-a518-213dedb95bf6",
       "type": "tileset",
       "custom_data": {
-        "width": 10,
-        "height": 16,
+        "width": 24,
+        "height": 18,
         "sprite": "tilesets/kitchen_tiles"
       }
     }

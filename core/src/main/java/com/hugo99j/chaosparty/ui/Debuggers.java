@@ -6,6 +6,7 @@ import box2dLight.PointLight;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Graphics;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
@@ -27,6 +28,8 @@ import com.daniel99j.dungeongame.level.LevelLight;
 import com.daniel99j.dungeongame.level.LevelLoader;
 import com.daniel99j.dungeongame.level.SaveConfig;
 import com.google.gson.JsonObject;
+import com.hugo99j.chaosparty.minigame.DevMinigame;
+import com.hugo99j.chaosparty.minigame.MapEditor;
 import imgui.ImGui;
 import imgui.ImGuiIO;
 import imgui.ImVec2;
@@ -67,6 +70,8 @@ public class Debuggers {
     public static Vector2 freecam = Vector2.Zero;
     private static float lastTime = 0;
     private static ArrayList<String> audioNames = new ArrayList<>();
+    private static String newMapEditorName = "dev";
+    private static boolean forceShow = false;
 
     static {
         if (GameData.DEBUGGING) {
@@ -192,112 +197,134 @@ public class Debuggers {
 
             //START
 
-            ImGui.begin("Logger");
-            for (String s : logger) {
-                if (s.startsWith("<error>")) {
-                    ImGui.textColored(0xff0000ff, s.replace("<error>", ""));
-                } else ImGui.text(s);
+            //on wayland you can't figure out which monitor... use primary instead.
+            boolean isFullScreenOrMaximised = Gdx.graphics.isFullscreen() || (Lwjgl3ApplicationConfiguration.getDisplayMode(Gdx.graphics.getPrimaryMonitor()).width == Gdx.graphics.getWidth() && Gdx.graphics.getHeight()+200 >= Lwjgl3ApplicationConfiguration.getDisplayMode(Gdx.graphics.getPrimaryMonitor()).height);
 
-                if (!ImGui.isWindowHovered()) ImGui.setScrollY(10000);
-            }
-            ImGui.end();
-
-            ImGui.begin("Options");
-
-            if (ImGui.button("Save map")) {
-                try {
-                    Files.write(Path.of(PathUtil.codingDir(PathUtil.data("maps/"+GameData.getCurrentGame().getMapName()+".map"))), LevelLoader.saveLevel(GameData.level).getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            }
-
-            if (ImGui.button("Kill")) {
-                //GameData.player.damage(100000);
-            }
-
-            debugOptions.forEach((s, valueHolder) -> {
-                if (!s.equals("showing") && !s.equals("selecting") && !s.equals("selectingLight"))
-                    if (ImGui.checkbox(s, valueHolder.object)) {
-                        valueHolder.object = !valueHolder.object;
-                        if(s.equals("freecam")) freecam = new Vector2(GameData.gameCamera.position.x, GameData.gameCamera.position.y);
-                    }
-            });
-
-            float[] fpsArray = new float[fpsCounter.size()];
-            int i = 0;
-
-            for (Short f : fpsCounter) {
-                fpsArray[i++] = f;
-            }
-
-            ImGui.plotLines("FPS graph", fpsArray, 100, 1, "", 0, 200, new ImVec2(0, 80));
-            if (GameData.time > lastTime+0.02f) {
-                lastTime = GameData.time;
-                if (fpsCounter.size() > 100) fpsCounter.removeFirst();
-                fpsCounter.add((short) Gdx.graphics.getFramesPerSecond());
-            }
-
-            ImGui.text("Current FPS: " + Gdx.graphics.getFramesPerSecond());
-
-            ImGui.end();
-
-            ImGui.showDemoWindow();
-
-            UUID hoveredObject = null;
-
-            ImGui.begin("Lights");
-            UUID hoveredLight = renderLightSelector();
-            boolean showLights = ImGui.isWindowFocused(ImGuiFocusedFlags.RootAndChildWindows);
-            ImGui.end();
-
-            ImGui.begin("Objects");
-
-            if (createObjectData != null) {
-                renderObjectCreator();
+            if(!isFullScreenOrMaximised && !forceShow) {
+                ImGui.begin("Are you sure?");
+                if(ImGui.button("Force show UI")) forceShow = true;
+                ImGui.end();
             } else {
-                hoveredObject = renderObjectSelector();
-            }
+                ImGui.begin("Logger");
+                for (String s : logger) {
+                    if (s.startsWith("<error>")) {
+                        ImGui.textColored(0xff0000ff, s.replace("<error>", ""));
+                    } else ImGui.text(s);
 
-            ImGui.end();
+                    if (!ImGui.isWindowHovered()) ImGui.setScrollY(10000);
+                }
+                ImGui.end();
 
-            //DEBUGGERS
+                ImGui.begin("Options");
 
-            // incase imgui changes the gameViewport
-            GameData.gameCamera.update();
-            GameData.gameViewport.apply();
-
-            if(GameData.level != null) {
-
-                if (GameData.level != null && isEnabled("hitboxes"))
-                    box2dDebugRenderer.render(GameData.level.getBox2dWorld(), GameData.gameCamera.combined);
-
-                AbstractObject selectedObject;
-                if (hoveredObject != null && (selectedObject = GameData.level.getObjectByUUID(hoveredObject)) != null) {
-                    RenderUtil.enableBlending();
-                    GameData.shapeRenderer.setProjectionMatrix(GameData.gameCamera.combined);
-                    GameData.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-                    if (selectedObject.hasPhysics()) {
-                        for (Fixture fixture : selectedObject.getPhysics().getFixtureList()) {
-                            Vector4 hitbox = selectedObject.getHitbox(fixture);
-                            GameData.shapeRenderer.setColor(0xdf / 255.0f, 0xf0 / 255.0f, 0x29 / 255.0f, 0.5f);
-                            GameData.shapeRenderer.rect(hitbox.x, hitbox.y, hitbox.z, hitbox.w);
-                        }
-                    } else if (selectedObject instanceof TilesetObject tilesetObject) {
-                        GameData.shapeRenderer.setColor(0xdf / 255.0f, 0xf0 / 255.0f, 0x29 / 255.0f, 0.5f);
-                        GameData.shapeRenderer.rect(tilesetObject.getPos().x, tilesetObject.getPos().y, tilesetObject.getWidth(), tilesetObject.getHeight());
+                if (ImGui.button("Save map")) {
+                    try {
+                        Files.write(Path.of(PathUtil.codingDir(PathUtil.data("maps/" + GameData.getCurrentGame().getMapName() + ".map"))), LevelLoader.saveLevel(GameData.level).getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
                     }
-                    GameData.shapeRenderer.end();
                 }
 
-                if (showLights) for (LevelLight<?> light : GameData.level.getLights()) {
-                    Color c = light.light().getColor().cpy();
-                    if (light.uuid().equals(hoveredLight)) c = Color.YELLOW;
-                    GameData.shapeRenderer.setProjectionMatrix(GameData.gameCamera.combined);
-                    GameData.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-                    GameData.shapeRenderer.setColor(c);
-                    GameData.shapeRenderer.circle(light.light().getPosition().x, light.light().getPosition().y, 0.2f, 20);
-                    GameData.shapeRenderer.end();
+                if (ImGui.button("Kill")) {
+                    //GameData.player.damage(100000);
+                }
+
+                if (ImGui.button("Load map")) {
+                    try {
+                        GameData.setCurrentGame(new MapEditor(newMapEditorName));
+                    } catch (Exception e) {
+                        Logger.error("Error loading map", e);
+                    }
+                }
+                ImGui.sameLine();
+                ImString newName = new ImString(newMapEditorName, 10);
+                ImGui.inputText("Map", newName);
+                newMapEditorName = newName.get();
+
+                debugOptions.forEach((s, valueHolder) -> {
+                    if (!s.equals("showing") && !s.equals("selecting") && !s.equals("selectingLight"))
+                        if (ImGui.checkbox(s, valueHolder.object)) {
+                            valueHolder.object = !valueHolder.object;
+                            if (s.equals("freecam"))
+                                freecam = new Vector2(GameData.gameCamera.position.x, GameData.gameCamera.position.y);
+                        }
+                });
+
+                float[] fpsArray = new float[fpsCounter.size()];
+                int i = 0;
+
+                for (Short f : fpsCounter) {
+                    fpsArray[i++] = f;
+                }
+
+                ImGui.plotLines("FPS graph", fpsArray, 100, 1, "", 0, 200, new ImVec2(0, 80));
+                if (GameData.time > lastTime + 0.02f) {
+                    lastTime = GameData.time;
+                    if (fpsCounter.size() > 100) fpsCounter.removeFirst();
+                    fpsCounter.add((short) Gdx.graphics.getFramesPerSecond());
+                }
+
+                ImGui.text("Current FPS: " + Gdx.graphics.getFramesPerSecond());
+
+                ImGui.end();
+
+                ImGui.showDemoWindow();
+
+                UUID hoveredObject = null;
+
+                ImGui.begin("Lights");
+                UUID hoveredLight = renderLightSelector();
+                boolean showLights = ImGui.isWindowFocused(ImGuiFocusedFlags.RootAndChildWindows);
+                ImGui.end();
+
+                ImGui.begin("Objects");
+
+                if (createObjectData != null) {
+                    renderObjectCreator();
+                } else {
+                    hoveredObject = renderObjectSelector();
+                }
+
+                ImGui.end();
+
+                //DEBUGGERS
+
+                // incase imgui changes the gameViewport
+                GameData.gameCamera.update();
+                GameData.gameViewport.apply();
+
+                if (GameData.level != null) {
+
+                    if (GameData.level != null && isEnabled("hitboxes"))
+                        box2dDebugRenderer.render(GameData.level.getBox2dWorld(), GameData.gameCamera.combined);
+
+                    AbstractObject selectedObject;
+                    if (hoveredObject != null && (selectedObject = GameData.level.getObjectByUUID(hoveredObject)) != null) {
+                        RenderUtil.enableBlending();
+                        GameData.shapeRenderer.setProjectionMatrix(GameData.gameCamera.combined);
+                        GameData.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+                        if (selectedObject.hasPhysics()) {
+                            for (Fixture fixture : selectedObject.getPhysics().getFixtureList()) {
+                                Vector4 hitbox = selectedObject.getHitbox(fixture);
+                                GameData.shapeRenderer.setColor(0xdf / 255.0f, 0xf0 / 255.0f, 0x29 / 255.0f, 0.5f);
+                                GameData.shapeRenderer.rect(hitbox.x, hitbox.y, hitbox.z, hitbox.w);
+                            }
+                        } else if (selectedObject instanceof TilesetObject tilesetObject) {
+                            GameData.shapeRenderer.setColor(0xdf / 255.0f, 0xf0 / 255.0f, 0x29 / 255.0f, 0.5f);
+                            GameData.shapeRenderer.rect(tilesetObject.getPos().x, tilesetObject.getPos().y, tilesetObject.getWidth(), tilesetObject.getHeight());
+                        }
+                        GameData.shapeRenderer.end();
+                    }
+
+                    if (showLights) for (LevelLight<?> light : GameData.level.getLights()) {
+                        Color c = light.light().getColor().cpy();
+                        if (light.uuid().equals(hoveredLight)) c = Color.YELLOW;
+                        GameData.shapeRenderer.setProjectionMatrix(GameData.gameCamera.combined);
+                        GameData.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+                        GameData.shapeRenderer.setColor(c);
+                        GameData.shapeRenderer.circle(light.light().getPosition().x, light.light().getPosition().y, 0.2f, 20);
+                        GameData.shapeRenderer.end();
+                    }
                 }
             }
 

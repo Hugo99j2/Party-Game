@@ -12,8 +12,11 @@ import com.hugo99j.chaosparty.Main;
 import java.util.Calendar;
 
 public class Timer extends Renderable {
+    //Does the timer count up or down?
     private boolean up;
+    //Time remaining/time at
     private float time;
+    //3 -> '5:20:05' 2 -> '20:05' 1 -> '5'
     private final int display;
 
     public Timer(String elementId, int time, int display, boolean countUp) {

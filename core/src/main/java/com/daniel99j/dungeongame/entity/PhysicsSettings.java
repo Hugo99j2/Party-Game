@@ -10,7 +10,7 @@ public record PhysicsSettings(BodyDef.BodyType bodyType, Shape shape, float dens
         sizeX /= 2;
         sizeY /= 2;
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(sizeX, sizeY, new Vector2(sizeX/2+xOffset, sizeY/2+yOffset), 0);
+        shape.setAsBox(sizeX, sizeY, new Vector2(sizeX+xOffset, sizeY+yOffset), 0);
         return new PhysicsSettings(BodyDef.BodyType.DynamicBody, shape, density, drag);
     }
 

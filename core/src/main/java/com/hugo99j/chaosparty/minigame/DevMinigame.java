@@ -3,12 +3,10 @@ package com.hugo99j.chaosparty.minigame;
 import com.badlogic.gdx.utils.Align;
 import com.daniel99j.dungeongame.ui.renderable.RenderState;
 import com.daniel99j.dungeongame.ui.screenss.CombinedScreenSS;
-import com.daniel99j.dungeongame.ui.screenss.ScreenSS;
 import com.daniel99j.dungeongame.ui.screenss.ScreenSSBuilder;
-import com.daniel99j.dungeongame.ui.types.Text;
 import com.daniel99j.dungeongame.util.RenderUtil;
+import com.daniel99j.dungeongame.util.ToRun;
 import com.hugo99j.chaosparty.GameData;
-import com.hugo99j.chaosparty.Main;
 import com.hugo99j.chaosparty.ui.Timer;
 import com.hugo99j.chaosparty.ui.WinScreen;
 
@@ -42,7 +40,7 @@ public class DevMinigame extends AbstractMinigame {
     @Override
     public void tick() {
         if(timer.getSeconds() <= 0) {
-            Main.run(() -> {
+            ToRun.run(() -> {
                 GameData.setCurrentGame(null);
                 GameData.MAIN_INSTANCE.setScreen(new WinScreen());
             });
@@ -60,5 +58,10 @@ public class DevMinigame extends AbstractMinigame {
     @Override
     public void dispose() {
 
+    }
+
+    @Override
+    public MinigameScreenLayout getLayout() {
+        return MinigameScreenLayout.HALF_HALF;
     }
 }

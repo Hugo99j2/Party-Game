@@ -12,10 +12,9 @@ import com.daniel99j.dungeongame.entity.PhysicsSettings;
 import com.daniel99j.dungeongame.sounds.SoundManager;
 import com.daniel99j.dungeongame.util.GlobalRunnables;
 import com.daniel99j.dungeongame.util.RenderLayer;
-import com.daniel99j.dungeongame.util.ScheduledRunnables;
+import com.daniel99j.dungeongame.util.ToRun;
 import com.google.gson.JsonObject;
 import com.hugo99j.chaosparty.GameData;
-import com.hugo99j.chaosparty.Main;
 import com.hugo99j.chaosparty.ui.Debuggers;
 
 public class Sheep extends AdvancedObject {
@@ -90,7 +89,7 @@ public class Sheep extends AdvancedObject {
         health-=amount;
         SoundManager.getSound("hurt").play(1);
         if(health <= 0) {
-            ScheduledRunnables.add(GlobalRunnables.FAIL_RUN);
+            ToRun.run(GlobalRunnables.FAIL_RUN);
         }
     }
 

@@ -3,9 +3,7 @@ package com.hugo99j.chaosparty;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Graphics;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.tools.texturepacker.TexturePacker;
@@ -17,7 +15,7 @@ import com.daniel99j.dungeongame.ui.renderable.CursorType;
 import com.daniel99j.dungeongame.util.Logger;
 import com.daniel99j.dungeongame.util.PathUtil;
 import com.daniel99j.dungeongame.util.RenderUtil;
-import com.daniel99j.dungeongame.util.ScheduledRunnables;
+import com.daniel99j.dungeongame.util.ToRun;
 import com.hugo99j.chaosparty.entity.Player;
 import com.hugo99j.chaosparty.ui.MenuScreen;
 import org.lwjgl.glfw.GLFW;
@@ -26,14 +24,12 @@ import org.lwjgl.glfw.GLFWErrorCallback;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 public class Main extends Game {
     private CursorType oldCursor = CursorType.NORMAL;
     private boolean cursorCaught = false;
     private GLFWErrorCallback glfwErrorCallback;
-    private static final List<Runnable> toRun = new ArrayList<>();
     private float activeTimer;
     private float tickTimer;
     private int oldXSize, oldYSize;
@@ -41,10 +37,6 @@ public class Main extends Game {
     public static Player tempPlayer;
 
     private FrameBuffer fbo;
-
-    public static void run(Runnable o) {
-        toRun.add(o);
-    }
 
     @Override
     public void create() {
@@ -127,9 +119,6 @@ public class Main extends Game {
                 Gdx.graphics.setWindowedMode(oldXSize, oldYSize);
             }
         }
-        //fbo.begin();
-        toRun.forEach(Runnable::run);
-        toRun.clear();
 
         SoundManager.tick(Gdx.graphics.getDeltaTime());
 
@@ -153,8 +142,8 @@ public class Main extends Game {
         ScreenUtils.clear(new Color(0x111111ff));
 
         //so adding new ones whilst in the list works
-        ArrayList<Runnable> oldRunnables = new ArrayList<>(ScheduledRunnables.runnables);
-        ScheduledRunnables.runnables.clear();
+        ArrayList<Runnable> oldRunnables = new ArrayList<>(ToRun.runnables);
+        ToRun.runnables.clear();
         for (Runnable runnable : oldRunnables) {
             runnable.run();
         }
@@ -167,6 +156,9 @@ public class Main extends Game {
 //                GameData.gameCamera.position.y = GameData.player.getPos().y;
 //            }
         }
+
+        //fbo.begin();
+
         //GameConstants.gameCamera.update();
         GameData.gameViewport.apply();
 

@@ -11,6 +11,7 @@ import com.daniel99j.dungeongame.ui.renderable.RenderState;
 import com.daniel99j.dungeongame.ui.renderable.Renderable;
 import com.daniel99j.dungeongame.ui.screenss.CombinedScreenSS;
 import com.daniel99j.dungeongame.ui.screenss.ScreenSS;
+import com.hugo99j.chaosparty.GameData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +51,7 @@ public class UiScreen implements Screen {
             Gdx.input.isButtonJustPressed(Input.Buttons.MIDDLE),
             Gdx.input.isButtonPressed(Input.Buttons.RIGHT),
             Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT),
-            Gdx.input.getX(), Gdx.input.getY(),
+            Gdx.input.getX(), GameData.height-Gdx.input.getY(),
             delta);
         for (Renderable renderable : this.renderables) {
             if(renderable == controllerSelected) state = new RenderState(state.left(), state.leftJust(), state.middle(), state.middleJust(), state.right(), state.rightJust(), (int) controllerSelected.getCenter().x, (int) controllerSelected.getCenter().y, state.time());

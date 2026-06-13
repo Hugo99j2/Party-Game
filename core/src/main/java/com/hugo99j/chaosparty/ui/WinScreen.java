@@ -6,18 +6,13 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.daniel99j.djutil.NumberUtils;
-import com.daniel99j.dungeongame.sounds.SoundManager;
 import com.daniel99j.dungeongame.ui.UiScreen;
 import com.daniel99j.dungeongame.ui.screenss.ScreenSSBuilder;
 import com.daniel99j.dungeongame.ui.types.Button;
 import com.daniel99j.dungeongame.ui.types.Text;
-import com.daniel99j.dungeongame.util.Logger;
 import com.daniel99j.dungeongame.util.PathUtil;
+import com.daniel99j.dungeongame.util.ToRun;
 import com.hugo99j.chaosparty.GameData;
-import com.hugo99j.chaosparty.Main;
-import com.hugo99j.chaosparty.minigame.DevMinigame;
-
-import java.util.ArrayList;
 
 /** First screen of the application. Displayed after the application is created. */
 public class WinScreen extends UiScreen {
@@ -72,13 +67,13 @@ public class WinScreen extends UiScreen {
         this.addRenderable(new Button("menu", "button", "Back to menu") {
             @Override
             public void onClick() {
-                Main.run(() -> GameData.MAIN_INSTANCE.setScreen(new MenuScreen()));
+                ToRun.run(() -> GameData.MAIN_INSTANCE.setScreen(new MenuScreen()));
             }
         });
         this.addRenderable(new Button("menu2", "button", "Back to menu") {
             @Override
             public void onClick() {
-                Main.run(() -> GameData.MAIN_INSTANCE.setScreen(new MenuScreen()));
+                ToRun.run(() -> GameData.MAIN_INSTANCE.setScreen(new MenuScreen()));
             }
         });
         //new ScreenSS("0.5vw", "0.7vh", "1", "1", "1", false)

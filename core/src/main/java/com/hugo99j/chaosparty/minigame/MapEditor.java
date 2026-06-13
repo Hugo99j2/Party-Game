@@ -16,4 +16,9 @@ public class MapEditor extends AbstractMinigame {
     @Override
     public void dispose() {
     }
+
+    @Override
+    public MinigameScreenLayout getLayout() {
+        return MinigameScreenLayout.SINGLE;
+    }
 }

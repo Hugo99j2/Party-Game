@@ -12,6 +12,7 @@ import com.daniel99j.dungeongame.ui.types.Text;
 import com.daniel99j.dungeongame.util.Logger;
 import com.daniel99j.dungeongame.util.PathUtil;
 import com.daniel99j.dungeongame.util.RenderUtil;
+import com.daniel99j.dungeongame.util.ToRun;
 import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.Main;
 import com.hugo99j.chaosparty.minigame.DevMinigame;
@@ -64,7 +65,7 @@ public class MenuScreen extends UiScreen {
             public void onClick() {
                 SoundManager.getSound("click").playSingle(1);
                 Logger.info("clicked");
-                Main.run(() -> GameData.setCurrentGame(new DevMinigame()));
+                ToRun.run(() -> GameData.setCurrentGame(new DevMinigame()));
             }
         });
 
@@ -73,7 +74,7 @@ public class MenuScreen extends UiScreen {
             public void onClick() {
                 SoundManager.getSound("click").playSingle(1);
                 Logger.info("clicked");
-                Main.run(() -> GameData.setCurrentGame(new HerdSheepMinigame()));
+                ToRun.run(() -> GameData.setCurrentGame(new HerdSheepMinigame()));
             }
         });
 

@@ -34,14 +34,35 @@ particle-star
   index: -1
 player
   rotate: false
-  xy: 2, 2
+  xy: 36, 36
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+sheep
+  rotate: false
+  xy: 68, 84
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+tilesets/grass
+  rotate: false
+  xy: 294, 360
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+tilesets/grass-export
+  rotate: false
+  xy: 294, 360
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 tilesets/kitchen_tiles
   rotate: false
-  xy: 294, 360
+  xy: 2, 2
   size: 16, 16
   orig: 16, 16
   offset: 0, 0

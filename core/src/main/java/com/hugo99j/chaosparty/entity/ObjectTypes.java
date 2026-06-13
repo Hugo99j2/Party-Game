@@ -17,6 +17,7 @@ public class ObjectTypes {
     public static final ObjectType<TreasureSpawnerObject> TREASURE_SPAWNER = registerObjectType(new ObjectType<>("treasure_spawner", TreasureSpawnerObject::read));
     public static final ObjectType<Hog> HOG = registerObjectType(new ObjectType<>("hog", Hog::read));
     public static final ObjectType<Button> BUTTON = registerObjectType(new ObjectType<>("button", Button::read));
+    public static final ObjectType<Sheep> SHEEP = registerObjectType(new ObjectType<>("sheep", Sheep::read));
 
     private static <T extends AbstractObject> ObjectType<T> registerObjectType(ObjectType<T> type) {
         types.put(type.id(), type);

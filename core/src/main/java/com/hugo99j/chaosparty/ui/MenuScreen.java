@@ -15,6 +15,7 @@ import com.daniel99j.dungeongame.util.RenderUtil;
 import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.Main;
 import com.hugo99j.chaosparty.minigame.DevMinigame;
+import com.hugo99j.chaosparty.minigame.HerdSheepMinigame;
 
 /** First screen of the application. Displayed after the application is created. */
 public class MenuScreen extends UiScreen {
@@ -29,6 +30,14 @@ public class MenuScreen extends UiScreen {
             .newChild("play")
             .set("x", "0.5vw")
             .set("y", "0.5vh")
+            .set("xSize", 320)
+            .set("ySize", 64)
+            .set("center", true)
+            .set("scale", 2)
+            .finishChild()
+            .newChild("sheep")
+            .set("x", "0.5vw")
+            .set("y", "0.3vh")
             .set("xSize", 320)
             .set("ySize", 64)
             .set("center", true)
@@ -58,6 +67,16 @@ public class MenuScreen extends UiScreen {
                 Main.run(() -> GameData.setCurrentGame(new DevMinigame()));
             }
         });
+
+        this.addRenderable(new Button("sheep", "button", "Herd Sheep") {
+            @Override
+            public void onClick() {
+                SoundManager.getSound("click").playSingle(1);
+                Logger.info("clicked");
+                Main.run(() -> GameData.setCurrentGame(new HerdSheepMinigame()));
+            }
+        });
+
         //new ScreenSS("0.5vw", "0.7vh", "1", "1", "1", false)
         this.addRenderable(new Text("text", "<colour:blue>Hello world"));
     }

@@ -18,6 +18,8 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.daniel99j.djutil.ValueHolder;
 import com.daniel99j.djutil.pathfinder.PathfindDebugPos;
 import com.daniel99j.djutil.pathfinder.PathfindDebugType;
+import com.daniel99j.dungeongame.sounds.SoundInstance;
+import com.daniel99j.dungeongame.sounds.SoundManager;
 import com.hugo99j.chaosparty.GameData;
 import com.daniel99j.dungeongame.entity.AbstractObject;
 import com.daniel99j.dungeongame.entity.PositionMarker;
@@ -52,7 +54,7 @@ public class Debuggers {
     private static ImGuiImplGlfw imGuiGlfw;
     private static ImGuiImplGl3 imGuiGl3;
     private static InputProcessor tmpProcessor;
-    private static Map<String, ValueHolder<Boolean>> debugOptions = new HashMap<>();
+    private static final Map<String, ValueHolder<Boolean>> debugOptions = new HashMap<>();
     private static UUID selectedObjectId = null;
     private static UUID selectedLightId = null;
     private static Vector2 oldPos;
@@ -61,15 +63,15 @@ public class Debuggers {
     //short for less memory
     private static final ArrayList<Short> fpsCounter = new ArrayList<>();
     private static String createObjectData = null;
-    private static String soundName = null;
     private static final ArrayList<String> logger = new ArrayList<>();
     public static final Map<String, ArrayList<PathfindDebugPos>> pathfindDebuggers = new HashMap<>();
     public static final Map<String, Integer> pathfindDebuggerTimers = new HashMap<>();
     public static Vector2 freecam = Vector2.Zero;
     private static float lastTime = 0;
-    private static ArrayList<String> audioNames = new ArrayList<>();
+    private static int selectedSound = 0;
+    private static final ArrayList<String> audioNames = new ArrayList<>();
     private static int newMapEditorName = 0;
-    private static List<String> newMapNames = new ArrayList<>();
+    private static final List<String> newMapNames = new ArrayList<>();
     private static boolean forceShow = false;
 
     static {
@@ -91,9 +93,7 @@ public class Debuggers {
             debugOptions.put("pixelPerfect", new ValueHolder<>(false));
             debugOptions.put("wireframe", new ValueHolder<>(false));
 
-            for (FileHandle e : Gdx.files.internal(PathUtil.asset("sounds/")).list()) {
-                audioNames.add(e.name());
-            }
+            PathUtil.getFilesIn(PathUtil.asset("sounds/")).forEach(e -> audioNames.add(e.replace("assets/sounds/", "").replace(".mp3", "")));
         }
     }
 
@@ -283,6 +283,35 @@ public class Debuggers {
                 ImGui.begin("Lights");
                 UUID hoveredLight = renderLightSelector();
                 boolean showLights = ImGui.isWindowFocused(ImGuiFocusedFlags.RootAndChildWindows);
+                ImGui.end();
+
+                ImGui.begin("Sounds");
+                if (ImGui.button("Play Sound")) {
+                    try {
+                        SoundManager.getSound(audioNames.get(selectedSound)).playSingle(1);
+                    } catch (Exception e) {
+                        Logger.error("Error playing sound", e);
+                    }
+                }
+                ImGui.sameLine();
+                ImInt newSound = new ImInt(selectedSound);
+                if(ImGui.combo("Sound", newSound, audioNames.toArray(new String[0]))) {
+                    selectedSound = newSound.get();
+                }
+
+                ImGui.separatorText("Active Sounds");
+                int j = 0;
+                for (SoundInstance activeSound : SoundManager.getActiveSounds()) {
+                    if(ImGui.collapsingHeader("'"+activeSound.getName()+"' ("+j+")")) {
+                        ImGui.text("Time for "+j+": "+activeSound.getCurrentTime()+"/"+activeSound.getDuration());
+                        if(ImGui.button("Cancel "+j)) ToRun.run(activeSound::cancel);
+                        if(ImGui.button("Pause "+j)) activeSound.pause();
+                        if(ImGui.button("Play "+j)) activeSound.play();
+                        slider("Pitch "+j, activeSound.getPitch(), activeSound::setPitch, 0, 2, "%.3f");
+                        slider("Volume "+j, activeSound.getVolume(), activeSound::setVolume, 0, 1, "%.3f");
+                    }
+                    j++;
+                }
                 ImGui.end();
 
                 ImGui.begin("Objects");

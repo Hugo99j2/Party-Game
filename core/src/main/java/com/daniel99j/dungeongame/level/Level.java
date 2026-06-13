@@ -28,7 +28,7 @@ public class Level implements Disposable {
     private final ArrayList<StaticObject> staticObjects = new ArrayList<>();
     private int time;
     public RayHandler rayHandler;
-    private final ArrayList<LevelLight> lights = new ArrayList<>();
+    private final ArrayList<LevelLight<?>> lights = new ArrayList<>();
     public final ArrayList<ParticleEffect> particles = new ArrayList<>();
 
     public Level() {
@@ -133,7 +133,7 @@ public class Level implements Disposable {
         return this.getAllObjects().stream().filter((object -> object.getUUID() == uuid)).findFirst().orElse(null);
     }
 
-    public ArrayList<LevelLight> getLights() {
+    public ArrayList<LevelLight<?>> getLights() {
         return this.lights;
     }
 

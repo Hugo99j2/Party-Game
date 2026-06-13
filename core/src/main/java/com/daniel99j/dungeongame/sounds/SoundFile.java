@@ -8,6 +8,7 @@ import com.daniel99j.djutil.Either;
 import com.daniel99j.dungeongame.util.PathUtil;
 
 import java.util.ArrayList;
+import java.util.function.Consumer;
 
 public class SoundFile implements Disposable {
     private final Sound actualAudio;
@@ -28,13 +29,20 @@ public class SoundFile implements Disposable {
     }
 
     public SoundInstance playSingle(float volume, float pitch, float pan) {
-        return play(volume, pitch, pan, this::dispose);
+        return playSingle(volume, pitch, pan, (s) -> {});
     }
 
-    public SoundInstance playSingle(float volume, float pitch, float pan, Runnable onFinish) {
-        return play(volume, pitch, pan, () -> {
-            this.dispose();
-            onFinish.run();
+    public SoundInstance playSingle(float volume, float pitch, float pan, Consumer<SoundInstance> onFinish) {
+        return play(volume, pitch, pan, (s) -> {
+            boolean any = false;
+            for (SoundInstance activeSound : this.getInstances()) {
+                if(activeSound != s) {
+                    any = true;
+                    break;
+                }
+            }
+            if(!any) dispose();
+            onFinish.accept(s);
         });
     }
 
@@ -47,11 +55,11 @@ public class SoundFile implements Disposable {
     }
 
     public SoundInstance play(float volume, float pitch, float pan) {
-        return play(volume, pitch, pan, () -> {});
+        return play(volume, pitch, pan, (s) -> {});
     }
 
 
-    public SoundInstance play(float volume, float pitch, float pan, Runnable onFinish) {
+    public SoundInstance play(float volume, float pitch, float pan, Consumer<SoundInstance> onFinish) {
         SoundInstance i = new SoundInstance(this, volume, pitch, pan, onFinish);
         instances.add(i);
         return i;
@@ -76,5 +84,9 @@ public class SoundFile implements Disposable {
 
     protected ArrayList<SoundInstance> getInstances() {
         return instances;
+    }
+
+    public String getName() {
+        return name;
     }
 }

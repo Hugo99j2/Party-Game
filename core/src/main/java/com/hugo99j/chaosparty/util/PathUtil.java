@@ -1,4 +1,4 @@
-package com.daniel99j.dungeongame.util;
+package com.hugo99j.chaosparty.util;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.tools.texturepacker.TexturePacker;
@@ -67,5 +67,9 @@ public class PathUtil {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static int size() {
+        return files.size();
     }
 }

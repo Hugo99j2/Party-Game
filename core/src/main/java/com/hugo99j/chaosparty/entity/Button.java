@@ -1,12 +1,11 @@
 package com.hugo99j.chaosparty.entity;
 
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.daniel99j.dungeongame.entity.AdvancedObject;
 import com.daniel99j.dungeongame.entity.ObjectType;
 import com.daniel99j.dungeongame.entity.PhysicsSettings;
-import com.daniel99j.dungeongame.util.RenderLayer;
+import com.hugo99j.chaosparty.util.ImageUtil;
+import com.hugo99j.chaosparty.util.RenderLayer;
 import com.google.gson.JsonObject;
 import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.Main;
@@ -15,7 +14,7 @@ public class Button extends AdvancedObject {
     @Override
     public void render() {
         Vector2 pos = this.getPos();
-        GameData.spriteBatch.draw(GameData.atlas.findRegion("button"), pos.x, pos.y, 1, 1);
+        GameData.spriteBatch.draw(ImageUtil.get("button"), pos.x, pos.y, 1, 1);
     }
 
     @Override
@@ -52,5 +51,9 @@ public class Button extends AdvancedObject {
     @Override
     public String toString() {
         return "Button";
+    }
+
+    public static Button createDefault() {
+        return new Button();
     }
 }

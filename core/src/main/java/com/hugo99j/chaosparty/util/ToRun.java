@@ -1,4 +1,4 @@
-package com.daniel99j.dungeongame.util;
+package com.hugo99j.chaosparty.util;
 
 import java.util.ArrayList;
 

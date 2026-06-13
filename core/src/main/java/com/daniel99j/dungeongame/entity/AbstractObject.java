@@ -231,4 +231,9 @@ public abstract class AbstractObject implements Disposable {
         AbstractObject object = (AbstractObject) o;
         return uuid.equals(object.uuid);
     }
+
+    @UsageLimited
+    public void setUUIDReallyUnsafeDoNotUse(UUID uuid) {
+        this.uuid = uuid;
+    }
 }

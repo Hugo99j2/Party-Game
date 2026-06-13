@@ -9,7 +9,7 @@ import com.daniel99j.dungeongame.ui.renderable.ClickType;
 import com.daniel99j.dungeongame.ui.renderable.CursorType;
 import com.daniel99j.dungeongame.ui.renderable.RenderState;
 import com.daniel99j.dungeongame.ui.renderable.Renderable;
-import com.daniel99j.dungeongame.util.RenderUtil;
+import com.hugo99j.chaosparty.util.RenderUtil;
 
 public class Button extends Renderable {
     private NinePatch ninePatch;

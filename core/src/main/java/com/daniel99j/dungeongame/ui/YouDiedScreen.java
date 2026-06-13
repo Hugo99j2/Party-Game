@@ -8,9 +8,9 @@ import com.daniel99j.dungeongame.sounds.SoundManager;
 import com.daniel99j.dungeongame.ui.screenss.ScreenSSBuilder;
 import com.daniel99j.dungeongame.ui.types.Button;
 import com.daniel99j.dungeongame.ui.types.Text;
-import com.daniel99j.dungeongame.util.Logger;
-import com.daniel99j.dungeongame.util.PathUtil;
-import com.daniel99j.dungeongame.util.RenderUtil;
+import com.hugo99j.chaosparty.util.Logger;
+import com.hugo99j.chaosparty.util.PathUtil;
+import com.hugo99j.chaosparty.util.RenderUtil;
 
 /** First screen of the application. Displayed after the application is created. */
 public class YouDiedScreen extends UiScreen {

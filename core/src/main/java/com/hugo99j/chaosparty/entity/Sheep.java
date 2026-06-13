@@ -5,7 +5,8 @@ import com.daniel99j.djutil.NumberUtils;
 import com.daniel99j.dungeongame.entity.AdvancedObject;
 import com.daniel99j.dungeongame.entity.ObjectType;
 import com.daniel99j.dungeongame.entity.PhysicsSettings;
-import com.daniel99j.dungeongame.util.RenderLayer;
+import com.hugo99j.chaosparty.util.ImageUtil;
+import com.hugo99j.chaosparty.util.RenderLayer;
 import com.google.gson.JsonObject;
 import com.hugo99j.chaosparty.GameData;
 
@@ -34,7 +35,7 @@ public class Sheep extends AdvancedObject {
     @Override
     public void render() {
         Vector2 pos = this.getPos();
-        GameData.spriteBatch.draw(GameData.atlas.findRegion("sheep"), pos.x, pos.y, 1, 1);
+        GameData.spriteBatch.draw(ImageUtil.get("sheep"), pos.x, pos.y, 1, 1);
     }
 
     @Override
@@ -64,5 +65,9 @@ public class Sheep extends AdvancedObject {
     @Override
     public String toString() {
         return "Sheep";
+    }
+
+    public static Sheep createDefault() {
+        return new Sheep();
     }
 }

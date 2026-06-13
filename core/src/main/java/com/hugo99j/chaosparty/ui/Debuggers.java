@@ -8,7 +8,6 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Graphics;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
@@ -21,20 +20,19 @@ import com.daniel99j.djutil.pathfinder.PathfindDebugPos;
 import com.daniel99j.djutil.pathfinder.PathfindDebugType;
 import com.daniel99j.dungeongame.NoDebugOption;
 import com.daniel99j.dungeongame.RequiresRefresh;
+import com.daniel99j.dungeongame.entity.ObjectType;
 import com.daniel99j.dungeongame.sounds.SoundInstance;
 import com.daniel99j.dungeongame.sounds.SoundManager;
 import com.hugo99j.chaosparty.GameData;
 import com.daniel99j.dungeongame.entity.AbstractObject;
-import com.daniel99j.dungeongame.entity.PositionMarker;
 import com.daniel99j.dungeongame.entity.TilesetObject;
-import com.daniel99j.dungeongame.entity.TreasureObject;
-import com.daniel99j.dungeongame.util.*;
 import com.daniel99j.dungeongame.level.LevelLight;
 import com.daniel99j.dungeongame.level.LevelLoader;
 import com.daniel99j.dungeongame.level.SaveConfig;
 import com.google.gson.JsonObject;
-import com.hugo99j.chaosparty.minigame.DevMinigame;
+import com.hugo99j.chaosparty.entity.ObjectTypes;
 import com.hugo99j.chaosparty.minigame.MapEditor;
+import com.hugo99j.chaosparty.util.*;
 import imgui.*;
 import imgui.flag.*;
 import imgui.gl3.ImGuiImplGl3;
@@ -193,9 +191,7 @@ public class Debuggers {
                 });
             }
 
-            if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
-                GameData.level.addObject(new TreasureObject(GlobalRunnables.COLLECT_TREASURE, "coin", Color.valueOf("#fcb603")));
-            }
+
 
             if (tmpProcessor != null) { // Restore the input processor after ImGui caught all inputs, see #end()
                 Gdx.input.setInputProcessor(tmpProcessor);
@@ -277,6 +273,10 @@ public class Debuggers {
                 }
 
                 ImGui.text("Current FPS: " + Gdx.graphics.getFramesPerSecond());
+
+                ImGui.text("Cached images: " + ImageUtil.size());
+                ImGui.text("Cached files: " + PathUtil.size());
+                ImGui.text("Cached sounds: " + SoundManager.size());
 
                 ImGui.end();
 
@@ -416,6 +416,16 @@ public class Debuggers {
                     Logger.error("Error creating object", e);
                 }
             }
+
+            ImGui.separatorText("Default Objects");
+            ObjectTypes.types.forEach((n, c) -> {
+                if(ImGui.button("Create " + n)) {
+                    AbstractObject object = c.constructor().get();
+                    GameData.getLevelOrThrow().addObject(object);
+                    createObjectData = null;
+                    selectedObjectId = object.getUUID();
+                }
+            });
         }
     }
 
@@ -532,10 +542,13 @@ public class Debuggers {
 
             if (ImGui.button("Refresh")) {
                 try {
-                    JsonObject data = selectedObject.write();
-                    AbstractObject o = LevelLoader.createObject(data, GameData.level);
-                    selectedObject.dispose();
-                    selectedObjectId = o.getUUID();
+                    ToRun.run(() -> {
+                        JsonObject data = selectedObject.write();
+                        AbstractObject o = LevelLoader.createObject(data, GameData.level);
+                        selectedObject.dispose();
+                        selectedObject.setUUIDReallyUnsafeDoNotUse(UUID.randomUUID());
+                        selectedObjectId = o.getUUID();
+                    });
                 } catch (Exception e) {
                     Logger.error("Error refreshing object", e);
                 }
@@ -544,27 +557,20 @@ public class Debuggers {
             ImGui.sameLine();
 
             if (ImGui.button("Duplicate")) {
-                if(selectedObject instanceof PositionMarker m) {
-                    GameData.level.addObject(new PositionMarker(m));
-                } else {
-                    try {
-                        JsonObject data = selectedObject.write();
-                        data.addProperty("uuid", UUID.randomUUID().toString());
-                        AbstractObject o = LevelLoader.createObject(data, GameData.level);
-                        selectedObjectId = o.getUUID();
-                    } catch (Exception e) {
-                        Logger.error("Error duplicating object", e);
-                    }
+                try {
+                    JsonObject data = selectedObject.write();
+                    data.addProperty("uuid", UUID.randomUUID().toString());
+                    AbstractObject o = LevelLoader.createObject(data, GameData.level);
+                    selectedObjectId = o.getUUID();
+                } catch (Exception e) {
+                    Logger.error("Error duplicating object", e);
                 }
             }
-
             ImGui.sameLine();
 
             if (ImGui.button("Delete")) {
-                if(selectedObject instanceof PositionMarker p) p.delete();
                 GameData.level.removeObject(selectedObject);
             }
-
         }
 
         ImGui.endChild();
@@ -799,7 +805,7 @@ public class Debuggers {
 //
 //            ImGui.sameLine();
 //
-//            if (ImGui.button("Delete")) {
+//            if (ImGui.button("c.constructor().get()")) {
 //                GameConstants.level.removeObject(selectedObject);
 //            }
 //
@@ -826,9 +832,13 @@ public class Debuggers {
     }
 
     private static void slider(String name, float getter, Consumer<Float> setter, float min, float max, String format) {
-        float[] check = {getter};
-        if (ImGui.sliderFloat(name, check, min, max, format)) {
-            setter.accept(check[0]);
+        if (Float.isFinite(min) && Float.isFinite(max)) {
+            float[] check = {getter};
+            if (ImGui.sliderFloat(name, check, min, max, format)) {
+                setter.accept(check[0]);
+            }
+        } else {
+            ImGui.text("Invalid bounds for slider "+name);
         }
     }
 
@@ -955,13 +965,13 @@ public class Debuggers {
                 setter.accept((T) (Object) check.get());
             }
         } else if(type.equals(String.class)) {
-            ImString check = new ImString((String) current);
-            if(ImGui.inputText(name, check)) {
+            ImString check = new ImString((String) current, ((String) current).length()+10000);
+            if(ImGui.inputText(name, check, ImGuiInputTextFlags.EnterReturnsTrue)) {
                 setter.accept((T) check.get());
             }
         } else if(type.equals(UUID.class)) {
             ImString check = new ImString(current.toString());
-            if(ImGui.inputText(name, check)) {
+            if(ImGui.inputText(name, check, ImGuiInputTextFlags.EnterReturnsTrue)) {
                 setter.accept((T) UUID.fromString(check.get()));
             }
         } else if(type.equals(Boolean.class)) {

@@ -5,13 +5,15 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.daniel99j.dungeongame.entity.*;
 import com.daniel99j.dungeongame.sounds.SoundManager;
 import com.hugo99j.chaosparty.ui.Debuggers;
-import com.daniel99j.dungeongame.util.GlobalRunnables;
-import com.daniel99j.dungeongame.util.RenderLayer;
-import com.daniel99j.dungeongame.util.ToRun;
+import com.hugo99j.chaosparty.util.GlobalRunnables;
+import com.hugo99j.chaosparty.util.ImageUtil;
+import com.hugo99j.chaosparty.util.RenderLayer;
+import com.hugo99j.chaosparty.util.ToRun;
 import com.google.gson.JsonObject;
 import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.Main;
@@ -69,7 +71,7 @@ public class Player extends AdvancedObject {
             pos.x = Math.round(pos.x/m)*m;
             pos.y = Math.round(pos.y/m)*m;
         }
-        GameData.spriteBatch.draw(GameData.atlas.findRegion("player"), pos.x, pos.y, 1, 1);
+        GameData.spriteBatch.draw(ImageUtil.get("player"), pos.x, pos.y, 1, 1);
         //pixelPerfect
     }
 
@@ -77,6 +79,9 @@ public class Player extends AdvancedObject {
     public void onAdd(boolean fromLoad) {
         super.onAdd(fromLoad);
         Main.tempPlayer = this;
+        Filter f = new Filter();
+        f.categoryBits = CollisionCategories.PLAYER;
+        this.getPhysics().getFixtureList().get(0).setFilterData(f);
     }
 
     @Override
@@ -117,5 +122,9 @@ public class Player extends AdvancedObject {
     @Override
     public String toString() {
         return "Player";
+    }
+
+    public static Player createDefault() {
+        return new Player();
     }
 }

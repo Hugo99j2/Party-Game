@@ -10,8 +10,8 @@ import com.daniel99j.dungeongame.ui.UiScreen;
 import com.daniel99j.dungeongame.ui.screenss.ScreenSSBuilder;
 import com.daniel99j.dungeongame.ui.types.Button;
 import com.daniel99j.dungeongame.ui.types.Text;
-import com.daniel99j.dungeongame.util.PathUtil;
-import com.daniel99j.dungeongame.util.ToRun;
+import com.hugo99j.chaosparty.util.PathUtil;
+import com.hugo99j.chaosparty.util.ToRun;
 import com.hugo99j.chaosparty.GameData;
 
 /** First screen of the application. Displayed after the application is created. */

@@ -1,7 +1,6 @@
 package com.hugo99j.chaosparty.entity;
 
 import com.daniel99j.dungeongame.entity.*;
-import com.daniel99j.dungeongame.entity.living.Hog;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,15 +8,12 @@ import java.util.Map;
 public class ObjectTypes {
     public static final Map<String, ObjectType<?>> types = new HashMap<>();
 
-    public static final ObjectType<Player> PLAYER = registerObjectType(new ObjectType<>("player", Player::read));
-    public static final ObjectType<SpriteObject> SPRITE = registerObjectType(new ObjectType<>("sprite", SpriteObject::read));
-    public static final ObjectType<PositionMarker> POS_MARKER = registerObjectType(new ObjectType<>("pos_marker", PositionMarker::read));
-    public static final ObjectType<TilesetObject> TILESET = registerObjectType(new ObjectType<>("tileset", TilesetObject::read));
-    public static final ObjectType<TreasureObject> TREASURE = registerObjectType(new ObjectType<>("treasure", TreasureObject::read));
-    public static final ObjectType<TreasureSpawnerObject> TREASURE_SPAWNER = registerObjectType(new ObjectType<>("treasure_spawner", TreasureSpawnerObject::read));
-    public static final ObjectType<Hog> HOG = registerObjectType(new ObjectType<>("hog", Hog::read));
-    public static final ObjectType<Button> BUTTON = registerObjectType(new ObjectType<>("button", Button::read));
-    public static final ObjectType<Sheep> SHEEP = registerObjectType(new ObjectType<>("sheep", Sheep::read));
+    public static final ObjectType<Player> PLAYER = registerObjectType(new ObjectType<>("player", Player::read, Player::createDefault));
+    public static final ObjectType<SpriteObject> SPRITE = registerObjectType(new ObjectType<>("sprite", SpriteObject::read, SpriteObject::createDefault));
+    public static final ObjectType<TilesetObject> TILESET = registerObjectType(new ObjectType<>("tileset", TilesetObject::read, TilesetObject::createDefault));
+    public static final ObjectType<Button> BUTTON = registerObjectType(new ObjectType<>("button", Button::read, Button::createDefault));
+    public static final ObjectType<Sheep> SHEEP = registerObjectType(new ObjectType<>("sheep", Sheep::read, Sheep::createDefault));
+    public static final ObjectType<CollisionObject> COLLISION = registerObjectType(new ObjectType<>("collision", CollisionObject::read, CollisionObject::createDefault));;
 
     private static <T extends AbstractObject> ObjectType<T> registerObjectType(ObjectType<T> type) {
         types.put(type.id(), type);

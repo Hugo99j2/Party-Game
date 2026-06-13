@@ -6,7 +6,8 @@ import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.daniel99j.dungeongame.RequiresRefresh;
 import com.hugo99j.chaosparty.GameData;
-import com.daniel99j.dungeongame.util.RenderLayer;
+import com.hugo99j.chaosparty.util.ImageUtil;
+import com.hugo99j.chaosparty.util.RenderLayer;
 import com.google.gson.JsonObject;
 import com.hugo99j.chaosparty.entity.ObjectTypes;
 
@@ -28,7 +29,7 @@ public class SpriteObject extends StaticObject {
         super();
         this.sprite = sprite;
         this.hitbox = new PolygonShape();
-        this.size = new Vector2((GameData.atlas.findRegion(sprite).packedWidth / 16.0f)*scale, (GameData.atlas.findRegion(sprite).packedHeight / 16.0f)*scale);
+        this.size = new Vector2((ImageUtil.get(sprite).packedWidth / 16.0f)*scale, (ImageUtil.get(sprite).packedHeight / 16.0f)*scale);
 
         this.hitbox.setAsBox(this.size.x/2, this.size.y/2, new Vector2(0.5f*scale, 0.5f*scale), 0);
         this.scale = scale;
@@ -51,7 +52,7 @@ public class SpriteObject extends StaticObject {
 
     @Override
     public void render() {
-        GameData.spriteBatch.draw(GameData.atlas.findRegion(sprite), flipX ? this.getPos().x+this.size.x : this.getPos().x, flipY ? this.getPos().y+this.size.y : this.getPos().y, flipX ? -this.size.x : this.size.x, flipY ? -this.size.y : this.size.y);
+        GameData.spriteBatch.draw(ImageUtil.get(sprite), flipX ? this.getPos().x+this.size.x : this.getPos().x, flipY ? this.getPos().y+this.size.y : this.getPos().y, flipX ? -this.size.x : this.size.x, flipY ? -this.size.y : this.size.y);
     }
 
     public void setSprite(String sprite) {
@@ -103,5 +104,9 @@ public class SpriteObject extends StaticObject {
             "sprite='" + sprite + '\'' +
             ", scale=" + scale +
             '}';
+    }
+
+    public static SpriteObject createDefault() {
+        return new SpriteObject("sheep");
     }
 }

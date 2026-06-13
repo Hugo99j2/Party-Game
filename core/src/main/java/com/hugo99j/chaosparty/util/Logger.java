@@ -1,4 +1,4 @@
-package com.daniel99j.dungeongame.util;
+package com.hugo99j.chaosparty.util;
 
 import com.hugo99j.chaosparty.ui.Debuggers;
 

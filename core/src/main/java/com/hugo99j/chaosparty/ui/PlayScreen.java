@@ -1,9 +1,7 @@
 package com.hugo99j.chaosparty.ui;
 
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Texture;
 import com.hugo99j.chaosparty.GameData;
-import com.daniel99j.dungeongame.util.PathUtil;
 
 /** First screen of the application. Displayed after the application is created. */
 public class PlayScreen implements Screen {

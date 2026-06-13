@@ -3,8 +3,7 @@ package com.daniel99j.dungeongame.ui.types;
 import com.badlogic.gdx.utils.Align;
 import com.daniel99j.dungeongame.ui.renderable.RenderState;
 import com.daniel99j.dungeongame.ui.renderable.Renderable;
-import com.daniel99j.dungeongame.ui.screenss.ScreenSS;
-import com.daniel99j.dungeongame.util.RenderUtil;
+import com.hugo99j.chaosparty.util.RenderUtil;
 
 public class Text extends Renderable {
     private final String text;

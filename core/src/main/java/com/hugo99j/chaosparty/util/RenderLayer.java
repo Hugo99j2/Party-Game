@@ -1,4 +1,4 @@
-package com.daniel99j.dungeongame.util;
+package com.hugo99j.chaosparty.util;
 
 public class RenderLayer {
     private static int current = 0;

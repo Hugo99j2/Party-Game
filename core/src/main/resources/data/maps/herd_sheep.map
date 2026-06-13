@@ -1,38 +1,10 @@
 {
   "objects": [
     {
-      "x": 8.811767,
-      "y": 6.1061983,
+      "x": 5.014999,
+      "y": 3.4107187,
       "uuid": "f04eda4c-7780-4b80-905e-34fe94000d0a",
       "type": "player",
-      "custom_data": {}
-    },
-    {
-      "x": 24.93008,
-      "y": 4.1955113,
-      "uuid": "d21e211f-4939-4e2e-8bbf-9ba5489824e6",
-      "type": "sheep",
-      "custom_data": {}
-    },
-    {
-      "x": 13.000143,
-      "y": 4.82711,
-      "uuid": "d7ead148-cae0-44ad-95a0-e8158b222a2d",
-      "type": "sheep",
-      "custom_data": {}
-    },
-    {
-      "x": 13.670392,
-      "y": -2.902502,
-      "uuid": "3c507f3f-18e0-4b1f-811d-32499002ad67",
-      "type": "sheep",
-      "custom_data": {}
-    },
-    {
-      "x": 6.510245,
-      "y": 2.3124874,
-      "uuid": "65abd641-929e-41b4-ad55-12c75d3f5b5a",
-      "type": "sheep",
       "custom_data": {}
     },
     {
@@ -47,16 +19,139 @@
       }
     },
     {
-      "x": 3.0,
-      "y": 4.0,
-      "uuid": "963d3200-8db6-47e5-b7cc-145bef8ec558",
+      "x": -0.0,
+      "y": 1.0,
+      "uuid": "6c83c27a-9da8-4651-b1f4-41579e747692",
+      "type": "tileset",
+      "custom_data": {
+        "width": 1,
+        "height": 7,
+        "sprite": "tilesets/fence_tb"
+      }
+    },
+    {
+      "x": 15.0,
+      "y": 1.0,
+      "uuid": "eaaea0b7-2053-491b-a8e1-4bd3c817ba33",
+      "type": "tileset",
+      "custom_data": {
+        "width": 1,
+        "height": 7,
+        "sprite": "tilesets/fence_tb"
+      }
+    },
+    {
+      "x": 1.0,
+      "y": 0.0,
+      "uuid": "82d1eea1-4806-48f3-bef8-c84c652c1e74",
+      "type": "tileset",
+      "custom_data": {
+        "width": 14,
+        "height": 1,
+        "sprite": "tilesets/fence_lr"
+      }
+    },
+    {
+      "x": 1.0,
+      "y": 8.0,
+      "uuid": "063f7af1-c0e8-4aed-b80d-7769d995ea71",
+      "type": "tileset",
+      "custom_data": {
+        "width": 14,
+        "height": 1,
+        "sprite": "tilesets/fence_lr"
+      }
+    },
+    {
+      "x": -0.0,
+      "y": 8.0,
+      "uuid": "ce3e79a7-534a-45e1-b0cf-f5c4c787cc44",
       "type": "sprite",
       "custom_data": {
-        "sprite": "sheep",
-        "scale": 5.0,
+        "sprite": "fence_tc",
+        "scale": 1.0,
         "flipX": false,
         "flipY": false,
         "hitbox": false
+      }
+    },
+    {
+      "x": 15.0,
+      "y": 8.0,
+      "uuid": "fb91eebe-4d0f-40db-a79c-eae345d4c57f",
+      "type": "sprite",
+      "custom_data": {
+        "sprite": "fence_tc",
+        "scale": 1.0,
+        "flipX": true,
+        "flipY": false,
+        "hitbox": false
+      }
+    },
+    {
+      "x": 15.0,
+      "y": 0.0,
+      "uuid": "0bbb292f-3bbe-4e89-9e49-376dcb5748ca",
+      "type": "sprite",
+      "custom_data": {
+        "sprite": "fence_bc",
+        "scale": 1.0,
+        "flipX": true,
+        "flipY": false,
+        "hitbox": false
+      }
+    },
+    {
+      "x": 0.0,
+      "y": 0.0,
+      "uuid": "f5eaf6e2-9225-444a-a038-f241aeaed84e",
+      "type": "sprite",
+      "custom_data": {
+        "sprite": "fence_bc",
+        "scale": 1.0,
+        "flipX": false,
+        "flipY": false,
+        "hitbox": false
+      }
+    },
+    {
+      "x": 0.0,
+      "y": -0.113000005,
+      "uuid": "880deda7-18a8-4cfa-9c94-b98a0554ce4e",
+      "type": "collision",
+      "custom_data": {
+        "sizeX": 16.0,
+        "sizeY": 1.0
+      }
+    },
+    {
+      "x": 0.0,
+      "y": 7.9990005,
+      "uuid": "353450a2-dd44-43b8-8d8d-adf9b5ea6e9e",
+      "type": "collision",
+      "custom_data": {
+        "sizeX": 16.0,
+        "sizeY": 1.0
+      }
+    },
+    {
+      "x": -0.345,
+      "y": 0.0,
+      "uuid": "2f362aec-9bf3-47e2-90a9-21a48198fc7f",
+      "type": "collision",
+      "custom_data": {
+        "sizeX": 1.0,
+        "sizeY": 9.0
+      }
+    },
+    {
+      "x": 15.345,
+      "y": 0.0,
+      "uuid": "9199186f-785a-492a-83ce-0650a1167d0d",
+      "type": "collision",
+      "custom_data": {
+        "sizeX": 1.0,
+        "sizeY": 9.0
       }
     }
   ],

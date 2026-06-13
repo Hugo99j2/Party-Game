@@ -10,9 +10,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Disposable;
 import com.hugo99j.chaosparty.GameData;
 import com.daniel99j.dungeongame.entity.*;
-import com.daniel99j.dungeongame.sounds.SoundManager;
 import com.hugo99j.chaosparty.ui.Debuggers;
-import com.daniel99j.dungeongame.util.Logger;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;

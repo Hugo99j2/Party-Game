@@ -1,11 +1,9 @@
 package com.daniel99j.dungeongame.sounds;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.utils.Disposable;
-import com.daniel99j.djutil.Either;
-import com.daniel99j.dungeongame.util.PathUtil;
+import com.hugo99j.chaosparty.util.PathUtil;
 
 import java.util.ArrayList;
 import java.util.function.Consumer;

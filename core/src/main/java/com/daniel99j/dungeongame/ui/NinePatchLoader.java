@@ -2,8 +2,9 @@ package com.daniel99j.dungeongame.ui;
 
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.hugo99j.chaosparty.GameData;
-import com.daniel99j.dungeongame.util.GsonUtil;
-import com.daniel99j.dungeongame.util.PathUtil;
+import com.hugo99j.chaosparty.util.GsonUtil;
+import com.hugo99j.chaosparty.util.ImageUtil;
+import com.hugo99j.chaosparty.util.PathUtil;
 import com.google.gson.JsonObject;
 
 import java.util.HashMap;
@@ -17,7 +18,7 @@ public class NinePatchLoader {
         if(patches.containsKey(name)) return patches.get(name);
         try {
             JsonObject data = GsonUtil.parse(PathUtil.get(PathUtil.texture("ui/"+name+".json"), true));
-            NinePatch patch = new NinePatch(GameData.atlas.findRegion("ui/"+name), data.get("left").getAsInt(), data.get("right").getAsInt(), data.get("top").getAsInt(), data.get("bottom").getAsInt());
+            NinePatch patch = new NinePatch(ImageUtil.get("ui/"+name), data.get("left").getAsInt(), data.get("right").getAsInt(), data.get("top").getAsInt(), data.get("bottom").getAsInt());
             patches.put(name, patch);
             return patch;
         } catch (Exception e) {

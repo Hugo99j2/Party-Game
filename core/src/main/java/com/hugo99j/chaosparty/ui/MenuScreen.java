@@ -1,20 +1,16 @@
 package com.hugo99j.chaosparty.ui;
 
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.daniel99j.dungeongame.sounds.SoundManager;
 import com.daniel99j.dungeongame.ui.UiScreen;
 import com.daniel99j.dungeongame.ui.screenss.ScreenSSBuilder;
 import com.daniel99j.dungeongame.ui.types.Button;
 import com.daniel99j.dungeongame.ui.types.Text;
-import com.daniel99j.dungeongame.util.Logger;
-import com.daniel99j.dungeongame.util.PathUtil;
-import com.daniel99j.dungeongame.util.RenderUtil;
-import com.daniel99j.dungeongame.util.ToRun;
+import com.hugo99j.chaosparty.util.Logger;
+import com.hugo99j.chaosparty.util.PathUtil;
+import com.hugo99j.chaosparty.util.ToRun;
 import com.hugo99j.chaosparty.GameData;
-import com.hugo99j.chaosparty.Main;
 import com.hugo99j.chaosparty.minigame.DevMinigame;
 import com.hugo99j.chaosparty.minigame.HerdSheepMinigame;
 

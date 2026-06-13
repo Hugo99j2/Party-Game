@@ -1,4 +1,4 @@
-package com.daniel99j.dungeongame.util;
+package com.hugo99j.chaosparty.util;
 
 import com.badlogic.gdx.math.Vector2;
 import com.google.gson.*;

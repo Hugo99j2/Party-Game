@@ -2,14 +2,15 @@ package com.daniel99j.dungeongame.entity;
 
 import com.badlogic.gdx.math.Vector2;
 import com.hugo99j.chaosparty.GameData;
-import com.daniel99j.dungeongame.util.RenderLayer;
+import com.hugo99j.chaosparty.util.ImageUtil;
+import com.hugo99j.chaosparty.util.RenderLayer;
 import com.google.gson.JsonObject;
 import com.hugo99j.chaosparty.entity.ObjectTypes;
 
 public class TilesetObject extends StaticObject {
     private int width = 1;
     private int height = 1;
-    private final String sprite;
+    private String sprite;
     private final Vector2 size;
 
     public TilesetObject(String sprite, int width, int height) {
@@ -17,7 +18,7 @@ public class TilesetObject extends StaticObject {
         this.width = width;
         this.height = height;
         //slightly extra so that
-        this.size = new Vector2((GameData.atlas.findRegion(this.sprite).packedWidth / 16.0f), (GameData.atlas.findRegion(this.sprite).packedHeight / 16.0f));
+        this.size = new Vector2((ImageUtil.get(this.sprite).packedWidth / 16.0f), (ImageUtil.get(this.sprite).packedHeight / 16.0f));
     }
 
     @Override
@@ -30,7 +31,7 @@ public class TilesetObject extends StaticObject {
         for (float x = 0; x < this.width*this.size.x; x+=this.size.x) {
             for (float y = 0; y < this.height*this.size.y; y+=this.size.y) {
                 //slightly more so that it doesnt have seams
-                GameData.spriteBatch.draw(GameData.atlas.findRegion(sprite), this.getPos().x+x, this.getPos().y+y, this.size.x+0.0001f, this.size.y+0.0001f);
+                GameData.spriteBatch.draw(ImageUtil.get(sprite), this.getPos().x+x, this.getPos().y+y, this.size.x+0.0000000000000001f, this.size.y+0.0000000000000001f);
             }
         }
     }
@@ -75,5 +76,9 @@ public class TilesetObject extends StaticObject {
 
     public void setHeight(int height) {
         this.height = height;
+    }
+
+    public static TilesetObject createDefault() {
+        return new TilesetObject("sheep", 2, 2);
     }
 }

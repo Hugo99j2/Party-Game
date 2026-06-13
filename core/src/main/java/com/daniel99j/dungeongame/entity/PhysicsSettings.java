@@ -15,6 +15,6 @@ public record PhysicsSettings(BodyDef.BodyType bodyType, Shape shape, float dens
     }
 
     public static PhysicsSettings immovable(float sizeX, float sizeY, float xOffset, float yOffset) {
-        return create(sizeX, sizeY, xOffset, yOffset, Float.MAX_VALUE, Float.MAX_VALUE);
+        return create(sizeX, sizeY, xOffset, yOffset, 999999999, 999999999);
     }
 }

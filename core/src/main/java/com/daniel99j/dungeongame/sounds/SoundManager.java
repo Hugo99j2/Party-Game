@@ -30,4 +30,8 @@ public class SoundManager {
 
         return out;
     }
+
+    public static int size() {
+        return loadedFiles.size();
+    }
 }

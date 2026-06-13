@@ -16,7 +16,7 @@ import com.daniel99j.djutil.pathfinder.PathfinderOptions;
 import com.daniel99j.dungeongame.entity.AbstractObject;
 import com.hugo99j.chaosparty.ui.Debuggers;
 import com.hugo99j.chaosparty.ui.PlayScreen;
-import com.daniel99j.dungeongame.util.PathUtil;
+import com.hugo99j.chaosparty.util.PathUtil;
 import com.daniel99j.dungeongame.level.Level;
 import com.hugo99j.chaosparty.minigame.AbstractMinigame;
 import org.jetbrains.annotations.Nullable;

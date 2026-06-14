@@ -8,6 +8,34 @@
       "custom_data": {}
     },
     {
+      "x": 1.241,
+      "y": 6.552,
+      "uuid": "f5943e33-fc61-4eeb-8d3b-52c655207055",
+      "type": "sheep",
+      "custom_data": {}
+    },
+    {
+      "x": 1.448,
+      "y": 5.38,
+      "uuid": "67616e86-9600-44de-a981-b99e7e21fd61",
+      "type": "sheep",
+      "custom_data": {}
+    },
+    {
+      "x": 1.104,
+      "y": 3.794,
+      "uuid": "80ef788c-68dc-4475-85d1-b19ab9f07764",
+      "type": "sheep",
+      "custom_data": {}
+    },
+    {
+      "x": 1.104,
+      "y": 3.794,
+      "uuid": "0efa995c-71f0-4c82-849e-3a328940f2ad",
+      "type": "sheep",
+      "custom_data": {}
+    },
+    {
       "x": -0.0,
       "y": -7.0,
       "uuid": "f33e3a0e-d62f-49ca-87dc-491f40578537",

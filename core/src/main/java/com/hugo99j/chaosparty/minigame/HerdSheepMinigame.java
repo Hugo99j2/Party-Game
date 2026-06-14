@@ -1,10 +1,13 @@
 package com.hugo99j.chaosparty.minigame;
 
 import com.badlogic.gdx.utils.Align;
+import com.daniel99j.dungeongame.entity.AdvancedObject;
 import com.daniel99j.dungeongame.ui.renderable.RenderState;
 import com.daniel99j.dungeongame.ui.screenss.CombinedScreenSS;
 import com.daniel99j.dungeongame.ui.screenss.ScreenSSBuilder;
+import com.hugo99j.chaosparty.entity.Sheep;
 import com.hugo99j.chaosparty.match.MatchView;
+import com.hugo99j.chaosparty.util.Logger;
 import com.hugo99j.chaosparty.util.RenderUtil;
 import com.hugo99j.chaosparty.util.ToRun;
 import com.hugo99j.chaosparty.GameData;
@@ -15,6 +18,7 @@ import java.util.List;
 
 public class HerdSheepMinigame extends AbstractMinigame {
     private Timer timer;
+    private int counter;
     private CombinedScreenSS ss = ScreenSSBuilder.create()
         .set("x", "0.1vw")
         .set("y", "0.1vh")
@@ -42,6 +46,13 @@ public class HerdSheepMinigame extends AbstractMinigame {
 
     @Override
     public void tick() {
+        counter = 0;
+        for (AdvancedObject advancedObject : GameData.getLevelOrThrow().getAdvancedObjects()) {
+            if (advancedObject instanceof Sheep sheep && sheep.getPos().y > 5) {
+                counter ++;
+            }
+        }
+//        Logger.info(counter);
         if(timer.getSeconds() <= 0) {
             ToRun.run(() -> {
                 GameData.getCurrentMatch().finishCurrentMinigame();

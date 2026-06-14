@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -18,7 +19,7 @@ import com.hugo99j.chaosparty.ui.Debuggers;
 public class MatchView implements Disposable {
     private FrameBuffer fbo = new FrameBuffer(Pixmap.Format.RGBA8888, GameData.width, GameData.height, false);
     public final OrthographicCamera gameCamera = new OrthographicCamera();
-    public Viewport gameViewport = new FitViewport(16, 9, gameCamera);
+    public Viewport gameViewport = new ExtendViewport(16, 9, gameCamera);
 
     public MatchView() {
         gameViewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
@@ -32,8 +33,8 @@ public class MatchView implements Disposable {
 
         GameData.shapeRenderer.setProjectionMatrix(gameCamera.combined);
         GameData.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        GameData.shapeRenderer.setColor(Color.RED);
-        GameData.shapeRenderer.rect(gameCamera.position.x-10, gameCamera.position.y-10, 1000, 1000);
+        GameData.shapeRenderer.setColor(Color.BLACK);
+        GameData.shapeRenderer.rect(gameCamera.position.x-1000, gameCamera.position.y-1000, 10000, 10000);
         GameData.shapeRenderer.end();
 
         GameData.spriteBatch.setProjectionMatrix(gameCamera.combined);
@@ -68,5 +69,6 @@ public class MatchView implements Disposable {
     public void update() {
         fbo.dispose();
         fbo = new FrameBuffer(Pixmap.Format.RGBA8888, GameData.width, GameData.height, false);
+        gameViewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
     }
 }

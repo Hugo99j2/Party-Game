@@ -82,6 +82,15 @@ public class Main extends Game {
 
         //dont load it before texture packer else it will crash
         GameData.init(this);
+
+        Gdx.input.setInputProcessor(new InputAdapter() {
+            @Override
+            public boolean scrolled(float amountX, float amountY) {
+                if(GameData.getCurrentMatch().getCurrentMinigame() instanceof MapEditor mapEditor) mapEditor.scroll(amountY);
+                return super.scrolled(amountX, amountY);
+            }
+        });
+
         GameData.uiViewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
         GameData.gameViewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
         this.setScreen(new MenuScreen());

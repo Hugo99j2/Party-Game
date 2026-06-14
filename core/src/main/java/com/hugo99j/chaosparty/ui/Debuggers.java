@@ -283,6 +283,10 @@ public class Debuggers {
                 ImGui.text("Cached files: " + PathUtil.size());
                 ImGui.text("Cached sounds: " + SoundManager.size());
 
+                if(GameData.getCurrentMatch() != null) {
+                    slider("x", GameData.getCurrentMatch().getMatchViews().get(0).gameCamera.position.x, (e) -> {GameData.getCurrentMatch().getMatchViews().get(0).gameCamera.position.x = e;}, -10, 10, "%.3f");
+                }
+
                 ImGui.end();
 
                 if(isEnabled("demoWindow")) ImGui.showDemoWindow();
@@ -867,7 +871,8 @@ public class Debuggers {
         float mouseY = ImGui.getMousePosY();
 
         Vector3 screenCoords = new Vector3(mouseX, mouseY, 0);
-        Vector3 worldCoords = GameData.gameCamera.unproject(screenCoords);
+        if(GameData.getCurrentMatch() == null) return null;
+        Vector3 worldCoords = GameData.getCurrentMatch().getMatchViews().getFirst().gameCamera.unproject(screenCoords);
 
         Vector2 point = new Vector2(worldCoords.x, worldCoords.y);
         float range = 0.001f;
@@ -889,7 +894,8 @@ public class Debuggers {
         float mouseY = ImGui.getMousePosY();
 
         Vector3 screenCoords = new Vector3(mouseX, mouseY, 0);
-        Vector3 worldCoords = GameData.gameCamera.unproject(screenCoords);
+        if(GameData.getCurrentMatch() == null) return null;
+        Vector3 worldCoords = GameData.getCurrentMatch().getMatchViews().getFirst().gameCamera.unproject(screenCoords);
 
         Vector2 point = new Vector2(worldCoords.x, worldCoords.y);
         float range = 0.3f;

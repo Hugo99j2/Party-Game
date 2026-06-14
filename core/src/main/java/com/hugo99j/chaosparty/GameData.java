@@ -32,8 +32,6 @@ public class GameData {
     public static final float SECONDS_PER_TICK = 1.0f/TICKS_PER_SECOND;
     public static final float SECONDS_PER_PHYSICS_TICK = 1.0f/TICKS_PER_SECOND/10.0f;
     public static final SpriteBatch spriteBatch = new SpriteBatch();
-    public static final OrthographicCamera gameCamera = new OrthographicCamera();
-    public static Viewport gameViewport = new FitViewport(16, 9, gameCamera);
     public static final OrthographicCamera uiCamera = new OrthographicCamera();
     public static Viewport uiViewport = new ScreenViewport(uiCamera);
     public static final TextureAtlas atlas = new TextureAtlas(Gdx.files.internal(PathUtil.generated("atlases/main.atlas")));

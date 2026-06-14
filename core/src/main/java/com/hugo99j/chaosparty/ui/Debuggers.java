@@ -82,7 +82,7 @@ public class Debuggers {
         if (GameData.DEBUGGING) {
             debugOptions.put("showing", new ValueHolder<>(false));
             debugOptions.put("hitboxes", new ValueHolder<>(false));
-            debugOptions.put("lights", new ValueHolder<>(false));
+            debugOptions.put("lights", new ValueHolder<>(true));
             debugOptions.put("noclip", new ValueHolder<>(false));
             debugOptions.put("selecting", new ValueHolder<>(false));
             debugOptions.put("selectingLight", new ValueHolder<>(false));
@@ -140,7 +140,7 @@ public class Debuggers {
 
         GL30.glPolygonMode(GL30.GL_FRONT_AND_BACK, isEnabled("wireframe") ? GL30.GL_LINE : GL30.GL_FILL);
 
-        GameData.gameViewport.apply();
+        //GameData.gameViewport.apply();
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.GRAVE)) debugOptions.get("showing").object = !isEnabled("showing");
 
@@ -160,7 +160,7 @@ public class Debuggers {
                     for (PathfindDebugPos pathfindDebugPos : debuggers) {
                         float transparency = pathfindDebuggerTimers.get(hash).floatValue()/(5* GameData.TICKS_PER_SECOND);
 
-                        GameData.shapeRenderer.setProjectionMatrix(GameData.gameCamera.combined);
+                        //GameData.shapeRenderer.setProjectionMatrix(GameData.gameCamera.combined);
                         if (pathfindDebugPos.type().equals(PathfindDebugType.SUCCESSFUL_PATH)) {
                             GameData.shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
                             GameData.shapeRenderer.setColor(Color.GREEN.cpy().mul(1, 1, 1, transparency));
@@ -259,8 +259,8 @@ public class Debuggers {
                     if (!s.equals("showing") && !s.equals("selecting") && !s.equals("selectingLight"))
                         if (ImGui.checkbox(s, valueHolder.object)) {
                             valueHolder.object = !valueHolder.object;
-                            if (s.equals("freecam"))
-                                freecam = new Vector2(GameData.gameCamera.position.x, GameData.gameCamera.position.y);
+                            //if (s.equals("freecam"))
+                                //freecam = new Vector2(GameData.gameCamera.position.x, GameData.gameCamera.position.y);
                         }
                 });
 
@@ -284,8 +284,8 @@ public class Debuggers {
                 ImGui.text("Cached files: " + PathUtil.size());
                 ImGui.text("Cached sounds: " + SoundManager.size());
 
-                if(GameData.getCurrentMatch() != null && GameData.getCurrentMatch().getMatchViews() != null) {
-                    slider("zoom", GameData.getCurrentMatch().getMatchViews().get(0).gameCamera.zoom, (e) -> {GameData.getCurrentMatch().getMatchViews().get(0).gameCamera.zoom = e;}, -10, 10, "%.3f");
+                if(GameData.getCurrentMatch() != null && GameData.getCurrentMatch().getMatchViews() != null && !GameData.getCurrentMatch().getMatchViews().isEmpty()) {
+                    slider("zoom", GameData.getCurrentMatch().getMatchViews().getFirst().gameCamera.zoom, (e) -> {GameData.getCurrentMatch().getMatchViews().getFirst().gameCamera.zoom = e;}, -10, 10, "%.3f");
                 }
 
                 ImGui.end();
@@ -342,18 +342,18 @@ public class Debuggers {
                 //DEBUGGERS
 
                 // incase imgui changes the gameViewport
-                GameData.gameCamera.update();
-                GameData.gameViewport.apply();
+//                GameData.gameCamera.update();
+//                GameData.gameViewport.apply();
 
                 if (GameData.level != null) {
 
-                    if (GameData.level != null && isEnabled("hitboxes"))
-                        box2dDebugRenderer.render(GameData.level.getBox2dWorld(), GameData.gameCamera.combined);
+                    //if (GameData.level != null && isEnabled("hitboxes"))
+                        //box2dDebugRenderer.render(GameData.level.getBox2dWorld(), GameData.gameCamera.combined);
 
                     AbstractObject selectedObject;
                     if (hoveredObject != null && (selectedObject = GameData.level.getObjectByUUID(hoveredObject)) != null) {
                         RenderUtil.enableBlending();
-                        GameData.shapeRenderer.setProjectionMatrix(GameData.gameCamera.combined);
+                        //GameData.shapeRenderer.setProjectionMatrix(GameData.gameCamera.combined);
                         GameData.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
                         if (selectedObject.hasPhysics()) {
                             for (Fixture fixture : selectedObject.getPhysics().getFixtureList()) {
@@ -371,7 +371,7 @@ public class Debuggers {
                     if (showLights) for (LevelLight<?> light : GameData.level.getLights()) {
                         Color c = light.light().getColor().cpy();
                         if (light.uuid().equals(hoveredLight)) c = Color.YELLOW;
-                        GameData.shapeRenderer.setProjectionMatrix(GameData.gameCamera.combined);
+                        //GameData.shapeRenderer.setProjectionMatrix(GameData.gameCamera.combined);
                         GameData.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
                         GameData.shapeRenderer.setColor(c);
                         GameData.shapeRenderer.circle(light.light().getPosition().x, light.light().getPosition().y, 0.2f, 20);

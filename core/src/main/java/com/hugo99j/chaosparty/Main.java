@@ -91,7 +91,7 @@ public class Main extends Game {
         });
 
         GameData.uiViewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
-        GameData.gameViewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
+        //GameData.gameViewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
         this.setScreen(new MenuScreen());
 
         Debuggers.init();
@@ -107,7 +107,7 @@ public class Main extends Game {
         GameData.height = height;
 
         // Resize your screen here. The parameters represent the new window size.
-        GameData.gameViewport.update(width, height, true);
+        //GameData.gameViewport.update(width, height, true);
         GameData.uiViewport.update(width, height, true);
 
         if(GameData.getCurrentMatch() != null) GameData.getCurrentMatch().updateViews();
@@ -155,8 +155,8 @@ public class Main extends Game {
             runnable.run();
         }
         if (GameData.DEBUGGING && Debuggers.isEnabled("freecam")) {
-            GameData.gameCamera.position.x = Debuggers.freecam.x;
-            GameData.gameCamera.position.y = Debuggers.freecam.y;
+            //GameData.gameCamera.position.x = Debuggers.freecam.x;
+            //GameData.gameCamera.position.y = Debuggers.freecam.y;
         } else {
 //            if(GameData.player != null) {
 //                GameData.gameCamera.position.x = GameData.player.getPos().x;

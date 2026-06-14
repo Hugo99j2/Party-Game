@@ -62,21 +62,26 @@ public class ReconnectControllersScreen extends UiScreen {
         this.addRenderable(new Button("menu", "button", "Done") {
             @Override
             public void onClick() {
-                boolean connected = true;
-                int i = 0;
-                for (MatchPlayer player : GameData.getCurrentMatch().getPlayers()) {
-                    if(Controllers.getControllers().size <= i) {
-                        connected = false;
-                        break;
-                    }
-                    player.controller = Controllers.getControllers().get(i);
-                    i++;
-                }
-                if(connected) ToRun.run(() -> GameData.MAIN_INSTANCE.setScreen(new PlayScreen()));
+                reconnect();
             }
         });
         //new ScreenSS("0.5vw", "0.7vh", "1", "1", "1", false)
         this.addRenderable(new Text("text", "<colour:red>Please reconnect controllers!"));
+        reconnect();
+    }
+
+    private void reconnect() {
+        boolean connected = true;
+        int i = 0;
+        for (MatchPlayer player : GameData.getCurrentMatch().getPlayers()) {
+            if(Controllers.getControllers().size <= i) {
+                connected = false;
+                break;
+            }
+            player.controller = Controllers.getControllers().get(i);
+            i++;
+        }
+        if(connected) ToRun.run(() -> GameData.MAIN_INSTANCE.setScreen(new PlayScreen()));
     }
 
     @Override

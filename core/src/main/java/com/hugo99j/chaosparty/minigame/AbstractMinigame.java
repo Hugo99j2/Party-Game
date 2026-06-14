@@ -63,12 +63,25 @@ public abstract class AbstractMinigame implements Disposable {
         }
     }
 
-    public void renderSegment(float delta, int segment) {
-        renderWorld(segment);
+    public void renderSegment(float delta, MatchView view) {
+        renderWorld(view);
     }
 
-    protected void renderWorld(int segment) {
+    protected void renderWorld(MatchView view) {
+        GameData.spriteBatch.begin();
 
+        GameData.spriteBatch.enableBlending();
+        GameData.getLevelOrThrow().render();
+
+        GameData.spriteBatch.end();
+
+        if(!GameData.DEBUGGING || Debuggers.isEnabled("lights")) {
+//                GameConstants.gameCamera.update();
+//                GameConstants.gameViewport.apply();
+            GameData.level.rayHandler.useCustomViewport(view.gameViewport.getScreenX(), view.gameViewport.getScreenY(), view.gameViewport.getScreenWidth(), view.gameViewport.getScreenHeight());
+            GameData.level.rayHandler.setCombinedMatrix(view.gameCamera);
+            GameData.level.rayHandler.updateAndRender();
+        }
     }
 
     public String getMapName() {
@@ -90,12 +103,7 @@ public abstract class AbstractMinigame implements Disposable {
     public abstract MinigameScreenLayout getLayout();
 
     public void render(float delta) {
-        int width = 0;
-        int height = 0;
 
-        if(this.getLayout() == MinigameScreenLayout.HALF_HALF) {
-
-        }
     }
 
     public void setupViews(List<MatchView> matchViews) {

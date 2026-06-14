@@ -59,6 +59,8 @@ public class Match {
                 renderView(this.getMatchViews().get(2), 0, 0.5f, 0.5f, 0.5f);
                 if(this.getMatchViews().size() >= 4) renderView(this.getMatchViews().get(3), 0.5f, 0.5f, 0.5f, 0.5f);
             }
+            GameData.uiViewport.apply();
+            GameData.spriteBatch.setProjectionMatrix(GameData.uiCamera.combined);
             this.getCurrentMinigame().render(delta);
         }
     }

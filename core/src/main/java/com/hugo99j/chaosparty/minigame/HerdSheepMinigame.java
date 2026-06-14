@@ -7,7 +7,9 @@ import com.daniel99j.dungeongame.ui.renderable.RenderState;
 import com.daniel99j.dungeongame.ui.screenss.CombinedScreenSS;
 import com.daniel99j.dungeongame.ui.screenss.ScreenSSBuilder;
 import com.hugo99j.chaosparty.entity.Sheep;
+import com.hugo99j.chaosparty.match.MatchPlayer;
 import com.hugo99j.chaosparty.match.MatchView;
+import com.hugo99j.chaosparty.util.ImageUtil;
 import com.hugo99j.chaosparty.util.Logger;
 import com.hugo99j.chaosparty.util.RenderUtil;
 import com.hugo99j.chaosparty.util.ToRun;
@@ -21,7 +23,7 @@ public class HerdSheepMinigame extends AbstractMinigame {
     private Timer timer;
     private int counter;
     private CombinedScreenSS ss = ScreenSSBuilder.create()
-        .set("x", "0.1vw")
+        .set("x", "20")
         .set("y", "0.1vh")
         .set("xSize", "0.02vw")
         .set("ySize", "0.02vh")
@@ -41,7 +43,7 @@ public class HerdSheepMinigame extends AbstractMinigame {
 
     public HerdSheepMinigame() {
         super("herd_sheep");
-        timer = new Timer("timer", 60, 2, false);
+        timer = new Timer("timer", 45, 2, false);
         timer.setStyle(ss.get("timer"));
     }
 
@@ -59,11 +61,15 @@ public class HerdSheepMinigame extends AbstractMinigame {
     }
 
     @Override
-    public void renderSegment(float delta, int segment) {
-        super.renderSegment(delta, segment);
+    public void render(float delta) {
         GameData.spriteBatch.begin();
         timer.render(new RenderState(false, false, false, false, false, false, 0, 0, delta));
-        RenderUtil.renderText("Score: 1", ss.get("score").getX(), ss.get("score").getY(), 1f, 100, Align.left, false);
+        int offset = 0;
+        for (MatchPlayer player : GameData.getCurrentMatch().getPlayers()) {
+            RenderUtil.renderText(player.getName()+": "+GameData.getCurrentMatch().getCurrentMinigame().getScore(player), ss.get("score").getX(), ss.get("score").getY()+offset, 1f, ss.get("score").getXSize(), Align.left, false);
+            offset += 50;
+        }
+        RenderUtil.renderText("Scores: ", ss.get("score").getX(), ss.get("score").getY()+offset, 1f, ss.get("score").getXSize(), Align.left, false);
         GameData.spriteBatch.end();
     }
 

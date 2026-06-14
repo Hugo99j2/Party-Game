@@ -28,4 +28,8 @@ public class MatchPlayer {
             GameData.MAIN_INSTANCE.setScreen(new ReconnectControllersScreen());
         }
     }
+
+    public String getName() {
+        return name;
+    }
 }

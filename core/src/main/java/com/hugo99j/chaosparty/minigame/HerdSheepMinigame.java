@@ -1,5 +1,6 @@
 package com.hugo99j.chaosparty.minigame;
 
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
 import com.daniel99j.dungeongame.entity.AdvancedObject;
 import com.daniel99j.dungeongame.ui.renderable.RenderState;
@@ -46,14 +47,10 @@ public class HerdSheepMinigame extends AbstractMinigame {
 
     @Override
     public void tick() {
-        defaultPlayerMovements();
-        counter = 0;
-        for (AdvancedObject advancedObject : GameData.getLevelOrThrow().getAdvancedObjects()) {
-            if (advancedObject instanceof Sheep sheep && sheep.getPos().y > 5) {
-                counter ++;
-            }
-        }
-//        Logger.info(counter);
+        this.defaultPlayerMovements();
+        this.setScore(GameData.getCurrentMatch().getPlayers().getFirst(), GameData.getLevelOrThrow().getObjectsBetweenClass(new Vector2(0, 18), new Vector2(11, 8), Sheep.class).size());
+        this.setScore(GameData.getCurrentMatch().getPlayers().get(1), GameData.getLevelOrThrow().getObjectsBetweenClass(new Vector2(32, 18), new Vector2(21, 8), Sheep.class).size());
+
         if(timer.getSeconds() <= 0) {
             ToRun.run(() -> {
                 GameData.getCurrentMatch().finishCurrentMinigame();
@@ -66,7 +63,7 @@ public class HerdSheepMinigame extends AbstractMinigame {
         super.renderSegment(delta, segment);
         GameData.spriteBatch.begin();
         timer.render(new RenderState(false, false, false, false, false, false, 0, 0, delta));
-        RenderUtil.renderText("Score: "+this.getScore(0), ss.get("score").getX(), ss.get("score").getY(), 1f, 100, Align.left, false);
+        RenderUtil.renderText("Score: 1", ss.get("score").getX(), ss.get("score").getY(), 1f, 100, Align.left, false);
         GameData.spriteBatch.end();
     }
 

@@ -4,6 +4,7 @@ import com.badlogic.gdx.utils.Align;
 import com.daniel99j.dungeongame.ui.renderable.RenderState;
 import com.daniel99j.dungeongame.ui.screenss.CombinedScreenSS;
 import com.daniel99j.dungeongame.ui.screenss.ScreenSSBuilder;
+import com.hugo99j.chaosparty.match.MatchPlayer;
 import com.hugo99j.chaosparty.match.MatchView;
 import com.hugo99j.chaosparty.util.RenderUtil;
 import com.hugo99j.chaosparty.util.ToRun;
@@ -53,7 +54,7 @@ public class DevMinigame extends AbstractMinigame {
     public void render(float delta) {
         GameData.spriteBatch.begin();
         timer.render(new RenderState(false, false, false, false, false, false, 0, 0, delta));
-        RenderUtil.renderText("Score: "+this.getScore(0), ss.get("score").getX(), ss.get("score").getY(), 1f, 100, Align.left, false);
+        RenderUtil.renderText("Score: 1", ss.get("score").getX(), ss.get("score").getY(), 1f, 100, Align.left, false);
         GameData.spriteBatch.end();
     }
 

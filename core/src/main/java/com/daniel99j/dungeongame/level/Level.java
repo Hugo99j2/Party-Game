@@ -6,14 +6,17 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.QueryCallback;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Disposable;
+import com.daniel99j.djutil.ValueHolder;
 import com.hugo99j.chaosparty.GameData;
 import com.daniel99j.dungeongame.entity.*;
 import com.hugo99j.chaosparty.ui.Debuggers;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Function;
@@ -162,5 +165,23 @@ public class Level implements Disposable {
     public void removeLight(LevelLight<?> light) {
         this.lights.remove(light);
         light.light().remove();
+    }
+
+    public <T> List<T> getObjectsBetweenClass(Vector2 start, Vector2 end, Class<T> clazz) {
+        List<T> objects = new ArrayList<>();
+
+        QueryCallback callback = fixture -> {
+            if (clazz.isInstance(fixture.getBody().getUserData())) //noinspection unchecked
+                objects.add((T) fixture.getBody().getUserData());
+            return true;
+        };
+
+        this.getBox2dWorld().QueryAABB(callback, start.x, start.y, end.x, end.y);
+
+        return objects;
+    }
+
+    public List<AdvancedObject> getObjectsBetween(Vector2 start, Vector2 end) {
+        return this.getObjectsBetweenClass(start, end, AdvancedObject.class);
     }
 }

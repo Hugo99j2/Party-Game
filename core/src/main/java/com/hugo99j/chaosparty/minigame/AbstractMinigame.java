@@ -12,11 +12,13 @@ import com.hugo99j.chaosparty.match.MatchPlayer;
 import com.hugo99j.chaosparty.match.MatchView;
 import com.hugo99j.chaosparty.ui.Debuggers;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public abstract class AbstractMinigame implements Disposable {
     private final String mapName;
-    private int score;
+    private Map<MatchPlayer, Integer> scores = new HashMap<>();
 
     protected AbstractMinigame(String mapName) {
         this.mapName = mapName;
@@ -73,12 +75,16 @@ public abstract class AbstractMinigame implements Disposable {
         return mapName;
     }
 
-    public void addScore(int i, int i1) {
-        score += i1;
+    public void addScore(MatchPlayer player, int score) {
+        setScore(player, getScore(player)+score);
     }
 
-    public int getScore(int i) {
-        return score;
+    public void setScore(MatchPlayer player, int score) {
+        scores.put(player, score);
+    }
+
+    public int getScore(MatchPlayer player) {
+        return scores.getOrDefault(player, 0);
     }
 
     public abstract MinigameScreenLayout getLayout();

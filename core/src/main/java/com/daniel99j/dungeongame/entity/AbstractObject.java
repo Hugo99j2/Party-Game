@@ -43,9 +43,14 @@ public abstract class AbstractObject implements Disposable {
             FixtureDef fixtureDef = new FixtureDef();
             fixtureDef.shape = settings.shape();
             fixtureDef.density = settings.density();
-            this.physics.getRight().createFixture(fixtureDef);
+            Fixture fixture = this.physics.getRight().createFixture(fixtureDef);
             settings.shape().dispose();
             this.physics.getRight().setUserData(this);
+
+            Filter collisionFilter = new Filter();
+            collisionFilter.categoryBits = settings.collisionGroup();
+            collisionFilter.maskBits = settings.collidesWith();
+            fixture.setFilterData(collisionFilter);
         } else {
             this.physics = Either.left(new PositionHolder());
         }

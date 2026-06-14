@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.hugo99j.chaosparty.mixin",
+  "compatibilityLevel": "JAVA_13",
+  "mixins": [
+    "TestMixin"
+  ],
+  "client": [],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

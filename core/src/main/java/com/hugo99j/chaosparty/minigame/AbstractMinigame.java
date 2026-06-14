@@ -4,6 +4,9 @@ import com.badlogic.gdx.utils.Disposable;
 import com.daniel99j.dungeongame.level.LevelLoader;
 import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.Main;
+import com.hugo99j.chaosparty.match.MatchView;
+
+import java.util.List;
 
 public abstract class AbstractMinigame implements Disposable {
     private final String mapName;
@@ -45,5 +48,9 @@ public abstract class AbstractMinigame implements Disposable {
         if(this.getLayout() == MinigameScreenLayout.HALF_HALF) {
 
         }
+    }
+
+    public void setupViews(List<MatchView> matchViews) {
+
     }
 }

@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.tools.texturepacker.TexturePacker;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.daniel99j.dungeongame.sounds.SoundManager;
+import com.hugo99j.chaosparty.minigame.MapEditor;
 import com.hugo99j.chaosparty.ui.Debuggers;
 import com.daniel99j.dungeongame.ui.UiScreen;
 import com.daniel99j.dungeongame.ui.renderable.CursorType;
@@ -35,8 +36,6 @@ public class Main extends Game {
     private int oldXSize, oldYSize;
 
     public static Player tempPlayer;
-
-    private FrameBuffer fbo;
 
     @Override
     public void create() {
@@ -99,11 +98,11 @@ public class Main extends Game {
         GameData.width = width;
         GameData.height = height;
 
-        fbo = new FrameBuffer(Pixmap.Format.RGBA8888, GameData.width, GameData.height, false);
-
         // Resize your screen here. The parameters represent the new window size.
         GameData.gameViewport.update(width, height, true);
         GameData.uiViewport.update(width, height, true);
+
+        if(GameData.getCurrentMatch() != null) GameData.getCurrentMatch().updateViews();
 
         super.resize(width, height);
     }
@@ -160,44 +159,22 @@ public class Main extends Game {
         //fbo.begin();
 
         //GameConstants.gameCamera.update();
-        GameData.gameViewport.apply();
-
-        GameData.spriteBatch.setProjectionMatrix(GameData.gameCamera.combined);
-
-        GameData.shapeRenderer.setProjectionMatrix(GameData.gameCamera.combined);
-        GameData.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        GameData.shapeRenderer.setColor(Color.BLACK);
-        GameData.shapeRenderer.rect(GameData.gameCamera.position.x-10, GameData.gameCamera.position.y-10, 1000, 1000);
-        GameData.shapeRenderer.end();
-
         activeTimer += Gdx.graphics.getDeltaTime();
 
-        if (activeTimer > GameData.SECONDS_PER_PHYSICS_TICK)
+        boolean inMapEditor = GameData.getCurrentMatch() != null && GameData.getCurrentMatch().getCurrentMinigame() instanceof MapEditor;
+        if (activeTimer > GameData.SECONDS_PER_PHYSICS_TICK && (!inMapEditor || (GameData.DEBUGGING && Debuggers.isEnabled("tickMapEditor"))))
             while ((activeTimer -= GameData.SECONDS_PER_PHYSICS_TICK) > 0) {
                 tickTimer+= GameData.SECONDS_PER_PHYSICS_TICK;
                 if(tickTimer >= GameData.SECONDS_PER_TICK) {
                     if(GameData.level != null) GameData.level.tickWorld();
-                    if(GameData.getCurrentGame() != null) GameData.getCurrentGame().tick();
+                    if(GameData.getCurrentMatch() != null) GameData.getCurrentMatch().tick();
                     tickTimer = 0;
                 }
                 if(GameData.level != null) GameData.level.getBox2dWorld().step(GameData.SECONDS_PER_PHYSICS_TICK, 6, 2);
             }
 
 
-        if(GameData.level != null) {
-            GameData.spriteBatch.begin();
-            GameData.spriteBatch.enableBlending();
-            GameData.getLevelOrThrow().render();
-            GameData.spriteBatch.end();
 
-            if(!GameData.DEBUGGING || Debuggers.isEnabled("lights")) {
-//                GameConstants.gameCamera.update();
-//                GameConstants.gameViewport.apply();
-                GameData.level.rayHandler.useCustomViewport(GameData.gameViewport.getScreenX(), GameData.gameViewport.getScreenY(), GameData.gameViewport.getScreenWidth(), GameData.gameViewport.getScreenHeight());
-                GameData.level.rayHandler.setCombinedMatrix(GameData.gameCamera);
-                GameData.level.rayHandler.updateAndRender();
-            }
-        }
 
         //Start UI
         //GameConstants.uiCamera.position.set(0, 0, 0);

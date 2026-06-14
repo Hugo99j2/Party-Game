@@ -14,11 +14,10 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.daniel99j.djutil.pathfinder.PathfindDebugType;
 import com.daniel99j.djutil.pathfinder.PathfinderOptions;
 import com.daniel99j.dungeongame.entity.AbstractObject;
+import com.hugo99j.chaosparty.match.Match;
 import com.hugo99j.chaosparty.ui.Debuggers;
-import com.hugo99j.chaosparty.ui.PlayScreen;
 import com.hugo99j.chaosparty.util.PathUtil;
 import com.daniel99j.dungeongame.level.Level;
-import com.hugo99j.chaosparty.minigame.AbstractMinigame;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -44,16 +43,10 @@ public class GameData {
     public static Main MAIN_INSTANCE;
     public static int width, height;
 
-    private static AbstractMinigame currentGame;
+    private static Match currentMatch;
 
-    public static AbstractMinigame getCurrentGame() {
-        return currentGame;
-    }
-
-    public static void setCurrentGame(AbstractMinigame currentGame) {
-        GameData.currentGame = currentGame;
-        if(currentGame != null) MAIN_INSTANCE.setScreen(new PlayScreen());
-        else level = null;
+    public static Match getCurrentMatch() {
+        return currentMatch;
     }
 
     public static PathfinderOptions.Builder createPathfinding(AbstractObject from) {
@@ -97,5 +90,11 @@ public class GameData {
 
     public static float px(int pixels) {
         return pixels*0.0625f;
+    }
+
+    public static Match startMatch() {
+        Match match = new Match();
+        currentMatch = match;
+        return match;
     }
 }

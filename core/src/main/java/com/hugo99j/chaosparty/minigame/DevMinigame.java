@@ -41,8 +41,7 @@ public class DevMinigame extends AbstractMinigame {
     public void tick() {
         if(timer.getSeconds() <= 0) {
             ToRun.run(() -> {
-                GameData.setCurrentGame(null);
-                GameData.MAIN_INSTANCE.setScreen(new WinScreen());
+                GameData.getCurrentMatch().finishCurrentMinigame();
             });
         }
     }

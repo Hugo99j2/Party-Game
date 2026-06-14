@@ -2,6 +2,7 @@ buildscript {
   repositories {
     gradlePluginPortal()
     maven { url = 'https://dj.ucc.asn.au/maven/' }
+    maven { url = 'https://maven.fabricmc.net/' }
   }
   dependencies {
     classpath "io.github.fourlastor:construo:2.1.0"
@@ -15,6 +16,7 @@ plugins {
 }
 apply plugin: 'io.github.fourlastor.construo'
 
+configurations { mixinAgent }
 
 import io.github.fourlastor.construo.Target
 
@@ -31,6 +33,7 @@ if (JavaVersion.current().isJava9Compatible()) {
 repositories {
   mavenCentral()
   maven { url = 'https://dj.ucc.asn.au/maven/' }
+  maven { url = 'https://maven.fabricmc.net/' }
 }
 
 dependencies {
@@ -39,6 +42,9 @@ dependencies {
   implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
   implementation "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
   implementation project(':core')
+
+  implementation "net.fabricmc:sponge-mixin:0.17.3+mixin.0.8.7"
+  mixinAgent("net.fabricmc:sponge-mixin:0.17.3+mixin.0.8.7") { transitive = false }
 
   if(enableGraalNative == 'true') {
     implementation "io.github.berstanio:gdx-svmhelper-backend-lwjgl3:$graalHelperVersion"
@@ -54,6 +60,13 @@ dependencies {
     implementation("org.lwjgl:lwjgl-opengl:$lwjgl3Version")
     implementation("org.lwjgl:lwjgl-stb:$lwjgl3Version")
   }
+}
+
+
+application {
+  applicationDefaultJvmArgs = [
+    "-javaagent:${configurations.mixinAgent.asPath}"
+  ]
 }
 
 def os = System.properties['os.name'].toLowerCase(Locale.ROOT)
@@ -208,6 +221,7 @@ startScripts.classpath = project.tasks.jar.outputs.files
 // a good thing for end users. They won't need to ever set the debug-specific environment variable.
 tasks.withType(JavaExec.class).configureEach {
   environment("__GL_THREADED_OPTIMIZATIONS", 0)
+  jvmArgs "-javaagent:${configurations.mixinAgent.asPath}"
 }
 
 if(enableGraalNative == 'true') {

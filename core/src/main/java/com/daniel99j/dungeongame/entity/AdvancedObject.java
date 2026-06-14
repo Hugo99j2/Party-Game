@@ -26,11 +26,4 @@ public abstract class AdvancedObject extends AbstractObject {
     public void setVelocity(Vector2 velocity) {
         this.getPhysics().setLinearVelocity(velocity);
     }
-
-    @Override
-    protected PhysicsSettings createPhysics() {
-        PolygonShape shape = new PolygonShape();
-        shape.setAsBox(1.0f, 0.5f);
-        return new PhysicsSettings(BodyDef.BodyType.DynamicBody, shape, 1.0f, 1.0f);
-    }
 }

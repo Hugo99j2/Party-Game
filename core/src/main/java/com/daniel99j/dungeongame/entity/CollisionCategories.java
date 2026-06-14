@@ -19,4 +19,8 @@ public class CollisionCategories {
     public static short allBut(short category) {
         return (short)(0xFFFF & ~category);
     }
+
+    public static short all() {
+        return (short)(0xFFFF);
+    }
 }

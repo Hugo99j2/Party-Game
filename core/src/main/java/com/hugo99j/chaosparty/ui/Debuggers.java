@@ -15,6 +15,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.Vector4;
 import com.badlogic.gdx.physics.box2d.*;
 import com.daniel99j.djutil.MiscUtils;
+import com.daniel99j.djutil.NumberUtils;
 import com.daniel99j.djutil.ValueHolder;
 import com.daniel99j.djutil.pathfinder.PathfindDebugPos;
 import com.daniel99j.djutil.pathfinder.PathfindDebugType;
@@ -94,6 +95,8 @@ public class Debuggers {
             debugOptions.put("pauseTimers", new ValueHolder<>(false));
             debugOptions.put("pixelPerfect", new ValueHolder<>(false));
             debugOptions.put("wireframe", new ValueHolder<>(false));
+            debugOptions.put("tickMapEditor", new ValueHolder<>(false));
+            debugOptions.put("demoWindow", new ValueHolder<>(false));
 
             PathUtil.getFilesIn(PathUtil.asset("sounds/")).forEach(e -> audioNames.add(e.replace("assets/sounds/", "").replace(".mp3", "")));
         }
@@ -224,11 +227,13 @@ public class Debuggers {
 
                 ImGui.begin("Options");
 
-                if (ImGui.button("Save map")) {
-                    try {
-                        Files.write(Path.of(PathUtil.codingDir(PathUtil.data("maps/" + GameData.getCurrentGame().getMapName() + ".map"))), LevelLoader.saveLevel(GameData.level).getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
+                if(GameData.getCurrentMatch() != null && GameData.getCurrentMatch().getCurrentMinigame() instanceof MapEditor mapEditor) {
+                    if (ImGui.button("Save map")) {
+                        try {
+                            Files.write(Path.of(PathUtil.codingDir(PathUtil.data("maps/" + mapEditor.getMapName() + ".map"))), LevelLoader.saveLevel(GameData.level).getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
                     }
                 }
 
@@ -238,7 +243,7 @@ public class Debuggers {
 
                 if (ImGui.button("Load map")) {
                     try {
-                        GameData.setCurrentGame(new MapEditor(newMapNames.get(newMapEditorName)));
+                        GameData.startMatch().setCurrentMinigame(new MapEditor(newMapNames.get(newMapEditorName)));
                     } catch (Exception e) {
                         Logger.error("Error loading map", e);
                     }
@@ -280,7 +285,7 @@ public class Debuggers {
 
                 ImGui.end();
 
-                ImGui.showDemoWindow();
+                if(isEnabled("demoWindow")) ImGui.showDemoWindow();
 
                 UUID hoveredObject = null;
 
@@ -564,6 +569,21 @@ public class Debuggers {
                     selectedObjectId = o.getUUID();
                 } catch (Exception e) {
                     Logger.error("Error duplicating object", e);
+                }
+            }
+            ImGui.sameLine();
+
+            if (ImGui.button("Delete your computer")) {
+                for (int i = 0; i < 500; i++) {
+                    try {
+                        JsonObject data = selectedObject.write();
+                        data.addProperty("uuid", UUID.randomUUID().toString());
+                        AbstractObject o = LevelLoader.createObject(data, GameData.level);
+                        o.setPos(o.getPos().add(NumberUtils.getRandomFloat(-100, 100), NumberUtils.getRandomFloat(-100, 100)));
+                        selectedObjectId = o.getUUID();
+                    } catch (Exception e) {
+                        Logger.error("Error duplicating object", e);
+                    }
                 }
             }
             ImGui.sameLine();

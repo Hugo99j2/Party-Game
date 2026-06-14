@@ -17,7 +17,7 @@ public class PlayScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        if(GameData.getCurrentGame() != null) GameData.getCurrentGame().render(delta);
+        if(GameData.getCurrentMatch() != null) GameData.getCurrentMatch().render(delta);
     }
 
     @Override

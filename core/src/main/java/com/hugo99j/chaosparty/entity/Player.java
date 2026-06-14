@@ -88,7 +88,7 @@ public class Player extends AdvancedObject {
     protected PhysicsSettings createPhysics() {
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(0.5f, 0.5f, new Vector2(0.5f, 0.5f), 0);
-        return new PhysicsSettings(BodyDef.BodyType.DynamicBody, shape, 1.0f, 1.1f);
+        return new PhysicsSettings(BodyDef.BodyType.DynamicBody, shape, 1.0f, 1.1f, CollisionCategories.DEFAULT, CollisionCategories.all());
     }
 
     @Override

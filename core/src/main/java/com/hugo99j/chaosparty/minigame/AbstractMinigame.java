@@ -30,7 +30,7 @@ public abstract class AbstractMinigame implements Disposable {
     protected void defaultPlayerMovements() {
         for (MatchPlayer player : GameData.getCurrentMatch().getPlayers()) {
             if(player.controller == null || player.getPlayer() == null) continue;
-            float speed = Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) ? 500 : 300 ;
+            float speed = 300*(1+player.controller.getAxis(5));
             float move = Math.max(speed-player.getPlayer().getVelocity().len(), 0);
 
             Vector2 movement = new Vector2(0, 0);

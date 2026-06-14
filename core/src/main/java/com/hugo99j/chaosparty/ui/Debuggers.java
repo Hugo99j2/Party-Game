@@ -33,6 +33,7 @@ import com.daniel99j.dungeongame.level.SaveConfig;
 import com.google.gson.JsonObject;
 import com.hugo99j.chaosparty.entity.ObjectTypes;
 import com.hugo99j.chaosparty.match.MatchPlayer;
+import com.hugo99j.chaosparty.match.MatchView;
 import com.hugo99j.chaosparty.minigame.MapEditor;
 import com.hugo99j.chaosparty.util.*;
 import imgui.*;
@@ -77,7 +78,7 @@ public class Debuggers {
     private static int newMapEditorName = 0;
     private static final List<String> newMapNames = new ArrayList<>();
     private static boolean forceShow = false;
-    public static List<Runnable> customRenderers = new ArrayList<>();
+    public static Map<Consumer<MatchView>, ValueHolder<Integer>> customRenderers = new HashMap<>();
 
     static {
         if (GameData.DEBUGGING) {
@@ -354,8 +355,11 @@ public class Debuggers {
 
                 if (GameData.level != null) {
 
-                    //if (GameData.level != null && isEnabled("hitboxes"))
-                        //box2dDebugRenderer.render(GameData.level.getBox2dWorld(), GameData.gameCamera.combined);
+                    if (GameData.level != null && isEnabled("hitboxes")) {
+                        customRenderers.put((v) -> {
+                            box2dDebugRenderer.render(GameData.level.getBox2dWorld(), v.gameCamera.combined);
+                        }, new ValueHolder<>(1));
+                    }
 
                     AbstractObject selectedObject;
                     if (hoveredObject != null && (selectedObject = GameData.level.getObjectByUUID(hoveredObject)) != null) {
@@ -515,24 +519,23 @@ public class Debuggers {
 
             boolean changing = false;
             slider("X Pos", selectedObject.getPos().x, selectedObject::setX, middle.x - posOffset, middle.x + posOffset, ImGui.isKeyDown(ImGuiKey.ModAlt) ? "%.0f" : "%.3f");
+            if (ImGui.isItemActive() && ImGui.isKeyDown(ImGuiKey.ModShift)) {
+                float x = selectedObject.getPos().x;
+                float snappedX = Math.round(x * 16f) / 16f;
+                selectedObject.setX(snappedX);
+            }
             if (ImGui.isItemActive()) changing = true;
             slider("Y Pos", selectedObject.getPos().y, selectedObject::setY, middle.y - posOffset, middle.y + posOffset, ImGui.isKeyDown(ImGuiKey.ModAlt) ? "%.0f" : "%.3f");
+            if (ImGui.isItemActive() && ImGui.isKeyDown(ImGuiKey.ModShift)) {
+                float y = selectedObject.getPos().y;
+                float snappedX = Math.round(y * 16f) / 16f;
+                selectedObject.setY(snappedX);
+            }
             if (ImGui.isItemActive()) changing = true;
 
-            if(selectedObject.hasPhysics() && selectedObject.getPhysics().getFixtureList().size == 1) {
-                ImGui.separatorText("Physics");
-                Vector4 hitbox = selectedObject.getHitbox(selectedObject.getPhysics().getFixtureList().get(0));
-                slider("Hitbox X", hitbox.x, (v) -> {
-                    ((PolygonShape) selectedObject.getPhysics().getFixtureList().get(0).getShape()).setAsBox(v / 2, hitbox.w / 2);
-                } , 0, 1, "%.1f");
-                slider("Hitbox Y", hitbox.y, (y) -> hitbox.y = y, 0, 1, "%.1f");
-                slider("Hitbox size X", hitbox.z, (z) -> hitbox.z = z, 0, 1, "%.1f");
-                slider("Hitbox size Y", hitbox.w, (w) -> hitbox.w = w, 0, 1, "%.1f");
-            }
-
-//            if (ImGui.button("TP to player")) selectedObject.setPos(GameData.player.getPos());
-//            ImGui.sameLine();
-//            if (ImGui.button("TP player to this")) GameData.player.setPos(selectedObject.getPos());
+            if (ImGui.button("TP to player")) selectedObject.setPos(GameData.getCurrentMatch().getPlayers().getFirst().getPlayer().getPos());
+            ImGui.sameLine();
+            if (ImGui.button("TP player to this")) GameData.getCurrentMatch().getPlayers().getFirst().getPlayer().setPos(selectedObject.getPos());
 
             if (oldPos == null && changing) {
                 oldPos = selectedObject.getPos();

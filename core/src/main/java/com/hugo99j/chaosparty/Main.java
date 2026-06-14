@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.tools.texturepacker.TexturePacker;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.daniel99j.dungeongame.sounds.SoundManager;
+import com.hugo99j.chaosparty.match.MatchView;
 import com.hugo99j.chaosparty.minigame.MapEditor;
 import com.hugo99j.chaosparty.ui.Debuggers;
 import com.daniel99j.dungeongame.ui.UiScreen;
@@ -26,7 +27,9 @@ import org.lwjgl.glfw.GLFWErrorCallback;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+import java.util.function.Consumer;
 
 public class Main extends Game {
     private CursorType oldCursor = CursorType.NORMAL;
@@ -174,7 +177,14 @@ public class Main extends Game {
             while ((activeTimer -= GameData.SECONDS_PER_PHYSICS_TICK) > 0) {
                 tickTimer+= GameData.SECONDS_PER_PHYSICS_TICK;
                 if(tickTimer >= GameData.SECONDS_PER_TICK) {
-                    Debuggers.customRenderers.clear();
+                    List<Consumer<MatchView>> customRenderersToRemove = new ArrayList<>();
+                    Debuggers.customRenderers.forEach((r, v) -> {
+                        v.object = v.object-1;
+                        if(v.object <= 0) customRenderersToRemove.add(r);
+                    });
+                    for (Consumer<MatchView> runnable : customRenderersToRemove) {
+                        Debuggers.customRenderers.remove(runnable);
+                    }
 
                     if(GameData.level != null) GameData.level.tickWorld();
                     if(GameData.getCurrentMatch() != null) GameData.getCurrentMatch().tick();

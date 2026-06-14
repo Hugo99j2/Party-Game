@@ -13,6 +13,8 @@ import com.badlogic.gdx.utils.viewport.*;
 import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.ui.Debuggers;
 
+import java.util.function.Consumer;
+
 public class MatchView implements Disposable {
     private FrameBuffer fbo = new FrameBuffer(Pixmap.Format.RGBA8888, GameData.width, GameData.height, false);
     public final OrthographicCamera gameCamera = new OrthographicCamera();
@@ -45,8 +47,8 @@ public class MatchView implements Disposable {
         gameViewport.apply();
         GameData.shapeRenderer.setProjectionMatrix(gameCamera.combined);
         GameData.spriteBatch.setProjectionMatrix(gameCamera.combined);
-        for (Runnable customRenderer : Debuggers.customRenderers) {
-            customRenderer.run();
+        for (Consumer<MatchView> customRenderer : Debuggers.customRenderers.keySet()) {
+            customRenderer.accept(this);
         }
 
         fbo.end();

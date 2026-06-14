@@ -2,26 +2,22 @@ package com.hugo99j.chaosparty.minigame;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
-import com.daniel99j.dungeongame.entity.AdvancedObject;
 import com.daniel99j.dungeongame.ui.renderable.RenderState;
 import com.daniel99j.dungeongame.ui.screenss.CombinedScreenSS;
 import com.daniel99j.dungeongame.ui.screenss.ScreenSSBuilder;
 import com.hugo99j.chaosparty.entity.Sheep;
 import com.hugo99j.chaosparty.match.MatchPlayer;
 import com.hugo99j.chaosparty.match.MatchView;
-import com.hugo99j.chaosparty.util.ImageUtil;
-import com.hugo99j.chaosparty.util.Logger;
 import com.hugo99j.chaosparty.util.RenderUtil;
 import com.hugo99j.chaosparty.util.ToRun;
 import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.ui.Timer;
-import com.hugo99j.chaosparty.ui.WinScreen;
 
 import java.util.List;
 
 public class HerdSheepMinigame extends AbstractMinigame {
-    private Timer timer;
-    private CombinedScreenSS ss = ScreenSSBuilder.create()
+    private final Timer timer;
+    private final CombinedScreenSS ss = ScreenSSBuilder.create()
         .set("x", "20")
         .set("y", "0.1vh")
         .set("xSize", "0.02vw")
@@ -59,9 +55,7 @@ public class HerdSheepMinigame extends AbstractMinigame {
         }
 
         if(timer.getSeconds() <= 0) {
-            ToRun.run(() -> {
-                GameData.getCurrentMatch().finishCurrentMinigame();
-            });
+            ToRun.run(() -> GameData.getCurrentMatch().finishCurrentMinigame());
         }
     }
 

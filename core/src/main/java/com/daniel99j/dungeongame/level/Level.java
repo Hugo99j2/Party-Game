@@ -183,12 +183,12 @@ public class Level implements Disposable {
         this.getBox2dWorld().QueryAABB(callback, start.x, start.y, end.x, end.y);
 
         if(GameData.DEBUGGING && Debuggers.isEnabled("showBetweenBoxes")) {
-            Debuggers.customRenderers.add(() -> {
+            Debuggers.customRenderers.put((v) -> {
                 GameData.shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
                 GameData.shapeRenderer.setColor(Color.CYAN);
                 GameData.shapeRenderer.rect(start.x, start.y, end.x - start.x, end.y - start.y);
                 GameData.shapeRenderer.end();
-            });
+            }, new ValueHolder<>(GameData.TICKS_PER_SECOND));
         }
 
         return objects;

@@ -9,6 +9,7 @@ import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.daniel99j.dungeongame.entity.*;
 import com.daniel99j.dungeongame.sounds.SoundManager;
+import com.hugo99j.chaosparty.match.MatchPlayer;
 import com.hugo99j.chaosparty.ui.Debuggers;
 import com.hugo99j.chaosparty.util.GlobalRunnables;
 import com.hugo99j.chaosparty.util.ImageUtil;
@@ -19,43 +20,15 @@ import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.Main;
 
 public class Player extends AdvancedObject {
-    public static float MAX_HEALTH = 100.0f;
+    private final MatchPlayer matchPlayer;
 
-    public float health = MAX_HEALTH;
+    public Player(MatchPlayer matchPlayer) {
+        this.matchPlayer = matchPlayer;
+        this.matchPlayer.setPlayer(this);
+    }
 
     @Override
     public void tick() {
-        float speed = Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) ? 500 : 300 ;
-        float move = Math.max(speed-this.getVelocity().len(), 0);
-
-        Vector2 movement = new Vector2(0, 0);
-
-        if(Gdx.input.isKeyPressed(Input.Keys.W)) {
-            movement.add(0, 1);
-        };
-        if(Gdx.input.isKeyPressed(Input.Keys.A)) {
-            movement.add(-1, 0);
-        };
-        if(Gdx.input.isKeyPressed(Input.Keys.S)) {
-            movement.add(0, -1);
-        };
-        if(Gdx.input.isKeyPressed(Input.Keys.D)) {
-            movement.add(1, 0);
-        };
-
-        if(Controllers.getCurrent() != null) {
-            Vector2 controller = new Vector2(Controllers.getCurrent().getAxis(Controllers.getCurrent().getMapping().axisLeftX), -Controllers.getCurrent().getAxis(Controllers.getCurrent().getMapping().axisLeftY));
-            if(controller.len() > 0.2f) movement = controller;
-        }
-
-        //diagonal isnt faster
-        if(movement.len() > 1) movement.nor();
-
-        if(Debuggers.isEnabled("freecam")) {
-            float mul = 0.25f;
-            Debuggers.freecam.add(new Vector2(movement.x*mul, movement.y*mul));
-        }
-        else if(movement.len() > 0) this.getPhysics().applyForceToCenter(new Vector2(movement.x*move, movement.y*move), true);
         super.tick();
 
         if(GameData.DEBUGGING) {
@@ -78,7 +51,6 @@ public class Player extends AdvancedObject {
     @Override
     public void onAdd(boolean fromLoad) {
         super.onAdd(fromLoad);
-        Main.tempPlayer = this;
         Filter f = new Filter();
         f.categoryBits = CollisionCategories.PLAYER;
         this.getPhysics().getFixtureList().get(0).setFilterData(f);
@@ -97,16 +69,7 @@ public class Player extends AdvancedObject {
     }
 
     public static Player read(JsonObject object) {
-        return new Player();
-    }
-
-    public void damage(float amount) {
-        if(Debuggers.isEnabled("invulnerable")) return;
-        health-=amount;
-        SoundManager.getSound("hurt").play(1);
-        if(health <= 0) {
-            ToRun.run(GlobalRunnables.FAIL_RUN);
-        }
+        throw new IllegalArgumentException("Cannot create player");
     }
 
     @Override
@@ -125,6 +88,11 @@ public class Player extends AdvancedObject {
     }
 
     public static Player createDefault() {
-        return new Player();
+        throw new IllegalArgumentException("Cannot create player");
+    }
+
+    @Override
+    public boolean shouldSave() {
+        return false;
     }
 }

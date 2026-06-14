@@ -97,15 +97,14 @@ public class LevelLoader {
 
         JsonArray objects = new JsonArray();
         for (AbstractObject allObject : level.getAllObjects()) {
-            if(!allObject.getSaveConfig().equals(SaveConfig.NEVER)) objects.add(allObject.write());
+            if(allObject.shouldSave()) objects.add(allObject.write());
         }
 
         out.add("objects", objects);
 
         JsonArray lights = new JsonArray();
         for (LevelLight<?> levelLight : level.getLights()) {
-            //TODO: FIX
-            if(levelLight.saveConfig().equals(SaveConfig.ALWAYS)) lights.add(levelLight.write());
+            lights.add(levelLight.write());
         }
 
         out.add("lights", lights);

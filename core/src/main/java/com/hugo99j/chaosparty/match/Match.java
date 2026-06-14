@@ -2,6 +2,7 @@ package com.hugo99j.chaosparty.match;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.hugo99j.chaosparty.GameData;
+import com.hugo99j.chaosparty.entity.Player;
 import com.hugo99j.chaosparty.minigame.AbstractMinigame;
 import com.hugo99j.chaosparty.minigame.MinigameScreenLayout;
 import com.hugo99j.chaosparty.ui.PlayScreen;
@@ -14,6 +15,11 @@ import java.util.List;
 public class Match {
     private AbstractMinigame currentMinigame = null;
     private final List<MatchView> matchViews = new ArrayList<>();
+    private final List<MatchPlayer> players;
+
+    public Match(List<MatchPlayer> players) {
+        this.players = new ArrayList<>(players);
+    }
 
     public AbstractMinigame getCurrentMinigame() {
         return currentMinigame;
@@ -26,6 +32,9 @@ public class Match {
         if(minigame != null) {
             GameData.MAIN_INSTANCE.setScreen(new PlayScreen());
             minigame.setupViews(matchViews);
+            for (MatchPlayer player : players) {
+                GameData.level.addObject(new Player(player));
+            }
         }
         else {
             GameData.level.dispose();
@@ -33,6 +42,7 @@ public class Match {
     }
 
     public void tick() {
+        this.players.forEach(MatchPlayer::tick);
         if(this.getCurrentMinigame() != null) this.getCurrentMinigame().tick();
     }
 
@@ -75,5 +85,9 @@ public class Match {
 
     public List<MatchView> getMatchViews() {
         return matchViews;
+    }
+
+    public List<MatchPlayer> getPlayers() {
+        return players;
     }
 }

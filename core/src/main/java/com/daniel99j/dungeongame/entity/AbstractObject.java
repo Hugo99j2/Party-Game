@@ -25,7 +25,6 @@ public abstract class AbstractObject implements Disposable {
     private boolean fromWorldLoad = false;
     private UUID uuid;
     private boolean removed = false;
-    private SaveConfig saveConfig = SaveConfig.ALWAYS;
 
     public AbstractObject() {
     }
@@ -163,12 +162,8 @@ public abstract class AbstractObject implements Disposable {
 
     public abstract float getLayer();
 
-    public SaveConfig getSaveConfig() {
-        return saveConfig;
-    }
-
-    public void setSaveConfig(SaveConfig saveConfig) {
-        this.saveConfig = saveConfig;
+    public boolean shouldSave() {
+        return true;
     }
 
     protected void moveTowardTarget(Vector2 targetPosition, float speed) {
@@ -227,7 +222,7 @@ public abstract class AbstractObject implements Disposable {
     }
 
     public int uniqueHash() {
-        return Objects.hash(level, physics, fromWorldLoad, uuid, removed, saveConfig);
+        return Objects.hash(level, physics, fromWorldLoad, uuid, removed);
     }
 
     @Override

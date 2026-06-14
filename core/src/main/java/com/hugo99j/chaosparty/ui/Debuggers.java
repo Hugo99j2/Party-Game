@@ -32,6 +32,7 @@ import com.daniel99j.dungeongame.level.LevelLoader;
 import com.daniel99j.dungeongame.level.SaveConfig;
 import com.google.gson.JsonObject;
 import com.hugo99j.chaosparty.entity.ObjectTypes;
+import com.hugo99j.chaosparty.match.MatchPlayer;
 import com.hugo99j.chaosparty.minigame.MapEditor;
 import com.hugo99j.chaosparty.util.*;
 import imgui.*;
@@ -81,7 +82,7 @@ public class Debuggers {
         if (GameData.DEBUGGING) {
             debugOptions.put("showing", new ValueHolder<>(false));
             debugOptions.put("hitboxes", new ValueHolder<>(false));
-            debugOptions.put("lights", new ValueHolder<>(true));
+            debugOptions.put("lights", new ValueHolder<>(false));
             debugOptions.put("noclip", new ValueHolder<>(false));
             debugOptions.put("selecting", new ValueHolder<>(false));
             debugOptions.put("selectingLight", new ValueHolder<>(false));
@@ -243,7 +244,7 @@ public class Debuggers {
 
                 if (ImGui.button("Load map")) {
                     try {
-                        GameData.startMatch().setCurrentMinigame(new MapEditor(newMapNames.get(newMapEditorName)));
+                        GameData.startMatch(List.of(new MatchPlayer("test"))).setCurrentMinigame(new MapEditor(newMapNames.get(newMapEditorName)));
                     } catch (Exception e) {
                         Logger.error("Error loading map", e);
                     }
@@ -283,8 +284,8 @@ public class Debuggers {
                 ImGui.text("Cached files: " + PathUtil.size());
                 ImGui.text("Cached sounds: " + SoundManager.size());
 
-                if(GameData.getCurrentMatch() != null) {
-                    slider("x", GameData.getCurrentMatch().getMatchViews().get(0).gameCamera.position.x, (e) -> {GameData.getCurrentMatch().getMatchViews().get(0).gameCamera.position.x = e;}, -10, 10, "%.3f");
+                if(GameData.getCurrentMatch() != null && GameData.getCurrentMatch().getMatchViews() != null) {
+                    slider("zoom", GameData.getCurrentMatch().getMatchViews().get(0).gameCamera.zoom, (e) -> {GameData.getCurrentMatch().getMatchViews().get(0).gameCamera.zoom = e;}, -10, 10, "%.3f");
                 }
 
                 ImGui.end();
@@ -429,10 +430,14 @@ public class Debuggers {
             ImGui.separatorText("Default Objects");
             ObjectTypes.types.forEach((n, c) -> {
                 if(ImGui.button("Create " + n)) {
-                    AbstractObject object = c.constructor().get();
-                    GameData.getLevelOrThrow().addObject(object);
-                    createObjectData = null;
-                    selectedObjectId = object.getUUID();
+                    try {
+                        AbstractObject object = c.constructor().get();
+                        GameData.getLevelOrThrow().addObject(object);
+                        createObjectData = null;
+                        selectedObjectId = object.getUUID();
+                    } catch (Exception e) {
+                        Logger.error("Error adding object", e);
+                    }
                 }
             });
         }

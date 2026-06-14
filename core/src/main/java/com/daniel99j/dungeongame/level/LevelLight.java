@@ -10,19 +10,16 @@ import java.util.UUID;
 
 public final class LevelLight<T extends Light> {
     private final T light;
-    private final SaveConfig saveConfig;
     private UUID uuid;
 
     public LevelLight(T light, SaveConfig saveConfig, UUID uuid) {
         this.light = light;
-        this.saveConfig = saveConfig;
         this.uuid = uuid;
     }
 
     public JsonObject write() {
         JsonObject out = new JsonObject();
         out.addProperty("uuid", uuid.toString());
-        out.addProperty("saveConfig", saveConfig.toString());
         out.addProperty("lightClass", light.getClass().toString());
         out.addProperty("colour", light.getColor().toString());
         out.addProperty("direction", light.getDirection());
@@ -45,10 +42,6 @@ public final class LevelLight<T extends Light> {
         return light;
     }
 
-    public SaveConfig saveConfig() {
-        return saveConfig;
-    }
-
     public UUID uuid() {
         return uuid;
     }
@@ -64,20 +57,18 @@ public final class LevelLight<T extends Light> {
         if (obj == null || obj.getClass() != this.getClass()) return false;
         var that = (LevelLight) obj;
         return Objects.equals(this.light, that.light) &&
-            Objects.equals(this.saveConfig, that.saveConfig) &&
             Objects.equals(this.uuid, that.uuid);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(light, saveConfig, uuid);
+        return Objects.hash(light, uuid);
     }
 
     @Override
     public String toString() {
         return "LevelLight[" +
             "light=" + light + ", " +
-            "saveConfig=" + saveConfig + ", " +
             "uuid=" + uuid + ']';
     }
 

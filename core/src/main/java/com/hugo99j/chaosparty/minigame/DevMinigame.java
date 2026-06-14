@@ -4,11 +4,14 @@ import com.badlogic.gdx.utils.Align;
 import com.daniel99j.dungeongame.ui.renderable.RenderState;
 import com.daniel99j.dungeongame.ui.screenss.CombinedScreenSS;
 import com.daniel99j.dungeongame.ui.screenss.ScreenSSBuilder;
+import com.hugo99j.chaosparty.match.MatchView;
 import com.hugo99j.chaosparty.util.RenderUtil;
 import com.hugo99j.chaosparty.util.ToRun;
 import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.ui.Timer;
 import com.hugo99j.chaosparty.ui.WinScreen;
+
+import java.util.List;
 
 public class DevMinigame extends AbstractMinigame {
     private Timer timer;
@@ -62,5 +65,10 @@ public class DevMinigame extends AbstractMinigame {
     @Override
     public MinigameScreenLayout getLayout() {
         return MinigameScreenLayout.HALF_HALF;
+    }
+
+    @Override
+    public void setupViews(List<MatchView> matchViews) {
+        matchViews.add(new MatchView(16, 9));
     }
 }

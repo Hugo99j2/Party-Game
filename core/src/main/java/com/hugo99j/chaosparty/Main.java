@@ -13,6 +13,7 @@ import com.hugo99j.chaosparty.minigame.MapEditor;
 import com.hugo99j.chaosparty.ui.Debuggers;
 import com.daniel99j.dungeongame.ui.UiScreen;
 import com.daniel99j.dungeongame.ui.renderable.CursorType;
+import com.hugo99j.chaosparty.ui.PlayScreen;
 import com.hugo99j.chaosparty.util.Logger;
 import com.hugo99j.chaosparty.util.PathUtil;
 import com.hugo99j.chaosparty.util.RenderUtil;
@@ -34,8 +35,6 @@ public class Main extends Game {
     private float activeTimer;
     private float tickTimer;
     private int oldXSize, oldYSize;
-
-    public static Player tempPlayer;
 
     @Override
     public void create() {
@@ -86,7 +85,7 @@ public class Main extends Game {
         Gdx.input.setInputProcessor(new InputAdapter() {
             @Override
             public boolean scrolled(float amountX, float amountY) {
-                if(GameData.getCurrentMatch().getCurrentMinigame() instanceof MapEditor mapEditor) mapEditor.scroll(amountY);
+                if(GameData.getCurrentMatch() != null && GameData.getCurrentMatch().getCurrentMinigame() instanceof MapEditor mapEditor) mapEditor.scroll(amountY);
                 return super.scrolled(amountX, amountY);
             }
         });
@@ -171,7 +170,7 @@ public class Main extends Game {
         activeTimer += Gdx.graphics.getDeltaTime();
 
         boolean inMapEditor = GameData.getCurrentMatch() != null && GameData.getCurrentMatch().getCurrentMinigame() instanceof MapEditor;
-        if (activeTimer > GameData.SECONDS_PER_PHYSICS_TICK && (!inMapEditor || (GameData.DEBUGGING && Debuggers.isEnabled("tickMapEditor"))))
+        if (activeTimer > GameData.SECONDS_PER_PHYSICS_TICK && (!inMapEditor || (GameData.DEBUGGING && Debuggers.isEnabled("tickMapEditor"))) && this.getScreen() instanceof PlayScreen)
             while ((activeTimer -= GameData.SECONDS_PER_PHYSICS_TICK) > 0) {
                 tickTimer+= GameData.SECONDS_PER_PHYSICS_TICK;
                 if(tickTimer >= GameData.SECONDS_PER_TICK) {

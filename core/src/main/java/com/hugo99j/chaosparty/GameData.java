@@ -15,12 +15,14 @@ import com.daniel99j.djutil.pathfinder.PathfindDebugType;
 import com.daniel99j.djutil.pathfinder.PathfinderOptions;
 import com.daniel99j.dungeongame.entity.AbstractObject;
 import com.hugo99j.chaosparty.match.Match;
+import com.hugo99j.chaosparty.match.MatchPlayer;
 import com.hugo99j.chaosparty.ui.Debuggers;
 import com.hugo99j.chaosparty.util.PathUtil;
 import com.daniel99j.dungeongame.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @SuppressWarnings("GDXJavaStaticResource")
@@ -92,8 +94,8 @@ public class GameData {
         return pixels*0.0625f;
     }
 
-    public static Match startMatch() {
-        Match match = new Match();
+    public static Match startMatch(List<MatchPlayer> players) {
+        Match match = new Match(players);
         currentMatch = match;
         return match;
     }

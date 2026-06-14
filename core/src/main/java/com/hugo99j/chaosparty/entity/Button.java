@@ -19,9 +19,9 @@ public class Button extends AdvancedObject {
 
     @Override
     public void tick() {
-        if (this.getPos().dst(Main.tempPlayer.getPos()) < 2) {
-            GameData.getCurrentMatch().getCurrentMinigame().addScore(0, 1);
-        }
+//         if (this.getPos().dst(Main.tempPlayer.getPos()) < 2) {
+//            GameData.getCurrentMatch().getCurrentMinigame().addScore(0, 1);
+//        }
     }
 
     @Override

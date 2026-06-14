@@ -46,6 +46,7 @@ public class HerdSheepMinigame extends AbstractMinigame {
 
     @Override
     public void tick() {
+        defaultPlayerMovements();
         counter = 0;
         for (AdvancedObject advancedObject : GameData.getLevelOrThrow().getAdvancedObjects()) {
             if (advancedObject instanceof Sheep sheep && sheep.getPos().y > 5) {

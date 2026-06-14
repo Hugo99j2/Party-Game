@@ -1,33 +1,32 @@
 package com.hugo99j.chaosparty.ui;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.daniel99j.dungeongame.sounds.SoundManager;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
+import com.daniel99j.djutil.NumberUtils;
 import com.daniel99j.dungeongame.ui.UiScreen;
 import com.daniel99j.dungeongame.ui.screenss.ScreenSSBuilder;
 import com.daniel99j.dungeongame.ui.types.Button;
 import com.daniel99j.dungeongame.ui.types.Text;
+import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.match.MatchPlayer;
-import com.hugo99j.chaosparty.util.Logger;
 import com.hugo99j.chaosparty.util.PathUtil;
 import com.hugo99j.chaosparty.util.ToRun;
-import com.hugo99j.chaosparty.GameData;
-import com.hugo99j.chaosparty.minigame.DevMinigame;
-import com.hugo99j.chaosparty.minigame.HerdSheepMinigame;
-
-import java.util.List;
 
 /** First screen of the application. Displayed after the application is created. */
-public class MenuScreen extends UiScreen {
+public class ReconnectControllersScreen extends UiScreen {
     Texture backgroundTexture;
 
-    public MenuScreen() {
+    public ReconnectControllersScreen() {
         super(ScreenSSBuilder.create()
             .set("x", "0vw")
             .set("y", "0vh")
             .set("xSize", "100vw")
             .set("ySize", "100vh")
-            .newChild("play")
+            .newChild("menu")
             .set("x", "0.5vw")
             .set("y", "0.5vh")
             .set("xSize", 320)
@@ -35,7 +34,7 @@ public class MenuScreen extends UiScreen {
             .set("center", true)
             .set("scale", 2)
             .finishChild()
-            .newChild("sheep")
+            .newChild("menu2")
             .set("x", "0.5vw")
             .set("y", "0.3vh")
             .set("xSize", 320)
@@ -51,6 +50,7 @@ public class MenuScreen extends UiScreen {
             .finishChild()
             .build()
         );
+
         backgroundTexture = new Texture(PathUtil.texture("gameyay.png"));
     }
 
@@ -59,26 +59,24 @@ public class MenuScreen extends UiScreen {
         super.show();
         //syncViewport(GameConstants.width, GameConstants.height);
         //new ScreenSS("0.5vw", "0.5vh", "320", "32", "5", true)
-        this.addRenderable(new Button("play", "button", "Test game") {
+        this.addRenderable(new Button("menu", "button", "Done") {
             @Override
             public void onClick() {
-                SoundManager.getSound("click").playSingle(1);
-                Logger.info("clicked");
-                ToRun.run(() -> GameData.startMatch(List.of(new MatchPlayer("one"))).setCurrentMinigame(new DevMinigame()));
+                boolean connected = true;
+                int i = 0;
+                for (MatchPlayer player : GameData.getCurrentMatch().getPlayers()) {
+                    if(Controllers.getControllers().size <= i) {
+                        connected = false;
+                        break;
+                    }
+                    player.controller = Controllers.getControllers().get(i);
+                    i++;
+                }
+                if(connected) ToRun.run(() -> GameData.MAIN_INSTANCE.setScreen(new PlayScreen()));
             }
         });
-
-        this.addRenderable(new Button("sheep", "button", "Herd Sheep") {
-            @Override
-            public void onClick() {
-                SoundManager.getSound("click").playSingle(1);
-                Logger.info("clicked");
-                ToRun.run(() -> GameData.startMatch(List.of(new MatchPlayer("one"), new MatchPlayer("two"))).setCurrentMinigame(new HerdSheepMinigame()));
-            }
-        });
-
         //new ScreenSS("0.5vw", "0.7vh", "1", "1", "1", false)
-        this.addRenderable(new Text("text", "<colour:blue>Hello world"));
+        this.addRenderable(new Text("text", "<colour:red>Please reconnect controllers!"));
     }
 
     @Override
@@ -88,7 +86,7 @@ public class MenuScreen extends UiScreen {
         float worldWidth = GameData.uiViewport.getWorldWidth();
         float worldHeight = GameData.uiViewport.getWorldHeight();
 
-        GameData.spriteBatch.setColor(Color.ORANGE);
+        GameData.spriteBatch.setColor(Color.RED);
 
         GameData.spriteBatch.draw(backgroundTexture, 0, 0, worldWidth, worldHeight);
         super.render(delta);

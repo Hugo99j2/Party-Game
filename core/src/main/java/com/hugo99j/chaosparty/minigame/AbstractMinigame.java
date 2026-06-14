@@ -1,10 +1,16 @@
 package com.hugo99j.chaosparty.minigame;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.controllers.Controllers;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
 import com.daniel99j.dungeongame.level.LevelLoader;
 import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.Main;
+import com.hugo99j.chaosparty.match.MatchPlayer;
 import com.hugo99j.chaosparty.match.MatchView;
+import com.hugo99j.chaosparty.ui.Debuggers;
 
 import java.util.List;
 
@@ -18,6 +24,42 @@ public abstract class AbstractMinigame implements Disposable {
     }
 
     public abstract void tick();
+
+    protected void defaultPlayerMovements() {
+        for (MatchPlayer player : GameData.getCurrentMatch().getPlayers()) {
+            if(player.controller == null || player.getPlayer() == null) continue;
+            float speed = Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) ? 500 : 300 ;
+            float move = Math.max(speed-player.getPlayer().getVelocity().len(), 0);
+
+            Vector2 movement = new Vector2(0, 0);
+
+//            if(Gdx.input.isKeyPressed(Input.Keys.W)) {
+//                movement.add(0, 1);
+//            };
+//            if(Gdx.input.isKeyPressed(Input.Keys.A)) {
+//                movement.add(-1, 0);
+//            };
+//            if(Gdx.input.isKeyPressed(Input.Keys.S)) {
+//                movement.add(0, -1);
+//            };
+//            if(Gdx.input.isKeyPressed(Input.Keys.D)) {
+//                movement.add(1, 0);
+//            };
+
+            Vector2 controller = new Vector2(player.controller.getAxis(player.controller.getMapping().axisLeftX), -player.controller.getAxis(player.controller.getMapping().axisLeftY));
+            if (controller.len() > 0.2f) movement = controller;
+
+            //diagonal isnt faster
+            if(movement.len() > 1) movement.nor();
+
+            if(Debuggers.isEnabled("freecam")) {
+                float mul = 0.25f;
+                Debuggers.freecam.add(new Vector2(movement.x*mul, movement.y*mul));
+            }
+            else if(movement.len() > 0) player.getPlayer().getPhysics().applyForceToCenter(new Vector2(movement.x*move, movement.y*move), true);
+
+        }
+    }
 
     public void renderSegment(float delta, int segment) {
         renderWorld(segment);

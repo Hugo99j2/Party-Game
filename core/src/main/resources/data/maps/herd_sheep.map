@@ -1,30 +1,93 @@
 {
   "objects": [
     {
-      "x": 1.241,
-      "y": 6.552,
+      "x": 30.3125,
+      "y": 15.9375,
       "uuid": "f5943e33-fc61-4eeb-8d3b-52c655207055",
       "type": "sheep",
       "custom_data": {}
     },
     {
-      "x": 6.498044,
-      "y": 6.5058665,
+      "x": 0.6875,
+      "y": 15.9375,
       "uuid": "67616e86-9600-44de-a981-b99e7e21fd61",
       "type": "sheep",
       "custom_data": {}
     },
     {
-      "x": 0.686,
-      "y": 0.933,
+      "x": 0.6875,
+      "y": 0.9375,
       "uuid": "80ef788c-68dc-4475-85d1-b19ab9f07764",
       "type": "sheep",
       "custom_data": {}
     },
     {
-      "x": 11.57312,
-      "y": 3.2850466,
+      "x": 30.3125,
+      "y": 0.9375,
       "uuid": "0efa995c-71f0-4c82-849e-3a328940f2ad",
+      "type": "sheep",
+      "custom_data": {}
+    },
+    {
+      "x": 10.3125,
+      "y": 8.5,
+      "uuid": "389f83e1-ce80-4c9c-a26e-ba64497f64c3",
+      "type": "sheep",
+      "custom_data": {}
+    },
+    {
+      "x": 20.75,
+      "y": 8.5,
+      "uuid": "740b22f1-242c-45ba-b4f6-cc4462061ea4",
+      "type": "sheep",
+      "custom_data": {}
+    },
+    {
+      "x": 15.6875,
+      "y": 8.5,
+      "uuid": "136cb163-7ed5-48e1-9bde-ba4eda76c158",
+      "type": "sheep",
+      "custom_data": {}
+    },
+    {
+      "x": 13.1875,
+      "y": 8.5,
+      "uuid": "d2d6f137-3454-4609-9d78-f835ce5eaffa",
+      "type": "sheep",
+      "custom_data": {}
+    },
+    {
+      "x": 18.375,
+      "y": 8.5,
+      "uuid": "74e90514-a14a-4947-979c-9d6b3b244732",
+      "type": "sheep",
+      "custom_data": {}
+    },
+    {
+      "x": 15.6875,
+      "y": 10.6875,
+      "uuid": "53cc327d-53f6-4765-af95-1aaba19348ac",
+      "type": "sheep",
+      "custom_data": {}
+    },
+    {
+      "x": 15.6875,
+      "y": 6.274,
+      "uuid": "030b4341-dea8-4798-ad5c-6fe0c80257f1",
+      "type": "sheep",
+      "custom_data": {}
+    },
+    {
+      "x": 15.6875,
+      "y": 4.067,
+      "uuid": "b923f6d7-853f-4827-b199-88a374295430",
+      "type": "sheep",
+      "custom_data": {}
+    },
+    {
+      "x": 15.6875,
+      "y": 12.757,
+      "uuid": "b3e30e63-7cee-453b-b2e9-0725e6984e99",
       "type": "sheep",
       "custom_data": {}
     },
@@ -173,6 +236,146 @@
       "custom_data": {
         "sizeX": 1.0,
         "sizeY": 18.0
+      }
+    },
+    {
+      "x": 10.375,
+      "y": 1.125,
+      "uuid": "26007f9b-ec0c-41b5-89bf-dc2679d2497b",
+      "type": "tileset",
+      "custom_data": {
+        "width": 1,
+        "height": 6,
+        "sprite": "tilesets/goal_tb"
+      }
+    },
+    {
+      "x": 10.375,
+      "y": 11.0,
+      "uuid": "54a8ab12-bad1-46cd-97d4-23d50b399cec",
+      "type": "tileset",
+      "custom_data": {
+        "width": 1,
+        "height": 6,
+        "sprite": "tilesets/goal_tb"
+      }
+    },
+    {
+      "x": 20.625,
+      "y": 10.875,
+      "uuid": "7492fdcd-4c5d-42e1-9506-359488ede670",
+      "type": "tileset",
+      "custom_data": {
+        "width": 1,
+        "height": 6,
+        "sprite": "tilesets/goal_tb"
+      }
+    },
+    {
+      "x": 20.625,
+      "y": 1.0,
+      "uuid": "e55450bf-dc22-4321-9bd0-54dd665145a9",
+      "type": "tileset",
+      "custom_data": {
+        "width": 1,
+        "height": 6,
+        "sprite": "tilesets/goal_tb"
+      }
+    },
+    {
+      "x": 1.125,
+      "y": 7.375,
+      "uuid": "9f980f11-0ec3-49e6-a3c8-e83c485cd4d4",
+      "type": "tileset",
+      "custom_data": {
+        "width": 9,
+        "height": 1,
+        "sprite": "tilesets/goal_lr"
+      }
+    },
+    {
+      "x": 1.0,
+      "y": 9.625,
+      "uuid": "ab8c03a0-db0d-4245-ad4a-d073785562d9",
+      "type": "tileset",
+      "custom_data": {
+        "width": 9,
+        "height": 1,
+        "sprite": "tilesets/goal_lr"
+      }
+    },
+    {
+      "x": 21.875,
+      "y": 9.625,
+      "uuid": "c51c7dbd-ebdc-4ae0-be9e-49bc3ef135c7",
+      "type": "tileset",
+      "custom_data": {
+        "width": 9,
+        "height": 1,
+        "sprite": "tilesets/goal_lr"
+      }
+    },
+    {
+      "x": 22.0,
+      "y": 7.375,
+      "uuid": "0609876f-53d9-487a-8f60-f9a33abce7e7",
+      "type": "tileset",
+      "custom_data": {
+        "width": 9,
+        "height": 1,
+        "sprite": "tilesets/goal_lr"
+      }
+    },
+    {
+      "x": 10.0,
+      "y": 10.0,
+      "uuid": "cbef1b4b-91d6-4b7c-adee-2c0d1aa5fc03",
+      "type": "sprite",
+      "custom_data": {
+        "sprite": "goal_c",
+        "scale": 1.0,
+        "flipX": false,
+        "flipY": false,
+        "hitbox": false
+      }
+    },
+    {
+      "x": 10.0,
+      "y": 7.0,
+      "uuid": "dfe78903-2ab8-4ebe-ad68-937fa5345c68",
+      "type": "sprite",
+      "custom_data": {
+        "sprite": "goal_c",
+        "scale": 1.0,
+        "flipX": false,
+        "flipY": true,
+        "hitbox": false
+      }
+    },
+    {
+      "x": 21.0,
+      "y": 7.0,
+      "uuid": "c34d1947-917e-42b6-af94-a9cde74bba95",
+      "type": "sprite",
+      "custom_data": {
+        "sprite": "goal_c",
+        "scale": 1.0,
+        "flipX": true,
+        "flipY": true,
+        "hitbox": false
+      }
+    },
+    {
+      "x": 21.0,
+      "y": 10.0,
+      "uuid": "278aa285-ea6d-49af-a0de-7e958f3c928d",
+      "type": "sprite",
+      "custom_data": {
+        "sprite": "goal_c",
+        "scale": 1.0,
+        "flipX": true,
+        "flipY": false,
+        "hitbox": false
       }
     }
   ],

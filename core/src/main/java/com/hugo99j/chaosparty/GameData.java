@@ -21,6 +21,8 @@ import com.hugo99j.chaosparty.util.PathUtil;
 import com.daniel99j.dungeongame.level.Level;
 import org.jetbrains.annotations.Nullable;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -35,7 +37,7 @@ public class GameData {
     public static final OrthographicCamera uiCamera = new OrthographicCamera();
     public static Viewport uiViewport = new ScreenViewport(uiCamera);
     public static final TextureAtlas atlas = new TextureAtlas(Gdx.files.internal(PathUtil.generated("atlases/main.atlas")));
-    public static final boolean DEBUGGING = Objects.equals(System.getenv("DEBUGGING_GAME"), "1");
+    public static final boolean DEBUGGING = Objects.equals(System.getenv("DEBUGGING_GAME"), "1") || Files.exists(Path.of("force_debug_game.txt"));
     public static final ShapeRenderer shapeRenderer = new ShapeRenderer();
     public static float time = 0L;
     public static BitmapFont FONT;

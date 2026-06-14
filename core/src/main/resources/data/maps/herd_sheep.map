@@ -8,34 +8,34 @@
       "custom_data": {}
     },
     {
-      "x": 1.448,
-      "y": 5.38,
+      "x": 6.498044,
+      "y": 6.5058665,
       "uuid": "67616e86-9600-44de-a981-b99e7e21fd61",
       "type": "sheep",
       "custom_data": {}
     },
     {
-      "x": 1.104,
-      "y": 3.794,
+      "x": 6.4786835,
+      "y": 8.174064,
       "uuid": "80ef788c-68dc-4475-85d1-b19ab9f07764",
       "type": "sheep",
       "custom_data": {}
     },
     {
-      "x": 1.104,
-      "y": 3.794,
+      "x": 11.57312,
+      "y": 3.2850466,
       "uuid": "0efa995c-71f0-4c82-849e-3a328940f2ad",
       "type": "sheep",
       "custom_data": {}
     },
     {
-      "x": -0.0,
-      "y": -7.0,
+      "x": -1.0,
+      "y": -1.0,
       "uuid": "f33e3a0e-d62f-49ca-87dc-491f40578537",
       "type": "tileset",
       "custom_data": {
-        "width": 16,
-        "height": 16,
+        "width": 34,
+        "height": 20,
         "sprite": "tilesets/grass"
       }
     },
@@ -46,18 +46,18 @@
       "type": "tileset",
       "custom_data": {
         "width": 1,
-        "height": 7,
+        "height": 16,
         "sprite": "tilesets/fence_tb"
       }
     },
     {
-      "x": 15.0,
+      "x": 31.0,
       "y": 1.0,
       "uuid": "eaaea0b7-2053-491b-a8e1-4bd3c817ba33",
       "type": "tileset",
       "custom_data": {
         "width": 1,
-        "height": 7,
+        "height": 16,
         "sprite": "tilesets/fence_tb"
       }
     },
@@ -67,25 +67,25 @@
       "uuid": "82d1eea1-4806-48f3-bef8-c84c652c1e74",
       "type": "tileset",
       "custom_data": {
-        "width": 14,
+        "width": 30,
         "height": 1,
         "sprite": "tilesets/fence_lr"
       }
     },
     {
       "x": 1.0,
-      "y": 8.0,
+      "y": 17.0,
       "uuid": "063f7af1-c0e8-4aed-b80d-7769d995ea71",
       "type": "tileset",
       "custom_data": {
-        "width": 14,
+        "width": 30,
         "height": 1,
         "sprite": "tilesets/fence_lr"
       }
     },
     {
       "x": -0.0,
-      "y": 8.0,
+      "y": 17.0,
       "uuid": "ce3e79a7-534a-45e1-b0cf-f5c4c787cc44",
       "type": "sprite",
       "custom_data": {
@@ -97,8 +97,8 @@
       }
     },
     {
-      "x": 15.0,
-      "y": 8.0,
+      "x": 31.0,
+      "y": 17.0,
       "uuid": "fb91eebe-4d0f-40db-a79c-eae345d4c57f",
       "type": "sprite",
       "custom_data": {
@@ -110,7 +110,7 @@
       }
     },
     {
-      "x": 15.0,
+      "x": 31.0,
       "y": 0.0,
       "uuid": "0bbb292f-3bbe-4e89-9e49-376dcb5748ca",
       "type": "sprite",
@@ -141,17 +141,17 @@
       "uuid": "880deda7-18a8-4cfa-9c94-b98a0554ce4e",
       "type": "collision",
       "custom_data": {
-        "sizeX": 16.0,
+        "sizeX": 32.0,
         "sizeY": 1.0
       }
     },
     {
       "x": 0.0,
-      "y": 7.9990005,
+      "y": 16.965,
       "uuid": "353450a2-dd44-43b8-8d8d-adf9b5ea6e9e",
       "type": "collision",
       "custom_data": {
-        "sizeX": 16.0,
+        "sizeX": 32.0,
         "sizeY": 1.0
       }
     },
@@ -162,17 +162,17 @@
       "type": "collision",
       "custom_data": {
         "sizeX": 1.0,
-        "sizeY": 9.0
+        "sizeY": 18.0
       }
     },
     {
-      "x": 15.345,
+      "x": 31.001,
       "y": 0.0,
       "uuid": "9199186f-785a-492a-83ce-0650a1167d0d",
       "type": "collision",
       "custom_data": {
         "sizeX": 1.0,
-        "sizeY": 9.0
+        "sizeY": 18.0
       }
     }
   ],

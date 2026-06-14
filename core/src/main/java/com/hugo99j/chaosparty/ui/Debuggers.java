@@ -323,6 +323,7 @@ public class Debuggers {
                         if(ImGui.button("Play "+j)) activeSound.play();
                         slider("Pitch "+j, activeSound.getPitch(), activeSound::setPitch, 0, 2, "%.3f");
                         slider("Volume "+j, activeSound.getVolume(), activeSound::setVolume, 0, 1, "%.3f");
+                        slider("Pan "+j, activeSound.getPan(), activeSound::setPan, -1, 1, "%.3f");
                     }
                     j++;
                 }

@@ -12,6 +12,7 @@ public class SoundInstance {
     private final long id;
     private final Consumer<SoundInstance> onFinish;
     private float volume;
+    private float pan;
     private float pitch;
     private boolean paused = false;
     private float currentTime = 0;
@@ -55,6 +56,7 @@ public class SoundInstance {
 
     public void setPan(float p) {
         this.file.getActualAudio().setPan(this.id, p, this.volume);
+        pan = p;
     }
 
     public float getDuration() {
@@ -83,6 +85,10 @@ public class SoundInstance {
 
     public float getVolume() {
         return volume;
+    }
+
+    public float getPan() {
+        return pan;
     }
 
     public String getName() {

@@ -55,7 +55,7 @@ public class MapEditor extends AbstractMinigame {
     }
 
     public void scroll(float amountY) {
-        GameData.getCurrentMatch().getMatchViews().getFirst().gameCamera.zoom += amountY;
+        GameData.getCurrentMatch().getMatchViews().getFirst().gameCamera.zoom += amountY/5*GameData.getCurrentMatch().getMatchViews().getFirst().gameCamera.zoom;
         GameData.getCurrentMatch().getMatchViews().getFirst().gameCamera.zoom = Math.clamp(GameData.getCurrentMatch().getMatchViews().getFirst().gameCamera.zoom, 0.1f, 10);
     }
 }

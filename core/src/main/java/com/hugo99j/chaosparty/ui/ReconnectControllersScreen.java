@@ -75,10 +75,14 @@ public class ReconnectControllersScreen extends UiScreen {
     private void reconnect() {
         boolean connected = true;
         int i = 0;
+        int fakeControllers = 0;
+        if(GameData.DEBUGGING && Debuggers.isEnabled("fakeControllers+1")) fakeControllers+=1;
+        if(GameData.DEBUGGING && Debuggers.isEnabled("fakeControllers+2")) fakeControllers+=2;
         for (MatchPlayer player : GameData.getCurrentMatch().getPlayers()) {
             if(Controllers.getControllers().size <= i) {
-                if(GameData.DEBUGGING && Debuggers.isEnabled("fakeControllers")) {
+                if(fakeControllers > 0) {
                     player.controller = (Controller) new DummyController();
+                    fakeControllers--;
                     continue;
                 }
                 connected = false;

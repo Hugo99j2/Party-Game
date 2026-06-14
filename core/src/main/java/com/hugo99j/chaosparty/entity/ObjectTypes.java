@@ -9,7 +9,6 @@ public class ObjectTypes {
     public static final Map<String, ObjectType<?>> types = new HashMap<>();
 
     public static final ObjectType<Player> PLAYER = registerObjectType(new ObjectType<>("player", Player::read, Player::createDefault));
-    public static final ObjectType<SpriteObject> SPRITE = registerObjectType(new ObjectType<>("sprite", SpriteObject::read, SpriteObject::createDefault));
     public static final ObjectType<TilesetObject> TILESET = registerObjectType(new ObjectType<>("tileset", TilesetObject::read, TilesetObject::createDefault));
     public static final ObjectType<Button> BUTTON = registerObjectType(new ObjectType<>("button", Button::read, Button::createDefault));
     public static final ObjectType<Sheep> SHEEP = registerObjectType(new ObjectType<>("sheep", Sheep::read, Sheep::createDefault));

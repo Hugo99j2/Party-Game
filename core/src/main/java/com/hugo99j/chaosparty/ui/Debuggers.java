@@ -21,12 +21,11 @@ import com.daniel99j.djutil.pathfinder.PathfindDebugPos;
 import com.daniel99j.djutil.pathfinder.PathfindDebugType;
 import com.daniel99j.dungeongame.NoDebugOption;
 import com.daniel99j.dungeongame.RequiresRefresh;
-import com.daniel99j.dungeongame.entity.ObjectType;
 import com.daniel99j.dungeongame.sounds.SoundInstance;
 import com.daniel99j.dungeongame.sounds.SoundManager;
 import com.hugo99j.chaosparty.GameData;
 import com.daniel99j.dungeongame.entity.AbstractObject;
-import com.daniel99j.dungeongame.entity.TilesetObject;
+import com.hugo99j.chaosparty.entity.TilesetObject;
 import com.daniel99j.dungeongame.level.LevelLight;
 import com.daniel99j.dungeongame.level.LevelLoader;
 import com.daniel99j.dungeongame.level.SaveConfig;
@@ -101,7 +100,8 @@ public class Debuggers {
             debugOptions.put("tickMapEditor", new ValueHolder<>(false));
             debugOptions.put("demoWindow", new ValueHolder<>(false));
             debugOptions.put("showBetweenBoxes", new ValueHolder<>(true));
-            debugOptions.put("fakeControllers", new ValueHolder<>(false));
+            debugOptions.put("fakeControllers+1", new ValueHolder<>(false));
+            debugOptions.put("fakeControllers+2", new ValueHolder<>(false));
 
             PathUtil.getFilesIn(PathUtil.asset("sounds/")).forEach(e -> audioNames.add(e.replace("assets/sounds/", "").replace(".mp3", "")));
         }
@@ -542,13 +542,6 @@ public class Debuggers {
             }
             if (oldPos != null && !changing) {
                 oldPos = null;
-            }
-
-            if (selectedObject instanceof TilesetObject tilesetObject) {
-                ImGui.separatorText("Custom object data");
-
-                intInput("Width", tilesetObject.getWidth(), tilesetObject::setWidth);
-                intInput("Height", tilesetObject.getHeight(), tilesetObject::setHeight);
             }
 
             ImGui.separatorText("Java variables");
@@ -1026,6 +1019,14 @@ public class Debuggers {
             if(ImGui.inputFloat2(name, check)) {
                 ((Vector2) current).x = check[0];
                 ((Vector2) current).y = check[1];
+            }
+        } else if(type.equals(Color.class)) {
+            float[] check = {((Color) current).r, ((Color) current).g, ((Color) current).b, ((Color) current).a};
+            if(ImGui.colorEdit4(name, check)) {
+                ((Color) current).r = check[0];
+                ((Color) current).g = check[1];
+                ((Color) current).b = check[2];
+                ((Color) current).a = check[3];
             }
         } else {
             ImGui.text("Unsupported type: " + name + " (value: " + current + ")");

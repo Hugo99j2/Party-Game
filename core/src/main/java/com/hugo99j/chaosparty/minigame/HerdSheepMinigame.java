@@ -81,6 +81,6 @@ public class HerdSheepMinigame extends AbstractMinigame {
 
     @Override
     public void setupViews(List<MatchView> matchViews) {
-        matchViews.add(new MatchView());
+        matchViews.add(new MatchView(32, 18));
     }
 }

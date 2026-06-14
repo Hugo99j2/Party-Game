@@ -19,10 +19,14 @@ import com.hugo99j.chaosparty.ui.Debuggers;
 public class MatchView implements Disposable {
     private FrameBuffer fbo = new FrameBuffer(Pixmap.Format.RGBA8888, GameData.width, GameData.height, false);
     public final OrthographicCamera gameCamera = new OrthographicCamera();
-    public Viewport gameViewport = new ExtendViewport(16, 9, gameCamera);
+    public Viewport gameViewport;
+    public int worldWidth, worldHeight;
 
-    public MatchView() {
-        gameViewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
+    public MatchView(int worldWidth, int worldHeight) {
+        this.worldWidth = worldWidth;
+        this.worldHeight = worldHeight;
+        this.gameViewport = new ExtendViewport(worldWidth, worldHeight, gameCamera);
+        this.gameViewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
     }
 
     public TextureRegion render() {

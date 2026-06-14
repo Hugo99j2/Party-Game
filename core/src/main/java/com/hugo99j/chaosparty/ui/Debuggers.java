@@ -515,7 +515,7 @@ public class Debuggers {
         if (selectedObjectId != null && (selectedObject = GameData.level.getObjectByUUID(selectedObjectId)) != null) {
 
             Vector2 middle = oldPos == null ? selectedObject.getPos() : oldPos;
-            int posOffset = 10;
+            int posOffset = ImGui.isKeyDown(ImGuiKey.ModShift) ? 1 : 10;
 
             boolean changing = false;
             slider("X Pos", selectedObject.getPos().x, selectedObject::setX, middle.x - posOffset, middle.x + posOffset, ImGui.isKeyDown(ImGuiKey.ModAlt) ? "%.0f" : "%.3f");
@@ -571,6 +571,7 @@ public class Debuggers {
                         JsonObject data = selectedObject.write();
                         AbstractObject o = LevelLoader.createObject(data, GameData.level);
                         selectedObject.dispose();
+                        //noinspection usagelimited
                         selectedObject.setUUIDReallyUnsafeDoNotUse(UUID.randomUUID());
                         selectedObjectId = o.getUUID();
                     });

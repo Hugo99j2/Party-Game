@@ -3,8 +3,10 @@ package com.daniel99j.dungeongame.level;
 import box2dLight.Light;
 import box2dLight.RayHandler;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.QueryCallback;
 import com.badlogic.gdx.physics.box2d.World;
@@ -13,6 +15,7 @@ import com.daniel99j.djutil.ValueHolder;
 import com.hugo99j.chaosparty.GameData;
 import com.daniel99j.dungeongame.entity.*;
 import com.hugo99j.chaosparty.ui.Debuggers;
+import com.hugo99j.chaosparty.util.ImageUtil;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -168,6 +171,7 @@ public class Level implements Disposable {
     }
 
     public <T> List<T> getObjectsBetweenClass(Vector2 start, Vector2 end, Class<T> clazz) {
+        if(end.x < start.x || end.y < start.y) throw new IllegalArgumentException("End is before start");
         List<T> objects = new ArrayList<>();
 
         QueryCallback callback = fixture -> {
@@ -177,6 +181,15 @@ public class Level implements Disposable {
         };
 
         this.getBox2dWorld().QueryAABB(callback, start.x, start.y, end.x, end.y);
+
+        if(GameData.DEBUGGING && Debuggers.isEnabled("showBetweenBoxes")) {
+            Debuggers.customRenderers.add(() -> {
+                GameData.shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+                GameData.shapeRenderer.setColor(Color.CYAN);
+                GameData.shapeRenderer.rect(start.x, start.y, end.x - start.x, end.y - start.y);
+                GameData.shapeRenderer.end();
+            });
+        }
 
         return objects;
     }

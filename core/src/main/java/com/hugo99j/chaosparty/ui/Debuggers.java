@@ -77,6 +77,7 @@ public class Debuggers {
     private static int newMapEditorName = 0;
     private static final List<String> newMapNames = new ArrayList<>();
     private static boolean forceShow = false;
+    public static List<Runnable> customRenderers = new ArrayList<>();
 
     static {
         if (GameData.DEBUGGING) {
@@ -98,6 +99,8 @@ public class Debuggers {
             debugOptions.put("wireframe", new ValueHolder<>(false));
             debugOptions.put("tickMapEditor", new ValueHolder<>(false));
             debugOptions.put("demoWindow", new ValueHolder<>(false));
+            debugOptions.put("showBetweenBoxes", new ValueHolder<>(true));
+            debugOptions.put("fakeControllers", new ValueHolder<>(false));
 
             PathUtil.getFilesIn(PathUtil.asset("sounds/")).forEach(e -> audioNames.add(e.replace("assets/sounds/", "").replace(".mp3", "")));
         }
@@ -283,6 +286,10 @@ public class Debuggers {
                 ImGui.text("Cached images: " + ImageUtil.size());
                 ImGui.text("Cached files: " + PathUtil.size());
                 ImGui.text("Cached sounds: " + SoundManager.size());
+
+                if(ImGui.button("Why is my code not working?")) {
+                    debugOptions.put("lights", new ValueHolder<>(false));
+                }
 
                 if(GameData.getCurrentMatch() != null && GameData.getCurrentMatch().getMatchViews() != null && !GameData.getCurrentMatch().getMatchViews().isEmpty()) {
                     slider("zoom", GameData.getCurrentMatch().getMatchViews().getFirst().gameCamera.zoom, (e) -> {GameData.getCurrentMatch().getMatchViews().getFirst().gameCamera.zoom = e;}, -10, 10, "%.3f");

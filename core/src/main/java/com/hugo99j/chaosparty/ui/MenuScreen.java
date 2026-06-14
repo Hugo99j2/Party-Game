@@ -73,7 +73,7 @@ public class MenuScreen extends UiScreen {
             public void onClick() {
                 SoundManager.getSound("click").playSingle(1);
                 Logger.info("clicked");
-                ToRun.run(() -> GameData.startMatch(List.of(new MatchPlayer("one"), new MatchPlayer("two"))).setCurrentMinigame(new HerdSheepMinigame()));
+                ToRun.run(() -> GameData.startMatch(List.of(new MatchPlayer("one"), new MatchPlayer("two"), new MatchPlayer("three"), new MatchPlayer("four"))).setCurrentMinigame(new HerdSheepMinigame()));
             }
         });
 

@@ -21,7 +21,6 @@ import java.util.List;
 
 public class HerdSheepMinigame extends AbstractMinigame {
     private Timer timer;
-    private int counter;
     private CombinedScreenSS ss = ScreenSSBuilder.create()
         .set("x", "20")
         .set("y", "0.1vh")
@@ -50,8 +49,14 @@ public class HerdSheepMinigame extends AbstractMinigame {
     @Override
     public void tick() {
         this.defaultPlayerMovements();
-        this.setScore(GameData.getCurrentMatch().getPlayers().getFirst(), GameData.getLevelOrThrow().getObjectsBetweenClass(new Vector2(0, 18), new Vector2(11, 8), Sheep.class).size());
-        this.setScore(GameData.getCurrentMatch().getPlayers().get(1), GameData.getLevelOrThrow().getObjectsBetweenClass(new Vector2(32, 18), new Vector2(21, 8), Sheep.class).size());
+        this.setScore(GameData.getCurrentMatch().getPlayers().getFirst(), GameData.getLevelOrThrow().getObjectsBetweenClass(new Vector2(0, 10), new Vector2(11, 18), Sheep.class).size());
+        this.setScore(GameData.getCurrentMatch().getPlayers().get(1), GameData.getLevelOrThrow().getObjectsBetweenClass(new Vector2(21, 10), new Vector2(32, 18), Sheep.class).size());
+        if (GameData.getCurrentMatch().getPlayers().size() >= 3) {
+            this.setScore(GameData.getCurrentMatch().getPlayers().get(2), GameData.getLevelOrThrow().getObjectsBetweenClass(new Vector2(0, 0), new Vector2(11, 8), Sheep.class).size());
+        }
+        if (GameData.getCurrentMatch().getPlayers().size() == 4) {
+            this.setScore(GameData.getCurrentMatch().getPlayers().get(3), GameData.getLevelOrThrow().getObjectsBetweenClass(new Vector2(21, 0), new Vector2(32, 8), Sheep.class).size());
+        }
 
         if(timer.getSeconds() <= 0) {
             ToRun.run(() -> {

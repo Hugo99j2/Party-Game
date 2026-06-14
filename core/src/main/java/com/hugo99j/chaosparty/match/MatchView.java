@@ -42,6 +42,13 @@ public class MatchView implements Disposable {
 
         GameData.getCurrentMatch().getCurrentMinigame().renderSegment(Gdx.graphics.getDeltaTime(), this);
 
+        gameViewport.apply();
+        GameData.shapeRenderer.setProjectionMatrix(gameCamera.combined);
+        GameData.spriteBatch.setProjectionMatrix(gameCamera.combined);
+        for (Runnable customRenderer : Debuggers.customRenderers) {
+            customRenderer.run();
+        }
+
         fbo.end();
 
         return new TextureRegion(fbo.getColorBufferTexture());

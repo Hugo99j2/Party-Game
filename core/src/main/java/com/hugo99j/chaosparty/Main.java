@@ -174,6 +174,8 @@ public class Main extends Game {
             while ((activeTimer -= GameData.SECONDS_PER_PHYSICS_TICK) > 0) {
                 tickTimer+= GameData.SECONDS_PER_PHYSICS_TICK;
                 if(tickTimer >= GameData.SECONDS_PER_TICK) {
+                    Debuggers.customRenderers.clear();
+
                     if(GameData.level != null) GameData.level.tickWorld();
                     if(GameData.getCurrentMatch() != null) GameData.getCurrentMatch().tick();
                     tickTimer = 0;

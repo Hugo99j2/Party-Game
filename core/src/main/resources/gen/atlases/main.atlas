@@ -32,9 +32,16 @@ gameyay
   orig: 256, 256
   offset: 0, 0
   index: -1
+goal_c
+  rotate: false
+  xy: 86, 120
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
 missing
   rotate: false
-  xy: 312, 378
+  xy: 86, 102
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -55,21 +62,21 @@ particle-star
   index: -1
 player
   rotate: false
-  xy: 2, 2
+  xy: 104, 120
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 player2
   rotate: false
-  xy: 68, 84
+  xy: 260, 308
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 sheep
   rotate: false
-  xy: 86, 102
+  xy: 330, 378
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -88,23 +95,37 @@ tilesets/fence_tb
   orig: 16, 16
   offset: 0, 0
   index: -1
+tilesets/goal_lr
+  rotate: false
+  xy: 260, 326
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+tilesets/goal_tb
+  rotate: false
+  xy: 312, 378
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
 tilesets/grass
   rotate: false
-  xy: 86, 120
+  xy: 2, 2
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 tilesets/grass-export
   rotate: false
-  xy: 86, 120
+  xy: 2, 2
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 tilesets/kitchen_tiles
   rotate: false
-  xy: 260, 326
+  xy: 68, 84
   size: 16, 16
   orig: 16, 16
   offset: 0, 0

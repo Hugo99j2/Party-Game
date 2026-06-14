@@ -1,6 +1,7 @@
 package com.hugo99j.chaosparty.ui;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -13,6 +14,7 @@ import com.daniel99j.dungeongame.ui.types.Button;
 import com.daniel99j.dungeongame.ui.types.Text;
 import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.match.MatchPlayer;
+import com.hugo99j.chaosparty.util.DummyController;
 import com.hugo99j.chaosparty.util.PathUtil;
 import com.hugo99j.chaosparty.util.ToRun;
 
@@ -75,6 +77,10 @@ public class ReconnectControllersScreen extends UiScreen {
         int i = 0;
         for (MatchPlayer player : GameData.getCurrentMatch().getPlayers()) {
             if(Controllers.getControllers().size <= i) {
+                if(GameData.DEBUGGING && Debuggers.isEnabled("fakeControllers")) {
+                    player.controller = (Controller) new DummyController();
+                    continue;
+                }
                 connected = false;
                 break;
             }

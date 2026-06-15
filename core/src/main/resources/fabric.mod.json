@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "id": "chaos-party",
+  "version": "1.0.0",
+  "environment": "*",
+  "mixins": [
+    "game.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": "*",
+    "java": ">=17"
+  }
+}

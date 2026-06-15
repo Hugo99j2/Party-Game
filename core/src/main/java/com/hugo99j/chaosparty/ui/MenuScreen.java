@@ -8,6 +8,7 @@ import com.daniel99j.dungeongame.ui.screenss.ScreenSSBuilder;
 import com.daniel99j.dungeongame.ui.types.Button;
 import com.daniel99j.dungeongame.ui.types.Text;
 import com.hugo99j.chaosparty.match.MatchPlayer;
+import com.hugo99j.chaosparty.match.User;
 import com.hugo99j.chaosparty.util.Logger;
 import com.hugo99j.chaosparty.util.PathUtil;
 import com.hugo99j.chaosparty.util.ToRun;
@@ -64,7 +65,7 @@ public class MenuScreen extends UiScreen {
             public void onClick() {
                 SoundManager.getSound("click").playSingle(1);
                 Logger.info("clicked");
-                ToRun.run(() -> GameData.startMatch(List.of(new MatchPlayer("one"))).setCurrentMinigame(new DevMinigame()));
+                ToRun.run(() -> GameData.startMatch(List.of(new MatchPlayer(User.getUser(1)))).setCurrentMinigame(new DevMinigame()));
             }
         });
 
@@ -73,7 +74,7 @@ public class MenuScreen extends UiScreen {
             public void onClick() {
                 SoundManager.getSound("click").playSingle(1);
                 Logger.info("clicked");
-                ToRun.run(() -> GameData.startMatch(List.of(new MatchPlayer("one"), new MatchPlayer("two"), new MatchPlayer("three"), new MatchPlayer("four"))).setCurrentMinigame(new HerdSheepMinigame()));
+                ToRun.run(() -> GameData.startMatch(List.of(new MatchPlayer(User.getUser(1)), new MatchPlayer(User.getUser(2)), new MatchPlayer(User.getUser(3)), new MatchPlayer(User.getUser(4)))).setCurrentMinigame(new HerdSheepMinigame()));
             }
         });
 

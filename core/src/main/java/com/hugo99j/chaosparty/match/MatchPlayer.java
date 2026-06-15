@@ -8,11 +8,11 @@ import org.jetbrains.annotations.Nullable;
 
 public class MatchPlayer {
     private @Nullable Player player;
-    private final String name;
+    private final User user;
     public Controller controller;
 
-    public MatchPlayer(String name) {
-        this.name = name;
+    public MatchPlayer(User user) {
+        this.user = user;
     }
 
     public void setPlayer(@Nullable Player player) {
@@ -30,6 +30,10 @@ public class MatchPlayer {
     }
 
     public String getName() {
-        return name;
+        return user.getName();
+    }
+
+    public User getUser() {
+        return user;
     }
 }

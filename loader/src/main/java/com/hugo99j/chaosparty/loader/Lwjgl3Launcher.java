@@ -1,24 +1,17 @@
-package com.hugo99j.chaosparty.lwjgl3;
+package com.hugo99j.chaosparty.loader;
 
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.hugo99j.chaosparty.Main;
-import org.spongepowered.asm.launch.MixinBootstrap;
-import org.spongepowered.asm.mixin.Mixins;
+import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.impl.FabricLoaderImpl;
 
 /** Launches the desktop (LWJGL3) application. */
 public class Lwjgl3Launcher {
     public static void main(String[] args) {
-        try {
-            Class.forName("com.hugo99j.chaosparty.util.GameMixinService");
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-        MixinBootstrap.init();
-        Mixins.addConfiguration("mixins.mygame.json");
-
         if (StartupHelper.startNewJvmIfRequired()) return; // This handles macOS support and helps on Windows.
-        createApplication();
+        Lwjgl3Application a = createApplication();
+        FabricLoaderImpl.INSTANCE.prepareModInit(FabricLoader.getInstance().getGameDir(), a);
     }
 
     private static Lwjgl3Application createApplication() {

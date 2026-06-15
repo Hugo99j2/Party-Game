@@ -21,9 +21,8 @@ configurations { mixinAgent }
 import io.github.fourlastor.construo.Target
 
 sourceSets.main.resources.srcDirs += [ rootProject.file('assets').path ]
-application.mainClass = 'com.hugo99j.chaosparty.lwjgl3.Lwjgl3Launcher'
+application.mainClass = 'com.hugo99j.chaosparty.loader.Lwjgl3Launcher'
 application.applicationName = appName
-eclipse.project.name = appName + '-lwjgl3'
 java.sourceCompatibility = 21
 java.targetCompatibility = 21
 if (JavaVersion.current().isJava9Compatible()) {
@@ -44,7 +43,23 @@ dependencies {
   implementation project(':core')
 
   implementation "net.fabricmc:sponge-mixin:0.17.3+mixin.0.8.7"
-  mixinAgent("net.fabricmc:sponge-mixin:0.17.3+mixin.0.8.7") { transitive = false }
+  implementation "net.fabricmc:fabric-loader:0.19.3"
+  implementation "net.fabricmc:tiny-mappings-parser:0.3.0+build.17"
+
+  implementation("net.fabricmc:sponge-mixin:0.12.5+mixin.0.8.5") {
+    exclude(group: 'com.google.code.gson')
+    exclude(group: 'com.google.guava')
+  }
+  implementation "com.google.guava:guava:33.0.0-jre"
+
+  implementation "net.fabricmc:tiny-remapper:0.9.0"
+  implementation "net.fabricmc:access-widener:2.1.0"
+
+  implementation "org.ow2.asm:asm:9.6"
+  implementation "org.ow2.asm:asm-analysis:9.6"
+  implementation "org.ow2.asm:asm-commons:9.6"
+  implementation "org.ow2.asm:asm-tree:9.6"
+  implementation "org.ow2.asm:asm-util:9.6"
 
   if(enableGraalNative == 'true') {
     implementation "io.github.berstanio:gdx-svmhelper-backend-lwjgl3:$graalHelperVersion"
@@ -60,13 +75,6 @@ dependencies {
     implementation("org.lwjgl:lwjgl-opengl:$lwjgl3Version")
     implementation("org.lwjgl:lwjgl-stb:$lwjgl3Version")
   }
-}
-
-
-application {
-  applicationDefaultJvmArgs = [
-    "-javaagent:${configurations.mixinAgent.asPath}"
-  ]
 }
 
 def os = System.properties['os.name'].toLowerCase(Locale.ROOT)
@@ -221,7 +229,7 @@ startScripts.classpath = project.tasks.jar.outputs.files
 // a good thing for end users. They won't need to ever set the debug-specific environment variable.
 tasks.withType(JavaExec.class).configureEach {
   environment("__GL_THREADED_OPTIMIZATIONS", 0)
-  jvmArgs "-javaagent:${configurations.mixinAgent.asPath}"
+  jvmArgs += "-Dfabric.development=true"
 }
 
 if(enableGraalNative == 'true') {

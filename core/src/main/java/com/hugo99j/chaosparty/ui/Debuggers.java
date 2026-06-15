@@ -33,6 +33,7 @@ import com.google.gson.JsonObject;
 import com.hugo99j.chaosparty.entity.ObjectTypes;
 import com.hugo99j.chaosparty.match.MatchPlayer;
 import com.hugo99j.chaosparty.match.MatchView;
+import com.hugo99j.chaosparty.match.User;
 import com.hugo99j.chaosparty.minigame.MapEditor;
 import com.hugo99j.chaosparty.util.*;
 import imgui.*;
@@ -248,7 +249,7 @@ public class Debuggers {
 
                 if (ImGui.button("Load map")) {
                     try {
-                        GameData.startMatch(List.of(new MatchPlayer("test"))).setCurrentMinigame(new MapEditor(newMapNames.get(newMapEditorName)));
+                        GameData.startMatch(List.of(new MatchPlayer(User.getUser(5)))).setCurrentMinigame(new MapEditor(newMapNames.get(newMapEditorName)));
                     } catch (Exception e) {
                         Logger.error("Error loading map", e);
                     }

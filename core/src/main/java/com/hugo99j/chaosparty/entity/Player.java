@@ -11,10 +11,7 @@ import com.daniel99j.dungeongame.entity.*;
 import com.daniel99j.dungeongame.sounds.SoundManager;
 import com.hugo99j.chaosparty.match.MatchPlayer;
 import com.hugo99j.chaosparty.ui.Debuggers;
-import com.hugo99j.chaosparty.util.GlobalRunnables;
-import com.hugo99j.chaosparty.util.ImageUtil;
-import com.hugo99j.chaosparty.util.RenderLayer;
-import com.hugo99j.chaosparty.util.ToRun;
+import com.hugo99j.chaosparty.util.*;
 import com.google.gson.JsonObject;
 import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.Main;
@@ -44,8 +41,11 @@ public class Player extends AdvancedObject {
             pos.x = Math.round(pos.x/m)*m;
             pos.y = Math.round(pos.y/m)*m;
         }
-        GameData.spriteBatch.draw(ImageUtil.get("player"), pos.x, pos.y, 1, 1);
-        //pixelPerfect
+        //GameData.spriteBatch.draw(ImageUtil.get("player"), pos.x, pos.y, 1, 1);
+
+        for (CostumePart value : CostumePart.values()) {
+            GameData.spriteBatch.draw(ImageUtil.get("costumes/"+this.matchPlayer.getUser().getWearing(value)), pos.x, pos.y, 1, 1);
+        }
     }
 
     @Override

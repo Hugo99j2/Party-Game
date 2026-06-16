@@ -18,184 +18,219 @@ costumes/face1
   orig: 16, 16
   offset: 0, 0
   index: -1
-costumes/hat1
-  rotate: false
-  xy: 86, 192
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: -1
-costumes/hat2
-  rotate: false
-  xy: 104, 210
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: -1
-costumes/hat3
-  rotate: false
-  xy: 260, 398
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: -1
-costumes/hat4
-  rotate: false
-  xy: 330, 468
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: -1
-costumes/hat5
-  rotate: false
-  xy: 2, 74
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: -1
-costumes/hat6
-  rotate: false
-  xy: 86, 174
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: -1
-costumes/hat7
-  rotate: false
-  xy: 104, 192
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: -1
-costumes/hat8
-  rotate: false
-  xy: 122, 210
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: -1
-costumes/pants1
-  rotate: false
-  xy: 2, 56
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: -1
-costumes/pants2
-  rotate: false
-  xy: 104, 174
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: -1
-costumes/pants3
-  rotate: false
-  xy: 122, 192
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: -1
-costumes/pants4
-  rotate: false
-  xy: 140, 210
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: -1
-costumes/pants5
-  rotate: false
-  xy: 260, 362
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: -1
-costumes/pants6
-  rotate: false
-  xy: 366, 468
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: -1
-costumes/pants7
-  rotate: false
-  xy: 2, 38
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: -1
-costumes/pants8
-  rotate: false
-  xy: 122, 174
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: -1
-costumes/shirt1
-  rotate: false
-  xy: 384, 468
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: -1
-costumes/shirt2
-  rotate: false
-  xy: 2, 20
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: -1
-costumes/shirt3
-  rotate: false
-  xy: 140, 174
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: -1
-costumes/shirt4
-  rotate: false
-  xy: 158, 192
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: -1
-costumes/shirt5
-  rotate: false
-  xy: 176, 210
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: -1
-costumes/shirt6
-  rotate: false
-  xy: 260, 326
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: -1
-costumes/shirt7
-  rotate: false
-  xy: 402, 468
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: -1
-costumes/shirt8
-  rotate: false
-  xy: 2, 2
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: -1
-fence_bc
+costumes/face2
   rotate: false
   xy: 2, 110
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
-fence_tc
+costumes/face3
+  rotate: false
+  xy: 36, 144
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+costumes/face4
+  rotate: false
+  xy: 68, 192
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+costumes/face5
   rotate: false
   xy: 86, 210
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+costumes/face6
+  rotate: false
+  xy: 260, 416
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+costumes/hat1
+  rotate: false
+  xy: 86, 174
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+costumes/hat2
+  rotate: false
+  xy: 104, 192
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+costumes/hat3
+  rotate: false
+  xy: 122, 210
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+costumes/hat4
+  rotate: false
+  xy: 260, 380
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+costumes/hat5
+  rotate: false
+  xy: 348, 468
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+costumes/hat6
+  rotate: false
+  xy: 2, 56
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+costumes/hat7
+  rotate: false
+  xy: 104, 174
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+costumes/hat8
+  rotate: false
+  xy: 122, 192
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+costumes/pants1
+  rotate: false
+  xy: 366, 468
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+costumes/pants2
+  rotate: false
+  xy: 2, 38
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+costumes/pants3
+  rotate: false
+  xy: 122, 174
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+costumes/pants4
+  rotate: false
+  xy: 140, 192
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+costumes/pants5
+  rotate: false
+  xy: 158, 210
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+costumes/pants6
+  rotate: false
+  xy: 260, 344
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+costumes/pants7
+  rotate: false
+  xy: 384, 468
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+costumes/pants8
+  rotate: false
+  xy: 2, 20
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+costumes/shirt1
+  rotate: false
+  xy: 260, 326
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+costumes/shirt2
+  rotate: false
+  xy: 402, 468
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+costumes/shirt3
+  rotate: false
+  xy: 2, 2
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+costumes/shirt4
+  rotate: false
+  xy: 158, 174
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+costumes/shirt5
+  rotate: false
+  xy: 176, 192
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+costumes/shirt6
+  rotate: false
+  xy: 194, 210
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+costumes/shirt7
+  rotate: false
+  xy: 260, 308
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+costumes/shirt8
+  rotate: false
+  xy: 420, 468
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+fence_bc
+  rotate: false
+  xy: 312, 468
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+fence_tc
+  rotate: false
+  xy: 86, 192
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -209,14 +244,14 @@ gameyay
   index: -1
 goal_c
   rotate: false
-  xy: 260, 416
+  xy: 104, 210
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 missing
   rotate: false
-  xy: 348, 468
+  xy: 260, 362
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -237,70 +272,70 @@ particle-star
   index: -1
 player
   rotate: false
-  xy: 140, 192
+  xy: 140, 174
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 player2
   rotate: false
-  xy: 158, 210
+  xy: 158, 192
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 sheep
   rotate: false
-  xy: 260, 344
+  xy: 176, 210
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 tilesets/fence_lr
   rotate: false
-  xy: 36, 144
+  xy: 2, 92
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 tilesets/fence_tb
   rotate: false
-  xy: 68, 192
+  xy: 68, 174
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 tilesets/goal_lr
   rotate: false
-  xy: 312, 468
+  xy: 260, 398
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 tilesets/goal_tb
   rotate: false
-  xy: 2, 92
+  xy: 330, 468
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 tilesets/grass
   rotate: false
-  xy: 68, 174
+  xy: 2, 74
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 tilesets/grass-export
   rotate: false
-  xy: 68, 174
+  xy: 2, 74
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 tilesets/kitchen_tiles
   rotate: false
-  xy: 260, 380
+  xy: 140, 210
   size: 16, 16
   orig: 16, 16
   offset: 0, 0

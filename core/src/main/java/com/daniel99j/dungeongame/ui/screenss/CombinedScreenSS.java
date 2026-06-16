@@ -20,6 +20,7 @@ public class CombinedScreenSS {
     }
 
     public ScreenSS get(String name) {
+        if(!getter.containsKey(name)) throw new IllegalArgumentException("Unknown child '"+name+"'");
         return getter.get(name);
     }
 

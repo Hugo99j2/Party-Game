@@ -44,6 +44,14 @@ public class MenuScreen extends UiScreen {
             .set("center", true)
             .set("scale", 2)
             .finishChild()
+            .newChild("creator")
+            .set("x", "0.5vw")
+            .set("y", "0.1vh")
+            .set("xSize", 320)
+            .set("ySize", 64)
+            .set("center", true)
+            .set("scale", 2)
+            .finishChild()
             .newChild("text")
             .set("x", "0.5vw")
             .set("y", "0.7vh")
@@ -75,6 +83,14 @@ public class MenuScreen extends UiScreen {
                 SoundManager.getSound("click").playSingle(1);
                 Logger.info("clicked");
                 ToRun.run(() -> GameData.startMatch(List.of(new MatchPlayer(User.getUser(1)), new MatchPlayer(User.getUser(2)), new MatchPlayer(User.getUser(3)), new MatchPlayer(User.getUser(4)))).setCurrentMinigame(new HerdSheepMinigame()));
+            }
+        });
+
+        this.addRenderable(new Button("creator", "button", "Character Creator") {
+            @Override
+            public void onClick() {
+                SoundManager.getSound("click").playSingle(1);
+                ToRun.run(() -> GameData.MAIN_INSTANCE.setScreen(new CharacterCreatorScreen()));
             }
         });
 

@@ -42,6 +42,10 @@ public class User {
         return costume.get(part);
     }
 
+    public void setWearing(CostumePart part, String newCostume) {
+        costume.put(part, newCostume);
+    }
+
     public static void saveUsers() {
         Path path = Path.of("profiles.json");
         JsonObject object = new JsonObject();

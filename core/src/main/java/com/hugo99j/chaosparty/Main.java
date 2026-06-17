@@ -3,23 +3,21 @@ package com.hugo99j.chaosparty;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Graphics;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.tools.texturepacker.TexturePacker;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.daniel99j.dungeongame.sounds.SoundManager;
+import com.daniel99j.dungeongame.ui.screenss.ScreenSS;
 import com.hugo99j.chaosparty.match.MatchView;
 import com.hugo99j.chaosparty.minigame.MapEditor;
 import com.hugo99j.chaosparty.ui.Debuggers;
-import com.daniel99j.dungeongame.ui.UiScreen;
+import com.hugo99j.chaosparty.ui.UiScreen;
 import com.daniel99j.dungeongame.ui.renderable.CursorType;
 import com.hugo99j.chaosparty.ui.PlayScreen;
 import com.hugo99j.chaosparty.util.Logger;
 import com.hugo99j.chaosparty.util.PathUtil;
 import com.hugo99j.chaosparty.util.RenderUtil;
 import com.hugo99j.chaosparty.util.ToRun;
-import com.hugo99j.chaosparty.entity.Player;
 import com.hugo99j.chaosparty.ui.MenuScreen;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -178,12 +176,12 @@ public class Main extends Game {
                 tickTimer+= GameData.SECONDS_PER_PHYSICS_TICK;
                 if(tickTimer >= GameData.SECONDS_PER_TICK) {
                     List<Consumer<MatchView>> customRenderersToRemove = new ArrayList<>();
-                    Debuggers.customRenderers.forEach((r, v) -> {
+                    Debuggers.customLevelRenderers.forEach((r, v) -> {
                         v.object = v.object-1;
                         if(v.object <= 0) customRenderersToRemove.add(r);
                     });
                     for (Consumer<MatchView> runnable : customRenderersToRemove) {
-                        Debuggers.customRenderers.remove(runnable);
+                        Debuggers.customLevelRenderers.remove(runnable);
                     }
 
                     if(GameData.level != null) GameData.level.tickWorld();

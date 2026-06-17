@@ -1,14 +1,9 @@
 package com.hugo99j.chaosparty.ui;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.ParticleEffect;
-import com.daniel99j.djutil.NumberUtils;
-import com.daniel99j.dungeongame.ui.UiScreen;
 import com.daniel99j.dungeongame.ui.screenss.ScreenSSBuilder;
 import com.daniel99j.dungeongame.ui.types.Button;
 import com.daniel99j.dungeongame.ui.types.Text;

@@ -23,6 +23,7 @@ import com.daniel99j.dungeongame.NoDebugOption;
 import com.daniel99j.dungeongame.RequiresRefresh;
 import com.daniel99j.dungeongame.sounds.SoundInstance;
 import com.daniel99j.dungeongame.sounds.SoundManager;
+import com.daniel99j.dungeongame.ui.screenss.ScreenSS;
 import com.hugo99j.chaosparty.GameData;
 import com.daniel99j.dungeongame.entity.AbstractObject;
 import com.hugo99j.chaosparty.entity.TilesetObject;
@@ -59,7 +60,7 @@ public class Debuggers {
     private static ImGuiImplGlfw imGuiGlfw;
     private static ImGuiImplGl3 imGuiGl3;
     private static InputProcessor tmpProcessor;
-    private static final Map<String, ValueHolder<Boolean>> debugOptions = new HashMap<>();
+    private static final Map<String, ValueHolder<Boolean>> debugOptions = new LinkedHashMap<>();
     private static UUID selectedObjectId = null;
     private static UUID selectedLightId = null;
     private static Vector2 oldPos;
@@ -78,7 +79,9 @@ public class Debuggers {
     private static int newMapEditorName = 0;
     private static final List<String> newMapNames = new ArrayList<>();
     private static boolean forceShow = false;
-    public static Map<Consumer<MatchView>, ValueHolder<Integer>> customRenderers = new HashMap<>();
+    public static Map<Consumer<MatchView>, ValueHolder<Integer>> customLevelRenderers = new HashMap<>();
+    public static List<ScreenSS> activeScreenSS = new ArrayList<>();
+    private static int screenSS = 0;
 
     static {
         if (GameData.DEBUGGING) {
@@ -103,6 +106,7 @@ public class Debuggers {
             debugOptions.put("showBetweenBoxes", new ValueHolder<>(true));
             debugOptions.put("fakeControllers+1", new ValueHolder<>(false));
             debugOptions.put("fakeControllers+2", new ValueHolder<>(false));
+            debugOptions.put("screenSSDebugger", new ValueHolder<>(false));
 
             PathUtil.getFilesIn(PathUtil.asset("sounds/")).forEach(e -> audioNames.add(e.replace("assets/sounds/", "").replace(".mp3", "")));
         }
@@ -348,6 +352,71 @@ public class Debuggers {
 
                 ImGui.end();
 
+                ImGui.begin("ScreenSS");
+                if(Debuggers.isEnabled("screenSSDebugger")) {
+                    ImGui.beginChild("Left Panel", new ImVec2(300, 0), ImGuiChildFlags.Border | ImGuiChildFlags.ResizeX);
+                    ImGui.separatorText("All Objects");
+
+                    ScreenSS currentlySelected = null;
+
+                    if (ImGui.beginTable("Object Selector", 1, ImGuiTableFlags.RowBg)) {
+                        int id = 0;
+                        for (ScreenSS ss : Debuggers.activeScreenSS) {
+                            ImGui.tableNextRow();
+                            ImGui.tableNextColumn();
+                            ImGui.pushID(id);
+
+                            int flags = ImGuiSelectableFlags.SpanAllColumns;
+                            boolean selected = screenSS == ss.hashCode();
+                            if (selected) {
+                                flags |= ImGuiTreeNodeFlags.Selected;
+                                currentlySelected = ss;
+                            }
+                            if (ImGui.selectable(ss.getElementId() + " (" + id + ")", selected, flags)) screenSS = ss.hashCode();
+
+                            if(ImGui.isItemHovered()) {
+                                Color c = Color.SCARLET.cpy();
+                                c.a = 0.5f;
+                                RenderUtil.enableBlending();
+                                GameData.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+                                GameData.shapeRenderer.setColor(c);
+                            }
+                            else {
+                                GameData.shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+                                GameData.shapeRenderer.setColor(Color.ORANGE);
+                            }
+                            GameData.shapeRenderer.rect(ss.getX(), ss.getY(), ss.getXSize(), ss.getYSize());
+                            GameData.shapeRenderer.end();
+                            ImGui.popID();
+                            id++;
+                        }
+                        ImGui.endTable();
+                    }
+
+                    ImGui.endChild();
+
+                    ImGui.sameLine();
+
+                    ImGui.beginChild("ScreenSS Right Panel", new ImVec2(0, 0), ImGuiChildFlags.Border);
+
+                    ImGui.separatorText("Current ScreenSS");
+
+                    if(currentlySelected != null) {
+                        ValueHolder<ScreenSS> screenSSValueHolder = new ValueHolder<>(currentlySelected);
+                        currentlySelected.getGetters().forEach((g, v) -> {
+                            ImString text = new ImString(v, v.length()+100);
+                            if(ImGui.inputText(g, text, ImGuiInputTextFlags.EnterReturnsTrue)) {
+                                ToRun.run(() -> {screenSSValueHolder.object.getGetters().put(g, text.get());});
+                            }
+                        });
+                    }
+
+                    ImGui.endChild();
+                } else {
+                    ImGui.text("Enable screenSSDebugger to use");
+                }
+                ImGui.end();
+
                 //DEBUGGERS
 
                 // incase imgui changes the gameViewport
@@ -355,9 +424,8 @@ public class Debuggers {
 //                GameData.gameViewport.apply();
 
                 if (GameData.level != null) {
-
-                    if (GameData.level != null && isEnabled("hitboxes")) {
-                        customRenderers.put((v) -> {
+                    if (isEnabled("hitboxes")) {
+                        customLevelRenderers.put((v) -> {
                             box2dDebugRenderer.render(GameData.level.getBox2dWorld(), v.gameCamera.combined);
                         }, new ValueHolder<>(1));
                     }
@@ -410,6 +478,8 @@ public class Debuggers {
                 ImGui.getStyle().setAlpha(0.2f);
             }
         }
+
+        activeScreenSS.clear();
     }
 
     private static void renderObjectCreator() {
@@ -760,103 +830,6 @@ public class Debuggers {
         ImGui.endChild();
 
         return hoveredLight;
-    }
-
-    private static void renderSoundPlayer() {
-//        if (ImGui.button("Play new")) soundName = "";
-//
-//        ImGui.beginChild("Left Audio Panel", new ImVec2(300, 0), ImGuiChildFlags.Border | ImGuiChildFlags.ResizeX);
-//        ImGui.separatorText("Active sounds");
-//
-//        if (ImGui.beginTable("Sound Selector", 1, ImGuiTableFlags.RowBg)) {
-//            int id = 0;
-//            for (SoundInstance soundInstance : SoundManager.getActiveSounds()) {
-//                ImGui.tableNextRow();
-//                ImGui.tableNextColumn();
-//                ImGui.pushID(id);
-//                int flags = ImGuiSelectableFlags.SpanAllColumns;
-//                boolean selected = allObject.getUUID().equals(selectedObjectId);
-//                if (selected)
-//                    flags |= ImGuiTreeNodeFlags.Selected;
-//                if (ImGui.selectable(allObject.toString() + " (" + id + ")", selected, flags))
-//                    selectedObjectId = allObject.getUUID();
-//                if (ImGui.isItemHovered()) hoveredObject = allObject.getUUID();
-//                ImGui.popID();
-//
-//                id++;
-//            }
-//            ImGui.endTable();
-//        }
-//
-//        ImGui.endChild();
-//
-//        ImGui.sameLine();
-//
-//        ImGui.beginChild("Right Panel", new ImVec2(0, 0), ImGuiChildFlags.Border);
-//
-//        ImGui.separatorText("Current Object");
-//
-//        AbstractObject selectedObject;
-//        if (selectedObjectId != null && (selectedObject = GameConstants.level.getObjectByUUID(selectedObjectId)) != null) {
-//
-//            Vector2 middle = oldPos == null ? selectedObject.getPos() : oldPos;
-//            int posOffset = 10;
-//
-//            boolean changing = false;
-//            slider("X Pos", selectedObject.getPos().x, selectedObject::setX, middle.x - posOffset, middle.x + posOffset, ImGui.isKeyDown(ImGuiKey.ModAlt) ? "%.0f" : "%.3f");
-//            if (ImGui.isItemActive()) changing = true;
-//            slider("Y Pos", selectedObject.getPos().y, selectedObject::setY, middle.y - posOffset, middle.y + posOffset, ImGui.isKeyDown(ImGuiKey.ModAlt) ? "%.0f" : "%.3f");
-//            if (ImGui.isItemActive()) changing = true;
-//
-//            if (ImGui.button("TP to player")) selectedObject.setPos(GameConstants.player.getPos());
-//            ImGui.sameLine();
-//            if (ImGui.button("TP player to this")) GameConstants.player.setPos(selectedObject.getPos());
-//
-//            if (oldPos == null && changing) {
-//                oldPos = selectedObject.getPos();
-//            }
-//            if (oldPos != null && !changing) {
-//                oldPos = null;
-//            }
-//
-//            if (selectedObject instanceof TilesetObject tilesetObject) {
-//                ImGui.separatorText("Custom object data");
-//
-//                intInput("Width", tilesetObject.getWidth(), tilesetObject::setWidth);
-//                intInput("Height", tilesetObject.getHeight(), tilesetObject::setHeight);
-//            }
-//
-//            if (ImGui.button("Duplicate")) {
-//                try {
-//                    JsonObject data = selectedObject.write();
-//                    data.addProperty("uuid", UUID.randomUUID().toString());
-//                    AbstractObject object = LevelLoader.createObject(data, GameConstants.level);
-//                    assert object != null;
-//                    selectedObjectId = object.getUUID();
-//                } catch (Exception e) {
-//                    Logger.error("Error duplicating object", e);
-//                }
-//            }
-//
-//            ImGui.sameLine();
-//
-//            if (ImGui.button("c.constructor().get()")) {
-//                GameConstants.level.removeObject(selectedObject);
-//            }
-//
-//            ImGui.separatorText("Data");
-//            if (data != null) {
-//                ImString input = new ImString(data, data.length() + 10000);
-//
-//                ImGui.inputTextMultiline(" ", input, ImGuiInputTextFlags.None);
-//
-//                data = input.get();
-//            }
-//            JsonObject object = selectedObject.write();
-//            data = GsonUtil.PARSER.toJson(object);
-//        }
-//
-//        ImGui.endChild();
     }
 
     private static void intInput(String name, int getter, Consumer<Integer> setter) {

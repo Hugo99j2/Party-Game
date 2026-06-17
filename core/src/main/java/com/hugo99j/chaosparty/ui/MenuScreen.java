@@ -3,7 +3,6 @@ package com.hugo99j.chaosparty.ui;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.daniel99j.dungeongame.sounds.SoundManager;
-import com.daniel99j.dungeongame.ui.UiScreen;
 import com.daniel99j.dungeongame.ui.screenss.ScreenSSBuilder;
 import com.daniel99j.dungeongame.ui.types.Button;
 import com.daniel99j.dungeongame.ui.types.Text;

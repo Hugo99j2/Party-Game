@@ -1,4 +1,4 @@
-package com.daniel99j.dungeongame.ui;
+package com.hugo99j.chaosparty.ui;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -10,7 +10,6 @@ import com.daniel99j.dungeongame.ui.renderable.CursorType;
 import com.daniel99j.dungeongame.ui.renderable.RenderState;
 import com.daniel99j.dungeongame.ui.renderable.Renderable;
 import com.daniel99j.dungeongame.ui.screenss.CombinedScreenSS;
-import com.daniel99j.dungeongame.ui.screenss.ScreenSS;
 import com.hugo99j.chaosparty.GameData;
 
 import java.util.ArrayList;

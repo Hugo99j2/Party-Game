@@ -1,7 +1,7 @@
 package com.daniel99j.dungeongame.ui.renderable;
 
 import com.badlogic.gdx.math.Vector2;
-import com.daniel99j.dungeongame.ui.UiScreen;
+import com.hugo99j.chaosparty.ui.UiScreen;
 import com.daniel99j.dungeongame.ui.screenss.ScreenSS;
 
 public class Renderable {

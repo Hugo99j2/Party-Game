@@ -3,6 +3,7 @@ package com.daniel99j.dungeongame.ui.screenss;
 import com.daniel99j.djutil.maths.MathsContext;
 import com.daniel99j.djutil.maths.MathsInterpreter;
 import com.hugo99j.chaosparty.GameData;
+import com.hugo99j.chaosparty.ui.Debuggers;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,12 +11,18 @@ import java.util.Map;
 public class ScreenSS {
     private final Map<String, String> getters;
     private final Map<String, CacheKey> cache = new HashMap<>();
-    private boolean center;
+    private final boolean center;
+    private final String elementId;
 
-    protected ScreenSS(Map<String, String> getters) {
+    protected ScreenSS(Map<String, String> getters, String elementId) {
         this.center = getters.getOrDefault("center", "false").equals("true");
+        this.elementId = elementId;
         getters.remove("center");
         this.getters = getters;
+    }
+
+    public String getElementId() {
+        return elementId;
     }
 
     public int getAsInt(String name) {
@@ -32,6 +39,11 @@ public class ScreenSS {
             }
         }
         if(getters.containsKey(name)) {
+            if(GameData.DEBUGGING && Debuggers.isEnabled("screenSSDebugger")) {
+                //fine as it doesnt run immediately
+                if(!Debuggers.activeScreenSS.contains(this)) Debuggers.activeScreenSS.add(this);
+            }
+
             double result = MathsInterpreter.eval(getters.get(name), this.createContext(name));
             cache.put(name, new CacheKey(result, GameData.time));
             return result;

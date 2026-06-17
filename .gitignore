@@ -139,7 +139,7 @@ www-test/
 /ios-moe/nbdist/
 /headless/nbdist/
 /server/nbdist/
-/shared/nbdist/
+/shared/nbdist/st
 
 nbactions.xml
 nb-configuration.xml

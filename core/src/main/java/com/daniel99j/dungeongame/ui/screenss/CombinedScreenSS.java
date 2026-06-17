@@ -14,7 +14,7 @@ public class CombinedScreenSS {
     }
 
     private void add(ScreenSSBuilder builder, ScreenSS parent) {
-        ScreenParentSS current = new ScreenParentSS(builder, parent);
+        ScreenParentSS current = new ScreenParentSS(builder, parent, builder.name);
         getter.put(builder.name, current);
         builder.children.forEach(builder1 -> add(builder1, current));
     }
@@ -28,8 +28,8 @@ public class CombinedScreenSS {
         private final ScreenSS parent;
         protected List<String> parentVars;
 
-        protected ScreenParentSS(ScreenSSBuilder builder, ScreenSS parent) {
-            super(builder.attributes);
+        protected ScreenParentSS(ScreenSSBuilder builder, ScreenSS parent, String elementId) {
+            super(builder.attributes, elementId);
             this.parent = parent;
             this.parentVars = builder.parentVars;
         }

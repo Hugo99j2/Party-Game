@@ -15,7 +15,6 @@ import com.daniel99j.djutil.ValueHolder;
 import com.hugo99j.chaosparty.GameData;
 import com.daniel99j.dungeongame.entity.*;
 import com.hugo99j.chaosparty.ui.Debuggers;
-import com.hugo99j.chaosparty.util.ImageUtil;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -183,7 +182,7 @@ public class Level implements Disposable {
         this.getBox2dWorld().QueryAABB(callback, start.x, start.y, end.x, end.y);
 
         if(GameData.DEBUGGING && Debuggers.isEnabled("showBetweenBoxes")) {
-            Debuggers.customRenderers.put((v) -> {
+            Debuggers.customLevelRenderers.put((v) -> {
                 GameData.shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
                 GameData.shapeRenderer.setColor(Color.CYAN);
                 GameData.shapeRenderer.rect(start.x, start.y, end.x - start.x, end.y - start.y);

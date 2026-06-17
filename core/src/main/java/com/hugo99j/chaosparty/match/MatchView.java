@@ -47,7 +47,7 @@ public class MatchView implements Disposable {
         gameViewport.apply();
         GameData.shapeRenderer.setProjectionMatrix(gameCamera.combined);
         GameData.spriteBatch.setProjectionMatrix(gameCamera.combined);
-        for (Consumer<MatchView> customRenderer : Debuggers.customRenderers.keySet()) {
+        for (Consumer<MatchView> customRenderer : Debuggers.customLevelRenderers.keySet()) {
             customRenderer.accept(this);
         }
 

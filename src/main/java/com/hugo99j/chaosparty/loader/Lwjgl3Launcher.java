@@ -1,6 +1,5 @@
 package com.hugo99j.chaosparty.loader;
 
-import com.badlogic.gdx.Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.hugo99j.chaosparty.Main;
@@ -9,7 +8,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.impl.FabricLoaderImpl;
 
 /** Launches the desktop (LWJGL3) application. */
-public class Lwjgl3Launcher implements ClientModInitializer {
+public class Lwjgl3Launcher {
     public static void main(String[] args) {
 
     }

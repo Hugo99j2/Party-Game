@@ -1,70 +1,51 @@
-buildscript {
-  repositories {
-    mavenCentral()
-    gradlePluginPortal()
-    mavenLocal()
-    google()
-    maven { url = 'https://central.sonatype.com/repository/maven-snapshots/' }
-    maven { url = 'https://dj.ucc.asn.au/maven/' }
-  }
-  dependencies {
-
-
-  }
+plugins {
+  id 'java'
 }
 
-allprojects {
-  apply plugin: 'eclipse'
-  apply plugin: 'idea'
+group = 'com.daniel99j'
+version = '1.0-SNAPSHOT'
 
-  // This allows you to "Build and run using IntelliJ IDEA", an option in IDEA's Settings.
-  idea {
-    module {
-      outputDir = file('build/classes/java/main')
-      testOutputDir = file('build/classes/java/test')
-    }
-  }
+repositories {
+  mavenCentral()
+  maven { url = 'https://dj.ucc.asn.au/maven/' }
+  maven { url = 'https://maven.fabricmc.net/' }
 }
 
-configure(subprojects) {
-  apply plugin: 'java-library'
-  java.sourceCompatibility = 21
+dependencies {
+  testImplementation platform('org.junit:junit-bom:6.0.0')
+  testImplementation 'org.junit.jupiter:junit-jupiter'
+  testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+  implementation "com.badlogicgames.box2dlights:box2dlights:$box2dlightsVersion"
+  implementation "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
+  implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
+  implementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
+  implementation "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
+  compileOnly 'org.jetbrains:annotations:26.0.2'
 
-  // From https://lyze.dev/2021/04/29/libGDX-Internal-Assets-List/
-  // The article can be helpful when using assets.txt in your project.
-  tasks.register('generateAssetList') {
-    inputs.dir("${project.rootDir}/core/src/main/resources/")
-    // projectFolder/assets
-    File assetsFolder = new File("${project.rootDir}/core/src/main/resources/")
-    // projectFolder/assets/assets.txt
-    File assetsFile = new File(assetsFolder, "tree.txt")
-    // delete that file in case we've already created it
-    assetsFile.delete()
+  implementation "io.github.spair:imgui-java-binding:$imguiVersion"
+  implementation "io.github.spair:imgui-java-lwjgl3:$imguiVersion"
+  implementation "io.github.spair:imgui-java-natives-linux:$imguiVersion"
+  implementation "io.github.spair:imgui-java-natives-macos:$imguiVersion"
+  implementation "io.github.spair:imgui-java-natives-windows:$imguiVersion"
 
-    // iterate through all files inside that folder
-    // convert it to a relative path
-    // and append it to the file assets.txt
-    fileTree(assetsFolder).collect { assetsFolder.relativePath(it) }.sort().each {
-      assetsFile.append(it + "\n")
-    }
-  }
-  processResources.dependsOn 'generateAssetList'
+  implementation "com.google.code.gson:gson:2.13.2"
 
-  compileJava {
-    options.incremental = true
-  }
-}
+  implementation "net.fabricmc:sponge-mixin:0.17.3+mixin.0.8.7"
 
-subprojects {
-  version = "$projectVersion"
-  ext.appName = 'Chaos Party'
-  repositories {
-    mavenCentral()
-    // You may want to remove the following line if you have errors downloading dependencies.
-    mavenLocal()
-    maven { url = 'https://central.sonatype.com/repository/maven-snapshots/' }
-    maven { url = 'https://jitpack.io' }
+  implementation "com.daniel99j:djutil:1.7.2"
+
+  implementation "com.badlogicgames.gdx-controllers:gdx-controllers-core:$gdxControllers"
+  implementation "com.badlogicgames.gdx-controllers:gdx-controllers-desktop:$gdxControllers"
+  implementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
+  implementation "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
+  implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+  implementation "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
+
+  implementation "org.spongepowered:mixin:0.8.7"
+  annotationProcessor "org.spongepowered:mixin:0.8.7:processor"
+
+  if(enableGraalNative == 'true') {
+    implementation "io.github.berstanio:gdx-svmhelper-backend-lwjgl3:$graalHelperVersion"
+    implementation "io.github.berstanio:gdx-svmhelper-extension-box2d:$graalHelperVersion"
   }
 }
-
-eclipse.project.name = 'Chaos Party' + '-parent'

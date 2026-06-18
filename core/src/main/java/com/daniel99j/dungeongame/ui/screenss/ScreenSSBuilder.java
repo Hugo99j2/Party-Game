@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 public class ScreenSSBuilder {
-    protected String name = "";
+    protected String name = "root";
     protected final ScreenSSBuilder parent;
     protected final List<ScreenSSBuilder> children = new ArrayList<>();
     protected final Map<String, String> attributes = new HashMap<>();

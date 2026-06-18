@@ -18,6 +18,11 @@ import java.util.List;
 public class HerdSheepMinigame extends AbstractMinigame {
     private final Timer timer;
     private final CombinedScreenSS ss = ScreenSSBuilder.create()
+        .set("xSize", "1vw")
+        .set("ySize", "1vh")
+        .set("x", 0)
+        .set("y", 0)
+        .newChild("rightcorner")
         .set("x", "20")
         .set("y", "0.1vh")
         .set("xSize", "0.02vw")
@@ -33,6 +38,7 @@ public class HerdSheepMinigame extends AbstractMinigame {
         .set("y", "40%+20%")
         .set("xSize", "95%")
         .set("ySize", "40%")
+        .finishChild()
         .finishChild()
         .build();
 

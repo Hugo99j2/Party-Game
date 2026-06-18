@@ -9,5 +9,10 @@
   "depends": {
     "fabricloader": "*",
     "java": ">=17"
+  },
+  "entrypoints": {
+    "client": [
+      "com.hugo99j.chaosparty.loader.Lwjgl3Launcher"
+    ]
   }
 }

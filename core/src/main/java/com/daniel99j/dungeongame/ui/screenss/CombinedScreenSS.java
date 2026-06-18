@@ -24,7 +24,7 @@ public class CombinedScreenSS {
         return getter.get(name);
     }
 
-    private static class ScreenParentSS extends ScreenSS {
+    public static class ScreenParentSS extends ScreenSS {
         private final ScreenSS parent;
         protected List<String> parentVars;
 
@@ -32,6 +32,10 @@ public class CombinedScreenSS {
             super(builder.attributes, elementId);
             this.parent = parent;
             this.parentVars = builder.parentVars;
+        }
+
+        public ScreenSS getParent() {
+            return parent;
         }
 
         @Override

@@ -1,6 +1,5 @@
 package com.hugo99j.chaosparty.loader;
 
-import com.badlogic.gdx.Game;
 import net.fabricmc.loader.impl.game.GameProvider;
 import net.fabricmc.loader.impl.game.patch.GameTransformer;
 import net.fabricmc.loader.impl.launch.FabricLauncher;

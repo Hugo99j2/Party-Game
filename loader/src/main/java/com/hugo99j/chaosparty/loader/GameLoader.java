@@ -9,6 +9,6 @@ import static net.fabricmc.loader.impl.util.SystemProperties.SKIP_MC_PROVIDER;
 public class GameLoader {
     public static void main(String[] args) {
         System.setProperty(SKIP_MC_PROVIDER, "true");
-        Knot.launch(args, EnvType.CLIENT);
+        //Knot.launch(args, EnvType.CLIENT);
     }
 }

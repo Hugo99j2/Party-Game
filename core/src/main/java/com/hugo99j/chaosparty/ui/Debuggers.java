@@ -23,6 +23,7 @@ import com.daniel99j.dungeongame.NoDebugOption;
 import com.daniel99j.dungeongame.RequiresRefresh;
 import com.daniel99j.dungeongame.sounds.SoundInstance;
 import com.daniel99j.dungeongame.sounds.SoundManager;
+import com.daniel99j.dungeongame.ui.screenss.CombinedScreenSS;
 import com.daniel99j.dungeongame.ui.screenss.ScreenSS;
 import com.hugo99j.chaosparty.GameData;
 import com.daniel99j.dungeongame.entity.AbstractObject;
@@ -36,6 +37,7 @@ import com.hugo99j.chaosparty.match.MatchPlayer;
 import com.hugo99j.chaosparty.match.MatchView;
 import com.hugo99j.chaosparty.match.User;
 import com.hugo99j.chaosparty.minigame.MapEditor;
+import com.hugo99j.chaosparty.mixin.ShapeRendererLineWidth;
 import com.hugo99j.chaosparty.util.*;
 import imgui.*;
 import imgui.flag.*;
@@ -360,36 +362,12 @@ public class Debuggers {
                     ScreenSS currentlySelected = null;
 
                     if (ImGui.beginTable("Object Selector", 1, ImGuiTableFlags.RowBg)) {
-                        int id = 0;
+                        ValueHolder<Integer> id = new ValueHolder<>(0);
+                        ValueHolder<ScreenSS> selected = new ValueHolder<>(null);
                         for (ScreenSS ss : Debuggers.activeScreenSS) {
-                            ImGui.tableNextRow();
-                            ImGui.tableNextColumn();
-                            ImGui.pushID(id);
-
-                            int flags = ImGuiSelectableFlags.SpanAllColumns;
-                            boolean selected = screenSS == ss.hashCode();
-                            if (selected) {
-                                flags |= ImGuiTreeNodeFlags.Selected;
-                                currentlySelected = ss;
-                            }
-                            if (ImGui.selectable(ss.getElementId() + " (" + id + ")", selected, flags)) screenSS = ss.hashCode();
-
-                            if(ImGui.isItemHovered()) {
-                                Color c = Color.SCARLET.cpy();
-                                c.a = 0.5f;
-                                RenderUtil.enableBlending();
-                                GameData.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-                                GameData.shapeRenderer.setColor(c);
-                            }
-                            else {
-                                GameData.shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-                                GameData.shapeRenderer.setColor(Color.ORANGE);
-                            }
-                            GameData.shapeRenderer.rect(ss.getX(), ss.getY(), ss.getXSize(), ss.getYSize());
-                            GameData.shapeRenderer.end();
-                            ImGui.popID();
-                            id++;
+                            if(!(ss instanceof CombinedScreenSS.ScreenParentSS) || ((CombinedScreenSS.ScreenParentSS) ss).getParent() == null) addSS(ss, id, selected, "");
                         }
+                        currentlySelected = selected.object;
                         ImGui.endTable();
                     }
 
@@ -480,6 +458,44 @@ public class Debuggers {
         }
 
         activeScreenSS.clear();
+    }
+
+    private static void addSS(ScreenSS ss, ValueHolder<Integer> i, ValueHolder<ScreenSS> selectedHolder, String prepend) {
+        int id = i.object;
+        ImGui.tableNextRow();
+        ImGui.tableNextColumn();
+        ImGui.pushID(id);
+
+        int flags = ImGuiSelectableFlags.SpanAllColumns;
+        boolean selected = screenSS == ss.hashCode();
+        if (selected) {
+            flags |= ImGuiTreeNodeFlags.Selected;
+            selectedHolder.object = ss;
+        }
+        if (ImGui.selectable(prepend + ss.getElementId() + " (" + id + ")", selected, flags)) screenSS = ss.hashCode();
+
+        GameData.shapeRenderer.setProjectionMatrix(GameData.uiCamera.combined);
+        if (ImGui.isItemHovered()) {
+            Color c = Color.SCARLET.cpy();
+            c.a = 0.5f;
+            RenderUtil.enableBlending();
+            GameData.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+            GameData.shapeRenderer.setColor(c);
+        } else {
+            ((ShapeRendererLineWidth) GameData.shapeRenderer).setDefaultRectLineWidth(10);
+            GameData.shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+            GameData.shapeRenderer.setColor(Color.ORANGE);
+        }
+        GameData.shapeRenderer.rect(ss.getX(), ss.getY(), ss.getXSize(), ss.getYSize());
+        GameData.shapeRenderer.end();
+        ImGui.popID();
+        i.object++;
+
+        for (ScreenSS activeScreenSS1 : Debuggers.activeScreenSS) {
+            if(activeScreenSS1 instanceof CombinedScreenSS.ScreenParentSS parent && parent.getParent() == ss) {
+                addSS(activeScreenSS1, i, selectedHolder, prepend+"    ");
+            }
+        }
     }
 
     private static void renderObjectCreator() {

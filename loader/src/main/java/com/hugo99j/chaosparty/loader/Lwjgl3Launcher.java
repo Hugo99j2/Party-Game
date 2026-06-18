@@ -1,17 +1,17 @@
 package com.hugo99j.chaosparty.loader;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.hugo99j.chaosparty.Main;
+import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.impl.FabricLoaderImpl;
 
 /** Launches the desktop (LWJGL3) application. */
-public class Lwjgl3Launcher {
+public class Lwjgl3Launcher implements ClientModInitializer {
     public static void main(String[] args) {
-        if (StartupHelper.startNewJvmIfRequired()) return; // This handles macOS support and helps on Windows.
-        Lwjgl3Application a = createApplication();
-        FabricLoaderImpl.INSTANCE.prepareModInit(FabricLoader.getInstance().getGameDir(), a);
+
     }
 
     private static Lwjgl3Application createApplication() {
@@ -47,5 +47,12 @@ public class Lwjgl3Launcher {
 //        configuration.setOpenGLEmulation(Lwjgl3ApplicationConfiguration.GLEmulation.ANGLE_GLES20, 0, 0);
 
         return configuration;
+    }
+
+    @Override
+    public void onInitializeClient() {
+        if (StartupHelper.startNewJvmIfRequired()) return; // This handles macOS support and helps on Windows.
+        Lwjgl3Application a = createApplication();
+        FabricLoaderImpl.INSTANCE.prepareModInit(FabricLoader.getInstance().getGameDir(), a);
     }
 }

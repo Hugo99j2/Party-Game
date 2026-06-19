@@ -41,11 +41,27 @@ dependencies {
   implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
   implementation "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
 
-  implementation "org.spongepowered:mixin:0.8.7"
-  annotationProcessor "org.spongepowered:mixin:0.8.7:processor"
+  //implementation "org.spongepowered:mixin:0.8.7"
+  //annotationProcessor "org.spongepowered:mixin:0.8.7:processor"
 
   if(enableGraalNative == 'true') {
     implementation "io.github.berstanio:gdx-svmhelper-backend-lwjgl3:$graalHelperVersion"
     implementation "io.github.berstanio:gdx-svmhelper-extension-box2d:$graalHelperVersion"
   }
 }
+
+tasks.withType(JavaExec.class).configureEach {
+  environment("__GL_THREADED_OPTIMIZATIONS", 0)
+  jvmArgs += "-Dfabric.development=true"
+}
+
+tasks.register('generateAssetList') {
+  inputs.dir("${project.rootDir}/src/main/resources/")
+  File assetsFolder = new File("${project.rootDir}/src/main/resources/")
+  File assetsFile = new File(assetsFolder, "tree.txt")
+  assetsFile.delete()
+  fileTree(assetsFolder).collect { assetsFolder.relativePath(it) }.sort().each {
+    assetsFile.append(it + "\n")
+  }
+}
+processResources.dependsOn 'generateAssetList'

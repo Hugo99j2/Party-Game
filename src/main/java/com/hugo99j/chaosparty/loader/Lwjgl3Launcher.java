@@ -3,14 +3,13 @@ package com.hugo99j.chaosparty.loader;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.hugo99j.chaosparty.Main;
-import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.loader.api.FabricLoader;
-import net.fabricmc.loader.impl.FabricLoaderImpl;
 
 /** Launches the desktop (LWJGL3) application. */
 public class Lwjgl3Launcher {
     public static void main(String[] args) {
-
+        if (StartupHelper.startNewJvmIfRequired()) return; // This handles macOS support and helps on Windows.
+        Lwjgl3Application a = createApplication();
+        //FabricLoaderImpl.INSTANCE.prepareModInit(FabricLoader.getInstance().getGameDir(), a);
     }
 
     private static Lwjgl3Application createApplication() {
@@ -33,7 +32,7 @@ public class Lwjgl3Launcher {
         configuration.setWindowedMode(640, 480);
         //// You can change these files; they are in lwjgl3/src/main/resources/ .
         //// They can also be loaded from the root of assets/ .
-        configuration.setWindowIcon("libgdx128.png", "libgdx64.png", "libgdx32.png", "libgdx16.png");
+        configuration.setWindowIcon("test.png", "test.png", "test.png", "test.png");
 
         //// This could improve compatibility with Windows machines with buggy OpenGL drivers, Macs
         //// with Apple Silicon that have to emulate compatibility with OpenGL anyway, and more.
@@ -48,10 +47,8 @@ public class Lwjgl3Launcher {
         return configuration;
     }
 
-    @Override
-    public void onInitializeClient() {
-        if (StartupHelper.startNewJvmIfRequired()) return; // This handles macOS support and helps on Windows.
-        Lwjgl3Application a = createApplication();
-        FabricLoaderImpl.INSTANCE.prepareModInit(FabricLoader.getInstance().getGameDir(), a);
-    }
+//    @Override
+//    public void onInitializeClient() {
+//
+//    }
 }

@@ -67,7 +67,7 @@ www-test/
 .project
 .metadata/
 /android/bin/
-/core/bin/
+bin/
 /lwjgl2/bin/
 /loader/bin/
 /html/bin/
@@ -104,7 +104,7 @@ www-test/
 
 /nbbuild/
 /android/nbbuild/
-/core/nbbuild/
+/nbbuild/
 /lwjgl2/nbbuild/
 /loader/nbbuild/
 /html/nbbuild/
@@ -117,7 +117,7 @@ www-test/
 
 /dist/
 /android/dist/
-/core/dist/
+/dist/
 /lwjgl2/dist/
 /loader/dist/
 /html/dist/
@@ -130,7 +130,7 @@ www-test/
 
 /nbdist/
 /android/nbdist/
-/core/nbdist/
+/nbdist/
 /lwjgl2/nbdist/
 /loader/nbdist/
 /html/nbdist/
@@ -164,5 +164,5 @@ Thumbs.db
 **/resource-config.json
 /imgui.ini
 /run/
-/core/src/main/resources/folders.txt
-/core/src/main/resources/tree.txt
+/src/main/resources/folders.txt
+/src/main/resources/tree.txt

@@ -2,6 +2,7 @@ package com.hugo99j.chaosparty.minigame;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
+import com.daniel99j.dungeongame.sounds.SoundManager;
 import com.daniel99j.dungeongame.ui.renderable.RenderState;
 import com.daniel99j.dungeongame.ui.screenss.CombinedScreenSS;
 import com.daniel99j.dungeongame.ui.screenss.ScreenSSBuilder;
@@ -46,6 +47,7 @@ public class HerdSheepMinigame extends AbstractMinigame {
         super("herd_sheep");
         timer = new Timer("timer", 45, 2, false);
         timer.setStyle(ss.get("timer"));
+        SoundManager.getSound("sheep_music").playSingle(1);
     }
 
     @Override

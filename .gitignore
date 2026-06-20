@@ -166,3 +166,4 @@ Thumbs.db
 /run/
 /game/src/main/resources/folders.txt
 /game/src/main/resources/tree.txt
+/core/src/main/resources/tree.txt

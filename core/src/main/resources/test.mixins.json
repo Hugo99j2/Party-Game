@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "package": "com.hugo99j.chaosparty.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "ControllerUtilMixin",
+    "MonitorFixMixin",
+    "ShapeRendererLineWidth",
+    "WindowFixMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

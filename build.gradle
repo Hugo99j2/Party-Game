@@ -12,13 +12,9 @@ repositories {
 }
 
 dependencies {
-  testImplementation platform('org.junit:junit-bom:6.0.0')
-  testImplementation 'org.junit.jupiter:junit-jupiter'
-  testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
   implementation "com.badlogicgames.box2dlights:box2dlights:$box2dlightsVersion"
   implementation "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
   implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
-  implementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
   implementation "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
   compileOnly 'org.jetbrains:annotations:26.0.2'
 
@@ -30,7 +26,7 @@ dependencies {
 
   implementation "com.google.code.gson:gson:2.13.2"
 
-  implementation "net.fabricmc:sponge-mixin:0.17.3+mixin.0.8.7"
+  //implementation "net.fabricmc:sponge-mixin:0.17.3+mixin.0.8.7"
 
   implementation "com.daniel99j:djutil:1.7.2"
 
@@ -48,6 +44,55 @@ dependencies {
     implementation "io.github.berstanio:gdx-svmhelper-backend-lwjgl3:$graalHelperVersion"
     implementation "io.github.berstanio:gdx-svmhelper-extension-box2d:$graalHelperVersion"
   }
+
+
+//
+  implementation "net.fabricmc:fabric-loader:${project.fabricLoaderVersion}"
+  implementation "net.fabricmc:tiny-mappings-parser:${project.tinyMappingsParserVersion}"
+
+  implementation("net.fabricmc:sponge-mixin:${mixinVersion}") {
+    exclude(group: 'com.google.code.gson')
+    exclude(group: 'com.google.guava')
+  }
+  implementation "io.github.llamalad7:mixinextras-fabric:$mixinExtrasVersion"
+  implementation "com.google.guava:guava:${guavaVersion}"
+
+  implementation "net.fabricmc:tiny-remapper:${project.tinyRemapperVersion}"
+  implementation "net.fabricmc:access-widener:${project.accessWidenerVersion}"
+
+  implementation "org.ow2.asm:asm:${project.asmVersion}"
+  implementation "org.ow2.asm:asm-analysis:${project.asmVersion}"
+  implementation "org.ow2.asm:asm-commons:${project.asmVersion}"
+  implementation "org.ow2.asm:asm-tree:${project.asmVersion}"
+  implementation "org.ow2.asm:asm-util:${project.asmVersion}"
+
+
+//
+  implementation "com.badlogicgames.box2dlights:box2dlights:$box2dlightsVersion"
+  implementation "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
+  implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
+  implementation "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
+  compileOnly 'org.jetbrains:annotations:26.0.2'
+
+  implementation "io.github.spair:imgui-java-binding:$imguiVersion"
+  implementation "io.github.spair:imgui-java-lwjgl3:$imguiVersion"
+  implementation "io.github.spair:imgui-java-natives-linux:$imguiVersion"
+  implementation "io.github.spair:imgui-java-natives-macos:$imguiVersion"
+  implementation "io.github.spair:imgui-java-natives-windows:$imguiVersion"
+
+  implementation "com.google.code.gson:gson:2.13.2"
+
+  implementation "net.fabricmc:sponge-mixin:$mixinVersion"
+  implementation "io.github.llamalad7:mixinextras-fabric:$mixinExtrasVersion"
+
+  implementation "com.daniel99j:djutil:1.7.2"
+
+  implementation "com.badlogicgames.gdx-controllers:gdx-controllers-core:$gdxControllers"
+  implementation "com.badlogicgames.gdx-controllers:gdx-controllers-desktop:$gdxControllers"
+  implementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
+  implementation "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
+  implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+  implementation "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
 }
 
 tasks.withType(JavaExec.class).configureEach {
@@ -56,8 +101,8 @@ tasks.withType(JavaExec.class).configureEach {
 }
 
 tasks.register('generateAssetList') {
-  inputs.dir("${project.rootDir}/src/main/resources/")
-  File assetsFolder = new File("${project.rootDir}/src/main/resources/")
+  inputs.dir("${project.rootDir}/core/src/main/resources/")
+  File assetsFolder = new File("${project.rootDir}/core/src/main/resources/")
   File assetsFile = new File(assetsFolder, "tree.txt")
   assetsFile.delete()
   fileTree(assetsFolder).collect { assetsFolder.relativePath(it) }.sort().each {
@@ -65,3 +110,27 @@ tasks.register('generateAssetList') {
   }
 }
 processResources.dependsOn 'generateAssetList'
+
+gradle.projectsEvaluated {
+  tasks.register('fatJar', Jar) {
+    group = 'build'
+    description = 'Builds a runnable fat jar containing the loader, core, and runtime dependencies.'
+
+    dependsOn project(':loader').tasks.named('classes')
+    archiveClassifier = 'all'
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+    manifest {
+      attributes 'Main-Class': 'com.hugo99j.chaosparty.LoaderMain'
+    }
+
+    from project(':loader').sourceSets.main.output
+    from {
+      project(':loader').configurations.runtimeClasspath.collect {
+        it.isDirectory() ? it : zipTree(it)
+      }
+    }
+
+    exclude 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/*.SF'
+  }
+}

@@ -8,3 +8,6 @@ pluginManagement {
     gradlePluginPortal()
   }
 }
+
+include('loader')
+include('core')

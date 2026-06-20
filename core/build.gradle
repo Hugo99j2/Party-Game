@@ -43,3 +43,14 @@ dependencies {
   //implementation project(':base')
 }
 
+tasks.register('generateAssetList') {
+  inputs.dir("${project.rootDir}/core/src/main/resources/")
+  File assetsFolder = new File("${project.rootDir}/core/src/main/resources/")
+  File assetsFile = new File(assetsFolder, "tree.txt")
+  assetsFile.delete()
+
+  fileTree(assetsFolder).collect { assetsFolder.relativePath(it) }.sort().each {
+    assetsFile.append(it + "\n")
+  }
+}
+processResources.dependsOn 'generateAssetList'

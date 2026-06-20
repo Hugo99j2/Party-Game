@@ -4,6 +4,7 @@ import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.desktop.support.JamepadController;
 import com.hugo99j.chaosparty.ui.ControllerInput;
 import com.hugo99j.chaosparty.ui.ControllerUtil;
+import com.hugo99j.chaosparty.util.RenderUtil;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
@@ -20,6 +21,7 @@ public class ControllerUtilMixin implements ControllerUtil {
 
     @Override
     public float getValue(ControllerInput input) {
+        if(!RenderUtil.isFocused()) return 0;
         //noinspection usagelimited
         return input.getGetValue().apply((Controller) this);
     }
@@ -27,7 +29,7 @@ public class ControllerUtilMixin implements ControllerUtil {
     @Override
     public boolean isPressed(ControllerInput input) {
         //noinspection usagelimited
-        return input.getGetPressed().apply((Controller) this);
+        return input.getGetPressed().apply((Controller) this) && RenderUtil.isFocused();
     }
 
     @Override

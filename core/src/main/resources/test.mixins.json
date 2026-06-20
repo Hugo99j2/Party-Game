@@ -6,6 +6,7 @@
     "ControllerUtilMixin",
     "MonitorFixMixin",
     "ShapeRendererLineWidth",
+    "WindowAccessor",
     "WindowFixMixin"
   ],
   "injectors": {

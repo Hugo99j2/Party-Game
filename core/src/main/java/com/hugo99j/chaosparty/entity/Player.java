@@ -18,6 +18,7 @@ import com.hugo99j.chaosparty.Main;
 
 public class Player extends AdvancedObject {
     private final MatchPlayer matchPlayer;
+    private boolean flip;
 
     public Player(MatchPlayer matchPlayer) {
         this.matchPlayer = matchPlayer;
@@ -30,6 +31,9 @@ public class Player extends AdvancedObject {
 
         if(GameData.DEBUGGING) {
             this.getPhysics().getFixtureList().get(0).getFilterData().maskBits = (short) (Debuggers.isEnabled("noclip") ? 0 : -1);
+        }
+        if(this.getVelocity().len() > 0.1) {
+            flip = this.getVelocity().x > 0.1;
         }
     }
 
@@ -44,7 +48,7 @@ public class Player extends AdvancedObject {
         //GameData.spriteBatch.draw(ImageUtil.get("player"), pos.x, pos.y, 1, 1);
 
         for (CostumePart value : CostumePart.values()) {
-            GameData.spriteBatch.draw(ImageUtil.get("costumes/"+this.matchPlayer.getUser().getWearing(value)), pos.x, pos.y, 1, 1);
+            GameData.spriteBatch.draw(ImageUtil.get("costumes/"+this.matchPlayer.getUser().getWearing(value)), pos.x+(flip ? 1 : 0), pos.y, (flip ? -1 : 1), 1);
         }
     }
 

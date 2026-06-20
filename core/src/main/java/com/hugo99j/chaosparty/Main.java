@@ -164,28 +164,32 @@ public class Main extends Game {
         //fbo.begin();
 
         //GameConstants.gameCamera.update();
-        activeTimer += Gdx.graphics.getDeltaTime();
-
         boolean inMapEditor = GameData.getCurrentMatch() != null && GameData.getCurrentMatch().getCurrentMinigame() instanceof MapEditor;
-        if (activeTimer > GameData.SECONDS_PER_PHYSICS_TICK && (!inMapEditor || (GameData.DEBUGGING && Debuggers.isEnabled("tickMapEditor"))) && this.getScreen() instanceof PlayScreen)
-            while ((activeTimer -= GameData.SECONDS_PER_PHYSICS_TICK) > 0) {
-                tickTimer+= GameData.SECONDS_PER_PHYSICS_TICK;
-                if(tickTimer >= GameData.SECONDS_PER_TICK) {
-                    List<Consumer<MatchView>> customRenderersToRemove = new ArrayList<>();
-                    Debuggers.customLevelRenderers.forEach((r, v) -> {
-                        v.object = v.object-1;
-                        if(v.object <= 0) customRenderersToRemove.add(r);
-                    });
-                    for (Consumer<MatchView> runnable : customRenderersToRemove) {
-                        Debuggers.customLevelRenderers.remove(runnable);
-                    }
+        if((!inMapEditor || (GameData.DEBUGGING && Debuggers.isEnabled("tickMapEditor"))) && this.getScreen() instanceof PlayScreen) {
+            //Only add to timer if the game should currently be ticking!
+            activeTimer += Gdx.graphics.getDeltaTime();
 
-                    if(GameData.level != null) GameData.level.tickWorld();
-                    if(GameData.getCurrentMatch() != null) GameData.getCurrentMatch().tick();
-                    tickTimer = 0;
+            if (activeTimer > GameData.SECONDS_PER_PHYSICS_TICK)
+                while ((activeTimer -= GameData.SECONDS_PER_PHYSICS_TICK) > 0) {
+                    tickTimer += GameData.SECONDS_PER_PHYSICS_TICK;
+                    if (tickTimer >= GameData.SECONDS_PER_TICK) {
+                        List<Consumer<MatchView>> customRenderersToRemove = new ArrayList<>();
+                        Debuggers.customLevelRenderers.forEach((r, v) -> {
+                            v.object = v.object - 1;
+                            if (v.object <= 0) customRenderersToRemove.add(r);
+                        });
+                        for (Consumer<MatchView> runnable : customRenderersToRemove) {
+                            Debuggers.customLevelRenderers.remove(runnable);
+                        }
+
+                        if (GameData.level != null) GameData.level.tickWorld();
+                        if (GameData.getCurrentMatch() != null) GameData.getCurrentMatch().tick();
+                        tickTimer = 0;
+                    }
+                    if (GameData.level != null)
+                        GameData.level.getBox2dWorld().step(GameData.SECONDS_PER_PHYSICS_TICK, 6, 2);
                 }
-                if(GameData.level != null) GameData.level.getBox2dWorld().step(GameData.SECONDS_PER_PHYSICS_TICK, 6, 2);
-            }
+        }
 
 
 

@@ -110,15 +110,15 @@ public class CharacterCreatorScreen extends UiScreen {
             if(current.getButton(current.getMapping().buttonDpadDown)) {
                 wasAnyPressed = true;
                 if(!wasDpadPressed) {
-                    if(costumePart.ordinal() < CostumePart.values().length -1) costumePart = CostumePart.values()[costumePart.ordinal()+1];
-                    else costumePart = CostumePart.values()[CostumePart.values().length-1];
+                    if(costumePart.ordinal() < CostumePart.values().length-1) costumePart = CostumePart.values()[costumePart.ordinal()+1];
+                    else costumePart = CostumePart.values()[0];
                 }
             }
             if(current.getButton(current.getMapping().buttonDpadLeft)) {
                 wasAnyPressed = true;
                 if(!wasDpadPressed) {
                     int index = Costumes.getVariants(costumePart).indexOf(user.getWearing(costumePart));
-                    String newWearing = "";
+                    String newWearing;
                     if(index > 0) newWearing = Costumes.getVariants(costumePart).get(index-1);
                     else newWearing = Costumes.getVariants(costumePart).getLast();
                     user.setWearing(costumePart, newWearing);
@@ -128,9 +128,9 @@ public class CharacterCreatorScreen extends UiScreen {
                 wasAnyPressed = true;
                 if(!wasDpadPressed) {
                     int index = Costumes.getVariants(costumePart).indexOf(user.getWearing(costumePart));
-                    String newWearing = "";
-                    if(index > 0) newWearing = Costumes.getVariants(costumePart).get(index+1);
-                    else newWearing = Costumes.getVariants(costumePart).getLast();
+                    String newWearing;
+                    if(index < Costumes.getVariants(costumePart).size()-1) newWearing = Costumes.getVariants(costumePart).get(index+1);
+                    else newWearing = Costumes.getVariants(costumePart).getFirst();
                     user.setWearing(costumePart, newWearing);
                 }
             }

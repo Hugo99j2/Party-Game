@@ -12,6 +12,8 @@ import com.daniel99j.dungeongame.ui.renderable.RenderState;
 import com.daniel99j.dungeongame.ui.renderable.Renderable;
 import com.daniel99j.dungeongame.ui.screenss.CombinedScreenSS;
 import com.hugo99j.chaosparty.GameData;
+import com.hugo99j.chaosparty.Main;
+import com.hugo99j.chaosparty.util.RenderUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,13 +36,15 @@ public class UiScreen implements Screen {
 
     @Override
     public void show() {
-
+        if(Controllers.getCurrent() != null && controllerSelected == null) {
+            controllerStick(Vector2.Zero);
+        }
     }
 
     @Override
     public void render(float delta) {
-        if(Controllers.getCurrent() != null) {
-            Vector2 controllerStickMove =  new Vector2();
+        if(Controllers.getCurrent() != null && RenderUtil.isFocused()) {
+            Vector2 controllerStickMove = new Vector2();
             if(((ControllerUtil) Controllers.getCurrent()).wasJustPressed(ControllerInput.LEFT_STICK_UP)) controllerStickMove.add(0, 5);
             if(((ControllerUtil) Controllers.getCurrent()).wasJustPressed(ControllerInput.LEFT_STICK_DOWN)) controllerStickMove.add(0, -5);
             if(((ControllerUtil) Controllers.getCurrent()).wasJustPressed(ControllerInput.LEFT_STICK_LEFT)) controllerStickMove.add(-5, 0);

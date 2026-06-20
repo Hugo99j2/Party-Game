@@ -8,6 +8,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Graphics;
+import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
@@ -19,6 +20,9 @@ import com.daniel99j.djutil.NumberUtils;
 import com.daniel99j.djutil.ValueHolder;
 import com.daniel99j.djutil.pathfinder.PathfindDebugPos;
 import com.daniel99j.djutil.pathfinder.PathfindDebugType;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.hugo99j.chaosparty.util.NoDebugOption;
 import com.hugo99j.chaosparty.util.RequiresRefresh;
 import com.daniel99j.dungeongame.sounds.SoundInstance;
@@ -110,6 +114,17 @@ public class Debuggers {
             debugOptions.put("screenSSDebugger", new ValueHolder<>(false));
 
             PathUtil.getFilesIn(PathUtil.asset("sounds/")).forEach(e -> audioNames.add(e.replace("assets/sounds/", "").replace(".mp3", "")));
+
+            try {
+                for (JsonElement options : GsonUtil.parse(Files.readString(Path.of("debug.json"))).get("options").getAsJsonArray()) {
+                    JsonObject map = options.getAsJsonObject();
+                    if(debugOptions.containsKey(map.get("name").getAsString())) {
+                        debugOptions.put(map.get("name").getAsString(), new ValueHolder<>(map.get("value").getAsBoolean()));
+                    }
+                }
+            } catch (Exception ignored) {
+
+            }
         }
     }
 
@@ -269,8 +284,19 @@ public class Debuggers {
                     if (!s.equals("showing") && !s.equals("selecting") && !s.equals("selectingLight"))
                         if (ImGui.checkbox(s, valueHolder.object)) {
                             valueHolder.object = !valueHolder.object;
-                            //if (s.equals("freecam"))
-                                //freecam = new Vector2(GameData.gameCamera.position.x, GameData.gameCamera.position.y);
+
+                            JsonObject data = new JsonObject();
+                            JsonArray array = new JsonArray();
+                            debugOptions.forEach((name, value) -> {
+                                JsonObject map = new JsonObject();
+                                map.addProperty("name", name);
+                                map.addProperty("value", value.object);
+                                array.add(map);
+                            });
+                            data.add("options", array);
+                            try {
+                                Files.writeString(Path.of("debug.json"), new GsonBuilder().disableHtmlEscaping().setPrettyPrinting().create().toJson(data));
+                            } catch (Exception ignored) {}
                         }
                 });
 
@@ -311,6 +337,16 @@ public class Debuggers {
                 ImGui.begin("Lights");
                 UUID hoveredLight = renderLightSelector();
                 boolean showLights = ImGui.isWindowFocused(ImGuiFocusedFlags.RootAndChildWindows);
+                ImGui.end();
+
+                ImGui.begin("Controlller");
+                if(Controllers.getCurrent() == null) {
+                    ImGui.text("None connected");
+                } else {
+                    for (int j = 0; j < 30; j++) {
+                        ImGui.text("Button " + j + ": " + Controllers.getCurrent().getButton(j));
+                    }
+                }
                 ImGui.end();
 
                 ImGui.begin("Sounds");

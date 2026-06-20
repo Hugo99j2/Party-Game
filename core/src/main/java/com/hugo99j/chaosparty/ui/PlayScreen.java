@@ -1,7 +1,11 @@
 package com.hugo99j.chaosparty.ui;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.controllers.Controllers;
 import com.hugo99j.chaosparty.GameData;
+import com.hugo99j.chaosparty.util.ToRun;
 
 /** First screen of the application. Displayed after the application is created. */
 public class PlayScreen implements Screen {
@@ -18,6 +22,10 @@ public class PlayScreen implements Screen {
     @Override
     public void render(float delta) {
         if(GameData.getCurrentMatch() != null) GameData.getCurrentMatch().render(delta);
+        if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) || ((ControllerUtil) Controllers.getCurrent()).wasJustPressed(ControllerInput.MENU)) {
+            PausedGameScreen screen = new PausedGameScreen();
+            ToRun.run(() -> GameData.MAIN_INSTANCE.setScreen(screen));
+        }
     }
 
     @Override

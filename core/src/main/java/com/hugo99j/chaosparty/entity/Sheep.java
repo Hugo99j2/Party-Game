@@ -26,8 +26,10 @@ public class Sheep extends AdvancedObject {
             } else move = Vector2.Zero.cpy();
             move.nor();
         }
-        float speed = 1f;
-        if (move.len() > 0) this.getPhysics().setLinearVelocity(move.x * speed, move.y * speed);
+
+        float speed = 20;
+        float actualSpeed = Math.max(speed-this.getVelocity().len(), 0);
+        if (move.len() > 0) this.getPhysics().applyForceToCenter(new Vector2(move.x * actualSpeed, move.y * actualSpeed), true);
 
         super.tick();
     }

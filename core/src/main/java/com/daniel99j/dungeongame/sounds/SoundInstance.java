@@ -1,7 +1,11 @@
 package com.daniel99j.dungeongame.sounds;
 
 import com.badlogic.gdx.backends.lwjgl3.audio.OpenALSound;
+import com.badlogic.gdx.math.Interpolation;
+import com.daniel99j.djutil.ValueHolder;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 
 import static org.lwjgl.openal.AL10.AL_SOURCE_STATE;
@@ -17,6 +21,8 @@ public class SoundInstance {
     private boolean paused = false;
     private float currentTime = 0;
     private final float duration;
+
+    private final List<Consumer<Float>> tickers = new ArrayList<>();
 
     protected SoundInstance(SoundFile file, float volume, float pitch, float pan, Consumer<SoundInstance> onFinish) {
         this.file = file;
@@ -74,6 +80,7 @@ public class SoundInstance {
     protected void tick(float deltaTime) {
         if(paused) return;
         this.currentTime += deltaTime*pitch;
+        tickers.forEach(c -> c.accept(deltaTime*pitch));
         if(this.isComplete()) {
             this.cancel();
         }
@@ -97,5 +104,19 @@ public class SoundInstance {
 
     public boolean isPaused() {
         return paused;
+    }
+
+    public void fade(float time, float to) {
+        float startTime = this.getCurrentTime();
+        float endTime = startTime + time;
+        float startVolume = this.getVolume();
+
+        tickers.add((f) -> {
+            float volume = Interpolation.fade.apply(startVolume, to, (this.currentTime-startTime)/(endTime-startTime));
+            this.setVolume(volume);
+            if(volume <= 0) {
+                this.cancel();
+            }
+        });
     }
 }

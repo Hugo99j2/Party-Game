@@ -26,6 +26,7 @@ public class Match {
     }
 
     public void setCurrentMinigame(@Nullable AbstractMinigame minigame) {
+        AbstractMinigame oldMinigame = currentMinigame;
         this.currentMinigame = minigame;
         matchViews.forEach(MatchView::dispose);
         matchViews.clear();
@@ -37,7 +38,8 @@ public class Match {
             }
         }
         else {
-            GameData.level.dispose();
+            if(oldMinigame != null) oldMinigame.dispose();
+            if(GameData.level != null) GameData.level.dispose();
         };
     }
 

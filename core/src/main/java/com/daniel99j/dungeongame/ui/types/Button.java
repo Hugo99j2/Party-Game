@@ -3,6 +3,7 @@ package com.daniel99j.dungeongame.ui.types;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.utils.Align;
+import com.daniel99j.dungeongame.sounds.SoundManager;
 import com.hugo99j.chaosparty.GameData;
 import com.daniel99j.dungeongame.ui.NinePatchLoader;
 import com.daniel99j.dungeongame.ui.renderable.ClickType;
@@ -39,7 +40,12 @@ public class Button extends Renderable {
     }
 
     public void onClick() {
+        String sound = getSound();
+        if(!sound.isEmpty()) SoundManager.getSound(sound).play(1);
+    }
 
+    public String getSound() {
+        return "click";
     }
 
     @Override

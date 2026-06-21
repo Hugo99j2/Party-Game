@@ -1,5 +1,6 @@
 package com.hugo99j.chaosparty.match;
 
+import com.badlogic.gdx.graphics.Color;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.hugo99j.chaosparty.util.CostumePart;
@@ -75,7 +76,11 @@ public class User {
                     JsonObject o = e.getAsJsonObject();
                     User u = new User(o.get("name").getAsString());
                     for (CostumePart part : CostumePart.values()) {
-                        u.costume.put(part, o.get(part.toString().toLowerCase()).getAsString());
+                        try {
+                            u.costume.put(part, o.get(part.toString().toLowerCase()).getAsString());
+                        } catch (Exception ex) {
+                            u.costume.put(part, "missing");
+                        }
                     }
                     loadedUsers.add(u);
                 });

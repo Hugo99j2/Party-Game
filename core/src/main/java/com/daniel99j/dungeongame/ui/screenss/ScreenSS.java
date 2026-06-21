@@ -2,6 +2,7 @@ package com.daniel99j.dungeongame.ui.screenss;
 
 import com.daniel99j.djutil.maths.MathsContext;
 import com.daniel99j.djutil.maths.MathsInterpreter;
+import com.daniel99j.djutil.maths.MathsParsingError;
 import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.ui.Debuggers;
 
@@ -30,9 +31,11 @@ public class ScreenSS {
     }
 
     public double get(String name) {
+        double oldResult = 0;
         if(cache.containsKey(name)) {
             CacheKey key = cache.get(name);
             if(key.time != GameData.time) {
+                oldResult = key.result;
                 cache.remove(name);
             } else {
                 return key.result;
@@ -44,9 +47,17 @@ public class ScreenSS {
                 if(!Debuggers.activeScreenSS.contains(this)) Debuggers.activeScreenSS.add(this);
             }
 
-            double result = MathsInterpreter.eval(getters.get(name), this.createContext(name));
-            cache.put(name, new CacheKey(result, GameData.time));
-            return result;
+            try {
+                double result = MathsInterpreter.eval(getters.get(name), this.createContext(name));
+                cache.put(name, new CacheKey(result, GameData.time));
+                return result;
+            } catch (MathsParsingError e) {
+                if(GameData.DEBUGGING && Debuggers.isEnabled("ignoreInvalidSS")) {
+                    cache.put(name, new CacheKey(oldResult, GameData.time));
+                    return oldResult;
+                } else throw e;
+            }
+
         } else throw new IllegalArgumentException("Unknown getter: " + name);
     }
 

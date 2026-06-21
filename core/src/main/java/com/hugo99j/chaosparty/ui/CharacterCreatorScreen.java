@@ -19,7 +19,6 @@ public class CharacterCreatorScreen extends UiScreen {
     float fade = 1;
     User user = User.getUser(1);
     CostumePart costumePart = CostumePart.HAT;
-    boolean wasDpadPressed = false;
 
     public CharacterCreatorScreen() {
         super(ScreenSSBuilder.create()
@@ -60,7 +59,7 @@ public class CharacterCreatorScreen extends UiScreen {
         this.addRenderable(new Button("respawn", "button", "Return to menu") {
             @Override
             public void onClick() {
-                SoundManager.getSound("click").playSingle(1);
+                super.onClick();
                 ToRun.run(() -> GameData.MAIN_INSTANCE.setScreen(new MenuScreen()));
                 User.saveUsers();
             }
@@ -98,44 +97,19 @@ public class CharacterCreatorScreen extends UiScreen {
         GameData.spriteBatch.end();
 
         if(Controllers.getCurrent() != null) {
-            Controller current = Controllers.getCurrent();
-            boolean wasAnyPressed = false;
-            if(current.getButton(current.getMapping().buttonDpadUp)) {
-                wasAnyPressed = true;
-                if(!wasDpadPressed) {
-                    if(costumePart.ordinal() > 0) costumePart = CostumePart.values()[costumePart.ordinal()-1];
-                    else costumePart = CostumePart.values()[CostumePart.values().length-1];
-                }
+            ControllerUtil current = ((ControllerUtil) Controllers.getCurrent());
+            if(current.wasJustPressed(ControllerInput.DPAD_UP)) {
+                costumePart = Looper.previousValue(costumePart);
             }
-            if(current.getButton(current.getMapping().buttonDpadDown)) {
-                wasAnyPressed = true;
-                if(!wasDpadPressed) {
-                    if(costumePart.ordinal() < CostumePart.values().length-1) costumePart = CostumePart.values()[costumePart.ordinal()+1];
-                    else costumePart = CostumePart.values()[0];
-                }
+            if(current.wasJustPressed(ControllerInput.DPAD_DOWN)) {
+                costumePart = Looper.nextValue(costumePart);
             }
-            if(current.getButton(current.getMapping().buttonDpadLeft)) {
-                wasAnyPressed = true;
-                if(!wasDpadPressed) {
-                    int index = Costumes.getVariants(costumePart).indexOf(user.getWearing(costumePart));
-                    String newWearing;
-                    if(index > 0) newWearing = Costumes.getVariants(costumePart).get(index-1);
-                    else newWearing = Costumes.getVariants(costumePart).getLast();
-                    user.setWearing(costumePart, newWearing);
-                }
+            if(current.wasJustPressed(ControllerInput.DPAD_LEFT)) {
+                user.setWearing(costumePart, Looper.previousValue(Costumes.getVariants(costumePart), user.getWearing(costumePart)));
             }
-            if(current.getButton(current.getMapping().buttonDpadRight)) {
-                wasAnyPressed = true;
-                if(!wasDpadPressed) {
-                    int index = Costumes.getVariants(costumePart).indexOf(user.getWearing(costumePart));
-                    String newWearing;
-                    if(index < Costumes.getVariants(costumePart).size()-1) newWearing = Costumes.getVariants(costumePart).get(index+1);
-                    else newWearing = Costumes.getVariants(costumePart).getFirst();
-                    user.setWearing(costumePart, newWearing);
-                }
+            if(current.wasJustPressed(ControllerInput.DPAD_RIGHT)) {
+                user.setWearing(costumePart, Looper.nextValue(Costumes.getVariants(costumePart), user.getWearing(costumePart)));
             }
-
-            wasDpadPressed = wasAnyPressed;
         }
     }
 

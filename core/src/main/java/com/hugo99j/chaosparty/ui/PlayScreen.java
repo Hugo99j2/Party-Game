@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.controllers.Controllers;
+import com.daniel99j.dungeongame.sounds.SoundManager;
 import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.util.ToRun;
 
@@ -25,6 +26,8 @@ public class PlayScreen implements Screen {
         if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) || ((ControllerUtil) Controllers.getCurrent()).wasJustPressed(ControllerInput.MENU)) {
             PausedGameScreen screen = new PausedGameScreen();
             ToRun.run(() -> GameData.MAIN_INSTANCE.setScreen(screen));
+            SoundManager.getSound("pause").playSingle(1);
+            if(GameData.getCurrentMatch() != null) GameData.getCurrentMatch().getCurrentMinigame().setPaused(true);
         }
     }
 

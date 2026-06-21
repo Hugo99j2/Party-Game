@@ -6,18 +6,17 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector4;
+import com.daniel99j.dungeongame.sounds.SoundManager;
 import com.daniel99j.dungeongame.ui.renderable.ClickType;
 import com.daniel99j.dungeongame.ui.renderable.CursorType;
 import com.daniel99j.dungeongame.ui.renderable.RenderState;
 import com.daniel99j.dungeongame.ui.renderable.Renderable;
 import com.daniel99j.dungeongame.ui.screenss.CombinedScreenSS;
 import com.hugo99j.chaosparty.GameData;
-import com.hugo99j.chaosparty.Main;
 import com.hugo99j.chaosparty.util.RenderUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class UiScreen implements Screen {
@@ -82,7 +81,10 @@ public class UiScreen implements Screen {
                 if(renderable.usesMouse && renderable != controllerSelected) {
                     selectors.put(new Vector4(renderable.getX(), renderable.getY(), renderable.getX()+renderable.getStyle().getXSize(), renderable.getY()+renderable.getStyle().getYSize()), renderable);
                     if(controllerSelected == null) {
-                        Controllers.getCurrent().startVibration(100, 1);
+                        if(change.len() > 0) {
+                            Controllers.getCurrent().startVibration(100, 1);
+                            SoundManager.getSound("select").play(1);
+                        }
                         controllerSelected = renderable;
                         return;
                     }
@@ -95,6 +97,7 @@ public class UiScreen implements Screen {
                     if(pos.x > aabb.x && pos.y > aabb.y && pos.x < aabb.z && pos.y < aabb.w) {
                         controllerSelected = selectors.get(aabb);
                         Controllers.getCurrent().startVibration(100, 1);
+                        SoundManager.getSound("select").play(1);
                         return;
                     }
                 }

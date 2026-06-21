@@ -109,4 +109,8 @@ public abstract class AbstractMinigame implements Disposable {
     public void setupViews(List<MatchView> matchViews) {
 
     }
+
+    public void setPaused(boolean paused) {
+
+    }
 }

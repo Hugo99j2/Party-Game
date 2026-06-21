@@ -112,6 +112,7 @@ public class Debuggers {
             debugOptions.put("fakeControllers+1", new ValueHolder<>(false));
             debugOptions.put("fakeControllers+2", new ValueHolder<>(false));
             debugOptions.put("screenSSDebugger", new ValueHolder<>(false));
+            debugOptions.put("ignoreInvalidSS", new ValueHolder<>(false));
 
             PathUtil.getFilesIn(PathUtil.asset("sounds/")).forEach(e -> audioNames.add(e.replace("assets/sounds/", "").replace(".mp3", "")));
 
@@ -346,6 +347,9 @@ public class Debuggers {
                     for (int j = 0; j < 30; j++) {
                         ImGui.text("Button " + j + ": " + Controllers.getCurrent().getButton(j));
                     }
+                    for (int j = 0; j < 10; j++) {
+                        ImGui.text("Axis " + j + ": " + Controllers.getCurrent().getAxis(j));
+                    }
                 }
                 ImGui.end();
 
@@ -417,9 +421,29 @@ public class Debuggers {
                     if(currentlySelected != null) {
                         ValueHolder<ScreenSS> screenSSValueHolder = new ValueHolder<>(currentlySelected);
                         currentlySelected.getGetters().forEach((g, v) -> {
-                            ImString text = new ImString(v, v.length()+100);
-                            if(ImGui.inputText(g, text, ImGuiInputTextFlags.EnterReturnsTrue)) {
-                                ToRun.run(() -> {screenSSValueHolder.object.getGetters().put(g, text.get());});
+                            if(ImGui.isKeyDown(ImGuiKey.ModShift)) {
+                                try {
+                                    if (v.endsWith("%")) {
+                                        slider(g, Float.parseFloat(v.replace("%", "")), (val) -> ToRun.run(() -> screenSSValueHolder.object.getGetters().put(g, val + "%")), 0, 100, "%.0f");
+                                    } else if (v.endsWith("vw")) {
+                                        slider(g, Float.parseFloat(v.replace("vw", "")), (val) -> ToRun.run(() -> screenSSValueHolder.object.getGetters().put(g, val + "vw")), 0, 1, "%.3f");
+                                    } else if (v.endsWith("vh")) {
+                                        slider(g, Float.parseFloat(v.replace("vh", "")), (val) -> ToRun.run(() -> screenSSValueHolder.object.getGetters().put(g, val + "vh")), 0, 1, "%.3f");
+                                    } else if (v.contains("vw")) {
+                                        slider(g, Float.parseFloat(v.replace("vw", "")), (val) -> ToRun.run(() -> screenSSValueHolder.object.getGetters().put(g, val + "vw")), 0, 1, "%.3f");
+                                        //no + or - etc
+                                    } else if (v.matches("^-?\\d+(\\.\\d+)?[A-Za-z]*$")) {
+                                        float current = Float.parseFloat(v);
+                                        slider(g, current, (val) -> ToRun.run(() -> screenSSValueHolder.object.getGetters().put(g, String.valueOf(val))), 0, (current > 100 ? 10000 : current > 10 ? 100 : 10), "%.3f");
+                                    } else ImGui.text("Cannot create slider");
+                                } catch (Exception e) {
+                                    ImGui.text("Error creating slider");
+                                }
+                            } else {
+                                ImString text = new ImString(v, v.length()+100);
+                                if(ImGui.inputText(g, text, isEnabled("ignoreInvalidSS") ? ImGuiInputTextFlags.None : ImGuiInputTextFlags.EnterReturnsTrue)) {
+                                    ToRun.run(() -> {screenSSValueHolder.object.getGetters().put(g, text.get());});
+                                }
                             }
                         });
                     }

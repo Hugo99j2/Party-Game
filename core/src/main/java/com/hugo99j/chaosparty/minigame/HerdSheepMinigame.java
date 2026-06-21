@@ -2,6 +2,7 @@ package com.hugo99j.chaosparty.minigame;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
+import com.daniel99j.dungeongame.sounds.SoundInstance;
 import com.daniel99j.dungeongame.sounds.SoundManager;
 import com.daniel99j.dungeongame.ui.renderable.RenderState;
 import com.daniel99j.dungeongame.ui.screenss.CombinedScreenSS;
@@ -42,12 +43,13 @@ public class HerdSheepMinigame extends AbstractMinigame {
         .finishChild()
         .finishChild()
         .build();
+    private final SoundInstance music;
 
     public HerdSheepMinigame() {
         super("herd_sheep");
         timer = new Timer("timer", 45, 2, false);
         timer.setStyle(ss.get("timer"));
-        SoundManager.getSound("sheep_music").playSingle(1);
+        music = SoundManager.getSound("sheep_music").playSingle(1);
     }
 
     @Override
@@ -76,13 +78,14 @@ public class HerdSheepMinigame extends AbstractMinigame {
             RenderUtil.renderText(player.getName()+": "+GameData.getCurrentMatch().getCurrentMinigame().getScore(player), ss.get("score").getX(), ss.get("score").getY()+offset, 1f, ss.get("score").getXSize(), Align.left, false);
             offset += 50;
         }
-        RenderUtil.renderText("Scores: ", ss.get("score").getX(), ss.get("score").getY()+offset, 1f, ss.get("score").getXSize(), Align.left, false);
+        //RenderUtil.renderText("Scores: ", ss.get("score").getX(), ss.get("score").getY()+offset, 1f, ss.get("score").getXSize(), Align.left, false);
+        RenderUtil.renderText("Scores: ", ss.get("score"));
         GameData.spriteBatch.end();
     }
 
     @Override
     public void dispose() {
-
+        music.fade(1, 0);
     }
 
     @Override
@@ -93,5 +96,11 @@ public class HerdSheepMinigame extends AbstractMinigame {
     @Override
     public void setupViews(List<MatchView> matchViews) {
         matchViews.add(new MatchView(32, 18));
+    }
+
+    @Override
+    public void setPaused(boolean paused) {
+        if(paused) music.pause();
+        else music.play();
     }
 }

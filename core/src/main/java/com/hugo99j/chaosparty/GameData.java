@@ -41,7 +41,6 @@ public class GameData {
     public static final ShapeRenderer shapeRenderer = new ShapeRenderer();
     public static float time = 0L;
     public static BitmapFont FONT;
-    public static BitmapFontCache FONT_CACHE;
     public static Main MAIN_INSTANCE;
     public static int width, height;
 
@@ -87,7 +86,7 @@ public class GameData {
 
         FONT = fontGenerator.generateFont(fontParameters);
         FONT.getData().markupEnabled = true;
-        FONT_CACHE = new BitmapFontCache(FONT);
+        FONT.setUseIntegerPositions(false);
     }
 
     public static float px(int pixels) {

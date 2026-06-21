@@ -3,23 +3,30 @@ package com.hugo99j.chaosparty.util;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Window;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.PixmapIO;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.glutils.GLFrameBuffer;
 import com.badlogic.gdx.graphics.glutils.GLOnlyTextureData;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.utils.Align;
 import com.daniel99j.djutil.MiscUtils;
+import com.daniel99j.dungeongame.ui.screenss.ScreenSS;
 import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.mixin.WindowAccessor;
+import com.hugo99j.chaosparty.ui.BitmapCacheScaler;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.zip.Deflater;
 
 public class RenderUtil {
     private static final ShaderProgram blurProgram;
+    private static final Map<String, Color> colorMap = new HashMap<>();
+    private static final Map<Color, String> colorMapOther = new HashMap<>();
 
     static  {
         String vertexShader = "attribute vec4 " + ShaderProgram.POSITION_ATTRIBUTE + ";\n" //
@@ -67,6 +74,17 @@ public class RenderUtil {
         ShaderProgram shader = new ShaderProgram(vertexShader, fragmentShader);
         if (!shader.isCompiled()) throw new IllegalArgumentException("Error compiling blur shader: " + shader.getLog());
         blurProgram = shader;
+
+        try {
+            for (Field field : Color.class.getFields()) {
+                if (Modifier.isStatic(field.getModifiers()) && Modifier.isFinal(field.getModifiers()) && Modifier.isPublic(field.getModifiers()) && field.getType().equals(Color.class)) {
+                    colorMap.put(field.getName(), (Color) field.get(null));
+                    colorMapOther.put((Color) field.get(null), field.getName());
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static ShaderProgram getBlurProgram() {
@@ -103,9 +121,36 @@ public class RenderUtil {
         GameData.FONT.draw(GameData.spriteBatch, newText, x, y, width, align, wrap);
     }
 
+    public static void renderText(String text, ScreenSS ss) {
+        //GameData.FONT.getData().setScale(size);
+        GameData.FONT.getData().setScale(1);
+
+        String newText = text.replace("[", "[[");
+        while(newText.contains("<colour:")) {
+            String data = MiscUtils.getTextBetween(newText, "<colour:", ">");
+            newText = newText.replace("<colour:"+data+">", "["+data.toUpperCase()+"]");
+        }
+
+        GameData.FONT.getCache().clear();
+        GlyphLayout layout = GameData.FONT.getCache().addText(newText, 0, 0);
+        float actualWidth = layout.width;
+        float scale = (ss.getXSize()/actualWidth);
+        ((BitmapCacheScaler) GameData.FONT.getCache()).scale(scale);
+        GameData.FONT.getCache().translate(ss.getX(), ss.getY()+(layout.height*scale));
+        GameData.FONT.getCache().draw(GameData.spriteBatch);
+    }
+
     public static boolean isFocused() {
         Lwjgl3Application app = (Lwjgl3Application) Gdx.app;
         Lwjgl3Window window = ((WindowAccessor) app).getWindows().get(0);
         return window != null && window.isFocused();
+    }
+
+    public static String toString(Color color) {
+        return colorMapOther.get(color);
+    }
+
+    public static Color fromString(String color) {
+        return colorMap.get(color);
     }
 }

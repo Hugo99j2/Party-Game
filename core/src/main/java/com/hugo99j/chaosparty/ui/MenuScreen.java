@@ -70,8 +70,7 @@ public class MenuScreen extends UiScreen {
         this.addRenderable(new Button("play", "button", "Test game") {
             @Override
             public void onClick() {
-                SoundManager.getSound("click").playSingle(1);
-                Logger.info("clicked");
+                super.onClick();
                 ToRun.run(() -> GameData.startMatch(List.of(new MatchPlayer(User.getUser(1)))).setCurrentMinigame(new DevMinigame()));
             }
         });
@@ -79,8 +78,7 @@ public class MenuScreen extends UiScreen {
         this.addRenderable(new Button("sheep", "button", "Herd Sheep") {
             @Override
             public void onClick() {
-                SoundManager.getSound("click").playSingle(1);
-                Logger.info("clicked");
+                super.onClick();
                 ToRun.run(() -> GameData.startMatch(List.of(new MatchPlayer(User.getUser(1)), new MatchPlayer(User.getUser(2)), new MatchPlayer(User.getUser(3)), new MatchPlayer(User.getUser(4)))).setCurrentMinigame(new HerdSheepMinigame()));
             }
         });

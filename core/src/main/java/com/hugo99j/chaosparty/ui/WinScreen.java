@@ -66,12 +66,14 @@ public class WinScreen extends UiScreen {
         this.addRenderable(new Button("menu", "button", "Back to menu") {
             @Override
             public void onClick() {
+                super.onClick();
                 ToRun.run(() -> GameData.MAIN_INSTANCE.setScreen(new MenuScreen()));
             }
         });
         this.addRenderable(new Button("menu2", "button", "Back to menu") {
             @Override
             public void onClick() {
+                super.onClick();
                 ToRun.run(() -> GameData.MAIN_INSTANCE.setScreen(new MenuScreen()));
             }
         });

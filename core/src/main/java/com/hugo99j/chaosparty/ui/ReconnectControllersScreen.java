@@ -59,6 +59,7 @@ public class ReconnectControllersScreen extends UiScreen {
         this.addRenderable(new Button("menu", "button", "Done") {
             @Override
             public void onClick() {
+                super.onClick();
                 reconnect();
             }
         });

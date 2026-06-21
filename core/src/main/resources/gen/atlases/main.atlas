@@ -11,91 +11,98 @@ button
   orig: 32, 32
   offset: 0, 0
   index: -1
-costumes/dev_face
+costumes/colour_red
   rotate: false
   xy: 294, 486
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
-costumes/dev_shirt
+costumes/hat5
+  rotate: false
+  xy: 294, 486
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+costumes/dev_face
   rotate: false
   xy: 2, 128
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
-costumes/face1
+costumes/dev_shirt
   rotate: false
   xy: 36, 162
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
-costumes/face2
+costumes/face1
   rotate: false
   xy: 68, 210
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
-costumes/face3
+costumes/face2
   rotate: false
   xy: 86, 228
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
-costumes/face4
+costumes/face3
   rotate: false
   xy: 260, 434
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
-costumes/face5
+costumes/face4
   rotate: false
   xy: 312, 486
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
-costumes/face6
+costumes/face5
   rotate: false
   xy: 2, 110
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
-costumes/hat1
+costumes/face6
   rotate: false
-  xy: 122, 228
+  xy: 68, 192
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
-costumes/hat2
+costumes/hat1
   rotate: false
   xy: 260, 398
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
-costumes/hat3
+costumes/hat2
   rotate: false
   xy: 348, 486
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
-costumes/hat4
+costumes/hat3
   rotate: false
   xy: 2, 74
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
-costumes/hat5
+costumes/hat4
   rotate: false
   xy: 104, 192
   size: 16, 16
@@ -251,14 +258,14 @@ costumes/shirt8
   index: -1
 fence_bc
   rotate: false
-  xy: 68, 192
+  xy: 86, 210
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 fence_tc
   rotate: false
-  xy: 260, 416
+  xy: 330, 486
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -272,7 +279,7 @@ gameyay
   index: -1
 goal_c
   rotate: false
-  xy: 330, 486
+  xy: 2, 92
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -321,42 +328,42 @@ sheep
   index: -1
 tilesets/fence_lr
   rotate: false
-  xy: 86, 210
+  xy: 104, 228
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 tilesets/fence_tb
   rotate: false
-  xy: 104, 228
+  xy: 260, 416
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 tilesets/goal_lr
   rotate: false
-  xy: 2, 92
+  xy: 86, 192
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 tilesets/goal_tb
   rotate: false
-  xy: 86, 192
+  xy: 104, 210
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 tilesets/grass
   rotate: false
-  xy: 104, 210
+  xy: 122, 228
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 tilesets/grass-export
   rotate: false
-  xy: 104, 210
+  xy: 122, 228
   size: 16, 16
   orig: 16, 16
   offset: 0, 0

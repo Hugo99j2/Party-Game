@@ -43,9 +43,9 @@ public class CharacterCreatorScreen extends UiScreen {
                 .set("ySize", 1)
             .finishChild()
             .newChild("hint")
-            .set("x", "0.5vw")
-            .set("y", "0.7vh")
-            .set("xSize", "0.1vw")
+            .set("x", "0.95vw-50")
+            .set("y", "50")
+            .set("xSize", "0.05vw")
             .set("ySize", "999")
             .finishChild()
             .newChild("up")
@@ -93,15 +93,6 @@ public class CharacterCreatorScreen extends UiScreen {
         super.show();
         //syncViewport(GameConstants.width, GameConstants.height);
         //new ScreenSS("0.5vw", "0.5vh", "320", "32", "5", true)
-        this.addRenderable(new Button("respawn", "button", "Return to menu") {
-            @Override
-            public void onClick() {
-                super.onClick();
-                ToRun.run(() -> GameData.MAIN_INSTANCE.setScreen(new MenuScreen()));
-                User.saveUsers();
-            }
-        });
-
         this.addRenderable(new Renderable("up") {
             @Override
             public void setScreen(UiScreen screen) {
@@ -195,6 +186,7 @@ public class CharacterCreatorScreen extends UiScreen {
         GameData.shapeRenderer.end();
 
         GameData.spriteBatch.begin();
+        GameData.spriteBatch.setColor(Color.WHITE);
         for (CostumePart value : CostumePart.values()) {
             if((value.shouldRender() || (costumePart.equals(CostumePart.COLOUR) && value.equals(CostumePart.COLOUR))) && (!costumePart.equals(CostumePart.COLOUR) || value.equals(CostumePart.COLOUR))) GameData.spriteBatch.draw(ImageUtil.get("costumes/"+this.user.getWearing(value)), this.getStyle().get("player").getX(), this.getStyle().get("player").getY(), this.getStyle().get("player").getXSize(), this.getStyle().get("player").getYSize());
         }
@@ -204,8 +196,16 @@ public class CharacterCreatorScreen extends UiScreen {
         GameData.spriteBatch.draw(ImageUtil.get("costumes/"+Looper.nextValue(Costumes.getVariants(costumePart), this.user.getWearing(costumePart))), this.getStyle().get("right").getX(), this.getStyle().get("player").getY(), this.getStyle().get("player").getXSize(), this.getStyle().get("player").getYSize());
 
         RenderUtil.renderText(costumePart.name(), 100, 100, 1, 100, 0, false);
-        RenderUtil.renderText("<icon:b>B exit\nL-stick left", this.getStyle().get("hint"));
+        RenderUtil.renderText("<icon:b> exit\n<icon:left_stick_leftright> left abcs", this.getStyle().get("hint"));
         GameData.spriteBatch.end();
+
+        if(Controllers.getCurrent() != null && ((ControllerUtil) Controllers.getCurrent()).wasJustPressed(ControllerInput.B)) {
+            ToRun.run(() -> {
+                GameData.MAIN_INSTANCE.setScreen(new MenuScreen());
+                ((UiScreen) GameData.MAIN_INSTANCE.getScreen()).setControllerSelected("creator");
+            });
+            User.saveUsers();
+        }
     }
 
     @Override

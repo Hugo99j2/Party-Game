@@ -45,8 +45,11 @@ public abstract class FontMixin {
         icons.forEach((key, value) -> {
             BitmapFont.Glyph glyph = new BitmapFont.Glyph();
             glyph.page = value.page;
-            glyph.width = 10;
-            glyph.height = 10;
+            glyph.width = 32;
+            glyph.height = -32;
+            glyph.yoffset = -16;
+            glyph.fixedWidth = true;
+            glyph.xadvance = glyph.width;
             glyph.u = value.u;
             glyph.v = value.v;
             glyph.u2 = value.u2;

@@ -8,6 +8,7 @@ import com.daniel99j.dungeongame.ui.types.Button;
 import com.daniel99j.dungeongame.ui.types.Text;
 import com.hugo99j.chaosparty.match.MatchPlayer;
 import com.hugo99j.chaosparty.match.User;
+import com.hugo99j.chaosparty.minigame.HotPotatoMinigame;
 import com.hugo99j.chaosparty.util.Logger;
 import com.hugo99j.chaosparty.util.PathUtil;
 import com.hugo99j.chaosparty.util.ToRun;
@@ -38,6 +39,14 @@ public class MenuScreen extends UiScreen {
             .newChild("sheep")
             .set("x", "0.5vw")
             .set("y", "0.3vh")
+            .set("xSize", 320)
+            .set("ySize", 64)
+            .set("center", true)
+            .set("scale", 2)
+            .finishChild()
+            .newChild("fire")
+            .set("x", "0.5vw")
+            .set("y", "0.25vh")
             .set("xSize", 320)
             .set("ySize", 64)
             .set("center", true)
@@ -82,6 +91,14 @@ public class MenuScreen extends UiScreen {
                 ToRun.run(() -> GameData.startMatch(List.of(new MatchPlayer(User.getUser(1)), new MatchPlayer(User.getUser(2)), new MatchPlayer(User.getUser(3)), new MatchPlayer(User.getUser(4)))).setCurrentMinigame(new HerdSheepMinigame()));
             }
         });
+        this.addRenderable(new Button("fire", "button", "FIRE IN THE HOLE!") {
+            @Override
+            public void onClick() {
+                super.onClick();
+                ToRun.run(() -> GameData.startMatch(List.of(new MatchPlayer(User.getUser(1)), new MatchPlayer(User.getUser(2)), new MatchPlayer(User.getUser(3)), new MatchPlayer(User.getUser(4)))).setCurrentMinigame(new HotPotatoMinigame()));
+            }
+        });
+
 
         this.addRenderable(new Button("creator", "button", "Character Creator") {
             @Override

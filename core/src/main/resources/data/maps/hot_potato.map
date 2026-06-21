@@ -1,0 +1,22 @@
+{
+  "objects": [
+    {
+      "x": 0.0,
+      "y": 0.0,
+      "uuid": "d36bf480-bb73-49a4-9b39-992af14f75e9",
+      "type": "tileset",
+      "custom_data": {
+        "width": 32,
+        "height": 18,
+        "sprite": "tilesets/road",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": false,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff"
+      }
+    }
+  ],
+  "lights": []
+}

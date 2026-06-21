@@ -12,6 +12,7 @@ public class ObjectTypes {
     public static final ObjectType<TilesetObject> TILESET = registerObjectType(new ObjectType<>("tileset", TilesetObject::read, TilesetObject::createDefault));
     public static final ObjectType<Button> BUTTON = registerObjectType(new ObjectType<>("button", Button::read, Button::createDefault));
     public static final ObjectType<Sheep> SHEEP = registerObjectType(new ObjectType<>("sheep", Sheep::read, Sheep::createDefault));
+    public static final ObjectType<Potato> POTATO = registerObjectType(new ObjectType<>("potato", Potato::read, Potato::createDefault));
     public static final ObjectType<CollisionObject> COLLISION = registerObjectType(new ObjectType<>("collision", CollisionObject::read, CollisionObject::createDefault));;
 
     private static <T extends AbstractObject> ObjectType<T> registerObjectType(ObjectType<T> type) {

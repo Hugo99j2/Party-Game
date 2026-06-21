@@ -137,7 +137,7 @@ public final class ExampleModProvider implements GameProvider {
         Path basePath2;
         try {
             basePath2 = getLaunchDirectory()
-                .resolve(Path.of("..", "build", "libs", "Party-Game-1.0-SNAPSHOT-all.jar"))
+                .resolve(Path.of("..", "build", "libs", "Chaos Party-1.0-SNAPSHOT-all.jar"))
                 .toRealPath();
         } catch(IOException e) {
             throw new RuntimeException("Failed to find base", e);

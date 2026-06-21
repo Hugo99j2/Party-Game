@@ -209,56 +209,56 @@ costumes/pants9
   index: -1
 costumes/shirt1
   rotate: false
-  xy: 176, 210
+  xy: 260, 326
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 costumes/shirt2
   rotate: false
-  xy: 194, 228
+  xy: 420, 486
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 costumes/shirt3
   rotate: false
-  xy: 260, 326
+  xy: 2, 2
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 costumes/shirt4
   rotate: false
-  xy: 420, 486
+  xy: 176, 192
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 costumes/shirt5
   rotate: false
-  xy: 2, 2
+  xy: 194, 210
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 costumes/shirt6
   rotate: false
-  xy: 176, 192
+  xy: 212, 228
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 costumes/shirt7
   rotate: false
-  xy: 194, 210
+  xy: 260, 308
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 costumes/shirt8
   rotate: false
-  xy: 212, 228
+  xy: 438, 486
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -326,9 +326,16 @@ player2
   orig: 16, 16
   offset: 0, 0
   index: -1
-sheep
+potato
   rotate: false
   xy: 158, 192
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+sheep
+  rotate: false
+  xy: 194, 228
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -378,6 +385,13 @@ tilesets/grass-export
 tilesets/kitchen_tiles
   rotate: false
   xy: 2, 56
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+tilesets/road
+  rotate: false
+  xy: 176, 210
   size: 16, 16
   orig: 16, 16
   offset: 0, 0

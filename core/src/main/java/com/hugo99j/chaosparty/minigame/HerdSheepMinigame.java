@@ -1,5 +1,7 @@
 package com.hugo99j.chaosparty.minigame;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
 import com.daniel99j.dungeongame.sounds.SoundInstance;
@@ -10,6 +12,7 @@ import com.daniel99j.dungeongame.ui.screenss.ScreenSSBuilder;
 import com.hugo99j.chaosparty.entity.Sheep;
 import com.hugo99j.chaosparty.match.MatchPlayer;
 import com.hugo99j.chaosparty.match.MatchView;
+import com.hugo99j.chaosparty.util.PathUtil;
 import com.hugo99j.chaosparty.util.RenderUtil;
 import com.hugo99j.chaosparty.util.ToRun;
 import com.hugo99j.chaosparty.GameData;
@@ -44,17 +47,26 @@ public class HerdSheepMinigame extends AbstractMinigame {
         .finishChild()
         .build();
     private final SoundInstance music;
+    private final ParticleEffect firework;
 
     public HerdSheepMinigame() {
         super("herd_sheep");
         timer = new Timer("timer", 45, 2, false);
         timer.setStyle(ss.get("timer"));
         music = SoundManager.getSound("sheep_music").playSingle(1);
+        firework = new ParticleEffect();
+        firework.load(Gdx.files.internal(PathUtil.texture("flame.p")), GameData.atlas);
+        firework.setEmittersCleanUpBlendFunction(false);
+        firework.scaleEffect(0.01f);
+        firework.setDuration(1000000);
+        firework.start();
+        GameData.getLevelOrThrow().particles.add(firework);
     }
 
     @Override
     public void tick() {
         this.defaultPlayerMovements();
+        firework.setPosition(GameData.getCurrentMatch().getPlayers().getFirst().getPlayer().getPos().x+0.3f, GameData.getCurrentMatch().getPlayers().getFirst().getPlayer().getPos().y+1);
         this.setScore(GameData.getCurrentMatch().getPlayers().getFirst(), GameData.getLevelOrThrow().getObjectsBetweenClass(new Vector2(0, 10), new Vector2(11, 18), Sheep.class).size());
         this.setScore(GameData.getCurrentMatch().getPlayers().get(1), GameData.getLevelOrThrow().getObjectsBetweenClass(new Vector2(21, 10), new Vector2(32, 18), Sheep.class).size());
         if (GameData.getCurrentMatch().getPlayers().size() >= 3) {

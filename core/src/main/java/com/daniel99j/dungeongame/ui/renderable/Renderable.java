@@ -101,4 +101,8 @@ public class Renderable {
     public CursorType getCursorOverride() {
         return null;
     }
+
+    public void onControllerSelect() {
+
+    }
 }

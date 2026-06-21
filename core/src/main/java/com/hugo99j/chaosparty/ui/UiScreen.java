@@ -149,4 +149,13 @@ public class UiScreen implements Screen {
     public CombinedScreenSS getStyle() {
         return this.combinedScreenSS;
     }
+
+    public void setControllerSelected(String elementId) {
+        for (Renderable renderable : renderables) {
+            if(renderable.usesMouse && renderable.getElementId().equals(elementId)) {
+                this.controllerSelected = renderable;
+                break;
+            }
+        }
+    }
 }

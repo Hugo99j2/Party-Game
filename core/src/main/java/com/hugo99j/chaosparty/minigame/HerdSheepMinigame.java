@@ -55,7 +55,7 @@ public class HerdSheepMinigame extends AbstractMinigame {
         timer.setStyle(ss.get("timer"));
         music = SoundManager.getSound("sheep_music").playSingle(1);
         firework = new ParticleEffect();
-        firework.load(Gdx.files.internal(PathUtil.texture("flame.p")), GameData.atlas);
+        firework.load(Gdx.files.internal(PathUtil.asset("particles/flame.p")), GameData.atlas);
         firework.setEmittersCleanUpBlendFunction(false);
         firework.scaleEffect(0.01f);
         firework.setDuration(1000000);

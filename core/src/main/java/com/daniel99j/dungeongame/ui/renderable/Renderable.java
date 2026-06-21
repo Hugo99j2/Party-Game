@@ -1,5 +1,6 @@
 package com.daniel99j.dungeongame.ui.renderable;
 
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.math.Vector2;
 import com.hugo99j.chaosparty.ui.UiScreen;
 import com.daniel99j.dungeongame.ui.screenss.ScreenSS;
@@ -12,6 +13,7 @@ public class Renderable {
     public boolean isRightDown = false;
     private boolean hovered;
     private ScreenSS style;
+    private UiScreen screen;
 
     public Renderable(String elementId) {
         this.elementId = elementId;
@@ -35,34 +37,34 @@ public class Renderable {
 
     public void render(RenderState state) {
         if(usesMouse) {
-            hovered = false;
-            if(isInRange(state.mouseX(), state.mouseY())) {
-                hovered = true;
-                if (!isLeftDown && state.leftJust()) {
-                    onDown(state.mouseX() - this.getX(), state.mouseY() - this.getY(), ClickType.LEFT);
-                    isLeftDown = true;
-                }
-                if (!isMiddleDown && state.middleJust()) {
-                    onDown(state.mouseX() - this.getX(), state.mouseY() - this.getY(), ClickType.MIDDLE);
-                    isMiddleDown = true;
-                }
-                if (!isRightDown && state.rightJust()) {
-                    onDown(state.mouseX() - this.getX(), state.mouseY() - this.getY(), ClickType.RIGHT);
-                    isRightDown = true;
-                }
-            }
-            if (isLeftDown && !state.left()) {
-                onUp(state.mouseX() - this.getX(), state.mouseY() - this.getY(), ClickType.LEFT);
-                isLeftDown = false;
-            }
-            if (isMiddleDown && !state.middle()) {
-                onUp(state.mouseX() - this.getX(), state.mouseY() - this.getY(), ClickType.MIDDLE);
-                isMiddleDown = false;
-            }
-            if (isRightDown && !state.right()) {
-                onUp(state.mouseX() - this.getX(), state.mouseY() - this.getY(), ClickType.RIGHT);
-                isRightDown = false;
-            }
+            hovered = isInRange(state.mouseX(), state.mouseY());
+//            if(isInRange(state.mouseX(), state.mouseY())) {
+//                hovered = true;
+//                if (!isLeftDown && state.leftJust()) {
+//                    onDown(state.mouseX() - this.getX(), state.mouseY() - this.getY(), ClickType.LEFT);
+//                    isLeftDown = true;
+//                }
+//                if (!isMiddleDown && state.middleJust()) {
+//                    onDown(state.mouseX() - this.getX(), state.mouseY() - this.getY(), ClickType.MIDDLE);
+//                    isMiddleDown = true;
+//                }
+//                if (!isRightDown && state.rightJust()) {
+//                    onDown(state.mouseX() - this.getX(), state.mouseY() - this.getY(), ClickType.RIGHT);
+//                    isRightDown = true;
+//                }
+//            }
+//            if (isLeftDown && !state.left()) {
+//                onUp(state.mouseX() - this.getX(), state.mouseY() - this.getY(), ClickType.LEFT);
+//                isLeftDown = false;
+//            }
+//            if (isMiddleDown && !state.middle()) {
+//                onUp(state.mouseX() - this.getX(), state.mouseY() - this.getY(), ClickType.MIDDLE);
+//                isMiddleDown = false;
+//            }
+//            if (isRightDown && !state.right()) {
+//                onUp(state.mouseX() - this.getX(), state.mouseY() - this.getY(), ClickType.RIGHT);
+//                isRightDown = false;
+//            }
         }
     }
 
@@ -80,6 +82,11 @@ public class Renderable {
 
     public void setScreen(UiScreen screen) {
         this.setStyle(screen.getStyle().get(this.elementId));
+        this.screen = screen;
+    }
+
+    public UiScreen getScreen() {
+        return screen;
     }
 
     public void setStyle(ScreenSS style) {

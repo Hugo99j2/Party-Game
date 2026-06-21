@@ -85,6 +85,7 @@ public class Debuggers {
     private static final List<String> newMapNames = new ArrayList<>();
     private static boolean forceShow = false;
     public static Map<Consumer<MatchView>, ValueHolder<Integer>> customLevelRenderers = new HashMap<>();
+    public static Map<Runnable, ValueHolder<Integer>> customUiRenderers = new HashMap<>();
     public static List<ScreenSS> activeScreenSS = new ArrayList<>();
     private static int screenSS = 0;
 
@@ -113,6 +114,7 @@ public class Debuggers {
             debugOptions.put("fakeControllers+2", new ValueHolder<>(false));
             debugOptions.put("screenSSDebugger", new ValueHolder<>(false));
             debugOptions.put("ignoreInvalidSS", new ValueHolder<>(false));
+            debugOptions.put("showControllerSelect", new ValueHolder<>(false));
 
             PathUtil.getFilesIn(PathUtil.asset("sounds/")).forEach(e -> audioNames.add(e.replace("assets/sounds/", "").replace(".mp3", "")));
 
@@ -163,6 +165,8 @@ public class Debuggers {
                 return;
             }
         }
+
+        customUiRenderers.keySet().forEach(Runnable::run);
 
         GL30.glPolygonMode(GL30.GL_FRONT_AND_BACK, isEnabled("wireframe") ? GL30.GL_LINE : GL30.GL_FILL);
 
@@ -516,6 +520,14 @@ public class Debuggers {
             }
         }
 
+        List<Runnable> customRenderersToRemove = new ArrayList<>();
+        Debuggers.customUiRenderers.forEach((r, v) -> {
+            v.object = v.object - 1;
+            if (v.object <= 0) customRenderersToRemove.add(r);
+        });
+        for (Runnable runnable : customRenderersToRemove) {
+            Debuggers.customUiRenderers.remove(runnable);
+        }
         activeScreenSS.clear();
     }
 

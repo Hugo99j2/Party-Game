@@ -4,8 +4,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.controllers.Controllers;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector4;
+import com.daniel99j.djutil.ValueHolder;
 import com.daniel99j.dungeongame.sounds.SoundManager;
 import com.daniel99j.dungeongame.ui.renderable.ClickType;
 import com.daniel99j.dungeongame.ui.renderable.CursorType;
@@ -23,6 +26,7 @@ public class UiScreen implements Screen {
     private final ArrayList<Renderable> renderables = new ArrayList<>();
     private final CombinedScreenSS combinedScreenSS;
     private Renderable controllerSelected;
+    private boolean firstFrame = true;
 
     public UiScreen(CombinedScreenSS combinedScreenSS) {
         this.combinedScreenSS = combinedScreenSS;
@@ -35,20 +39,24 @@ public class UiScreen implements Screen {
 
     @Override
     public void show() {
-        if(Controllers.getCurrent() != null && controllerSelected == null) {
-            controllerStick(Vector2.Zero);
-        }
+
     }
 
     @Override
     public void render(float delta) {
+        if(firstFrame) {
+            firstFrame = false;
+            if(Controllers.getCurrent() != null && controllerSelected == null) {
+                controllerStick(Vector2.Zero);
+            }
+        }
         if(Controllers.getCurrent() != null && RenderUtil.isFocused()) {
-            Vector2 controllerStickMove = new Vector2();
-            if(((ControllerUtil) Controllers.getCurrent()).wasJustPressed(ControllerInput.LEFT_STICK_UP)) controllerStickMove.add(0, 5);
-            if(((ControllerUtil) Controllers.getCurrent()).wasJustPressed(ControllerInput.LEFT_STICK_DOWN)) controllerStickMove.add(0, -5);
-            if(((ControllerUtil) Controllers.getCurrent()).wasJustPressed(ControllerInput.LEFT_STICK_LEFT)) controllerStickMove.add(-5, 0);
-            if(((ControllerUtil) Controllers.getCurrent()).wasJustPressed(ControllerInput.LEFT_STICK_RIGHT)) controllerStickMove.add(5, 0);
-            if(controllerStickMove.len() > 0) controllerStick(controllerStickMove);
+            ControllerUtil controller = ((ControllerUtil) Controllers.getCurrent());
+            //Separate so it gets the timeouts and doesnt repeat input
+            if(controller.wasJustPressed(ControllerInput.LEFT_STICK_ANY)) {
+                Vector2 controllerStickMove = new Vector2(controller.getValue(ControllerInput.LEFT_STICK_RIGHT), controller.getValue(ControllerInput.LEFT_STICK_UP));
+                if (controllerStickMove.len() > 0) controllerStick(controllerStickMove);
+            }
 
             if(((ControllerUtil) Controllers.getCurrent()).wasJustPressed(ControllerInput.A) && controllerSelected != null) {
                 controllerSelected.onDown(0, 0, ClickType.LEFT);
@@ -64,8 +72,8 @@ public class UiScreen implements Screen {
             Gdx.input.getX(), GameData.height-Gdx.input.getY(),
             delta);
         for (Renderable renderable : this.renderables) {
-            if(renderable == controllerSelected) state = new RenderState(state.left(), state.leftJust(), state.middle(), state.middleJust(), state.right(), state.rightJust(), (int) controllerSelected.getCenter().x, (int) controllerSelected.getCenter().y, state.time());
-            renderable.render(state);
+            if(renderable == controllerSelected) renderable.render(new RenderState(state.left(), state.leftJust(), state.middle(), state.middleJust(), state.right(), state.rightJust(), (int) controllerSelected.getCenter().x, (int) controllerSelected.getCenter().y, state.time()));
+            else renderable.render(state);
         }
     }
 
@@ -81,11 +89,8 @@ public class UiScreen implements Screen {
                 if(renderable.usesMouse && renderable != controllerSelected) {
                     selectors.put(new Vector4(renderable.getX(), renderable.getY(), renderable.getX()+renderable.getStyle().getXSize(), renderable.getY()+renderable.getStyle().getYSize()), renderable);
                     if(controllerSelected == null) {
-                        if(change.len() > 0) {
-                            Controllers.getCurrent().startVibration(100, 1);
-                            SoundManager.getSound("select").play(1);
-                        }
                         controllerSelected = renderable;
+                        controllerSelected.onControllerSelect();
                         return;
                     }
                 }
@@ -93,9 +98,19 @@ public class UiScreen implements Screen {
 
             for (int i = 0; i < 1000; i++) {
                 pos.add(change);
+                if(GameData.DEBUGGING && Debuggers.isEnabled("showControllerSelect")) {
+                    ValueHolder<Vector2> valueHolder = new ValueHolder<>(pos.cpy());
+                    Debuggers.customUiRenderers.put(() -> {
+                        GameData.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+                        GameData.shapeRenderer.setColor(Color.BLUE);
+                        GameData.shapeRenderer.circle(valueHolder.object.x, valueHolder.object.y, 10);
+                        GameData.shapeRenderer.end();
+                    }, new ValueHolder<>(10));
+                }
                 for (Vector4 aabb : selectors.keySet()) {
-                    if(pos.x > aabb.x && pos.y > aabb.y && pos.x < aabb.z && pos.y < aabb.w) {
+                    if(pos.x >= aabb.x && pos.y >= aabb.y && pos.x <= aabb.z && pos.y <= aabb.w) {
                         controllerSelected = selectors.get(aabb);
+                        controllerSelected.onControllerSelect();
                         Controllers.getCurrent().startVibration(100, 1);
                         SoundManager.getSound("select").play(1);
                         return;
@@ -154,8 +169,9 @@ public class UiScreen implements Screen {
         for (Renderable renderable : renderables) {
             if(renderable.usesMouse && renderable.getElementId().equals(elementId)) {
                 this.controllerSelected = renderable;
-                break;
+                return;
             }
         }
+        throw new IllegalArgumentException("No element with id " + elementId);
     }
 }

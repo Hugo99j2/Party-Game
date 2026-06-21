@@ -130,11 +130,16 @@ public class RenderUtil {
             String data = MiscUtils.getTextBetween(newText, "<colour:", ">");
             newText = newText.replace("<colour:"+data+">", "["+data.toUpperCase()+"]");
         }
+        while(newText.contains("<icon:")) {
+            String data = MiscUtils.getTextBetween(newText, "<icon:", ">");
+            newText = newText.replace("<icon:"+data+">", String.valueOf(GameData.getIcons().get(data)));
+        }
 
         GameData.FONT.getCache().clear();
         GlyphLayout layout = GameData.FONT.getCache().addText(newText, 0, 0);
-        float actualWidth = layout.width;
-        float scale = (ss.getXSize()/actualWidth);
+        float scaleX = (ss.getXSize()/layout.width);
+        float scaleY = (ss.getYSize()/layout.height);
+        float scale = Math.min(scaleX, scaleY);
         ((BitmapCacheScaler) GameData.FONT.getCache()).scale(scale);
         GameData.FONT.getCache().translate(ss.getX(), ss.getY()+(layout.height*scale));
         GameData.FONT.getCache().draw(GameData.spriteBatch);

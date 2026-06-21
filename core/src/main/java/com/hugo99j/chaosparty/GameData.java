@@ -17,15 +17,14 @@ import com.daniel99j.dungeongame.entity.AbstractObject;
 import com.hugo99j.chaosparty.match.Match;
 import com.hugo99j.chaosparty.match.MatchPlayer;
 import com.hugo99j.chaosparty.ui.Debuggers;
+import com.hugo99j.chaosparty.util.ImageUtil;
 import com.hugo99j.chaosparty.util.PathUtil;
 import com.daniel99j.dungeongame.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @SuppressWarnings("GDXJavaStaticResource")
 public class GameData {
@@ -43,6 +42,8 @@ public class GameData {
     public static BitmapFont FONT;
     public static Main MAIN_INSTANCE;
     public static int width, height;
+
+    private static Map<String, Character> icons = new HashMap<>();
 
     private static Match currentMatch;
 
@@ -67,8 +68,18 @@ public class GameData {
         throw new IllegalStateException("World is null");
     }
 
+    public static Map<String, Character> getIcons() {
+        return icons;
+    }
+
     protected static void init(Main main) {
         MAIN_INSTANCE = main;
+
+        char current = '\uE000';
+        for (String s : PathUtil.getFilesIn(PathUtil.texture("ui/icon"))) {
+            icons.put(s.replace("assets/textures/ui/icon/", "").replace(".png", ""), current);
+            current++;
+        }
 
         GameData.spriteBatch.enableBlending();
         GameData.spriteBatch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
@@ -84,7 +95,9 @@ public class GameData {
         fontParameters.minFilter = Texture.TextureFilter.Nearest;
         fontParameters.magFilter = Texture.TextureFilter.Nearest;
 
-        FONT = fontGenerator.generateFont(fontParameters);
+
+        FreeTypeFontGenerator.FreeTypeBitmapFontData data = new FreeTypeFontGenerator.FreeTypeBitmapFontData();
+        FONT = fontGenerator.generateFont(fontParameters, data);
         FONT.getData().markupEnabled = true;
         FONT.setUseIntegerPositions(false);
     }

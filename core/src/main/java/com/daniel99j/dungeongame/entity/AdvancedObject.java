@@ -18,12 +18,4 @@ public abstract class AdvancedObject extends AbstractObject {
     public void tick() {
 
     }
-
-    public Vector2 getVelocity() {
-        return this.getPhysics().getLinearVelocity().cpy();
-    }
-
-    public void setVelocity(Vector2 velocity) {
-        this.getPhysics().setLinearVelocity(velocity);
-    }
 }

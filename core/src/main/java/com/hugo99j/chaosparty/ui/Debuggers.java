@@ -115,6 +115,7 @@ public class Debuggers {
             debugOptions.put("screenSSDebugger", new ValueHolder<>(false));
             debugOptions.put("ignoreInvalidSS", new ValueHolder<>(false));
             debugOptions.put("showControllerSelect", new ValueHolder<>(false));
+            debugOptions.put("forceSingleView", new ValueHolder<>(false));
 
             PathUtil.getFilesIn(PathUtil.asset("sounds/")).forEach(e -> audioNames.add(e.replace("assets/sounds/", "").replace(".mp3", "")));
 
@@ -172,7 +173,10 @@ public class Debuggers {
 
         //GameData.gameViewport.apply();
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.GRAVE)) debugOptions.get("showing").object = !isEnabled("showing");
+        if (Gdx.input.isKeyJustPressed(Input.Keys.GRAVE)) {
+            debugOptions.get("showing").object = !isEnabled("showing");
+            save();
+        }
 
         if (isDebuggerOpen()) {
             if (isEnabled("staticLightUpdates") && GameData.level != null) {
@@ -289,19 +293,7 @@ public class Debuggers {
                     if (!s.equals("showing") && !s.equals("selecting") && !s.equals("selectingLight"))
                         if (ImGui.checkbox(s, valueHolder.object)) {
                             valueHolder.object = !valueHolder.object;
-
-                            JsonObject data = new JsonObject();
-                            JsonArray array = new JsonArray();
-                            debugOptions.forEach((name, value) -> {
-                                JsonObject map = new JsonObject();
-                                map.addProperty("name", name);
-                                map.addProperty("value", value.object);
-                                array.add(map);
-                            });
-                            data.add("options", array);
-                            try {
-                                Files.writeString(Path.of("debug.json"), new GsonBuilder().disableHtmlEscaping().setPrettyPrinting().create().toJson(data));
-                            } catch (Exception ignored) {}
+                            save();
                         }
                 });
 
@@ -448,6 +440,8 @@ public class Debuggers {
                                 if(ImGui.inputText(g, text, isEnabled("ignoreInvalidSS") ? ImGuiInputTextFlags.None : ImGuiInputTextFlags.EnterReturnsTrue)) {
                                     ToRun.run(() -> {screenSSValueHolder.object.getGetters().put(g, text.get());});
                                 }
+                                ImGui.sameLine();
+                                ImGui.text("(Current: "+screenSSValueHolder.object.get(g)+")");
                             }
                         });
                     }
@@ -529,6 +523,21 @@ public class Debuggers {
             Debuggers.customUiRenderers.remove(runnable);
         }
         activeScreenSS.clear();
+    }
+
+    private static void save() {
+        JsonObject data = new JsonObject();
+        JsonArray array = new JsonArray();
+        debugOptions.forEach((name, value) -> {
+            JsonObject map = new JsonObject();
+            map.addProperty("name", name);
+            map.addProperty("value", value.object);
+            array.add(map);
+        });
+        data.add("options", array);
+        try {
+            Files.writeString(Path.of("debug.json"), new GsonBuilder().disableHtmlEscaping().setPrettyPrinting().create().toJson(data));
+        } catch (Exception ignored) {}
     }
 
     private static void addSS(ScreenSS ss, ValueHolder<Integer> i, ValueHolder<ScreenSS> selectedHolder, String prepend) {

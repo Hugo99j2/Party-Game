@@ -8,6 +8,7 @@ import com.badlogic.gdx.utils.Disposable;
 import com.daniel99j.dungeongame.level.LevelLoader;
 import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.Main;
+import com.hugo99j.chaosparty.match.Match;
 import com.hugo99j.chaosparty.match.MatchPlayer;
 import com.hugo99j.chaosparty.match.MatchView;
 import com.hugo99j.chaosparty.ui.Debuggers;
@@ -112,5 +113,9 @@ public abstract class AbstractMinigame implements Disposable {
 
     public void setPaused(boolean paused) {
 
+    }
+
+    protected Match getMatch() {
+        return GameData.getCurrentMatch();
     }
 }

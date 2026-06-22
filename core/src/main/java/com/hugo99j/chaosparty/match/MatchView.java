@@ -20,19 +20,29 @@ public class MatchView implements Disposable {
     public final OrthographicCamera gameCamera = new OrthographicCamera();
     public Viewport gameViewport;
     public int worldWidth, worldHeight;
+    private final MatchPlayer player;
 
-    public MatchView(int worldWidth, int worldHeight) {
+    public MatchView(int worldWidth, int worldHeight, MatchPlayer player) {
         this.worldWidth = worldWidth;
         this.worldHeight = worldHeight;
         this.gameViewport = new ExtendViewport(worldWidth, worldHeight, gameCamera);
         this.gameViewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
+        this.player = player;
+    }
+
+    public MatchView(int worldWidth, int worldHeight) {
+        this(worldWidth, worldHeight, null);
     }
 
     public TextureRegion render() {
+        if(this.player != null) {
+            this.gameCamera.position.x = this.player.getPlayer().getPos().x;
+            this.gameCamera.position.y = this.player.getPlayer().getPos().y;
+        }
         fbo.begin();
         ScreenUtils.clear(new Color(0x331111ff));
 
-        gameViewport.apply();
+        gameViewport.apply(true);
 
         GameData.shapeRenderer.setProjectionMatrix(gameCamera.combined);
         GameData.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);

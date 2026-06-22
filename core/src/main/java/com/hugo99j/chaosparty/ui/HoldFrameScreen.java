@@ -21,7 +21,9 @@ public abstract class HoldFrameScreen extends UiScreen {
         GameData.spriteBatch.draw(frame, 0, GameData.height, GameData.width, -GameData.height);
         GameData.spriteBatch.end();
         GameData.spriteBatch.setShader(null);
+        GameData.spriteBatch.begin();
         super.render(delta);
+        GameData.spriteBatch.end();
     }
 
     @Override

@@ -49,7 +49,7 @@ public class WinScreen extends UiScreen {
             .build()
         );
         firework = new ParticleEffect();
-        firework.load(Gdx.files.internal(PathUtil.texture("w.p")), GameData.atlas);
+        firework.load(Gdx.files.internal(PathUtil.asset("particles/w.p")), GameData.atlas);
         firework.setEmittersCleanUpBlendFunction(false);
         firework.scaleEffect(1);
         firework.setDuration(1000000);

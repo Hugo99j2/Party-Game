@@ -8,8 +8,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.QueryCallback;
-import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Disposable;
 import com.daniel99j.djutil.ValueHolder;
 import com.hugo99j.chaosparty.GameData;
@@ -25,17 +24,45 @@ import java.util.function.Function;
 
 public class Level implements Disposable {
     private final World box2dWorld;
-    private float activeTimer;
-    private float tickTimer = 0;
     private final ArrayList<AdvancedObject> advancedObjects = new ArrayList<>();
     private final ArrayList<StaticObject> staticObjects = new ArrayList<>();
     private int time;
     public RayHandler rayHandler;
     private final ArrayList<LevelLight<?>> lights = new ArrayList<>();
     public final ArrayList<ParticleEffect> particles = new ArrayList<>();
+    private float lastRenderedFrame;
+    private final List<Runnable> collisions = new ArrayList<>();
 
     public Level() {
         this.box2dWorld = new World(new Vector2(0, 0), true);
+        this.box2dWorld.setContactListener(new ContactListener() {
+            @Override
+            public void beginContact(Contact contact) {
+                //schedule so that entities dont delete themselves whilst ticking box2d
+                AbstractObject a = ((AbstractObject) contact.getFixtureA().getBody().getUserData());
+                AbstractObject b = ((AbstractObject) contact.getFixtureB().getBody().getUserData());
+                collisions.add(() -> {
+                    if(a.isRemoved() || b.isRemoved()) return;
+                    a.onCollision(contact, b);
+                    b.onCollision(contact, a);
+                });
+            }
+
+            @Override
+            public void endContact(Contact contact) {
+
+            }
+
+            @Override
+            public void preSolve(Contact contact, Manifold oldManifold) {
+
+            }
+
+            @Override
+            public void postSolve(Contact contact, ContactImpulse impulse) {
+
+            }
+        });
         RayHandler.setGammaCorrection(true);
         this.rayHandler = new RayHandler(this.getBox2dWorld());
         this.rayHandler.setBlurNum(3);
@@ -46,7 +73,9 @@ public class Level implements Disposable {
 
     public void tickWorld() {
         time++;
-        for (AdvancedObject advancedObject : this.advancedObjects) {
+        collisions.forEach(Runnable::run);
+        collisions.clear();
+        for (AdvancedObject advancedObject : new ArrayList<>(this.advancedObjects)) {
             advancedObject.tick();
         }
     }
@@ -66,9 +95,11 @@ public class Level implements Disposable {
                 particles.remove(particle);
                 particle.dispose();
             }
-            particle.draw(GameData.spriteBatch, Gdx.graphics.getDeltaTime());
+            particle.draw(GameData.spriteBatch, lastRenderedFrame == Gdx.graphics.getDeltaTime() ? 0 : Gdx.graphics.getDeltaTime());
         }
         GameData.spriteBatch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        //makes particles update at normal speed with multiple screens
+        lastRenderedFrame = Gdx.graphics.getDeltaTime();
 
         if(Debuggers.isEnabled("pathfindingRender")) {
             for (Map.Entry<String, Integer> entry : Debuggers.pathfindDebuggerTimers.entrySet()) {
@@ -89,6 +120,8 @@ public class Level implements Disposable {
         }
         this.rayHandler.dispose();
         this.box2dWorld.dispose();
+
+        new ArrayList<>(this.particles).forEach(this::removeParticleImmediately);
 
         if(GameData.level == this) GameData.level = null;
     }
@@ -195,5 +228,15 @@ public class Level implements Disposable {
 
     public List<AdvancedObject> getObjectsBetween(Vector2 start, Vector2 end) {
         return this.getObjectsBetweenClass(start, end, AdvancedObject.class);
+    }
+
+    public void stopEmitting(ParticleEffect particle) {
+        particle.setDuration(0);
+    }
+
+    public void removeParticleImmediately(ParticleEffect particle) {
+        stopEmitting(particle);
+        particles.remove(particle);
+        particle.dispose();
     }
 }

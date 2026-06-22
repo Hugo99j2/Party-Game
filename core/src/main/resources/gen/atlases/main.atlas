@@ -258,56 +258,56 @@ costumes/pants9
   index: -1
 costumes/shirt1
   rotate: false
-  xy: 248, 231
+  xy: 248, 195
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 costumes/shirt2
   rotate: false
-  xy: 248, 213
+  xy: 266, 239
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 costumes/shirt3
   rotate: false
-  xy: 248, 195
+  xy: 266, 221
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 costumes/shirt4
   rotate: false
-  xy: 266, 239
+  xy: 266, 203
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 costumes/shirt5
   rotate: false
-  xy: 266, 221
+  xy: 284, 239
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 costumes/shirt6
   rotate: false
-  xy: 266, 203
+  xy: 284, 221
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 costumes/shirt7
   rotate: false
-  xy: 284, 239
+  xy: 284, 203
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 costumes/shirt8
   rotate: false
-  xy: 284, 221
+  xy: 266, 185
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -375,9 +375,16 @@ player2
   orig: 16, 16
   offset: 0, 0
   index: -1
+potato
+  rotate: false
+  xy: 278, 293
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
 sheep
   rotate: false
-  xy: 54, 165
+  xy: 248, 213
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -429,6 +436,20 @@ tilesets/kitchen_tiles
   xy: 194, 213
   size: 16, 16
   orig: 16, 16
+  offset: 0, 0
+  index: -1
+tilesets/road
+  rotate: false
+  xy: 248, 231
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+ui/border
+  rotate: false
+  xy: 260, 251
+  size: 4, 4
+  orig: 4, 4
   offset: 0, 0
   index: -1
 ui/button
@@ -615,105 +636,105 @@ ui/icon/menu
   index: -1
 ui/icon/right_button
   rotate: false
-  xy: 278, 293
+  xy: 278, 275
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ui/icon/right_stick
   rotate: false
-  xy: 278, 275
+  xy: 278, 257
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ui/icon/right_stick_any
   rotate: false
-  xy: 278, 257
+  xy: 20, 131
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ui/icon/right_stick_button
   rotate: false
-  xy: 20, 131
+  xy: 20, 113
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ui/icon/right_stick_down
   rotate: false
-  xy: 20, 113
+  xy: 20, 95
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ui/icon/right_stick_left
   rotate: false
-  xy: 20, 95
+  xy: 20, 77
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ui/icon/right_stick_leftright
   rotate: false
-  xy: 20, 77
+  xy: 20, 59
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ui/icon/right_stick_right
   rotate: false
-  xy: 20, 59
+  xy: 20, 41
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ui/icon/right_stick_up
   rotate: false
-  xy: 20, 41
+  xy: 20, 23
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ui/icon/right_stick_updown
   rotate: false
-  xy: 20, 23
+  xy: 20, 5
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ui/icon/right_trigger
   rotate: false
-  xy: 20, 5
+  xy: 54, 165
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ui/icon/upload
   rotate: false
-  xy: 284, 203
+  xy: 284, 185
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ui/icon/window
   rotate: false
-  xy: 266, 185
+  xy: 72, 177
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ui/icon/x
   rotate: false
-  xy: 284, 185
+  xy: 90, 177
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ui/icon/y
   rotate: false
-  xy: 72, 177
+  xy: 108, 177
   size: 16, 16
   orig: 16, 16
   offset: 0, 0

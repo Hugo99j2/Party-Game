@@ -1,48 +1,83 @@
 package com.hugo99j.chaosparty.entity;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.math.Vector2;
-import com.daniel99j.djutil.NumberUtils;
-import com.daniel99j.dungeongame.entity.AdvancedObject;
-import com.daniel99j.dungeongame.entity.ObjectType;
-import com.daniel99j.dungeongame.entity.PhysicsSettings;
+import com.badlogic.gdx.physics.box2d.Contact;
+import com.daniel99j.dungeongame.entity.*;
 import com.google.gson.JsonObject;
 import com.hugo99j.chaosparty.GameData;
+import com.hugo99j.chaosparty.minigame.HotPotatoMinigame;
 import com.hugo99j.chaosparty.util.ImageUtil;
+import com.hugo99j.chaosparty.util.PathUtil;
 import com.hugo99j.chaosparty.util.RenderLayer;
+import org.jetbrains.annotations.Nullable;
 
 import static com.hugo99j.chaosparty.GameData.px;
 
 public class Potato extends AdvancedObject {
-    private int sheepTime = 0;
-    private Vector2 move = Vector2.Zero;
+    private ParticleEffect hotEffect;
+    private float spin = 0;
+    private int ticksUntilCollision = 2;
+
+    @Override
+    public void onAdd(boolean fromLoad) {
+        super.onAdd(fromLoad);
+        hotEffect = new ParticleEffect();
+        hotEffect.load(Gdx.files.internal(PathUtil.asset("particles/flame.p")), GameData.atlas);
+        hotEffect.setEmittersCleanUpBlendFunction(false);
+        hotEffect.scaleEffect(0.01f);
+        hotEffect.setDuration(1000000);
+        hotEffect.start();
+        GameData.getLevelOrThrow().particles.add(hotEffect);
+        this.getPhysics().setLinearDamping(2);
+        hotEffect.setPosition(this.getPos().x+0.1f, this.getPos().y+0.4f);
+        //this.getPhysics().getFixtureList().get(0).
+    }
 
     @Override
     public void tick() {
-        sheepTime -= 1;
-        if(sheepTime <= 0) {
-            sheepTime = NumberUtils.getRandomInt(40, 100);
-            if (NumberUtils.getRandomInt(1, 2) == 1) {
-                move = new Vector2(NumberUtils.getRandomFloat(-1, 1), NumberUtils.getRandomFloat(-1, 1));
-            } else move = Vector2.Zero.cpy();
-            move.nor();
-        }
-
-        float speed = 20;
-        float actualSpeed = Math.max(speed-this.getVelocity().len(), 0);
-        if (move.len() > 0) this.getPhysics().applyForceToCenter(new Vector2(move.x * actualSpeed, move.y * actualSpeed), true);
-
         super.tick();
+        ticksUntilCollision--;
+        if(ticksUntilCollision == 0) {
+            this.setPhysicsSettings(PhysicsSettings.create(px(14), 1, px(1), 0, 0.5f, 0.5f));
+        }
+        hotEffect.setPosition(this.getPos().x+0.1f, this.getPos().y+0.4f);
+        if(this.getVelocity().len() < 1) {
+            goSplat(null);
+        }
+    }
+
+    @Override
+    public void onCollision(Contact contact, AbstractObject object) {
+        super.onCollision(contact, object);
+        goSplat(object instanceof Player player ? player : null);
+    }
+
+    private void goSplat(@Nullable Player player) {
+        var splat = new ParticleEffect();
+        splat.load(Gdx.files.internal(PathUtil.asset("particles/splat.p")), GameData.atlas);
+        splat.setEmittersCleanUpBlendFunction(false);
+        splat.scaleEffect(0.01f);
+        splat.start();
+        splat.setPosition(this.getPos().x+0.5f, this.getPos().y+0.5f);
+        GameData.getLevelOrThrow().particles.add(splat);
+        this.dispose();
+        if(player != null && GameData.getCurrentMatch().getCurrentMinigame() instanceof HotPotatoMinigame potatoMinigame) {
+            potatoMinigame.setHotPlayer(player.getMatchPlayer());
+        }
     }
 
     @Override
     public void render() {
+        spin += Gdx.graphics.getDeltaTime()*500;
         Vector2 pos = this.getPos();
-        GameData.spriteBatch.draw(ImageUtil.get("sheep"), pos.x, pos.y, 1, 1);
+        GameData.spriteBatch.draw(ImageUtil.get("potato"), pos.x, pos.y, 0.5f, 0.5f, 1, 1, 1, 1, spin);
     }
 
     @Override
     protected PhysicsSettings createPhysics() {
-        return PhysicsSettings.create(px(14), 1, px(1), 0, 0.5f, 0.5f);
+        return PhysicsSettings.create(px(14), 1, px(1), 0, 0.5f, 0.5f).collidesWith(CollisionCategories.allBut(CollisionCategories.PLAYER));
     }
 
     @Override
@@ -66,10 +101,16 @@ public class Potato extends AdvancedObject {
 
     @Override
     public String toString() {
-        return "Sheep";
+        return "Potato";
     }
 
     public static Potato createDefault() {
         return new Potato();
+    }
+
+    @Override
+    public void dispose() {
+        this.getLevel().stopEmitting(hotEffect);
+        super.dispose();
     }
 }

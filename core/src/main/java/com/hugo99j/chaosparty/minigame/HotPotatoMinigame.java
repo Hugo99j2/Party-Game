@@ -1,21 +1,20 @@
 package com.hugo99j.chaosparty.minigame;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Align;
 import com.daniel99j.dungeongame.sounds.SoundInstance;
 import com.daniel99j.dungeongame.sounds.SoundManager;
-import com.daniel99j.dungeongame.ui.renderable.RenderState;
 import com.daniel99j.dungeongame.ui.screenss.CombinedScreenSS;
 import com.daniel99j.dungeongame.ui.screenss.ScreenSSBuilder;
 import com.hugo99j.chaosparty.GameData;
-import com.hugo99j.chaosparty.entity.Sheep;
+import com.hugo99j.chaosparty.entity.Potato;
 import com.hugo99j.chaosparty.match.MatchPlayer;
 import com.hugo99j.chaosparty.match.MatchView;
+import com.hugo99j.chaosparty.ui.ControllerInput;
+import com.hugo99j.chaosparty.ui.ControllerUtil;
 import com.hugo99j.chaosparty.ui.Timer;
 import com.hugo99j.chaosparty.util.PathUtil;
-import com.hugo99j.chaosparty.util.RenderUtil;
 import com.hugo99j.chaosparty.util.ToRun;
 
 import java.util.List;
@@ -47,26 +46,39 @@ public class HotPotatoMinigame extends AbstractMinigame {
         .finishChild()
         .build();
     private final SoundInstance music;
-    private final ParticleEffect firework;
+    private final ParticleEffect hotEffect;
+    private MatchPlayer hotPlayer;
+    private boolean hotCollisionCooldown = false;
 
     public HotPotatoMinigame() {
         super("hot_potato");
         timer = new Timer("timer", 45, 2, false);
         timer.setStyle(ss.get("timer"));
         music = SoundManager.getSound("sheep_music").playSingle(1);
-        firework = new ParticleEffect();
-        firework.load(Gdx.files.internal(PathUtil.texture("flame.p")), GameData.atlas);
-        firework.setEmittersCleanUpBlendFunction(false);
-        firework.scaleEffect(0.01f);
-        firework.setDuration(1000000);
-        firework.start();
-        GameData.getLevelOrThrow().particles.add(firework);
+        hotEffect = new ParticleEffect();
+        hotEffect.load(Gdx.files.internal(PathUtil.asset("particles/flame.p")), GameData.atlas);
+        hotEffect.setEmittersCleanUpBlendFunction(false);
+        hotEffect.scaleEffect(0.01f);
+        hotEffect.setDuration(1000000);
+        hotEffect.start();
+        GameData.getLevelOrThrow().particles.add(hotEffect);
+
+        hotPlayer = GameData.getCurrentMatch().getPlayers().getFirst();
     }
 
     @Override
     public void tick() {
+        hotCollisionCooldown = false;
         this.defaultPlayerMovements();
-        firework.setPosition(GameData.getCurrentMatch().getPlayers().getFirst().getPlayer().getPos().x+0.3f, GameData.getCurrentMatch().getPlayers().getFirst().getPlayer().getPos().y+1);
+        hotEffect.setPosition(hotPlayer.getPlayer().getPos().x+0.3f, hotPlayer.getPlayer().getPos().y+1);
+
+        if(((ControllerUtil) hotPlayer.controller).wasJustPressed(ControllerInput.RIGHT_BUMPER)) {
+            Potato potato = new Potato();
+            potato.setX(hotPlayer.getPlayer().getPos().x);
+            potato.setY(hotPlayer.getPlayer().getPos().y);
+            GameData.getLevelOrThrow().addObject(potato);
+            potato.getPhysics().applyForceToCenter(((ControllerUtil) hotPlayer.controller).getValue(ControllerInput.RIGHT_STICK_RIGHT)*10000, ((ControllerUtil) hotPlayer.controller).getValue(ControllerInput.RIGHT_STICK_UP)*10000, true);
+        }
 
         if(timer.getSeconds() <= 0) {
             ToRun.run(() -> GameData.getCurrentMatch().finishCurrentMinigame());
@@ -99,12 +111,29 @@ public class HotPotatoMinigame extends AbstractMinigame {
 
     @Override
     public void setupViews(List<MatchView> matchViews) {
-        matchViews.add(new MatchView(32, 18));
+        matchViews.add(new MatchView(16, 9, GameData.getCurrentMatch().getPlayers().get(0)));
+        matchViews.add(new MatchView(16, 9, GameData.getCurrentMatch().getPlayers().get(1)));
+        matchViews.add(new MatchView(16, 9, GameData.getCurrentMatch().getPlayers().get(2)));
+        matchViews.add(new MatchView(16, 9, GameData.getCurrentMatch().getPlayers().get(3)));
     }
 
     @Override
     public void setPaused(boolean paused) {
         if(paused) music.pause();
         else music.play();
+    }
+
+    public void setHotPlayer(MatchPlayer hotPlayer) {
+        this.hotPlayer = hotPlayer;
+    }
+
+    public void setHotPlayerAndCooldown(MatchPlayer matchPlayer) {
+        if(this.hotPlayer == matchPlayer) return;
+        if(!hotCollisionCooldown) setHotPlayer(matchPlayer);
+        hotCollisionCooldown = true;
+    }
+
+    public MatchPlayer getHotPlayer() {
+        return hotPlayer;
     }
 }

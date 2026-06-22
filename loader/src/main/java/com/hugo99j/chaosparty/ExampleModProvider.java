@@ -1,9 +1,11 @@
 package com.hugo99j.chaosparty;
 
+import com.hugo99j.chaosparty.util.PathUtil;
 import net.fabricmc.loader.impl.game.GameProvider;
 import net.fabricmc.loader.impl.game.patch.GameTransformer;
 import net.fabricmc.loader.impl.launch.FabricLauncher;
 import net.fabricmc.loader.impl.util.Arguments;
+import org.lwjgl.Sys;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,10 +15,7 @@ import java.lang.invoke.MethodType;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collection;
-import java.util.List;
-import java.util.ServiceLoader;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Stream;
 
 /**
@@ -110,41 +109,24 @@ public final class ExampleModProvider implements GameProvider {
         this.arguments = new Arguments();
         arguments.parse(args);
 
-        // This should probably be done programmatically, but for this example hard-coding it is okay.
         entryClass = "com.hugo99j.chaosparty.Launcher";
-        // Same for the version.
         version = "1.0.0";
 
-        // This is a little messy and depends on the layout of this project, for a real provider write this in a way
-        // that it can survive existing in production.
-        var codeSource = ExampleModProvider.class.getProtectionDomain().getCodeSource();
         Path codePath;
-        try {
-            codePath = Paths.get(codeSource.getLocation().toURI());
-        } catch(URISyntaxException e) {
-            throw new RuntimeException("Failed to find source of ExampleModProvider?", e);
+        if(Objects.equals(System.getenv("CODING_GAME"), "1")) {
+            //No jar executable in dev env, so use fatJar
+            codePath = Path.of("../build/libs/PATH-1.0-SNAPSHOT-all.jar".replace("PATH", PathUtil.getDevPrefix())).toAbsolutePath();
+        } else {
+            //If not in dev env, this is the JAR file
+            var codeSource = ExampleModProvider.class.getProtectionDomain().getCodeSource();
+            try {
+                codePath = Paths.get(codeSource.getLocation().toURI());
+            } catch(URISyntaxException e) {
+                throw new RuntimeException("Failed to find source of ExampleModProvider?", e);
+            }
         }
 
-        Path basePath;
-        try {
-            basePath = getLaunchDirectory()
-                .resolve(Path.of("..", "core", "build", "libs", "core.jar"))
-                .toRealPath();
-        } catch(IOException e) {
-            throw new RuntimeException("Failed to find base", e);
-        }
-
-        Path basePath2;
-        try {
-            basePath2 = getLaunchDirectory()
-                .resolve(Path.of("..", "build", "libs", "Chaos Party-1.0-SNAPSHOT-all.jar"))
-                .toRealPath();
-        } catch(IOException e) {
-            throw new RuntimeException("Failed to find base", e);
-        }
-
-        classPath = List.of(codePath, basePath, basePath2);
-
+        classPath = List.of(codePath);
         return true;
     }
 

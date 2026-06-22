@@ -31,27 +31,7 @@ public abstract class AbstractObject implements Disposable {
     @UsageLimited
     public final void init(Level level, boolean fromLoad) {
         this.level = level;
-        PhysicsSettings settings = createPhysics();
-        if(settings != null) {
-            BodyDef bodyDef = new BodyDef();
-            bodyDef.type = settings.bodyType();
-            this.physics = Either.right(this.level.getBox2dWorld().createBody(bodyDef));
-            this.physics.getRight().setLinearDamping(settings.drag() * 10);
-            this.physics.getRight().setFixedRotation(true);
-            FixtureDef fixtureDef = new FixtureDef();
-            fixtureDef.shape = settings.shape();
-            fixtureDef.density = settings.density();
-            Fixture fixture = this.physics.getRight().createFixture(fixtureDef);
-            settings.shape().dispose();
-            this.physics.getRight().setUserData(this);
-
-            Filter collisionFilter = new Filter();
-            collisionFilter.categoryBits = settings.collisionGroup();
-            collisionFilter.maskBits = settings.collidesWith();
-            fixture.setFilterData(collisionFilter);
-        } else {
-            this.physics = Either.left(new PositionHolder());
-        }
+        setPhysicsSettings(createPhysics());
         if(this.beforeLoadPos != null) this.setPos(this.beforeLoadPos);
         this.beforeLoadPos = null;
         if(!fromLoad) this.uuid = UUID.randomUUID();
@@ -66,8 +46,8 @@ public abstract class AbstractObject implements Disposable {
 
     @Override
     public void dispose() {
-        if(this.removed) return;
-        this.removed = true;
+        if(this.isRemoved()) return;
+        this.markRemoved();
         if(this.physics.isRight()) this.getLevel().getBox2dWorld().destroyBody(this.physics.getRight());
         this.physics = null;
         if(this.level != null) this.level.removeObject(this);
@@ -87,6 +67,7 @@ public abstract class AbstractObject implements Disposable {
 
     public Vector2 getPos() {
         if(this.removed) return new Vector2();
+        if(this.physics == null && this.beforeLoadPos == null) return new Vector2();
         if(this.physics == null) return this.beforeLoadPos.cpy();
         if(this.physics.isRight()) return this.physics.getRight().getPosition().cpy();
         else if(this.physics.isLeft()) return this.physics.getLeft().pos.cpy();
@@ -112,11 +93,15 @@ public abstract class AbstractObject implements Disposable {
     }
 
     public boolean hasPhysics() {
-        return physics.isRight();
+        return physics != null && physics.isRight();
     }
 
     public void markRemoved() {
         this.removed = true;
+    }
+
+    public boolean isRemoved() {
+        return removed;
     }
 
     public void markFromWorldLoad() {
@@ -234,5 +219,44 @@ public abstract class AbstractObject implements Disposable {
     @UsageLimited
     public void setUUIDReallyUnsafeDoNotUse(UUID uuid) {
         this.uuid = uuid;
+    }
+
+    protected void setPhysicsSettings(PhysicsSettings settings) {
+        Vector2 oldPos = this.getPos();
+        Vector2 oldVelocity = this.hasPhysics() ? this.getVelocity() : new Vector2();
+        if(this.hasPhysics()) this.getLevel().getBox2dWorld().destroyBody(this.physics.getRight());
+        if(settings != null) {
+            BodyDef bodyDef = new BodyDef();
+            bodyDef.type = settings.bodyType();
+            this.physics = Either.right(this.level.getBox2dWorld().createBody(bodyDef));
+            this.physics.getRight().setLinearDamping(settings.drag() * 10);
+            this.physics.getRight().setFixedRotation(true);
+            FixtureDef fixtureDef = new FixtureDef();
+            fixtureDef.shape = settings.shape();
+            fixtureDef.density = settings.density();
+            Fixture fixture = this.physics.getRight().createFixture(fixtureDef);
+            settings.shape().dispose();
+            this.physics.getRight().setUserData(this);
+
+            Filter collisionFilter = new Filter();
+            collisionFilter.categoryBits = settings.collisionGroup();
+            collisionFilter.maskBits = settings.collidesWith();
+            fixture.setFilterData(collisionFilter);
+            this.setVelocity(oldVelocity);
+        } else {
+            this.physics = Either.left(new PositionHolder());
+        }
+        this.setPos(oldPos.cpy());
+    }
+
+    public Vector2 getVelocity() {
+        return this.getPhysics().getLinearVelocity().cpy();
+    }
+
+    public void setVelocity(Vector2 velocity) {
+        this.getPhysics().setLinearVelocity(velocity.cpy());
+    }
+
+    public void onCollision(Contact contact, AbstractObject userData) {
     }
 }

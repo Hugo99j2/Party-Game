@@ -5,8 +5,10 @@ import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.entity.Player;
 import com.hugo99j.chaosparty.minigame.AbstractMinigame;
 import com.hugo99j.chaosparty.minigame.MinigameScreenLayout;
+import com.hugo99j.chaosparty.ui.Debuggers;
 import com.hugo99j.chaosparty.ui.PlayScreen;
 import com.hugo99j.chaosparty.ui.WinScreen;
+import com.hugo99j.chaosparty.util.ImageUtil;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -50,16 +52,23 @@ public class Match {
 
     public void render(float delta) {
         if(this.getCurrentMinigame() != null) {
-            if(this.getMatchViews().size() == 1) {
+            if(this.getMatchViews().size() == 1 || (GameData.DEBUGGING && Debuggers.isEnabled("forceSingleView"))) {
                 renderView(this.getMatchViews().getFirst(), 0, 0, 1, 1);
             } else if(this.getMatchViews().size() == 2) {
                 renderView(this.getMatchViews().getFirst(), 0, 0, 0.5f, 1);
                 renderView(this.getMatchViews().get(1), 0.5f, 0, 0.5f, 1);
+                GameData.spriteBatch.begin();
+                GameData.spriteBatch.draw(ImageUtil.get("ui/border"), 0, GameData.height/2.0f, GameData.width, 6);
+                GameData.spriteBatch.end();
             } else {
                 renderView(this.getMatchViews().getFirst(), 0, 0, 0.5f, 0.5f);
                 renderView(this.getMatchViews().get(1), 0.5f, 0, 0.5f, 0.5f);
                 renderView(this.getMatchViews().get(2), 0, 0.5f, 0.5f, 0.5f);
                 if(this.getMatchViews().size() >= 4) renderView(this.getMatchViews().get(3), 0.5f, 0.5f, 0.5f, 0.5f);
+                GameData.spriteBatch.begin();
+                GameData.spriteBatch.draw(ImageUtil.get("ui/border"), 0, GameData.height/2.0f, GameData.width, 6);
+                GameData.spriteBatch.draw(ImageUtil.get("ui/border"), GameData.width/2.0f, 0, 6, GameData.height);
+                GameData.spriteBatch.end();
             }
             GameData.uiViewport.apply();
             GameData.spriteBatch.setProjectionMatrix(GameData.uiCamera.combined);

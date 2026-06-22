@@ -3,18 +3,22 @@ package com.hugo99j.chaosparty.entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.controllers.Controllers;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.daniel99j.dungeongame.entity.*;
 import com.daniel99j.dungeongame.sounds.SoundManager;
 import com.hugo99j.chaosparty.match.MatchPlayer;
+import com.hugo99j.chaosparty.minigame.HotPotatoMinigame;
 import com.hugo99j.chaosparty.ui.Debuggers;
 import com.hugo99j.chaosparty.util.*;
 import com.google.gson.JsonObject;
 import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.Main;
+import org.jetbrains.annotations.Nullable;
 
 public class Player extends AdvancedObject {
     private final MatchPlayer matchPlayer;
@@ -98,5 +102,17 @@ public class Player extends AdvancedObject {
     @Override
     public boolean shouldSave() {
         return false;
+    }
+
+    public MatchPlayer getMatchPlayer() {
+        return matchPlayer;
+    }
+
+    @Override
+    public void onCollision(Contact contact, AbstractObject object) {
+        super.onCollision(contact, object);
+        if(object instanceof Player player && GameData.getCurrentMatch().getCurrentMinigame() instanceof HotPotatoMinigame potatoMinigame && potatoMinigame.getHotPlayer().getPlayer() == this) {
+            potatoMinigame.setHotPlayerAndCooldown(player.getMatchPlayer());
+        }
     }
 }

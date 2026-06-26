@@ -19,14 +19,14 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 public abstract class LauncherMixin {
     // This allows Fabric loader to do the rest of the initialization work that it needs to do.
     @Inject(
-        method = "main",
+        method = "notMain",
         at = @At(
             value = "INVOKE",
             target = "Lcom/hugo99j/chaosparty/loader/Lwjgl3Launcher;main([Ljava/lang/String;)V"
         ),
         locals = LocalCapture.CAPTURE_FAILHARD
     )
-    private static void main(String[] args, CallbackInfo ci, Lwjgl3Launcher base) {
+    private static void notMain(String[] args, CallbackInfo ci, Lwjgl3Launcher base) {
         //FabricLoaderImpl.INSTANCE.prepareModInit(FabricLoader.getInstance().getGameDir(), base);
     }
 

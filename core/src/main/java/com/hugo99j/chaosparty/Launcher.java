@@ -9,7 +9,7 @@ public final class Launcher {
      *
      * @param args The command line arguments
      */
-    public static void main(String[] args) {
+    public static void notMain(String[] args) {
         var base = new Lwjgl3Launcher();
         base.main(args);
     }

@@ -7,7 +7,6 @@
     "example.mixins.json"
   ],
   "depends": {
-    "fabricloader": "*",
     "java": ">=17"
   }
 }

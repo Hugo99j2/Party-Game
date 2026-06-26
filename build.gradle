@@ -1,6 +1,24 @@
+buildscript {
+  repositories {
+    gradlePluginPortal()
+    maven { url = 'https://dj.ucc.asn.au/maven/' }
+    maven { url = 'https://maven.fabricmc.net/' }
+  }
+  dependencies {
+    classpath "io.github.fourlastor:construo:2.1.0"
+    if(enableGraalNative == 'true') {
+      classpath "org.graalvm.buildtools.native:org.graalvm.buildtools.native.gradle.plugin:0.9.28"
+    }
+  }
+}
+
 plugins {
+  id 'com.github.johnrengelman.shadow' version '7.1.2'
   id 'java'
 }
+
+apply plugin: 'com.gradleup.shadow'
+apply plugin: 'io.github.fourlastor.construo'
 
 group = 'com.daniel99j'
 version = '1.0-SNAPSHOT'
@@ -9,6 +27,10 @@ repositories {
   mavenCentral()
   maven { url = 'https://dj.ucc.asn.au/maven/' }
   maven { url = 'https://maven.fabricmc.net/' }
+  mavenCentral()
+  gradlePluginPortal()
+  mavenLocal()
+  google()
 }
 
 dependencies {
@@ -93,6 +115,12 @@ dependencies {
   implementation "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
   implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
   implementation "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
+
+  implementation "io.github.fourlastor:construo:2.1.0"
+
+  implementation project(":core")
+  implementation project(":loader")
+
 }
 
 tasks.withType(JavaExec.class).configureEach {
@@ -111,26 +139,65 @@ tasks.register('generateAssetList') {
 }
 processResources.dependsOn 'generateAssetList'
 
-gradle.projectsEvaluated {
-  tasks.register('fatJar', Jar) {
-    group = 'build'
-    description = 'Builds a runnable fat jar containing the loader, core, and runtime dependencies.'
+shadowJar {
+  archiveClassifier.set('all')
 
-    dependsOn project(':loader').tasks.named('classes')
-    archiveClassifier = 'all'
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+  manifest {
+    attributes(
+      'Main-Class': 'com.hugo99j.chaosparty.LoaderMain'
+    )
+  }
+}
 
-    manifest {
-      attributes 'Main-Class': 'com.hugo99j.chaosparty.LoaderMain'
+import io.github.fourlastor.construo.Target
+
+construo {
+  name.set("Test")
+  humanName.set("Test")
+
+  jarTask.set("fatJar")
+
+  jlink {
+    guessModulesFromJar.set(false)
+    modules.addAll(
+      "java.sql",
+      "java.logging",
+      "java.base",
+      "java.management",
+      "java.desktop",
+      "jdk.unsupported"
+    )
+  }
+
+  targets.configure {
+    register("linuxX64", Target.Linux) {
+      architecture.set(Target.Architecture.X86_64)
+      jdkUrl.set("https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.10%2B7/OpenJDK21U-jdk_x64_linux_hotspot_21.0.10_7.tar.gz")
+      // Linux does not currently have a way to set the icon on the executable
     }
-
-    from project(':loader').sourceSets.main.output
-    from {
-      project(':loader').configurations.runtimeClasspath.collect {
-        it.isDirectory() ? it : zipTree(it)
-      }
+    register("macM1", Target.MacOs) {
+      architecture.set(Target.Architecture.AARCH64)
+      jdkUrl.set("https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.10%2B7/OpenJDK21U-jdk_aarch64_mac_hotspot_21.0.10_7.tar.gz")
+      // macOS needs an identifier
+      identifier.set("com.hugo99j.chaosparty." + "Test")
+      // Optional: icon for macOS, as an ICNS file
+      macIcon.set(project.file("icons/logo.icns"))
     }
-
-    exclude 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/*.SF'
+    register("macX64", Target.MacOs) {
+      architecture.set(Target.Architecture.X86_64)
+      jdkUrl.set("https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.10%2B7/OpenJDK21U-jdk_x64_mac_hotspot_21.0.10_7.tar.gz")
+      // macOS needs an identifier
+      identifier.set("com.hugo99j.chaosparty." + "Test")
+      // Optional: icon for macOS, as an ICNS file
+      macIcon.set(project.file("icons/logo.icns"))
+    }
+    register("winX64", Target.Windows) {
+      architecture.set(Target.Architecture.X86_64)
+      // Optional: icon for Windows, as a PNG
+      icon.set(project.file("icons/logo.png"))
+      jdkUrl.set("https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.10%2B7/OpenJDK21U-jdk_x64_windows_hotspot_21.0.10_7.zip")
+      // Uncomment the next line to show a console when the game runs, to print messages.
+      //useConsole.set(true)
+    }
   }
 }

@@ -5,8 +5,10 @@
   "mixins": [
     "BitmapCacheScalerMixin",
     "ControllerUtilMixin",
+    "ExtendViewportCenterMixin",
     "FontMixin",
     "MonitorFixMixin",
+    "ResizeSpeederUpperMixin",
     "ShapeRendererLineWidth",
     "WindowAccessor",
     "WindowFixMixin"

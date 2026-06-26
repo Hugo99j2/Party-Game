@@ -168,7 +168,7 @@ public final class ExampleModProvider implements GameProvider {
         MethodHandle invoker;
         try {
             Class<?> target = loader.loadClass(targetName);
-            invoker = MethodHandles.lookup().findStatic(target, "main", MethodType.methodType(void.class, String[].class));
+            invoker = MethodHandles.lookup().findStatic(target, "notMain", MethodType.methodType(void.class, String[].class));
         } catch(ClassNotFoundException | NoSuchMethodException | IllegalAccessException e) {
             throw new RuntimeException("Failed to find entry point", e);
         }

@@ -1,0 +1,40 @@
+{
+  "objects": [
+    {
+      "x": 3.0,
+      "y": 4.0,
+      "uuid": "6336a25d-5789-47f0-b1e2-2b405cbda282",
+      "type": "button",
+      "custom_data": {}
+    },
+    {
+      "x": -0.0,
+      "y": -7.0,
+      "uuid": "151283cf-b175-447d-a518-213dedb95bf6",
+      "type": "tileset",
+      "custom_data": {
+        "width": 24,
+        "height": 18,
+        "sprite": "tilesets/kitchen_tiles"
+      }
+    }
+  ],
+  "lights": [
+    {
+      "uuid": "b65cf9e9-2570-4ac8-bf4e-7edfdc7b5371",
+      "saveConfig": "ALWAYS",
+      "lightClass": "class box2dLight.PointLight",
+      "colour": "ff0000bf",
+      "direction": 0.0,
+      "distance": 4.42,
+      "xray": false,
+      "static": false,
+      "active": true,
+      "soft": true,
+      "softShadowLength": 5.0,
+      "rays": 128,
+      "x": 3.073,
+      "y": 4.639
+    }
+  ]
+}

@@ -13,11 +13,13 @@ buildscript {
 }
 
 plugins {
-  id 'com.github.johnrengelman.shadow' version '7.1.2'
   id 'java'
 }
 
-apply plugin: 'com.gradleup.shadow'
+configurations {
+  metajars
+}
+
 apply plugin: 'io.github.fourlastor.construo'
 
 group = 'com.daniel99j'
@@ -69,7 +71,7 @@ dependencies {
 
 
 //
-  implementation "net.fabricmc:fabric-loader:${project.fabricLoaderVersion}"
+  metajars implementation("net.fabricmc:fabric-loader:${project.fabricLoaderVersion}")
   implementation "net.fabricmc:tiny-mappings-parser:${project.tinyMappingsParserVersion}"
 
   implementation("net.fabricmc:sponge-mixin:${mixinVersion}") {
@@ -82,11 +84,11 @@ dependencies {
   implementation "net.fabricmc:tiny-remapper:${project.tinyRemapperVersion}"
   implementation "net.fabricmc:access-widener:${project.accessWidenerVersion}"
 
-  implementation "org.ow2.asm:asm:${project.asmVersion}"
-  implementation "org.ow2.asm:asm-analysis:${project.asmVersion}"
-  implementation "org.ow2.asm:asm-commons:${project.asmVersion}"
-  implementation "org.ow2.asm:asm-tree:${project.asmVersion}"
-  implementation "org.ow2.asm:asm-util:${project.asmVersion}"
+  implementation( "org.ow2.asm:asm:${project.asmVersion}")
+    implementation( "org.ow2.asm:asm-analysis:${project.asmVersion}")
+      implementation( "org.ow2.asm:asm-commons:${project.asmVersion}")
+        implementation( "org.ow2.asm:asm-tree:${project.asmVersion}")
+          implementation( "org.ow2.asm:asm-util:${project.asmVersion}")
 
 
 //
@@ -116,11 +118,39 @@ dependencies {
   implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
   implementation "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
 
-  implementation "io.github.fourlastor:construo:2.1.0"
+  file("libs/construo-2.1.0-no-asm.jar")
+}
 
-  implementation project(":core")
-  implementation project(":loader")
-
+jar {
+  duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+  from({
+    configurations
+      .findAll { it != configurations.metajars && it.canBeResolved }
+      .collectMany { cfg ->
+        cfg.files.findAll { it.name.endsWith(".jar") }
+      }
+      .collect { zipTree(it) }
+  }) {
+    exclude "META-INF/*.SF"
+    exclude "META-INF/*.DSA"
+    exclude "META-INF/*.RSA"
+  }
+  //from({
+  //  configurations.bootstrap.collect { zipTree(it) }
+  //}) {
+  //  exclude "META-INF/**"
+  //}
+  from(configurations.metajars) {
+    into "META-INF/jars"
+    exclude "META-INF/*.SF"
+    exclude "META-INF/*.DSA"
+    exclude "META-INF/*.RSA"
+  }
+  manifest {
+    attributes(
+      'Main-Class': 'com.hugo99j.chaosparty.loader.fabric.LoaderMain'
+    )
+  }
 }
 
 tasks.withType(JavaExec.class).configureEach {
@@ -129,8 +159,8 @@ tasks.withType(JavaExec.class).configureEach {
 }
 
 tasks.register('generateAssetList') {
-  inputs.dir("${project.rootDir}/core/src/main/resources/")
-  File assetsFolder = new File("${project.rootDir}/core/src/main/resources/")
+  inputs.dir("${project.rootDir}/build/main/resources/")
+  File assetsFolder = new File("${project.rootDir}/build/src/main/resources/")
   File assetsFile = new File(assetsFolder, "tree.txt")
   assetsFile.delete()
   fileTree(assetsFolder).collect { assetsFolder.relativePath(it) }.sort().each {
@@ -139,23 +169,13 @@ tasks.register('generateAssetList') {
 }
 processResources.dependsOn 'generateAssetList'
 
-shadowJar {
-  archiveClassifier.set('all')
-
-  manifest {
-    attributes(
-      'Main-Class': 'com.hugo99j.chaosparty.LoaderMain'
-    )
-  }
-}
-
 import io.github.fourlastor.construo.Target
+
+import java.nio.file.Files
 
 construo {
   name.set("Test")
   humanName.set("Test")
-
-  jarTask.set("fatJar")
 
   jlink {
     guessModulesFromJar.set(false)

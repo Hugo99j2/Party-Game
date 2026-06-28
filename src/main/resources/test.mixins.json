@@ -1,0 +1,19 @@
+{
+  "required": true,
+  "package": "com.hugo99j.chaosparty.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "BitmapCacheScalerMixin",
+    "ControllerUtilMixin",
+    "ExtendViewportCenterMixin",
+    "FontMixin",
+    "MonitorFixMixin",
+    "ResizeSpeederUpperMixin",
+    "ShapeRendererLineWidth",
+    "WindowAccessor",
+    "WindowFixMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

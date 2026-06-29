@@ -69,108 +69,6 @@
       }
     },
     {
-      "x": 12.0,
-      "y": 6.0,
-      "uuid": "d07eff3f-347f-418a-b580-473f7232e80a",
-      "type": "tileset",
-      "custom_data": {
-        "width": 1,
-        "height": 1,
-        "sprite": "oil_drum",
-        "flipX": false,
-        "flipY": false,
-        "hasHitbox": true,
-        "rotation": 0,
-        "scale": 1.0,
-        "tint": "ffffffff"
-      }
-    },
-    {
-      "x": 7.0,
-      "y": 10.0,
-      "uuid": "4681583c-2ff4-4412-8be1-f66708982b48",
-      "type": "tileset",
-      "custom_data": {
-        "width": 1,
-        "height": 1,
-        "sprite": "oil_drum",
-        "flipX": false,
-        "flipY": false,
-        "hasHitbox": true,
-        "rotation": 0,
-        "scale": 1.0,
-        "tint": "ffffffff"
-      }
-    },
-    {
-      "x": 40.0,
-      "y": 21.0,
-      "uuid": "2c009f8c-d4aa-435b-a58f-25fb17488a18",
-      "type": "tileset",
-      "custom_data": {
-        "width": 1,
-        "height": 1,
-        "sprite": "oil_drum",
-        "flipX": false,
-        "flipY": false,
-        "hasHitbox": true,
-        "rotation": 0,
-        "scale": 1.0,
-        "tint": "ffffffff"
-      }
-    },
-    {
-      "x": 30.0,
-      "y": 9.0,
-      "uuid": "bb1ef2a4-7836-4bce-a32d-bab1aa16edce",
-      "type": "tileset",
-      "custom_data": {
-        "width": 1,
-        "height": 1,
-        "sprite": "oil_drum",
-        "flipX": false,
-        "flipY": false,
-        "hasHitbox": true,
-        "rotation": 0,
-        "scale": 1.0,
-        "tint": "ffffffff"
-      }
-    },
-    {
-      "x": 59.0,
-      "y": 29.0,
-      "uuid": "1518be3f-1b38-4cd0-b27c-1ebeff0d15fd",
-      "type": "tileset",
-      "custom_data": {
-        "width": 1,
-        "height": 1,
-        "sprite": "oil_drum",
-        "flipX": false,
-        "flipY": false,
-        "hasHitbox": true,
-        "rotation": 0,
-        "scale": 1.0,
-        "tint": "ffffffff"
-      }
-    },
-    {
-      "x": 17.0,
-      "y": 27.0,
-      "uuid": "b82d9b95-c5c6-4ce9-989c-630f41e8d561",
-      "type": "tileset",
-      "custom_data": {
-        "width": 1,
-        "height": 1,
-        "sprite": "oil_drum",
-        "flipX": false,
-        "flipY": false,
-        "hasHitbox": true,
-        "rotation": 0,
-        "scale": 1.0,
-        "tint": "ffffffff"
-      }
-    },
-    {
       "x": 11.0,
       "y": 15.0,
       "uuid": "efafb197-cac4-499b-8e6f-671fbf3ea822",
@@ -236,6 +134,66 @@
         "rotation": 0,
         "scale": 1.0,
         "tint": "ffffffff"
+      }
+    },
+    {
+      "x": 6.0,
+      "y": 10.0,
+      "uuid": "3ffd38cd-b6b0-42f0-87cd-2d2da0bdf628",
+      "type": "liquid_barrel",
+      "custom_data": {
+        "sprite": "oil_drum",
+        "explosive": true
+      }
+    },
+    {
+      "x": 11.0,
+      "y": 6.0,
+      "uuid": "3a1a1a79-c0f4-4b5b-bb53-6f1810246385",
+      "type": "liquid_barrel",
+      "custom_data": {
+        "sprite": "oil_drum",
+        "explosive": true
+      }
+    },
+    {
+      "x": 29.0,
+      "y": 9.0,
+      "uuid": "11a01c5f-b468-4730-a9a2-c3aa28c4040c",
+      "type": "liquid_barrel",
+      "custom_data": {
+        "sprite": "oil_drum",
+        "explosive": true
+      }
+    },
+    {
+      "x": 39.0,
+      "y": 21.0,
+      "uuid": "f440bc97-406a-4e04-bd65-3d2b9deca9bc",
+      "type": "liquid_barrel",
+      "custom_data": {
+        "sprite": "oil_drum",
+        "explosive": true
+      }
+    },
+    {
+      "x": 58.0,
+      "y": 29.0,
+      "uuid": "e8c0d914-8261-4cf6-8599-180786702275",
+      "type": "liquid_barrel",
+      "custom_data": {
+        "sprite": "oil_drum",
+        "explosive": true
+      }
+    },
+    {
+      "x": 16.0,
+      "y": 27.0,
+      "uuid": "5b8aac49-2739-4c74-8b15-f7586ce66618",
+      "type": "liquid_barrel",
+      "custom_data": {
+        "sprite": "oil_drum",
+        "explosive": true
       }
     }
   ],

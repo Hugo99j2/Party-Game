@@ -154,6 +154,30 @@ jar {
   }
 }
 
+configurations {
+  implementationResolved {
+    canBeResolved = true
+    canBeConsumed = false
+    extendsFrom implementation
+  }
+}
+
+tasks.register('devMixinSources', Jar) {
+  archiveBaseName.set("dev_mixin_sources")
+  version = ""
+  duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+  from({
+    configurations.implementationResolved.collect {
+      it.isDirectory() ? it : zipTree(it)
+    }
+  }) {
+    exclude "META-INF/*.SF"
+    exclude "META-INF/*.DSA"
+    exclude "META-INF/*.RSA"
+  }
+}
+
 tasks.withType(JavaExec.class).configureEach {
   environment("__GL_THREADED_OPTIMIZATIONS", 0)
   jvmArgs += "-Dfabric.development=true"

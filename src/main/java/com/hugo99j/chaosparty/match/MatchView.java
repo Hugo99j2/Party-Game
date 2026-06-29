@@ -11,8 +11,11 @@ import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.*;
 import com.hugo99j.chaosparty.GameData;
+import com.hugo99j.chaosparty.effect.ActiveEffect;
 import com.hugo99j.chaosparty.ui.Debuggers;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 
 public class MatchView implements Disposable {
@@ -22,6 +25,7 @@ public class MatchView implements Disposable {
     public int worldWidth, worldHeight;
     private final MatchPlayer player;
     private final boolean center;
+    private final List<ActiveEffect> activeEffects = new ArrayList<>();
 
     public MatchView(int worldWidth, int worldHeight, MatchPlayer player, boolean center) {
         this.worldWidth = worldWidth;
@@ -38,6 +42,10 @@ public class MatchView implements Disposable {
 
     public MatchView(int worldWidth, int worldHeight) {
         this(worldWidth, worldHeight, null, true);
+    }
+
+    public List<ActiveEffect> getActiveEffects() {
+        return activeEffects;
     }
 
     public TextureRegion render() {

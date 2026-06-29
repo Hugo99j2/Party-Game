@@ -23,6 +23,8 @@ import com.daniel99j.djutil.pathfinder.PathfindDebugType;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.hugo99j.chaosparty.effect.ActiveEffect;
+import com.hugo99j.chaosparty.effect.Effects;
 import com.hugo99j.chaosparty.util.NoDebugOption;
 import com.hugo99j.chaosparty.util.RequiresRefresh;
 import com.daniel99j.dungeongame.sounds.SoundInstance;
@@ -325,6 +327,14 @@ public class Debuggers {
                     slider("zoom", GameData.getCurrentMatch().getMatchViews().getFirst().gameCamera.zoom, (e) -> {GameData.getCurrentMatch().getMatchViews().getFirst().gameCamera.zoom = e;}, -10, 10, "%.3f");
                 }
 
+                ImGui.end();
+
+                ImGui.begin("Effects");
+                for (String allEffect : Effects.getAllEffects().keySet()) {
+                    if(ImGui.button("Apply "+allEffect)) {
+                        GameData.getCurrentMatch().getMatchViews().getFirst().getActiveEffects().add(new ActiveEffect(Effects.getAllEffects().get(allEffect)));
+                    }
+                }
                 ImGui.end();
 
                 if(isEnabled("demoWindow")) ImGui.showDemoWindow();

@@ -281,7 +281,7 @@ public final class BaseModProvider implements GameProvider {
 
         if(Objects.equals(System.getenv("CODING_GAME"), "1")) {
             //Add external dependencies so mixins can apply
-            classPath.add(Path.of("../build/libs/PATH-1.0-SNAPSHOT.jar".replace("PATH", PathUtil.getDevPrefix())).toAbsolutePath());
+            classPath.add(Path.of("../build/libs/dev_mixin_sources.jar").toAbsolutePath());
         }
         return true;
     }

@@ -2,6 +2,7 @@ package com.hugo99j.chaosparty.match;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.hugo99j.chaosparty.GameData;
+import com.hugo99j.chaosparty.effect.EffectShaderManager;
 import com.hugo99j.chaosparty.entity.Player;
 import com.hugo99j.chaosparty.minigame.AbstractMinigame;
 import com.hugo99j.chaosparty.minigame.MinigameScreenLayout;
@@ -82,9 +83,11 @@ public class Match {
         x *= GameData.width;
         TextureRegion r = v.render();
         GameData.uiViewport.apply();
+        EffectShaderManager.apply(v.getActiveEffects());
         GameData.spriteBatch.setProjectionMatrix(GameData.uiCamera.combined);
         GameData.spriteBatch.begin();
         GameData.spriteBatch.draw(r, x, GameData.height-y, 0, 0, GameData.width, GameData.height, sizeX, -sizeY, 0);
+        GameData.spriteBatch.setShader(null);
         GameData.spriteBatch.end();
     }
 

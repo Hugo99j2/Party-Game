@@ -6,7 +6,7 @@ import com.hugo99j.chaosparty.Main;
 
 /** Launches the desktop (LWJGL3) application. */
 public class Lwjgl3Launcher {
-    public void main(String[] args) {
+    public void alsoNotMain(String[] args) {
         if (StartupHelper.startNewJvmIfRequired()) return; // This handles macOS support and helps on Windows.
         Lwjgl3Application a = createApplication();
         //FabricLoaderImpl.INSTANCE.prepareModInit(FabricLoader.getInstance().getGameDir(), a);
@@ -32,7 +32,7 @@ public class Lwjgl3Launcher {
         configuration.setWindowedMode(640, 480);
         //// You can change these files; they are in lwjgl3/src/main/resources/ .
         //// They can also be loaded from the root of assets/ .
-        configuration.setWindowIcon("test.png", "test.png", "test.png", "test.png");
+        configuration.setWindowIcon("assets/textures/icon.png", "assets/textures/icon.png", "assets/textures/icon.png", "assets/textures/icon.png");
         configuration.setAudioConfig(32, 512, 9);
         configuration.setPauseWhenLostFocus(true);
         //configuration.set

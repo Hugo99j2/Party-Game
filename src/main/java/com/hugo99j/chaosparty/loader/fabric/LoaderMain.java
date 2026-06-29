@@ -67,6 +67,18 @@ public class LoaderMain {
 //        ASM.getVersionString();
 //
 //        launch.invoke(null, args, client);
+
+        //Fix ASM not knowing it's version unless it has custom metadata
+        for (Field field : ASM.class.getDeclaredFields()) {
+            if(field.getName().equals("implMinorVersion")) {
+                field.setAccessible(true);
+                try {
+                    field.set(null, 10);
+                } catch (IllegalAccessException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
         Knot.launch(args, EnvType.CLIENT);
     }
 

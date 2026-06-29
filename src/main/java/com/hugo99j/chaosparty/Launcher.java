@@ -1,7 +1,6 @@
 package com.hugo99j.chaosparty;
 
 import com.hugo99j.chaosparty.loader.Lwjgl3Launcher;
-import org.lwjgl.Sys;
 
 public final class Launcher {
     /**
@@ -10,7 +9,6 @@ public final class Launcher {
      * @param args The command line arguments
      */
     public static void notMain(String[] args) {
-        var base = new Lwjgl3Launcher();
-        base.main(args);
+        new Lwjgl3Launcher().alsoNotMain(args);
     }
 }

@@ -101,7 +101,7 @@ public class Level implements Disposable {
         //makes particles update at normal speed with multiple screens
         lastRenderedFrame = Gdx.graphics.getDeltaTime();
 
-        if(Debuggers.isEnabled("pathfindingRender")) {
+        if(GameData.DEBUGGING && Debuggers.isEnabled("pathfindingRender")) {
             for (Map.Entry<String, Integer> entry : Debuggers.pathfindDebuggerTimers.entrySet()) {
                 if (entry.getValue() <= 0) {
                     Debuggers.pathfindDebuggerTimers.remove(entry.getKey());

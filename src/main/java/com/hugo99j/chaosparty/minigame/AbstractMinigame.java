@@ -55,7 +55,7 @@ public abstract class AbstractMinigame implements Disposable {
             //diagonal isnt faster
             if(movement.len() > 1) movement.nor();
 
-            if(Debuggers.isEnabled("freecam")) {
+            if(GameData.DEBUGGING && Debuggers.isEnabled("freecam")) {
                 float mul = 0.25f;
                 Debuggers.freecam.add(new Vector2(movement.x*mul, movement.y*mul));
             }

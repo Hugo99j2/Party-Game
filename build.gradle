@@ -71,7 +71,8 @@ dependencies {
 
 
 //
-  metajars implementation("net.fabricmc:fabric-loader:${project.fabricLoaderVersion}")
+  //metajars implementation("net.fabricmc:fabric-loader:${project.fabricLoaderVersion}")
+  metajars implementation("com.daniel99j:fabric-loader:${project.fabricLoaderVersion}")
   implementation "net.fabricmc:tiny-mappings-parser:${project.tinyMappingsParserVersion}"
 
   implementation("net.fabricmc:sponge-mixin:${mixinVersion}") {
@@ -177,6 +178,8 @@ construo {
   name.set("Test")
   humanName.set("Test")
 
+  jarTask.set("jar")
+
   jlink {
     guessModulesFromJar.set(false)
     modules.addAll(
@@ -185,7 +188,8 @@ construo {
       "java.base",
       "java.management",
       "java.desktop",
-      "jdk.unsupported"
+      "jdk.unsupported",
+      "java.compiler"
     )
   }
 

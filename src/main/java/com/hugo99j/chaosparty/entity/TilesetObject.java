@@ -41,6 +41,7 @@ public class TilesetObject extends StaticObject {
     @Override
     public void onAdd(boolean fromLoad) {
         super.onAdd(fromLoad);
+        if(!hasHitbox) return;
         Filter f = new Filter();
         f.categoryBits = CollisionCategories.DONT_COLLIDE_WITH_EACH_OTHER;
         f.maskBits = CollisionCategories.allBut(CollisionCategories.DONT_COLLIDE_WITH_EACH_OTHER);

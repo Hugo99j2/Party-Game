@@ -11,6 +11,49 @@ public class Effects {
     public static final String RED = add("red", "pixel.r = 1f;");
     public static final String GREEN = add("green", "pixel.g = 1f;");
     public static final String BLUE = add("blue", "pixel.b = 1f;");
+    public static final String THERMAL = add("thermal", """
+        vec3 sceneColor = pixel.rgb;
+
+        // 2. Calculate luminance to serve as our "fake" temperature (0.0 to 1.0)
+        // Standard Rec. 709 grayscale coefficients
+        float temperature = dot(sceneColor, vec3(0.2126, 0.7152, 0.0722));
+
+        // 3. Define the thermal gradient lookup array (Cold -> Hot)
+        // Index 0: Dark/Cold (Blue/Purple)
+        // Index 1: Cool (Cyan)
+        // Index 2: Neutral (Green)
+        // Index 3: Warm (Yellow)
+        // Index 4: Hot (Red/White)
+        vec3 colors[5];
+        colors[0] = vec3(0.0, 0.0, 0.1); // Ultra cold purple-blue
+        colors[1] = vec3(0.0, 0.5, 1.0); // Cold blue
+        colors[2] = vec3(0.0, 1.0, 0.0); // Medium green
+        colors[3] = vec3(1.0, 1.0, 0.0); // Warm yellow
+        colors[4] = vec3(1.0, 0.0, 0.0); // Hot red
+
+        // 4. Map the 0.0 - 1.0 temperature range into the array indices
+        float ix = temperature * 4.0;
+        int index = int(floor(ix));
+        float factor = fract(ix); // How far between the two colors we are
+
+        // 5. Clamp values to avoid array out-of-bounds errors
+        index = clamp(index, 0, 3);
+
+        // 6. Linearly interpolate between the two closest colors in the spectrum
+        vec3 thermalColor = mix(colors[index], colors[index + 1], factor);
+
+        pixel = vec4(thermalColor, 1.0);
+        """);
+    public static final String BITSHIFT = add("bitshift", """
+        vec4 oldpixel = pixel;
+        pixel.r = oldpixel.g;
+        pixel.g = oldpixel.b;
+        pixel.b = oldpixel.r;
+    """);
+
+
+    public static final String OVERSATURATION = add("oversaturation", "pixel.r *= 1.01;\npixel.rgb *= 4;");
+
     public static final String INVERT = add("invert", """
         pixel.r = 1-pixel.r;
         pixel.g = 1-pixel.g;

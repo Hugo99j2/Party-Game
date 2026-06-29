@@ -51,7 +51,7 @@ public class MapEditor extends AbstractMinigame {
 
     @Override
     public void setupViews(List<MatchView> matchViews) {
-        matchViews.add(new MatchView(16, 9, null, false));
+        matchViews.add(new MatchView(16, 9, null));
     }
 
     public void scroll(float amountY) {

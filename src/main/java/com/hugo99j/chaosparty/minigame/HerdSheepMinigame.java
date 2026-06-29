@@ -51,6 +51,11 @@ public class HerdSheepMinigame extends AbstractMinigame {
     }
 
     @Override
+    public boolean shouldAutoCenterCameras() {
+        return true;
+    }
+
+    @Override
     public void start() {
         super.start();
         timer = new Timer("timer", 45, 2, false);

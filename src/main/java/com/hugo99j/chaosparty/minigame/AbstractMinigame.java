@@ -25,6 +25,10 @@ public abstract class AbstractMinigame implements Disposable {
         this.mapName = mapName;
     }
 
+    public boolean shouldAutoCenterCameras() {
+        return false;
+    }
+
     public void start() {
         GameData.level = LevelLoader.loadFromData(mapName);
     }

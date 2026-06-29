@@ -36,6 +36,9 @@ public class Match {
         if(minigame != null) {
             GameData.MAIN_INSTANCE.setScreen(new PlayScreen());
             minigame.setupViews(matchViews);
+            for (MatchView matchView : matchViews) {
+                matchView.setCenter(minigame.shouldAutoCenterCameras());
+            }
             minigame.start();
             for (MatchPlayer player : players) {
                 GameData.level.addObject(new Player(player));

@@ -24,24 +24,24 @@ public class MatchView implements Disposable {
     public Viewport gameViewport;
     public int worldWidth, worldHeight;
     private final MatchPlayer player;
-    private final boolean center;
+    private boolean center;
     private final List<ActiveEffect> activeEffects = new ArrayList<>();
 
-    public MatchView(int worldWidth, int worldHeight, MatchPlayer player, boolean center) {
+    public MatchView(int worldWidth, int worldHeight, MatchPlayer player) {
         this.worldWidth = worldWidth;
         this.worldHeight = worldHeight;
         this.gameViewport = new ExtendViewport(worldWidth, worldHeight, gameCamera);
         this.gameViewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), center);
         this.player = player;
-        this.center = center;
-    }
-
-    public MatchView(int worldWidth, int worldHeight, MatchPlayer player) {
-        this(worldWidth, worldHeight, player, true);
+        this.center = false;
     }
 
     public MatchView(int worldWidth, int worldHeight) {
-        this(worldWidth, worldHeight, null, true);
+        this(worldWidth, worldHeight, null);
+    }
+
+    public void setCenter(boolean center) {
+        this.center = center;
     }
 
     public List<ActiveEffect> getActiveEffects() {

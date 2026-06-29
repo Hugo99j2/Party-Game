@@ -38,12 +38,12 @@ public class TilesetObject extends StaticObject {
 
     @Override
     protected PhysicsSettings createPhysics() {
-        return null;
+        return hasHitbox ? PhysicsSettings.immovable(this.width*this.size.x, this.height*this.size.y, 0, 0) : null;
     }
 
     @Override
     public void render() {
-        Color old = GameData.spriteBatch.getColor();
+        Color old = GameData.spriteBatch.getColor().cpy();
         GameData.spriteBatch.setColor(tint);
         for (float x = 0; x < this.width*this.size.x; x+=this.size.x) {
             for (float y = 0; y < this.height*this.size.y; y+=this.size.y) {
@@ -123,7 +123,7 @@ public class TilesetObject extends StaticObject {
     }
 
     public void setTint(Color tint) {
-        this.tint = tint;
+        this.tint = tint.cpy();
     }
 
     public void setSprite(String sprite) {

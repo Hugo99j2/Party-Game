@@ -78,8 +78,8 @@ public class RenderUtil {
         try {
             for (Field field : Color.class.getFields()) {
                 if (Modifier.isStatic(field.getModifiers()) && Modifier.isFinal(field.getModifiers()) && Modifier.isPublic(field.getModifiers()) && field.getType().equals(Color.class)) {
-                    colorMap.put(field.getName(), (Color) field.get(null));
-                    colorMapOther.put((Color) field.get(null), field.getName());
+                    colorMap.put(field.getName().toLowerCase(), (Color) field.get(null));
+                    colorMapOther.put((Color) field.get(null), field.getName().toLowerCase());
                 }
             }
         } catch (Exception e) {
@@ -156,6 +156,6 @@ public class RenderUtil {
     }
 
     public static Color fromString(String color) {
-        return colorMap.get(color);
+        return colorMap.get(color.toLowerCase());
     }
 }

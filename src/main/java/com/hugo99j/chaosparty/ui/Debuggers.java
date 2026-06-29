@@ -415,7 +415,12 @@ public class Debuggers {
                     ImGui.separatorText("Current ScreenSS");
 
                     if(currentlySelected != null) {
+                        ImString added = new ImString();
+                        if(ImGui.inputText("To add", added, ImGuiInputTextFlags.EnterReturnsTrue) && !added.get().isBlank()) {
+                            currentlySelected.getGetters().put(added.get(), "1");
+                        }
                         ValueHolder<ScreenSS> screenSSValueHolder = new ValueHolder<>(currentlySelected);
+                        List<String> toRemove = new ArrayList<>();
                         currentlySelected.getGetters().forEach((g, v) -> {
                             if(ImGui.isKeyDown(ImGuiKey.ModShift)) {
                                 try {
@@ -443,7 +448,14 @@ public class Debuggers {
                                 ImGui.sameLine();
                                 ImGui.text("(Current: "+screenSSValueHolder.object.get(g)+")");
                             }
+                            ImGui.sameLine();
+                            if(ImGui.button("X")) {
+                                toRemove.add(g);
+                            }
                         });
+                        for (String s : toRemove) {
+                            currentlySelected.getGetters().remove(s);
+                        }
                     }
 
                     ImGui.endChild();

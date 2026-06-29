@@ -1,5 +1,7 @@
 package com.hugo99j.chaosparty.ui;
 
+import com.badlogic.gdx.controllers.Controller;
+import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.daniel99j.dungeongame.sounds.SoundManager;
@@ -8,6 +10,7 @@ import com.daniel99j.dungeongame.ui.types.Button;
 import com.daniel99j.dungeongame.ui.types.Text;
 import com.hugo99j.chaosparty.match.MatchPlayer;
 import com.hugo99j.chaosparty.match.User;
+import com.hugo99j.chaosparty.minigame.AbstractMinigame;
 import com.hugo99j.chaosparty.minigame.HotPotatoMinigame;
 import com.hugo99j.chaosparty.util.Logger;
 import com.hugo99j.chaosparty.util.PathUtil;
@@ -16,6 +19,7 @@ import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.minigame.DevMinigame;
 import com.hugo99j.chaosparty.minigame.HerdSheepMinigame;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /** First screen of the application. Displayed after the application is created. */
@@ -28,43 +32,45 @@ public class MenuScreen extends UiScreen {
             .set("y", "0vh")
             .set("xSize", "100vw")
             .set("ySize", "100vh")
-            .newChild("play")
-            .set("x", "0.5vw")
-            .set("y", "0.5vh")
+            .set("display", "flex")
+            .set("flexDirection", "column")
+            .set("justifyContent", "center")
+            .set("alignItems", "center")
+            .set("padding", 48)
+            .set("gap", 24)
+            .newChild("text")
+            .set("x", "auto")
+            .set("y", "auto")
             .set("xSize", 320)
             .set("ySize", 64)
-            .set("center", true)
+            .finishChild()
+            .newChild("play")
+            .set("x", "auto")
+            .set("y", "auto")
+            .set("xSize", 320)
+            .set("ySize", 64)
             .set("scale", 2)
             .finishChild()
             .newChild("sheep")
-            .set("x", "0.5vw")
-            .set("y", "0.3vh")
+            .set("x", "auto")
+            .set("y", "auto")
             .set("xSize", 320)
             .set("ySize", 64)
-            .set("center", true)
             .set("scale", 2)
             .finishChild()
             .newChild("fire")
-            .set("x", "0.5vw")
-            .set("y", "0.25vh")
+            .set("x", "auto")
+            .set("y", "auto")
             .set("xSize", 320)
             .set("ySize", 64)
-            .set("center", true)
             .set("scale", 2)
             .finishChild()
             .newChild("creator")
-            .set("x", "0.5vw")
-            .set("y", "0.1vh")
+            .set("x", "auto")
+            .set("y", "auto")
             .set("xSize", 320)
             .set("ySize", 64)
-            .set("center", true)
             .set("scale", 2)
-            .finishChild()
-            .newChild("text")
-            .set("x", "0.5vw")
-            .set("y", "0.7vh")
-            .set("xSize", 1)
-            .set("ySize", 1)
             .finishChild()
             .build()
         );
@@ -88,14 +94,14 @@ public class MenuScreen extends UiScreen {
             @Override
             public void onClick() {
                 super.onClick();
-                ToRun.run(() -> GameData.startMatch(List.of(new MatchPlayer(User.getUser(1)), new MatchPlayer(User.getUser(2)), new MatchPlayer(User.getUser(3)), new MatchPlayer(User.getUser(4)))).setCurrentMinigame(new HerdSheepMinigame()));
+                start(new HerdSheepMinigame());
             }
         });
         this.addRenderable(new Button("fire", "button", "FIRE IN THE HOLE!") {
             @Override
             public void onClick() {
                 super.onClick();
-                ToRun.run(() -> GameData.startMatch(List.of(new MatchPlayer(User.getUser(1)), new MatchPlayer(User.getUser(2)), new MatchPlayer(User.getUser(3)), new MatchPlayer(User.getUser(4)))).setCurrentMinigame(new HotPotatoMinigame()));
+                start(new HotPotatoMinigame());
             }
         });
 
@@ -110,6 +116,20 @@ public class MenuScreen extends UiScreen {
 
         //new ScreenSS("0.5vw", "0.7vh", "1", "1", "1", false)
         this.addRenderable(new Text("text", "<colour:blue>Hello world"));
+    }
+
+    private void start(AbstractMinigame minigame) {
+        List<MatchPlayer> players = new ArrayList<>();
+        int amount = 0;
+        if(GameData.DEBUGGING && Debuggers.isEnabled("fakeControllers+1")) amount+=1;
+        if(GameData.DEBUGGING && Debuggers.isEnabled("fakeControllers+2")) amount+=2;
+        amount += Controllers.getControllers().size;
+        amount = Math.min(amount, 4);
+        for (int i = 0; i < amount; i++) {
+            players.add(new MatchPlayer(User.getUser(i+1)));
+
+        }
+        ToRun.run(() -> GameData.startMatch(players).setCurrentMinigame(minigame));
     }
 
     @Override

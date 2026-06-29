@@ -21,17 +21,23 @@ public class MatchView implements Disposable {
     public Viewport gameViewport;
     public int worldWidth, worldHeight;
     private final MatchPlayer player;
+    private final boolean center;
 
-    public MatchView(int worldWidth, int worldHeight, MatchPlayer player) {
+    public MatchView(int worldWidth, int worldHeight, MatchPlayer player, boolean center) {
         this.worldWidth = worldWidth;
         this.worldHeight = worldHeight;
         this.gameViewport = new ExtendViewport(worldWidth, worldHeight, gameCamera);
-        this.gameViewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
+        this.gameViewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), center);
         this.player = player;
+        this.center = center;
+    }
+
+    public MatchView(int worldWidth, int worldHeight, MatchPlayer player) {
+        this(worldWidth, worldHeight, player, true);
     }
 
     public MatchView(int worldWidth, int worldHeight) {
-        this(worldWidth, worldHeight, null);
+        this(worldWidth, worldHeight, null, true);
     }
 
     public TextureRegion render() {
@@ -42,7 +48,7 @@ public class MatchView implements Disposable {
         fbo.begin();
         ScreenUtils.clear(new Color(0x331111ff));
 
-        gameViewport.apply(true);
+        gameViewport.apply(center);
 
         GameData.shapeRenderer.setProjectionMatrix(gameCamera.combined);
         GameData.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);

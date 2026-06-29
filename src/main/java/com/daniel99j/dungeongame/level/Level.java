@@ -202,17 +202,24 @@ public class Level implements Disposable {
         light.light().remove();
     }
 
-    public <T> List<T> getObjectsBetweenClass(Vector2 start, Vector2 end, Class<T> clazz) {
+    public <T> List<T> getObjectsBetweenClass(Vector2 start, Vector2 end, Class<T> clazz, boolean physics) {
         if(end.x < start.x || end.y < start.y) throw new IllegalArgumentException("End is before start");
         List<T> objects = new ArrayList<>();
+        if(physics) {
+            QueryCallback callback = fixture -> {
+                if (clazz.isInstance(fixture.getBody().getUserData())) //noinspection unchecked
+                    objects.add((T) fixture.getBody().getUserData());
+                return true;
+            };
 
-        QueryCallback callback = fixture -> {
-            if (clazz.isInstance(fixture.getBody().getUserData())) //noinspection unchecked
-                objects.add((T) fixture.getBody().getUserData());
-            return true;
-        };
-
-        this.getBox2dWorld().QueryAABB(callback, start.x, start.y, end.x, end.y);
+            this.getBox2dWorld().QueryAABB(callback, start.x, start.y, end.x, end.y);
+        } else {
+            for (AbstractObject allObject : this.getAllObjects()) {
+                Vector2 pos = allObject.getPos();
+                if(clazz.isInstance(allObject) && pos.x >= start.x && pos.x <= end.x && pos.y >= start.y && pos.y <= end.y) //noinspection unchecked
+                    objects.add((T) allObject);
+            }
+        }
 
         if(GameData.DEBUGGING && Debuggers.isEnabled("showBetweenBoxes")) {
             Debuggers.customLevelRenderers.put((v) -> {
@@ -227,7 +234,7 @@ public class Level implements Disposable {
     }
 
     public List<AdvancedObject> getObjectsBetween(Vector2 start, Vector2 end) {
-        return this.getObjectsBetweenClass(start, end, AdvancedObject.class);
+        return this.getObjectsBetweenClass(start, end, AdvancedObject.class, true);
     }
 
     public void stopEmitting(ParticleEffect particle) {

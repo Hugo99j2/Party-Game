@@ -65,8 +65,12 @@ public class ScreenSS {
         return getters;
     }
 
+    protected String getAsString(String name) {
+        return getters.get(name);
+    }
+
     protected MathsContext createContext(String name) {
-        return MathsContext.create().withGlobalVariable("vw", String.valueOf(GameData.width)).withGlobalVariable("vh", String.valueOf(GameData.height)).withGlobalVariable("time", String.valueOf(GameData.time));
+        return MathsContext.create().withGlobalVariable("vw", String.valueOf(GameData.width/100.0f)).withGlobalVariable("vh", String.valueOf(GameData.height/100.0f)).withGlobalVariable("time", String.valueOf(GameData.time));
     }
 
     public int getX() {
@@ -84,6 +88,30 @@ public class ScreenSS {
 
     protected boolean has(String v) {
         return getters.containsKey(v);
+    }
+
+    public int getPaddingLeft() {
+        return getBoxValue("paddingLeft", "paddingX", "padding");
+    }
+
+    public int getPaddingRight() {
+        return getBoxValue("paddingRight", "paddingX", "padding");
+    }
+
+    public int getPaddingTop() {
+        return getBoxValue("paddingTop", "paddingY", "padding");
+    }
+
+    public int getPaddingBottom() {
+        return getBoxValue("paddingBottom", "paddingY", "padding");
+    }
+
+    //returns either all sides, single side, or axis
+    protected int getBoxValue(String side, String axis, String all) {
+        if(has(side)) return getAsInt(side);
+        if(has(axis)) return getAsInt(axis);
+        if(has(all)) return getAsInt(all);
+        return 0;
     }
 
     private record CacheKey(double result, float time) {}

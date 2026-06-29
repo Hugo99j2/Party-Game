@@ -20,7 +20,7 @@ import com.hugo99j.chaosparty.util.ToRun;
 import java.util.List;
 
 public class HotPotatoMinigame extends AbstractMinigame {
-    private final Timer timer;
+    private Timer timer;
     private final CombinedScreenSS ss = ScreenSSBuilder.create()
         .set("xSize", "1vw")
         .set("ySize", "1vh")
@@ -45,13 +45,18 @@ public class HotPotatoMinigame extends AbstractMinigame {
         .finishChild()
         .finishChild()
         .build();
-    private final SoundInstance music;
-    private final ParticleEffect hotEffect;
+    private SoundInstance music;
+    private ParticleEffect hotEffect;
     private MatchPlayer hotPlayer;
     private boolean hotCollisionCooldown = false;
 
     public HotPotatoMinigame() {
         super("hot_potato");
+    }
+
+    @Override
+    public void start() {
+        super.start();
         timer = new Timer("timer", 45, 2, false);
         timer.setStyle(ss.get("timer"));
         music = SoundManager.getSound("sheep_music").playSingle(1);
@@ -111,10 +116,9 @@ public class HotPotatoMinigame extends AbstractMinigame {
 
     @Override
     public void setupViews(List<MatchView> matchViews) {
-        matchViews.add(new MatchView(16, 9, GameData.getCurrentMatch().getPlayers().get(0)));
-        matchViews.add(new MatchView(16, 9, GameData.getCurrentMatch().getPlayers().get(1)));
-        matchViews.add(new MatchView(16, 9, GameData.getCurrentMatch().getPlayers().get(2)));
-        matchViews.add(new MatchView(16, 9, GameData.getCurrentMatch().getPlayers().get(3)));
+        for (MatchPlayer player : GameData.getCurrentMatch().getPlayers()) {
+            matchViews.add(new MatchView(16, 9, player));
+        }
     }
 
     @Override

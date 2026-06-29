@@ -23,6 +23,9 @@ public abstract class AbstractMinigame implements Disposable {
 
     protected AbstractMinigame(String mapName) {
         this.mapName = mapName;
+    }
+
+    public void start() {
         GameData.level = LevelLoader.loadFromData(mapName);
     }
 

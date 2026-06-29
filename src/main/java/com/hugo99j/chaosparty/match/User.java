@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import com.hugo99j.chaosparty.util.CostumePart;
 import com.hugo99j.chaosparty.util.Costumes;
 import com.hugo99j.chaosparty.util.GsonUtil;
+import com.hugo99j.chaosparty.util.RenderUtil;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -45,6 +46,10 @@ public class User {
 
     public void setWearing(CostumePart part, String newCostume) {
         costume.put(part, newCostume);
+    }
+
+    public Color getColour() {
+        return RenderUtil.fromString(getWearing(CostumePart.COLOUR).replace("colour_", ""));
     }
 
     public static void saveUsers() {

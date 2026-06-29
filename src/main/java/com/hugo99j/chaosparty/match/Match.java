@@ -35,6 +35,7 @@ public class Match {
         if(minigame != null) {
             GameData.MAIN_INSTANCE.setScreen(new PlayScreen());
             minigame.setupViews(matchViews);
+            minigame.start();
             for (MatchPlayer player : players) {
                 GameData.level.addObject(new Player(player));
             }

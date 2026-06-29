@@ -57,10 +57,10 @@ public class HerdSheepMinigame extends AbstractMinigame {
         timer.setStyle(ss.get("timer"));
         music = SoundManager.getSound("sheep_music").playSingle(1);
 
-        for (TilesetObject o : GameData.getLevelOrThrow().getObjectsBetweenClass(new Vector2(1, 9), new Vector2(11, 17), TilesetObject.class, false)) {
+        for (TilesetObject o : GameData.getLevelOrThrow().getObjectsBetweenClass(new Vector2(1, 9), new Vector2(11, 16), TilesetObject.class, false)) {
             o.setTint(GameData.getCurrentMatch().getPlayers().getFirst().getUser().getColour());
         }
-        for (TilesetObject o : GameData.getLevelOrThrow().getObjectsBetweenClass(new Vector2(20, 9), new Vector2(31, 17), TilesetObject.class, false)) {
+        for (TilesetObject o : GameData.getLevelOrThrow().getObjectsBetweenClass(new Vector2(20, 9), new Vector2(30, 16), TilesetObject.class, false)) {
             o.setTint(GameData.getCurrentMatch().getPlayers().get(1).getUser().getColour());
         }
         if (GameData.getCurrentMatch().getPlayers().size() >= 3) {
@@ -69,7 +69,7 @@ public class HerdSheepMinigame extends AbstractMinigame {
             }
         }
         if (GameData.getCurrentMatch().getPlayers().size() == 4) {
-            for (TilesetObject o : GameData.getLevelOrThrow().getObjectsBetweenClass(new Vector2(20, 1), new Vector2(31, 8), TilesetObject.class, false)) {
+            for (TilesetObject o : GameData.getLevelOrThrow().getObjectsBetweenClass(new Vector2(20, 1), new Vector2(30, 8), TilesetObject.class, false)) {
                 o.setTint(GameData.getCurrentMatch().getPlayers().get(3).getUser().getColour());
             }
         }

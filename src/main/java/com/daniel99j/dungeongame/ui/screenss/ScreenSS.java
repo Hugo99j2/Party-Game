@@ -55,7 +55,7 @@ public class ScreenSS {
                 if(GameData.DEBUGGING && Debuggers.isEnabled("ignoreInvalidSS")) {
                     cache.put(name, new CacheKey(oldResult, GameData.time));
                     return oldResult;
-                } else throw e;
+                } else throw new IllegalArgumentException("Invalid screenSS "+getters.get(name), e);
             }
 
         } else throw new IllegalArgumentException("Unknown getter: " + name);

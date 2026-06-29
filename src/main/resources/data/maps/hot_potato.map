@@ -6,12 +6,233 @@
       "uuid": "d36bf480-bb73-49a4-9b39-992af14f75e9",
       "type": "tileset",
       "custom_data": {
-        "width": 32,
-        "height": 18,
+        "width": 64,
+        "height": 36,
         "sprite": "tilesets/road",
         "flipX": false,
         "flipY": false,
         "hasHitbox": false,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "b5b5b5ff"
+      }
+    },
+    {
+      "x": 0.0,
+      "y": 1.0,
+      "uuid": "6478e418-3e07-4568-9d25-bb8bbf9b52ea",
+      "type": "tileset",
+      "custom_data": {
+        "width": 1,
+        "height": 16,
+        "sprite": "tilesets/bricks",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff"
+      }
+    },
+    {
+      "x": 15.0,
+      "y": 5.0,
+      "uuid": "a4de2d67-94dd-4049-a1fa-6652360bb941",
+      "type": "tileset",
+      "custom_data": {
+        "width": 2,
+        "height": 1,
+        "sprite": "brick",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff"
+      }
+    },
+    {
+      "x": 15.0,
+      "y": 4.0,
+      "uuid": "abfc86d0-0818-4f72-b173-9ff62e9eb49d",
+      "type": "tileset",
+      "custom_data": {
+        "width": 2,
+        "height": 1,
+        "sprite": "tilesets/bricks",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff"
+      }
+    },
+    {
+      "x": 12.0,
+      "y": 6.0,
+      "uuid": "d07eff3f-347f-418a-b580-473f7232e80a",
+      "type": "tileset",
+      "custom_data": {
+        "width": 1,
+        "height": 1,
+        "sprite": "oil_drum",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff"
+      }
+    },
+    {
+      "x": 7.0,
+      "y": 10.0,
+      "uuid": "4681583c-2ff4-4412-8be1-f66708982b48",
+      "type": "tileset",
+      "custom_data": {
+        "width": 1,
+        "height": 1,
+        "sprite": "oil_drum",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff"
+      }
+    },
+    {
+      "x": 40.0,
+      "y": 21.0,
+      "uuid": "2c009f8c-d4aa-435b-a58f-25fb17488a18",
+      "type": "tileset",
+      "custom_data": {
+        "width": 1,
+        "height": 1,
+        "sprite": "oil_drum",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff"
+      }
+    },
+    {
+      "x": 30.0,
+      "y": 9.0,
+      "uuid": "bb1ef2a4-7836-4bce-a32d-bab1aa16edce",
+      "type": "tileset",
+      "custom_data": {
+        "width": 1,
+        "height": 1,
+        "sprite": "oil_drum",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff"
+      }
+    },
+    {
+      "x": 59.0,
+      "y": 29.0,
+      "uuid": "1518be3f-1b38-4cd0-b27c-1ebeff0d15fd",
+      "type": "tileset",
+      "custom_data": {
+        "width": 1,
+        "height": 1,
+        "sprite": "oil_drum",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff"
+      }
+    },
+    {
+      "x": 17.0,
+      "y": 27.0,
+      "uuid": "b82d9b95-c5c6-4ce9-989c-630f41e8d561",
+      "type": "tileset",
+      "custom_data": {
+        "width": 1,
+        "height": 1,
+        "sprite": "oil_drum",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff"
+      }
+    },
+    {
+      "x": 11.0,
+      "y": 15.0,
+      "uuid": "efafb197-cac4-499b-8e6f-671fbf3ea822",
+      "type": "tileset",
+      "custom_data": {
+        "width": 1,
+        "height": 1,
+        "sprite": "tire",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff"
+      }
+    },
+    {
+      "x": 11.0,
+      "y": 15.375,
+      "uuid": "c8dc07bf-843a-49b0-8dae-ac56b3da01b2",
+      "type": "tileset",
+      "custom_data": {
+        "width": 1,
+        "height": 1,
+        "sprite": "tire",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff"
+      }
+    },
+    {
+      "x": 19.0,
+      "y": 8.125,
+      "uuid": "9aa61e5f-57a9-4908-9744-c0f1bb10f9c0",
+      "type": "tileset",
+      "custom_data": {
+        "width": 1,
+        "height": 1,
+        "sprite": "tire",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff"
+      }
+    },
+    {
+      "x": 19.0,
+      "y": 8.5,
+      "uuid": "79ef51ce-d64e-4369-ac97-72102296f95c",
+      "type": "tileset",
+      "custom_data": {
+        "width": 1,
+        "height": 1,
+        "sprite": "tire",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
         "rotation": 0,
         "scale": 1.0,
         "tint": "ffffffff"

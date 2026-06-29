@@ -3,6 +3,8 @@ package com.hugo99j.chaosparty.entity;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Filter;
+import com.daniel99j.dungeongame.entity.CollisionCategories;
 import com.daniel99j.dungeongame.entity.ObjectType;
 import com.daniel99j.dungeongame.entity.PhysicsSettings;
 import com.daniel99j.dungeongame.entity.StaticObject;
@@ -34,6 +36,15 @@ public class TilesetObject extends StaticObject {
         this.hasHitbox = hasHitbox;
         this.rotation = rotation;
         this.tint = tint.cpy();
+    }
+
+    @Override
+    public void onAdd(boolean fromLoad) {
+        super.onAdd(fromLoad);
+        Filter f = new Filter();
+        f.categoryBits = CollisionCategories.DONT_COLLIDE_WITH_EACH_OTHER;
+        f.maskBits = CollisionCategories.allBut(CollisionCategories.DONT_COLLIDE_WITH_EACH_OTHER);
+        this.getPhysics().getFixtureList().get(0).setFilterData(f);
     }
 
     @Override

@@ -7,6 +7,7 @@ import com.badlogic.gdx.physics.box2d.Contact;
 import com.daniel99j.dungeongame.entity.*;
 import com.google.gson.JsonObject;
 import com.hugo99j.chaosparty.GameData;
+import com.hugo99j.chaosparty.match.MatchView;
 import com.hugo99j.chaosparty.minigame.HotPotatoMinigame;
 import com.hugo99j.chaosparty.util.ImageUtil;
 import com.hugo99j.chaosparty.util.PathUtil;
@@ -69,7 +70,7 @@ public class Potato extends AdvancedObject {
     }
 
     @Override
-    public void render() {
+    public void render(MatchView matchView) {
         spin += Gdx.graphics.getDeltaTime()*500;
         Vector2 pos = this.getPos();
         GameData.spriteBatch.draw(ImageUtil.get("potato"), pos.x, pos.y, 0.5f, 0.5f, 1, 1, 1, 1, spin);

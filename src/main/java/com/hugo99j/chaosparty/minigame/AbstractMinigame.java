@@ -1,13 +1,9 @@
 package com.hugo99j.chaosparty.minigame;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
 import com.daniel99j.dungeongame.level.LevelLoader;
 import com.hugo99j.chaosparty.GameData;
-import com.hugo99j.chaosparty.Main;
 import com.hugo99j.chaosparty.match.Match;
 import com.hugo99j.chaosparty.match.MatchPlayer;
 import com.hugo99j.chaosparty.match.MatchView;
@@ -37,9 +33,9 @@ public abstract class AbstractMinigame implements Disposable {
 
     protected void defaultPlayerMovements() {
         for (MatchPlayer player : GameData.getCurrentMatch().getPlayers()) {
-            if(player.controller == null || player.getPlayer() == null) continue;
-            float speed = 300*(1+player.controller.getAxis(5));
-            float move = Math.max(speed-player.getPlayer().getVelocity().len(), 0);
+            if(player.controller == null || player.getPlayerObject() == null) continue;
+            float speed = 600;
+            float move = Math.max(speed-player.getPlayerObject().getVelocity().len(), 0);
 
             Vector2 movement = new Vector2(0, 0);
 
@@ -66,7 +62,7 @@ public abstract class AbstractMinigame implements Disposable {
                 float mul = 0.25f;
                 Debuggers.freecam.add(new Vector2(movement.x*mul, movement.y*mul));
             }
-            else if(movement.len() > 0) player.getPlayer().getPhysics().applyForceToCenter(new Vector2(movement.x*move, movement.y*move), true);
+            else if(movement.len() > 0) player.getPlayerObject().getPhysics().applyForceToCenter(new Vector2(movement.x*move, movement.y*move), true);
 
         }
     }
@@ -79,7 +75,7 @@ public abstract class AbstractMinigame implements Disposable {
         GameData.spriteBatch.begin();
 
         GameData.spriteBatch.enableBlending();
-        GameData.getLevelOrThrow().render();
+        GameData.getLevelOrThrow().render(view);
 
         GameData.spriteBatch.end();
 
@@ -124,5 +120,9 @@ public abstract class AbstractMinigame implements Disposable {
 
     protected Match getMatch() {
         return GameData.getCurrentMatch();
+    }
+
+    public boolean splitHorizontal2Views() {
+        return true;
     }
 }

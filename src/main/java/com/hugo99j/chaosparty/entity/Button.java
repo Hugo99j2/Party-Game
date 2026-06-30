@@ -4,15 +4,15 @@ import com.badlogic.gdx.math.Vector2;
 import com.daniel99j.dungeongame.entity.AdvancedObject;
 import com.daniel99j.dungeongame.entity.ObjectType;
 import com.daniel99j.dungeongame.entity.PhysicsSettings;
+import com.hugo99j.chaosparty.match.MatchView;
 import com.hugo99j.chaosparty.util.ImageUtil;
 import com.hugo99j.chaosparty.util.RenderLayer;
 import com.google.gson.JsonObject;
 import com.hugo99j.chaosparty.GameData;
-import com.hugo99j.chaosparty.Main;
 
 public class Button extends AdvancedObject {
     @Override
-    public void render() {
+    public void render(MatchView matchView) {
         Vector2 pos = this.getPos();
         GameData.spriteBatch.draw(ImageUtil.get("button"), pos.x, pos.y, 1, 1);
     }

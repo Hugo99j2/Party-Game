@@ -1,28 +1,24 @@
 package com.hugo99j.chaosparty.entity;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.controllers.Controllers;
-import com.badlogic.gdx.graphics.g2d.ParticleEffect;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.daniel99j.dungeongame.entity.*;
-import com.daniel99j.dungeongame.sounds.SoundManager;
 import com.hugo99j.chaosparty.match.MatchPlayer;
+import com.hugo99j.chaosparty.match.MatchView;
 import com.hugo99j.chaosparty.minigame.HotPotatoMinigame;
 import com.hugo99j.chaosparty.ui.Debuggers;
 import com.hugo99j.chaosparty.util.*;
 import com.google.gson.JsonObject;
 import com.hugo99j.chaosparty.GameData;
-import com.hugo99j.chaosparty.Main;
-import org.jetbrains.annotations.Nullable;
 
 public class Player extends AdvancedObject {
     private final MatchPlayer matchPlayer;
     private boolean flip;
+    private short lastMask = -10;
 
     public Player(MatchPlayer matchPlayer) {
         this.matchPlayer = matchPlayer;
@@ -33,8 +29,8 @@ public class Player extends AdvancedObject {
     public void tick() {
         super.tick();
 
-        if(GameData.DEBUGGING) {
-            this.getPhysics().getFixtureList().get(0).getFilterData().maskBits = (short) (Debuggers.isEnabled("noclip") ? 0 : -1);
+        if(GameData.DEBUGGING && Debuggers.isEnabled("noclipToggleable")) {
+            setNoClip(Debuggers.isEnabled("noclip"));
         }
         if(this.getVelocity().len() > 0.3) {
             flip = this.getVelocity().x > 0.3;
@@ -42,7 +38,13 @@ public class Player extends AdvancedObject {
     }
 
     @Override
-    public void render() {
+    public void render(MatchView matchView) {
+        Color old = GameData.spriteBatch.getColor().cpy();
+        if(GameData.getCurrentMatch().getCurrentMinigame() instanceof HotPotatoMinigame potatoMinigame) {
+            if(this.isNoClip()) {
+                GameData.spriteBatch.setColor(new Color(1, 1, 1, 0.7f));
+            }
+        }
         Vector2 pos = this.getPos();
         if(GameData.DEBUGGING && Debuggers.isEnabled("pixelPerfect")) {
             float m = 0.0625f;
@@ -54,6 +56,7 @@ public class Player extends AdvancedObject {
         for (CostumePart value : CostumePart.values()) {
             if(value.shouldRender()) GameData.spriteBatch.draw(ImageUtil.get("costumes/"+this.matchPlayer.getUser().getWearing(value)), pos.x+(flip ? 1 : 0), pos.y, (flip ? -1 : 1), 1);
         }
+        GameData.spriteBatch.setColor(old);
     }
 
     @Override
@@ -111,8 +114,33 @@ public class Player extends AdvancedObject {
     @Override
     public void onCollision(Contact contact, AbstractObject object) {
         super.onCollision(contact, object);
-        if(object instanceof Player player && GameData.getCurrentMatch().getCurrentMinigame() instanceof HotPotatoMinigame potatoMinigame && potatoMinigame.getHotPlayer().getPlayer() == this) {
+        if(object instanceof Player player && GameData.getCurrentMatch().getCurrentMinigame() instanceof HotPotatoMinigame potatoMinigame && potatoMinigame.getHotPlayer().getPlayerObject() == this) {
             potatoMinigame.setHotPlayerAndCooldown(player.getMatchPlayer());
         }
+    }
+
+    public boolean isNoClip() {
+        return lastMask != -10;
+    }
+
+    public void setNoClip(boolean noClip) {
+        if(noClip && !isNoClip()) {
+            lastMask = this.getPhysics().getFixtureList().get(0).getFilterData().maskBits;
+            this.getPhysics().getFixtureList().get(0).getFilterData().maskBits = 0;
+        }
+        if(!noClip && isNoClip()) {
+            this.getPhysics().getFixtureList().get(0).getFilterData().maskBits = lastMask;
+            lastMask = -10;
+        }
+    }
+
+    @Override
+    public boolean shouldRender(MatchView view) {
+        if(GameData.getCurrentMatch().getCurrentMinigame() instanceof HotPotatoMinigame potatoMinigame) {
+            if(this.isNoClip() && view.getPlayer() != this.matchPlayer && (view.getPlayer() == null || view.getPlayer().getPlayerObject() == null || !view.getPlayer().getPlayerObject().isNoClip())) {
+                return false;
+            }
+        }
+        return super.shouldRender(view);
     }
 }

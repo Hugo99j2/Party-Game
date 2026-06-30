@@ -14,6 +14,7 @@ import com.badlogic.gdx.utils.Disposable;
 import com.daniel99j.djutil.ValueHolder;
 import com.hugo99j.chaosparty.GameData;
 import com.daniel99j.dungeongame.entity.*;
+import com.hugo99j.chaosparty.match.MatchView;
 import com.hugo99j.chaosparty.ui.Debuggers;
 import org.jetbrains.annotations.Nullable;
 
@@ -81,7 +82,7 @@ public class Level implements Disposable {
         }
     }
 
-    public void render() {
+    public void render(MatchView matchView) {
         ArrayList<AbstractObject> objects = getAllObjects();
         objects.sort((one, two) -> {
             float layer1 = one.getLayer();
@@ -89,7 +90,7 @@ public class Level implements Disposable {
             if(layer1 == layer2) return 0;
             return Float.compare(layer1, layer2);
         });
-        objects.forEach(AbstractObject::renderInternal);
+        objects.forEach((a) -> a.renderInternal(matchView));
 
         for (ParticleEffect particle : new ArrayList<>(particles)) {
             if(particle.isComplete()) {

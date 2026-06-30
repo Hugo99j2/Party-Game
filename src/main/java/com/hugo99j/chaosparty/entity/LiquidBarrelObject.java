@@ -31,7 +31,7 @@ public class LiquidBarrelObject extends AdvancedObject {
         super.onCollision(contact, object);
         if(object instanceof Potato) {
             explodeNow();
-        } else if(object instanceof Player player && GameData.getCurrentMatch().getCurrentMinigame() instanceof HotPotatoMinigame hotPotatoMinigame && hotPotatoMinigame.getHotPlayer().getPlayer().equals(player)) {
+        } else if(object instanceof Player player && GameData.getCurrentMatch().getCurrentMinigame() instanceof HotPotatoMinigame hotPotatoMinigame && hotPotatoMinigame.getHotPlayer().getPlayerObject().equals(player)) {
             explodeNow();
         }
     }
@@ -56,7 +56,7 @@ public class LiquidBarrelObject extends AdvancedObject {
             delay += NumberUtils.getRandomInt(3, 7);
             objectsInRadius.explodeAt(delay);
         }
-        for (Player player : this.getLevel().getObjectsInRadius(this.getPos().add(0.5f, 0.5f), 3, Player.class, false, null)) {
+        for (Player player : this.getLevel().getObjectsInRadius(this.getPos().add(0.5f, 0.5f), 5, Player.class, false, null)) {
             if(GameData.getCurrentMatch().getCurrentMinigame() instanceof HotPotatoMinigame hotPotatoMinigame) {
                 if(hotPotatoMinigame.getHotPlayer().equals(player.getMatchPlayer())) continue;
                 hotPotatoMinigame.setHotPlayer(player.getMatchPlayer());
@@ -81,7 +81,7 @@ public class LiquidBarrelObject extends AdvancedObject {
     }
 
     @Override
-    public void render() {
+    public void render(MatchView matchView) {
         GameData.spriteBatch.draw(ImageUtil.get(sprite), this.getPos().x, this.getPos().y, 2, 2);
     }
 

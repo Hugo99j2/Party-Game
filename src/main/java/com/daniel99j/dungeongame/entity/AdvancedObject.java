@@ -1,13 +1,10 @@
 package com.daniel99j.dungeongame.entity;
 
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.hugo99j.chaosparty.GameData;
+import com.hugo99j.chaosparty.match.MatchView;
 
 public abstract class AdvancedObject extends AbstractObject {
     @Override
-    public abstract void render();
+    public abstract void render(MatchView matchView);
 
     @Override
     public void onAdd(boolean fromLoad) {

@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -60,8 +59,8 @@ public class MatchView implements Disposable {
         camerashakeTime -= Gdx.graphics.getDeltaTime();
 
         if(this.player != null) {
-            this.gameCamera.position.x = this.player.getPlayer().getPos().x;
-            this.gameCamera.position.y = this.player.getPlayer().getPos().y;
+            this.gameCamera.position.x = this.player.getPlayerObject().getPos().x;
+            this.gameCamera.position.y = this.player.getPlayerObject().getPos().y;
         }
         fbo.begin();
         ScreenUtils.clear(new Color(0x331111ff));

@@ -1,14 +1,13 @@
 package com.hugo99j.chaosparty.entity;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Filter;
 import com.daniel99j.dungeongame.entity.CollisionCategories;
 import com.daniel99j.dungeongame.entity.ObjectType;
 import com.daniel99j.dungeongame.entity.PhysicsSettings;
 import com.daniel99j.dungeongame.entity.StaticObject;
 import com.hugo99j.chaosparty.GameData;
+import com.hugo99j.chaosparty.match.MatchView;
 import com.hugo99j.chaosparty.util.ImageUtil;
 import com.hugo99j.chaosparty.util.RenderLayer;
 import com.google.gson.JsonObject;
@@ -55,7 +54,7 @@ public class TilesetObject extends StaticObject {
     }
 
     @Override
-    public void render() {
+    public void render(MatchView matchView) {
         Color old = GameData.spriteBatch.getColor().cpy();
         GameData.spriteBatch.setColor(tint);
         for (float x = 0; x < this.width*this.size.x; x+=this.size.x) {

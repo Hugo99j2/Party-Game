@@ -96,6 +96,7 @@ public class Debuggers {
             debugOptions.put("showing", new ValueHolder<>(false));
             debugOptions.put("hitboxes", new ValueHolder<>(false));
             debugOptions.put("lights", new ValueHolder<>(true));
+            debugOptions.put("noclipToggleable", new ValueHolder<>(false));
             debugOptions.put("noclip", new ValueHolder<>(false));
             debugOptions.put("selecting", new ValueHolder<>(false));
             debugOptions.put("selectingLight", new ValueHolder<>(false));
@@ -324,7 +325,7 @@ public class Debuggers {
                 }
 
                 if(GameData.getCurrentMatch() != null && GameData.getCurrentMatch().getMatchViews() != null && !GameData.getCurrentMatch().getMatchViews().isEmpty()) {
-                    slider("zoom", GameData.getCurrentMatch().getMatchViews().getFirst().gameCamera.zoom, (e) -> {GameData.getCurrentMatch().getMatchViews().getFirst().gameCamera.zoom = e;}, -10, 10, "%.3f");
+                    slider("zoom", GameData.getCurrentMatch().getMatchViews().getFirst().gameCamera.zoom, (e) -> {GameData.getCurrentMatch().getMatchViews().getFirst().gameCamera.zoom = e;}, 0, 20, "%.3f");
                 }
 
                 ImGui.end();
@@ -722,9 +723,9 @@ public class Debuggers {
             }
             if (ImGui.isItemActive()) changing = true;
 
-            if (ImGui.button("TP to player")) selectedObject.setPos(GameData.getCurrentMatch().getPlayers().getFirst().getPlayer().getPos());
+            if (ImGui.button("TP to player")) selectedObject.setPos(GameData.getCurrentMatch().getPlayers().getFirst().getPlayerObject().getPos());
             ImGui.sameLine();
-            if (ImGui.button("TP player to this")) GameData.getCurrentMatch().getPlayers().getFirst().getPlayer().setPos(selectedObject.getPos());
+            if (ImGui.button("TP player to this")) GameData.getCurrentMatch().getPlayers().getFirst().getPlayerObject().setPos(selectedObject.getPos());
 
             if (oldPos == null && changing) {
                 oldPos = selectedObject.getPos();

@@ -1,6 +1,6 @@
 package com.hugo99j.chaosparty.entity;
 
-import com.badlogic.gdx.physics.box2d.Filter;
+import com.hugo99j.chaosparty.match.MatchView;
 import com.hugo99j.chaosparty.util.RequiresRefresh;
 import com.daniel99j.dungeongame.entity.CollisionCategories;
 import com.daniel99j.dungeongame.entity.ObjectType;
@@ -21,7 +21,7 @@ public class CollisionObject extends StaticObject {
     }
 
     @Override
-    public void render() {
+    public void render(MatchView matchView) {
     }
 
     @Override

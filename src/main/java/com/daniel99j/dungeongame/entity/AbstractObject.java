@@ -6,6 +6,7 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Disposable;
 import com.daniel99j.djutil.Either;
 import com.daniel99j.djutil.UsageLimited;
+import com.hugo99j.chaosparty.match.MatchView;
 import com.hugo99j.chaosparty.util.NoDebugOption;
 import com.daniel99j.dungeongame.level.Level;
 import com.google.gson.JsonObject;
@@ -58,12 +59,12 @@ public abstract class AbstractObject implements Disposable {
         return level;
     }
 
-    public final void renderInternal() {
-        if(removed) return;
-        render();
+    public final void renderInternal(MatchView matchView) {
+        if(!shouldRender(matchView)) return;
+        render(matchView);
     };
 
-    public abstract void render();
+    public abstract void render(MatchView matchView);
 
     public Vector2 getPos() {
         if(this.removed) return new Vector2();
@@ -263,5 +264,9 @@ public abstract class AbstractObject implements Disposable {
     }
 
     public void onCollision(Contact contact, AbstractObject userData) {
+    }
+
+    public boolean shouldRender(MatchView view) {
+        return !removed;
     }
 }

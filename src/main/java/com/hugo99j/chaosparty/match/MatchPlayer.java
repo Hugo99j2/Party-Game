@@ -19,7 +19,7 @@ public class MatchPlayer {
         this.player = player;
     }
 
-    public @Nullable Player getPlayer() {
+    public @Nullable Player getPlayerObject() {
         return player;
     }
 

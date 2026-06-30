@@ -59,11 +59,17 @@ public class Match {
         if(this.getCurrentMinigame() != null) {
             if(this.getMatchViews().size() == 1 || (GameData.DEBUGGING && Debuggers.isEnabled("forceSingleView"))) {
                 renderView(this.getMatchViews().getFirst(), 0, 0, 1, 1);
-            } else if(this.getMatchViews().size() == 2) {
+            } else if(this.getMatchViews().size() == 2 && this.getCurrentMinigame().splitHorizontal2Views()) {
+                renderView(this.getMatchViews().getFirst(), 0, 0, 1, 0.5f);
+                renderView(this.getMatchViews().get(1), 0, 0.5f, 1, 0.5f);
+                GameData.spriteBatch.begin();
+                GameData.spriteBatch.draw(ImageUtil.get("ui/border"), 0, GameData.height/2.0f, GameData.width, 6);
+                GameData.spriteBatch.end();
+            } else if(this.getMatchViews().size() == 2 && !this.getCurrentMinigame().splitHorizontal2Views()) {
                 renderView(this.getMatchViews().getFirst(), 0, 0, 0.5f, 1);
                 renderView(this.getMatchViews().get(1), 0.5f, 0, 0.5f, 1);
                 GameData.spriteBatch.begin();
-                GameData.spriteBatch.draw(ImageUtil.get("ui/border"), 0, GameData.height/2.0f, GameData.width, 6);
+                GameData.spriteBatch.draw(ImageUtil.get("ui/border"), GameData.width/2.0f, 0, 6, GameData.height);
                 GameData.spriteBatch.end();
             } else {
                 renderView(this.getMatchViews().getFirst(), 0, 0, 0.5f, 0.5f);

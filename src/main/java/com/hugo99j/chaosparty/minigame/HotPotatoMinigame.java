@@ -1,10 +1,10 @@
 package com.hugo99j.chaosparty.minigame;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.daniel99j.dungeongame.sounds.SoundInstance;
 import com.daniel99j.dungeongame.sounds.SoundManager;
+import com.daniel99j.dungeongame.ui.renderable.RenderState;
 import com.daniel99j.dungeongame.ui.screenss.CombinedScreenSS;
 import com.daniel99j.dungeongame.ui.screenss.ScreenSSBuilder;
 import com.hugo99j.chaosparty.GameData;
@@ -15,7 +15,6 @@ import com.hugo99j.chaosparty.ui.ControllerInput;
 import com.hugo99j.chaosparty.ui.ControllerUtil;
 import com.hugo99j.chaosparty.ui.Timer;
 import com.hugo99j.chaosparty.util.PathUtil;
-import com.hugo99j.chaosparty.util.ToRun;
 
 import java.util.List;
 
@@ -57,7 +56,7 @@ public class HotPotatoMinigame extends AbstractMinigame {
     @Override
     public void start() {
         super.start();
-        timer = new Timer("timer", 45, 2, false);
+        timer = new Timer("timer", 60, 2, false);
         timer.setStyle(ss.get("timer"));
         music = SoundManager.getSound("potato_music").playSingle(1);
         hotEffect = new ParticleEffect();
@@ -75,33 +74,40 @@ public class HotPotatoMinigame extends AbstractMinigame {
     public void tick() {
         hotCollisionCooldown = false;
         this.defaultPlayerMovements();
-        hotEffect.setPosition(hotPlayer.getPlayer().getPos().x+0.3f, hotPlayer.getPlayer().getPos().y+1);
+        hotEffect.setPosition(hotPlayer.getPlayerObject().getPos().x+0.3f, hotPlayer.getPlayerObject().getPos().y+1);
 
         if(((ControllerUtil) hotPlayer.controller).wasJustPressed(ControllerInput.RIGHT_BUMPER)) {
             Potato potato = new Potato();
-            potato.setX(hotPlayer.getPlayer().getPos().x);
-            potato.setY(hotPlayer.getPlayer().getPos().y);
+            potato.setX(hotPlayer.getPlayerObject().getPos().x);
+            potato.setY(hotPlayer.getPlayerObject().getPos().y);
             GameData.getLevelOrThrow().addObject(potato);
             potato.getPhysics().applyForceToCenter(((ControllerUtil) hotPlayer.controller).getValue(ControllerInput.RIGHT_STICK_RIGHT)*10000, ((ControllerUtil) hotPlayer.controller).getValue(ControllerInput.RIGHT_STICK_UP)*10000, true);
         }
 
         if(timer.getSeconds() <= 0) {
-            ToRun.run(() -> GameData.getCurrentMatch().finishCurrentMinigame());
+            getHotPlayer().getPlayerObject().setNoClip(true);
+            SoundManager.getSound("flame_erupt").playSingle(1);
+            var boom = new ParticleEffect();
+            boom.load(Gdx.files.internal(PathUtil.asset("particles/boom.p")), GameData.atlas);
+            boom.setEmittersCleanUpBlendFunction(false);
+            boom.scaleEffect(0.01f);
+            boom.start();
+            boom.setPosition(getHotPlayer().getPlayerObject().getPos().x+0.5f, getHotPlayer().getPlayerObject().getPos().y+0.5f);
+            GameData.getLevelOrThrow().particles.add(boom);
+            for (MatchPlayer player : GameData.getCurrentMatch().getPlayers()) {
+                if(!player.getPlayerObject().isNoClip()) {
+                    setHotPlayer(player);
+                    break;
+                }
+            }
         }
     }
 
     @Override
     public void render(float delta) {
-//        GameData.spriteBatch.begin();
-//        timer.render(new RenderState(false, false, false, false, false, false, 0, 0, delta));
-//        int offset = 0;
-//        for (MatchPlayer player : GameData.getCurrentMatch().getPlayers()) {
-//            RenderUtil.renderText(player.getName()+": "+GameData.getCurrentMatch().getCurrentMinigame().getScore(player), ss.get("score").getX(), ss.get("score").getY()+offset, 1f, ss.get("score").getXSize(), Align.left, false);
-//            offset += 50;
-//        }
-//        //RenderUtil.renderText("Scores: ", ss.get("score").getX(), ss.get("score").getY()+offset, 1f, ss.get("score").getXSize(), Align.left, false);
-////        RenderUtil.renderText("Scores: ", ss.get("score"));
-//        GameData.spriteBatch.end();
+        GameData.spriteBatch.begin();
+        timer.render(new RenderState(false, false, false, false, false, false, 0, 0, delta));
+        GameData.spriteBatch.end();
     }
 
     @Override
@@ -128,7 +134,9 @@ public class HotPotatoMinigame extends AbstractMinigame {
     }
 
     public void setHotPlayer(MatchPlayer hotPlayer) {
+        if(this.hotPlayer == hotPlayer) return;
         this.hotPlayer = hotPlayer;
+        this.timer.setTime(10, false);
     }
 
     public void setHotPlayerAndCooldown(MatchPlayer matchPlayer) {

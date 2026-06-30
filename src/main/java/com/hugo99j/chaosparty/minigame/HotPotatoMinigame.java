@@ -59,7 +59,7 @@ public class HotPotatoMinigame extends AbstractMinigame {
         super.start();
         timer = new Timer("timer", 45, 2, false);
         timer.setStyle(ss.get("timer"));
-        music = SoundManager.getSound("sheep_music").playSingle(1);
+        music = SoundManager.getSound("potato_music").playSingle(1);
         hotEffect = new ParticleEffect();
         hotEffect.load(Gdx.files.internal(PathUtil.asset("particles/flame.p")), GameData.atlas);
         hotEffect.setEmittersCleanUpBlendFunction(false);

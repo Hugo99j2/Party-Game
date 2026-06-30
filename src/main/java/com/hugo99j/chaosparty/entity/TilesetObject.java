@@ -12,6 +12,7 @@ import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.util.ImageUtil;
 import com.hugo99j.chaosparty.util.RenderLayer;
 import com.google.gson.JsonObject;
+import com.hugo99j.chaosparty.util.RequiresRefresh;
 
 public class TilesetObject extends StaticObject {
     private int width = 1;
@@ -20,11 +21,14 @@ public class TilesetObject extends StaticObject {
     private final Vector2 size;
     private boolean flipX, flipY;
     private float scale;
+    @RequiresRefresh
     private boolean hasHitbox;
+    @RequiresRefresh
+    private boolean textureHitbox;
     private int rotation;
     private Color tint;
 
-    public TilesetObject(String sprite, int width, int height, boolean flipX, boolean flipY, int rotation, float scale, boolean hasHitbox, Color tint) {
+    public TilesetObject(String sprite, int width, int height, boolean flipX, boolean flipY, int rotation, float scale, boolean hasHitbox, Color tint, boolean textureHitbox) {
         this.sprite = sprite;
         this.width = width;
         this.height = height;
@@ -36,21 +40,18 @@ public class TilesetObject extends StaticObject {
         this.hasHitbox = hasHitbox;
         this.rotation = rotation;
         this.tint = tint.cpy();
-    }
-
-    @Override
-    public void onAdd(boolean fromLoad) {
-        super.onAdd(fromLoad);
-        if(!hasHitbox) return;
-        Filter f = new Filter();
-        f.categoryBits = CollisionCategories.DONT_COLLIDE_WITH_EACH_OTHER;
-        f.maskBits = CollisionCategories.allBut(CollisionCategories.DONT_COLLIDE_WITH_EACH_OTHER);
-        this.getPhysics().getFixtureList().get(0).setFilterData(f);
+        this.textureHitbox = textureHitbox;
     }
 
     @Override
     protected PhysicsSettings createPhysics() {
-        return hasHitbox ? PhysicsSettings.immovable(this.width*this.size.x, this.height*this.size.y, 0, 0) : null;
+        PhysicsSettings settings = null;
+        if(hasHitbox) {
+            if(textureHitbox) {
+                settings = PhysicsSettings.textureImmovable(sprite, this.width, this.height);
+            } else settings = PhysicsSettings.immovable(this.width*this.size.x, this.height*this.size.y, 0, 0);
+        }
+        return hasHitbox ? settings.collidesWith(CollisionCategories.allBut(CollisionCategories.DONT_COLLIDE_WITH_EACH_OTHER)).group(CollisionCategories.DONT_COLLIDE_WITH_EACH_OTHER) : null;
     }
 
     @Override
@@ -77,10 +78,11 @@ public class TilesetObject extends StaticObject {
         object.addProperty("rotation", rotation);
         object.addProperty("scale", scale);
         object.addProperty("tint", tint.toString());
+        object.addProperty("textureHitbox", textureHitbox);
     }
 
     public static TilesetObject read(JsonObject object) {
-        return new TilesetObject(object.get("sprite").getAsString(), object.get("width").getAsInt(), object.get("height").getAsInt(), object.get("flipX").getAsBoolean(), object.get("flipY").getAsBoolean(), object.get("rotation").getAsInt(), object.get("scale").getAsFloat(), object.get("hasHitbox").getAsBoolean(), Color.valueOf(object.get("tint").getAsString()));
+        return new TilesetObject(object.get("sprite").getAsString(), object.get("width").getAsInt(), object.get("height").getAsInt(), object.get("flipX").getAsBoolean(), object.get("flipY").getAsBoolean(), object.get("rotation").getAsInt(), object.get("scale").getAsFloat(), object.get("hasHitbox").getAsBoolean(), Color.valueOf(object.get("tint").getAsString()), object.has("textureHitbox") ? object.get("textureHitbox").getAsBoolean() : false);
     }
 
     @Override
@@ -143,6 +145,6 @@ public class TilesetObject extends StaticObject {
     }
 
     public static TilesetObject createDefault() {
-        return new TilesetObject("sheep", 2, 2, false, false, 0, 1, false, Color.WHITE);
+        return new TilesetObject("sheep", 2, 2, false, false, 0, 1, false, Color.WHITE, false);
     }
 }

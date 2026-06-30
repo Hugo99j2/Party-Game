@@ -1,142 +1,6 @@
 {
   "objects": [
     {
-      "x": 0.0,
-      "y": 0.0,
-      "uuid": "d36bf480-bb73-49a4-9b39-992af14f75e9",
-      "type": "tileset",
-      "custom_data": {
-        "width": 64,
-        "height": 36,
-        "sprite": "tilesets/road",
-        "flipX": false,
-        "flipY": false,
-        "hasHitbox": false,
-        "rotation": 0,
-        "scale": 1.0,
-        "tint": "b5b5b5ff"
-      }
-    },
-    {
-      "x": 0.0,
-      "y": 1.0,
-      "uuid": "6478e418-3e07-4568-9d25-bb8bbf9b52ea",
-      "type": "tileset",
-      "custom_data": {
-        "width": 1,
-        "height": 16,
-        "sprite": "tilesets/bricks",
-        "flipX": false,
-        "flipY": false,
-        "hasHitbox": true,
-        "rotation": 0,
-        "scale": 1.0,
-        "tint": "ffffffff"
-      }
-    },
-    {
-      "x": 15.0,
-      "y": 5.0,
-      "uuid": "a4de2d67-94dd-4049-a1fa-6652360bb941",
-      "type": "tileset",
-      "custom_data": {
-        "width": 2,
-        "height": 1,
-        "sprite": "brick",
-        "flipX": false,
-        "flipY": false,
-        "hasHitbox": true,
-        "rotation": 0,
-        "scale": 1.0,
-        "tint": "ffffffff"
-      }
-    },
-    {
-      "x": 15.0,
-      "y": 4.0,
-      "uuid": "abfc86d0-0818-4f72-b173-9ff62e9eb49d",
-      "type": "tileset",
-      "custom_data": {
-        "width": 2,
-        "height": 1,
-        "sprite": "tilesets/bricks",
-        "flipX": false,
-        "flipY": false,
-        "hasHitbox": true,
-        "rotation": 0,
-        "scale": 1.0,
-        "tint": "ffffffff"
-      }
-    },
-    {
-      "x": 11.0,
-      "y": 15.0,
-      "uuid": "efafb197-cac4-499b-8e6f-671fbf3ea822",
-      "type": "tileset",
-      "custom_data": {
-        "width": 1,
-        "height": 1,
-        "sprite": "tire",
-        "flipX": false,
-        "flipY": false,
-        "hasHitbox": true,
-        "rotation": 0,
-        "scale": 1.0,
-        "tint": "ffffffff"
-      }
-    },
-    {
-      "x": 11.0,
-      "y": 15.375,
-      "uuid": "c8dc07bf-843a-49b0-8dae-ac56b3da01b2",
-      "type": "tileset",
-      "custom_data": {
-        "width": 1,
-        "height": 1,
-        "sprite": "tire",
-        "flipX": false,
-        "flipY": false,
-        "hasHitbox": true,
-        "rotation": 0,
-        "scale": 1.0,
-        "tint": "ffffffff"
-      }
-    },
-    {
-      "x": 19.0,
-      "y": 8.125,
-      "uuid": "9aa61e5f-57a9-4908-9744-c0f1bb10f9c0",
-      "type": "tileset",
-      "custom_data": {
-        "width": 1,
-        "height": 1,
-        "sprite": "tire",
-        "flipX": false,
-        "flipY": false,
-        "hasHitbox": true,
-        "rotation": 0,
-        "scale": 1.0,
-        "tint": "ffffffff"
-      }
-    },
-    {
-      "x": 19.0,
-      "y": 8.5,
-      "uuid": "79ef51ce-d64e-4369-ac97-72102296f95c",
-      "type": "tileset",
-      "custom_data": {
-        "width": 1,
-        "height": 1,
-        "sprite": "tire",
-        "flipX": false,
-        "flipY": false,
-        "hasHitbox": true,
-        "rotation": 0,
-        "scale": 1.0,
-        "tint": "ffffffff"
-      }
-    },
-    {
       "x": 6.0,
       "y": 10.0,
       "uuid": "3ffd38cd-b6b0-42f0-87cd-2d2da0bdf628",
@@ -194,6 +58,150 @@
       "custom_data": {
         "sprite": "oil_drum",
         "explosive": true
+      }
+    },
+    {
+      "x": 0.0,
+      "y": 0.0,
+      "uuid": "d36bf480-bb73-49a4-9b39-992af14f75e9",
+      "type": "tileset",
+      "custom_data": {
+        "width": 64,
+        "height": 36,
+        "sprite": "tilesets/road",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": false,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "b5b5b5ff",
+        "textureHitbox": false
+      }
+    },
+    {
+      "x": 0.0,
+      "y": 1.0,
+      "uuid": "6478e418-3e07-4568-9d25-bb8bbf9b52ea",
+      "type": "tileset",
+      "custom_data": {
+        "width": 1,
+        "height": 16,
+        "sprite": "tilesets/bricks",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": false
+      }
+    },
+    {
+      "x": 15.0,
+      "y": 4.0,
+      "uuid": "abfc86d0-0818-4f72-b173-9ff62e9eb49d",
+      "type": "tileset",
+      "custom_data": {
+        "width": 2,
+        "height": 1,
+        "sprite": "tilesets/bricks",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": false
+      }
+    },
+    {
+      "x": 11.0,
+      "y": 15.0,
+      "uuid": "efafb197-cac4-499b-8e6f-671fbf3ea822",
+      "type": "tileset",
+      "custom_data": {
+        "width": 1,
+        "height": 1,
+        "sprite": "tire",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": false
+      }
+    },
+    {
+      "x": 11.0,
+      "y": 15.375,
+      "uuid": "c8dc07bf-843a-49b0-8dae-ac56b3da01b2",
+      "type": "tileset",
+      "custom_data": {
+        "width": 1,
+        "height": 1,
+        "sprite": "tire",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": false
+      }
+    },
+    {
+      "x": 19.0,
+      "y": 8.125,
+      "uuid": "9aa61e5f-57a9-4908-9744-c0f1bb10f9c0",
+      "type": "tileset",
+      "custom_data": {
+        "width": 1,
+        "height": 1,
+        "sprite": "tire",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": false
+      }
+    },
+    {
+      "x": 19.0,
+      "y": 8.5,
+      "uuid": "79ef51ce-d64e-4369-ac97-72102296f95c",
+      "type": "tileset",
+      "custom_data": {
+        "width": 1,
+        "height": 1,
+        "sprite": "tire",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": false
+      }
+    },
+    {
+      "x": 15.0,
+      "y": 5.0,
+      "uuid": "a4de2d67-94dd-4049-a1fa-6652360bb941",
+      "type": "tileset",
+      "custom_data": {
+        "width": 2,
+        "height": 1,
+        "sprite": "brick",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": true
       }
     }
   ],

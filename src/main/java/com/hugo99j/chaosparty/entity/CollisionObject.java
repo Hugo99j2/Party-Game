@@ -17,16 +17,7 @@ public class CollisionObject extends StaticObject {
 
     @Override
     protected PhysicsSettings createPhysics() {
-        return PhysicsSettings.immovable(sizeX, sizeY, 0, 0);
-    }
-
-    @Override
-    public void onAdd(boolean fromLoad) {
-        super.onAdd(fromLoad);
-        Filter f = new Filter();
-        f.categoryBits = CollisionCategories.DONT_COLLIDE_WITH_EACH_OTHER;
-        f.maskBits = CollisionCategories.allBut(CollisionCategories.DONT_COLLIDE_WITH_EACH_OTHER);
-        this.getPhysics().getFixtureList().get(0).setFilterData(f);
+        return PhysicsSettings.immovable(sizeX, sizeY, 0, 0).collidesWith(CollisionCategories.allBut(CollisionCategories.DONT_COLLIDE_WITH_EACH_OTHER)).group(CollisionCategories.DONT_COLLIDE_WITH_EACH_OTHER);
     }
 
     @Override

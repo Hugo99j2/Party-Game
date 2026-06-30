@@ -106,6 +106,10 @@ public class GameData {
         return pixels*0.0625f;
     }
 
+    public static float px(Number pixels) {
+        return px(pixels.intValue());
+    }
+
     public static Match startMatch(List<MatchPlayer> players) {
         Match match = new Match(players);
         currentMatch = match;

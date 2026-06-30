@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector4;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Disposable;
 import com.daniel99j.djutil.ValueHolder;
@@ -202,7 +203,31 @@ public class Level implements Disposable {
         light.light().remove();
     }
 
-    public <T> List<T> getObjectsBetweenClass(Vector2 start, Vector2 end, Class<T> clazz, boolean physics) {
+    public <T extends AbstractObject> List<T> getObjectsInRadius(Vector2 pos, float radius, Class<T> clazz, boolean physics, @Nullable T exclude) {
+        List<T> objects = getObjectsBetweenClass(pos.cpy().sub(radius, radius), pos.cpy().add(radius, radius), clazz, physics);
+        if(!physics) {
+            objects.removeIf(object -> object.getPos().dst(pos) > radius);
+        } else {
+            objects.removeIf(object -> {
+                Vector4 hitbox = object.getHitboxWorld(object.getPhysics().getFixtureList().get(0));
+                Vector2 point = new Vector2(Math.clamp(pos.x, hitbox.x, hitbox.z), Math.clamp(pos.y, hitbox.y, hitbox.w));
+                return point.dst(pos) > radius;
+            });
+        }
+        objects.remove(exclude);
+
+        if(GameData.DEBUGGING && Debuggers.isEnabled("showBetweenBoxes")) {
+            Debuggers.customLevelRenderers.put((v) -> {
+                GameData.shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+                GameData.shapeRenderer.setColor(Color.BLUE);
+                GameData.shapeRenderer.circle(pos.x, pos.y, radius, (int) (40*radius));
+                GameData.shapeRenderer.end();
+            }, new ValueHolder<>(GameData.TICKS_PER_SECOND));
+        }
+        return objects;
+    }
+
+    public <T extends AbstractObject> List<T> getObjectsBetweenClass(Vector2 start, Vector2 end, Class<T> clazz, boolean physics) {
         if(end.x < start.x || end.y < start.y) throw new IllegalArgumentException("End is before start");
         List<T> objects = new ArrayList<>();
         if(physics) {

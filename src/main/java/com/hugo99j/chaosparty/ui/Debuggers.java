@@ -494,7 +494,7 @@ public class Debuggers {
                         GameData.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
                         if (selectedObject.hasPhysics()) {
                             for (Fixture fixture : selectedObject.getPhysics().getFixtureList()) {
-                                Vector4 hitbox = selectedObject.getHitbox(fixture);
+                                Vector4 hitbox = selectedObject.getHitboxWidthHeight(fixture);
                                 GameData.shapeRenderer.setColor(0xdf / 255.0f, 0xf0 / 255.0f, 0x29 / 255.0f, 0.5f);
                                 GameData.shapeRenderer.rect(hitbox.x, hitbox.y, hitbox.z, hitbox.w);
                             }
@@ -682,7 +682,7 @@ public class Debuggers {
                 boolean selected = allObject.getUUID().equals(selectedObjectId);
                 if (selected)
                     flags |= ImGuiTreeNodeFlags.Selected;
-                if (ImGui.selectable(allObject.toString() + " (" + id + ")", selected, flags))
+                if (ImGui.selectable(allObject.toString() + " (" + allObject + ")", selected, flags))
                     selectedObjectId = allObject.getUUID();
                 if (ImGui.isItemHovered()) hoveredObject = allObject.getUUID();
                 ImGui.popID();

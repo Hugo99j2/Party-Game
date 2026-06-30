@@ -159,7 +159,12 @@ public abstract class AbstractObject implements Disposable {
         this.getPhysics().setLinearVelocity(direction.x * speed, direction.y * speed);
     }
 
-    public Vector4 getHitbox(Fixture fixture) {
+    public Vector4 getHitboxWorld(Fixture fixture) {
+        Vector4 out = getHitboxWidthHeight(fixture);
+        return out.add(0, 0, out.x, out.y);
+    }
+
+    public Vector4 getHitboxWidthHeight(Fixture fixture) {
         if (fixture.getType() == Shape.Type.Polygon && ((PolygonShape) fixture.getShape()).getVertexCount() == 4) {
             Transform transform = this.getPhysics().getTransform();
 

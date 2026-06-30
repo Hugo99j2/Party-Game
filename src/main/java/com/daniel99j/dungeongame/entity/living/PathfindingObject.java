@@ -79,7 +79,7 @@ public abstract class PathfindingObject extends AdvancedObject {
     }
 
     protected Predicate<PathfindPos> createWalkPredicate() {
-        Vector4 hitbox = this.getHitbox(this.getPhysics().getFixtureList().first()).sub(this.getPos().x, this.getPos().y, 0, 0);
+        Vector4 hitbox = this.getHitboxWidthHeight(this.getPhysics().getFixtureList().first()).sub(this.getPos().x, this.getPos().y, 0, 0);
         Vector2 size = new Vector2(Math.abs(hitbox.x)+Math.abs(hitbox.z), Math.abs(hitbox.y)+Math.abs(hitbox.w));
         float distance = size.len()+0.1f;
         return (pos) -> {

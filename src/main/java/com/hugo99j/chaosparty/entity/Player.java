@@ -7,6 +7,7 @@ import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.daniel99j.dungeongame.entity.*;
+import com.hugo99j.chaosparty.bot.BotController;
 import com.hugo99j.chaosparty.match.MatchPlayer;
 import com.hugo99j.chaosparty.match.MatchView;
 import com.hugo99j.chaosparty.minigame.HotPotatoMinigame;
@@ -19,6 +20,8 @@ public class Player extends AdvancedObject {
     private final MatchPlayer matchPlayer;
     private boolean flip;
     private short lastMask = -10;
+    private BotController bot;
+    private int oldController;
 
     public Player(MatchPlayer matchPlayer) {
         this.matchPlayer = matchPlayer;
@@ -28,6 +31,10 @@ public class Player extends AdvancedObject {
     @Override
     public void tick() {
         super.tick();
+        if(matchPlayer != null && (matchPlayer.controller == null ? 0 : matchPlayer.controller.hashCode()) != oldController) {
+            this.bot = matchPlayer.controller instanceof DummyController ? new BotController(this) : null;
+            oldController = matchPlayer.controller == null ? 0 : matchPlayer.controller.hashCode();
+        }
 
         if(GameData.DEBUGGING && Debuggers.isEnabled("noclipToggleable")) {
             setNoClip(Debuggers.isEnabled("noclip"));
@@ -35,6 +42,8 @@ public class Player extends AdvancedObject {
         if(this.getVelocity().len() > 0.3) {
             flip = this.getVelocity().x > 0.3;
         }
+
+        if(bot != null) bot.tick();
     }
 
     @Override
@@ -42,7 +51,7 @@ public class Player extends AdvancedObject {
         Color old = GameData.spriteBatch.getColor().cpy();
         if(GameData.getCurrentMatch().getCurrentMinigame() instanceof HotPotatoMinigame potatoMinigame) {
             if(this.isNoClip()) {
-                GameData.spriteBatch.setColor(new Color(1, 1, 1, 0.7f));
+                GameData.spriteBatch.setColor(new Color(1, 1, 1, 0.5f));
             }
         }
         Vector2 pos = this.getPos();

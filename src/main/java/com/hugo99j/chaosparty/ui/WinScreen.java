@@ -6,48 +6,27 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.daniel99j.djutil.NumberUtils;
+import com.daniel99j.dungeongame.ui.screenss.CombinedScreenSS;
+import com.daniel99j.dungeongame.ui.screenss.ScreenSS;
 import com.daniel99j.dungeongame.ui.screenss.ScreenSSBuilder;
 import com.daniel99j.dungeongame.ui.types.Button;
 import com.daniel99j.dungeongame.ui.types.Text;
+import com.hugo99j.chaosparty.match.MatchPlayer;
 import com.hugo99j.chaosparty.util.PathUtil;
 import com.hugo99j.chaosparty.util.ToRun;
 import com.hugo99j.chaosparty.GameData;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /** First screen of the application. Displayed after the application is created. */
 public class WinScreen extends UiScreen {
     Texture backgroundTexture;
     ParticleEffect firework;
+    Map<MatchPlayer, Integer> scores = new HashMap<>();
 
     public WinScreen() {
-        super(ScreenSSBuilder.create()
-            .set("x", "0vw")
-            .set("y", "0vh")
-            .set("xSize", "100vw")
-            .set("ySize", "100vh")
-            .newChild("menu")
-            .set("x", "0.5vw")
-            .set("y", "0.5vh")
-            .set("xSize", 320)
-            .set("ySize", 64)
-            .set("center", true)
-            .set("scale", 2)
-            .finishChild()
-            .newChild("menu2")
-            .set("x", "0.5vw")
-            .set("y", "0.3vh")
-            .set("xSize", 320)
-            .set("ySize", 64)
-            .set("center", true)
-            .set("scale", 2)
-            .finishChild()
-            .newChild("text")
-            .set("x", "0.5vw")
-            .set("y", "0.7vh")
-            .set("xSize", 1)
-            .set("ySize", 1)
-            .finishChild()
-            .build()
-        );
+        super(createSS());
         firework = new ParticleEffect();
         firework.load(Gdx.files.internal(PathUtil.asset("particles/w.p")), GameData.atlas);
         firework.setEmittersCleanUpBlendFunction(false);
@@ -56,6 +35,57 @@ public class WinScreen extends UiScreen {
         firework.start();
 
         backgroundTexture = new Texture(PathUtil.texture("gameyay.png"));
+
+        for (MatchPlayer player : GameData.getCurrentMatch().getPlayers()) {
+            scores.put(player, GameData.getCurrentMatch().getCurrentMinigame().getScore(player));
+        }
+    }
+
+    private static CombinedScreenSS createSS() {
+        ScreenSSBuilder b = ScreenSSBuilder.create()
+            .set("x", "0vw")
+            .set("y", "0vh")
+            .set("xSize", "100vw")
+            .set("ySize", "100vh")
+            .set("display", "flex")
+            .set("flexDirection", "column")
+            .set("justifyContent", "center")
+            .set("alignItems", "center")
+            .set("padding", 48)
+            .set("gap", 24)
+            .newChild("text")
+            .set("x", "auto")
+            .set("y", "auto")
+            .set("xSize", 1)
+            .set("ySize", 1)
+            .finishChild()
+            .newChild("menu")
+            .set("x", "auto")
+            .set("y", "auto")
+            .set("xSize", 320)
+            .set("ySize", 64)
+            .set("scale", 2)
+            .finishChild()
+            .newChild("menu2")
+            .set("x", "auto")
+            .set("y", "auto")
+            .set("xSize", 320)
+            .set("ySize", 64)
+            .set("scale", 2)
+            .finishChild();
+
+        int i = 0;
+        for (MatchPlayer player : GameData.getCurrentMatch().getPlayers()) {
+                b.newChild("score"+i)
+                .set("x", "auto")
+                .set("y", "auto")
+                .set("xSize", 320)
+                .set("ySize", 64)
+                .set("scale", 2)
+                .finishChild();
+                i++;
+        }
+        return b.build();
     }
 
     @Override
@@ -63,6 +93,7 @@ public class WinScreen extends UiScreen {
         super.show();
         //syncViewport(GameConstants.width, GameConstants.height);
         //new ScreenSS("0.5vw", "0.5vh", "320", "32", "5", true)
+        this.addRenderable(new Text("text", "<colour:green>YOU WON!"));
         this.addRenderable(new Button("menu", "button", "Back to menu") {
             @Override
             public void onClick() {
@@ -77,8 +108,12 @@ public class WinScreen extends UiScreen {
                 ToRun.run(() -> GameData.MAIN_INSTANCE.setScreen(new MenuScreen()));
             }
         });
+        int i = 0;
+        for (MatchPlayer player : GameData.getCurrentMatch().getPlayers()) {
+            this.addRenderable(new Text("score"+i, player.getName()+": "+scores.get(player)));
+            i++;
+        }
         //new ScreenSS("0.5vw", "0.7vh", "1", "1", "1", false)
-        this.addRenderable(new Text("text", "<colour:green>YOU WON!"));
     }
 
     @Override
@@ -111,5 +146,6 @@ public class WinScreen extends UiScreen {
         // Destroy screen's assets here.
         backgroundTexture.dispose();
         /////font.dispose();
+        firework.dispose();
     }
 }

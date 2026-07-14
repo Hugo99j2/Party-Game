@@ -47,7 +47,7 @@ public class Timer extends Renderable {
             String n = String.valueOf(seconds % 60);
             s += n.length() == 2 || display == 1 ? n : "0"+n;
         }
-        RenderUtil.renderText(s, this.getX(), this.getY()+this.getStyle().getYSize()/2, 1f, this.getStyle().getXSize(), Align.center, false);
+        RenderUtil.renderText(s, this.getStyle());
     }
 
     public int getSeconds() {

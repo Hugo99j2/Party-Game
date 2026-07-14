@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 public class CombinedScreenSS {
-    private final Map<String, ScreenSS> getter = new HashMap<>();
+    private final Map<String, ScreenParentSS> getter = new HashMap<>();
 
     protected CombinedScreenSS(ScreenSSBuilder builder) {
         add(builder, null, 0);
@@ -21,9 +21,13 @@ public class CombinedScreenSS {
         }
     }
 
-    public ScreenSS get(String name) {
+    public ScreenParentSS get(String name) {
         if(!getter.containsKey(name)) throw new IllegalArgumentException("Unknown child '"+name+"'");
         return getter.get(name);
+    }
+
+    public static ScreenParentSS phantomChild(ScreenParentSS this1, ScreenSSBuilder builder) {
+        return new ScreenParentSS(builder, this1, this1.getElementId()+"_phantomchild@"+builder.hashCode(), 0);
     }
 
     public static class ScreenParentSS extends ScreenSS {

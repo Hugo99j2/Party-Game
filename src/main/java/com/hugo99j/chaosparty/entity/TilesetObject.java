@@ -50,7 +50,7 @@ public class TilesetObject extends StaticObject {
                 settings = PhysicsSettings.textureImmovable(sprite, this.width, this.height);
             } else settings = PhysicsSettings.immovable(this.width*this.size.x, this.height*this.size.y, 0, 0);
         }
-        return hasHitbox ? settings.collidesWith(CollisionCategories.allBut(CollisionCategories.DONT_COLLIDE_WITH_EACH_OTHER)).group(CollisionCategories.DONT_COLLIDE_WITH_EACH_OTHER) : null;
+        return hasHitbox ? settings.collidesWith(CollisionCategories.allBut(CollisionCategories.DONT_COLLIDE_WITH_EACH_OTHER)).group((short) (CollisionCategories.DONT_COLLIDE_WITH_EACH_OTHER | CollisionCategories.PATHFIND_BLOCKING)) : null;
     }
 
     @Override

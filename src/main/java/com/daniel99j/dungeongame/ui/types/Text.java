@@ -16,6 +16,6 @@ public class Text extends Renderable {
     @Override
     public void render(RenderState state) {
         super.render(state);
-        RenderUtil.renderText(this.text, this.getX(), this.getY()+this.getStyle().getYSize()/2, 1f, this.getStyle().getXSize(), Align.center, false);
+        RenderUtil.renderText(this.text, this.getStyle());
     }
 }

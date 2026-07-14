@@ -26,6 +26,10 @@ public class LiquidBarrelObject extends AdvancedObject {
         this.explosive = explosive;
     }
 
+    public boolean isExplosive() {
+        return explosive;
+    }
+
     @Override
     public void onCollision(Contact contact, AbstractObject object) {
         super.onCollision(contact, object);
@@ -59,8 +63,7 @@ public class LiquidBarrelObject extends AdvancedObject {
         for (Player player : this.getLevel().getObjectsInRadius(this.getPos().add(0.5f, 0.5f), 5, Player.class, false, null)) {
             if(GameData.getCurrentMatch().getCurrentMinigame() instanceof HotPotatoMinigame hotPotatoMinigame) {
                 if(hotPotatoMinigame.getHotPlayer().equals(player.getMatchPlayer())) continue;
-                hotPotatoMinigame.setHotPlayer(player.getMatchPlayer());
-                break;
+                if(hotPotatoMinigame.setHotPlayer(player.getMatchPlayer())) break;
             }
         }
         for (Player player : this.getLevel().getObjectsInRadius(this.getPos().add(0.5f, 0.5f), 20, Player.class, false, null)) {

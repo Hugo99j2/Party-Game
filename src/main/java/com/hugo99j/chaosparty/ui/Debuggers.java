@@ -24,7 +24,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.hugo99j.chaosparty.effect.ActiveEffect;
-import com.hugo99j.chaosparty.effect.Effects;
+import com.hugo99j.chaosparty.effect.EffectType;
 import com.hugo99j.chaosparty.util.NoDebugOption;
 import com.hugo99j.chaosparty.util.RequiresRefresh;
 import com.daniel99j.dungeongame.sounds.SoundInstance;
@@ -191,48 +191,6 @@ public class Debuggers {
                 }
             }
 
-            if(isEnabled("pathfindingRender")) {
-                RenderUtil.enableBlending();
-                pathfindDebuggers.forEach((hash, debuggers) -> {
-                    for (PathfindDebugPos pathfindDebugPos : debuggers) {
-                        float transparency = pathfindDebuggerTimers.get(hash).floatValue()/(5* GameData.TICKS_PER_SECOND);
-
-                        //GameData.shapeRenderer.setProjectionMatrix(GameData.gameCamera.combined);
-                        if (pathfindDebugPos.type().equals(PathfindDebugType.SUCCESSFUL_PATH)) {
-                            GameData.shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-                            GameData.shapeRenderer.setColor(Color.GREEN.cpy().mul(1, 1, 1, transparency));
-                            GameData.shapeRenderer.line(pathfindDebugPos.pos().getX() + 0.5f, pathfindDebugPos.pos().getY() + 0.5f, pathfindDebugPos.previous().getX() + 0.5f, pathfindDebugPos.previous().getY() + 0.5f);
-                        } else if (pathfindDebugPos.type().equals(PathfindDebugType.CONNECTION)) {
-                            GameData.shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-                            GameData.shapeRenderer.setColor(Color.YELLOW.cpy().mul(1, 1, 1, transparency));
-                            GameData.shapeRenderer.line(pathfindDebugPos.pos().getX() + 0.5f, pathfindDebugPos.pos().getY() + 0.5f, pathfindDebugPos.previous().getX() + 0.5f, pathfindDebugPos.previous().getY() + 0.5f);
-                        } else if (pathfindDebugPos.type().equals(PathfindDebugType.INVALID)) {
-                            GameData.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-                            GameData.shapeRenderer.setColor(Color.GRAY.cpy().mul(1, 1, 1, transparency));
-                            GameData.shapeRenderer.rect(pathfindDebugPos.pos().getX() + 0.3f, pathfindDebugPos.pos().getY() + 0.3f, 0.4f, 0.4f);
-                        } else if (pathfindDebugPos.type().equals(PathfindDebugType.OPEN_SET)) {
-                            GameData.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-                            GameData.shapeRenderer.setColor(Color.RED.cpy().mul(1, 1, 1, transparency));
-                            GameData.shapeRenderer.rect(pathfindDebugPos.pos().getX() + 0.3f, pathfindDebugPos.pos().getY() + 0.3f, 0.4f, 0.4f);
-                        } else if (pathfindDebugPos.type().equals(PathfindDebugType.CLOSED_SET)) {
-                            GameData.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-                            GameData.shapeRenderer.setColor(Color.YELLOW.cpy().mul(1, 1, 1, transparency));
-                            GameData.shapeRenderer.rect(pathfindDebugPos.pos().getX() + 0.3f, pathfindDebugPos.pos().getY() + 0.3f, 0.4f, 0.4f);
-                        } else if (pathfindDebugPos.type().equals(PathfindDebugType.START)) {
-                            GameData.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-                            GameData.shapeRenderer.setColor(Color.BLUE.cpy().mul(1, 1, 1, transparency));
-                            GameData.shapeRenderer.rect(pathfindDebugPos.pos().getX() + 0.3f, pathfindDebugPos.pos().getY() + 0.3f, 0.4f, 0.4f);
-                        } else if (pathfindDebugPos.type().equals(PathfindDebugType.END)) {
-                            GameData.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-                            GameData.shapeRenderer.setColor(Color.PURPLE.cpy().mul(1, 1, 1, transparency));
-                            GameData.shapeRenderer.rect(pathfindDebugPos.pos().getX() + 0.3f, pathfindDebugPos.pos().getY() + 0.3f, 0.4f, 0.4f);
-                        }
-                        GameData.shapeRenderer.end();
-                    }
-                });
-            }
-
-
 
             if (tmpProcessor != null) { // Restore the input processor after ImGui caught all inputs, see #end()
                 Gdx.input.setInputProcessor(tmpProcessor);
@@ -331,9 +289,9 @@ public class Debuggers {
                 ImGui.end();
 
                 ImGui.begin("Effects");
-                for (String allEffect : Effects.getAllEffects().keySet()) {
+                for (String allEffect : EffectType.getNameToEffect().keySet()) {
                     if(ImGui.button("Apply "+allEffect)) {
-                        GameData.getCurrentMatch().getMatchViews().getFirst().getActiveEffects().add(new ActiveEffect(Effects.getAllEffects().get(allEffect)));
+                        GameData.getCurrentMatch().getMatchViews().getFirst().addEffect(EffectType.getEffectType(allEffect), 15);
                     }
                 }
                 ImGui.end();

@@ -2,29 +2,32 @@ package com.hugo99j.chaosparty.effect;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.tools.hiero.unicodefont.effects.Effect;
 import com.daniel99j.djutil.ValueHolder;
 import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.util.RenderUtil;
 import org.lwjgl.Sys;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class EffectShaderManager {
-    private static final Map<List<String>, CacheKey> usedShader = new HashMap<>();
+    private static final Map<EnumSet<EffectType>, CacheKey> usedShader = new HashMap<>();
     private static float lastFrame = 0;
 
     public static void apply(List<ActiveEffect> active) {
+        List<EffectType> effectTypes = active.stream().map(ActiveEffect::getEffect).toList();
+        EnumSet<EffectType> activeEffects = effectTypes.isEmpty() ? EnumSet.noneOf(EffectType.class) : EnumSet.copyOf(effectTypes);
+        for (ActiveEffect activeEffect : active) {
+            activeEffects.add(activeEffect.getEffect());
+        }
         List<String> effects = new ArrayList<>();
-        active.forEach(effect -> effects.add(effect.getEffect()));
+        active.forEach(effect -> effects.add(effect.getEffect().getShader()));
 
         if(lastFrame != Gdx.graphics.getDeltaTime()) {
             lastFrame = Gdx.graphics.getDeltaTime();
-            List<List<String>> toRemove = new ArrayList<>();
+            List<EnumSet<EffectType>> toRemove = new ArrayList<>();
             usedShader.forEach((name, key) -> {
                 key.timer.object-=Gdx.graphics.getDeltaTime();
                 if(key.timer.object < 0) {
@@ -35,7 +38,7 @@ public class EffectShaderManager {
             toRemove.forEach(usedShader::remove);
         }
         if(effects.isEmpty()) return;
-        if (!usedShader.containsKey(effects)) {
+        if (!usedShader.containsKey(activeEffects)) {
             String vertexShader = "attribute vec4 " + ShaderProgram.POSITION_ATTRIBUTE + ";\n" //
                 + "attribute vec4 " + ShaderProgram.COLOR_ATTRIBUTE + ";\n" //
                 + "attribute vec2 " + ShaderProgram.TEXCOORD_ATTRIBUTE + "0;\n" //
@@ -62,6 +65,7 @@ public class EffectShaderManager {
                 uniform sampler2D u_texture;
                 uniform vec2 u_resolution;
                 uniform float u_time;
+                #define PI 3.1415926535
                 void main()
                 {
                   vec4 pixel = v_color * texture2D(u_texture, v_texCoords);
@@ -72,10 +76,10 @@ public class EffectShaderManager {
 
             ShaderProgram shader = new ShaderProgram(vertexShader, fragmentShader);
             if (!shader.isCompiled()) throw new IllegalArgumentException("Error compiling effects shader: " + shader.getLog());
-            usedShader.put(effects, new CacheKey(shader, new ValueHolder<>(5f)));
+            usedShader.put(activeEffects, new CacheKey(shader, new ValueHolder<>(5f)));
         }
-        usedShader.get(effects).timer.object = 5f;
-        ShaderProgram shader = usedShader.get(effects).shader;
+        usedShader.get(activeEffects).timer.object = 5f;
+        ShaderProgram shader = usedShader.get(activeEffects).shader;
         shader.bind();
         shader.setUniformf("u_resolution", GameData.width, GameData.height);
         shader.setUniformf("u_time", GameData.time);

@@ -110,6 +110,7 @@ public class RenderUtil {
         return texture;
     }
 
+    @Deprecated
     public static void renderText(String text, int x, int y, float size, int width, int align, boolean wrap) {
         GameData.FONT.getData().setScale(size);
 
@@ -141,7 +142,12 @@ public class RenderUtil {
         float scaleY = (ss.getYSize()/layout.height);
         float scale = Math.min(scaleX, scaleY);
         ((BitmapCacheScaler) GameData.FONT.getCache()).scale(scale);
-        GameData.FONT.getCache().translate(ss.getX(), ss.getY()+(layout.height*scale));
+        float offsetX = 0;
+        if(ss.has("textAlign") && ss.get("textAlign") != 0) {
+            float align = (float) ss.get("textAlign"); // 0 = left, 0.5 = center, 1 = right
+            offsetX = (ss.getXSize() - layout.width * scale) * align;
+        }
+        GameData.FONT.getCache().translate(ss.getX()+offsetX, ss.getY()+(layout.height*scale));
         GameData.FONT.getCache().draw(GameData.spriteBatch);
     }
 

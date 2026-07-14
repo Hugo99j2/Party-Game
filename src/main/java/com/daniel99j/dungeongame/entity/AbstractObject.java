@@ -151,7 +151,7 @@ public abstract class AbstractObject implements Disposable {
         return true;
     }
 
-    protected void moveTowardTarget(Vector2 targetPosition, float speed) {
+    public void moveTowardTarget(Vector2 targetPosition, float speed) {
         Vector2 currentPosition = this.getPhysics().getPosition();
         Vector2 direction = targetPosition.cpy().sub(currentPosition);
 

@@ -86,7 +86,7 @@ public class ScreenSS {
         return getAsInt("ySize");
     }
 
-    protected boolean has(String v) {
+    public boolean has(String v) {
         return getters.containsKey(v);
     }
 

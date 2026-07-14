@@ -1,17 +1,31 @@
 package com.hugo99j.chaosparty.effect;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-public class Effects {
-    private static final Map<String, String> ALL_EFFECTS = new HashMap<>();
+public enum EffectType {
+    RED("red", "pixel.r = 1f;"),
+    GREEN("green", "pixel.g = 1f;"),
+    BLUE("blue", "pixel.b = 1f;"),
+    WARM("warm", """
+            vec3 glowColor = vec3(1.0, 0.5, 0.2);
+            float glowIntensity = 0.7;
 
-    public static final String RED = add("red", "pixel.r = 1f;");
-    public static final String GREEN = add("green", "pixel.g = 1f;");
-    public static final String BLUE = add("blue", "pixel.b = 1f;");
-    public static final String THERMAL = add("thermal", """
+            float pulse = 1.0 + sin(u_time) * 0.2;
+
+            // Create a basic circular mask for the center of the object
+            vec2 center = v_texCoords - vec2(0.5);
+            float dist = 0.7-length(center)+(sin(u_time+v_texCoords.x+tan(v_texCoords.y*u_time))*0.2);
+
+            // Smoothstep creates a glowing gradient from the center outwards
+            float glow = smoothstep(0.5, 0.1, dist);
+
+            vec3 finalGlow = glowColor * glow * glowIntensity * pulse;
+
+            // Output final color with alpha (adjust alpha for transparency)
+            pixel.rgb += finalGlow;
+        """),
+    THERMAL("thermal", """
         vec3 sceneColor = pixel.rgb;
 
         // 2. Calculate luminance to serve as our "fake" temperature (0.0 to 1.0)
@@ -43,23 +57,23 @@ public class Effects {
         vec3 thermalColor = mix(colors[index], colors[index + 1], factor);
 
         pixel = vec4(thermalColor, 1.0);
-        """);
-    public static final String BITSHIFT = add("bitshift", """
+        """),
+    BITSHIFT("bitshift", """
         vec4 oldpixel = pixel;
         pixel.r = oldpixel.g;
         pixel.g = oldpixel.b;
         pixel.b = oldpixel.r;
-    """);
+    """),
 
 
-    public static final String OVERSATURATION = add("oversaturation", "pixel.r *= 1.01;\npixel.rgb *= 4;");
+    OVERSATURATION("oversaturation", "pixel.r *= 1.01;\npixel.rgb *= 4;"),
 
-    public static final String INVERT = add("invert", """
+    INVERT("invert", """
         pixel.r = 1-pixel.r;
         pixel.g = 1-pixel.g;
         pixel.b = 1-pixel.b;
-        """);
-    public static final String SPIRAL = add("spiral", """
+        """),
+    SPIRAL("spiral", """
 vec2 uv = v_texCoords;
 
 vec2 center = vec2(0.5, 0.5);
@@ -78,17 +92,16 @@ warped.y = sin(angle) * r;
 uv = warped + center;
 
 pixel = v_color * texture2D(u_texture, uv);
-        """);
-    public static final String BOUNCY = add("bouncy", """
+        """),
+    BOUNCY("bouncy", """
         pixel = v_color * texture2D(u_texture, vec2(v_texCoords.x, v_texCoords.y+sin(u_time+v_texCoords.x*20)/8));
-        """);
-    public static final String COLOURBLIND = add("colourblind", """
+        """),
+    COLOURBLIND("colourblind", """
         float average = (pixel.r + pixel.g)/2;
         pixel.r = average;
         pixel.g = average;
-        """);
-    public static final String LIQUID = add("liquid", """
-         float PI = 3.1415;
+        """),
+    LIQUID("liquid", """
          float uTwist = 2;
          float uFalloff = 0.89;
          float uContrast = 1;
@@ -116,9 +129,8 @@ pixel = v_color * texture2D(u_texture, uv);
 
         pixel = v_color * texture2D(u_texture, vec2(v_texCoords.x+offset.x, v_texCoords.y+offset.y));
         //pixel = vec4(offset.x, offset.y, 0, 1);
-        """);
-    public static final String FISHEYE = add("fisheye", """
-          float PI = 3.1415926535;
+        """),
+    FISHEYE("fisheye", """
           float aperture = 178.0;
           float apertureHalf = 0.5 * aperture * (PI / 180.0);
           float maxFactor = sin(apertureHalf);
@@ -144,12 +156,37 @@ pixel = v_color * texture2D(u_texture, uv);
           pixel = c;
                 """);
 
-    private static String add(String name, String effect) {
-        ALL_EFFECTS.put(name, effect);
-        return effect;
+    private static final Map<String, EffectType> NAME_TO_EFFECT;
+
+    static {
+        Map<String, EffectType> map = new HashMap<>();
+        for (EffectType value : EffectType.values()) {
+            map.put(value.name, value);
+        }
+        NAME_TO_EFFECT = Map.copyOf(map);
     }
 
-    public static Map<String, String> getAllEffects() {
-        return ALL_EFFECTS;
+    private final String name;
+    private final String shader;
+
+    EffectType(String name, String shader) {
+        this.name = name;
+        this.shader = shader;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getShader() {
+        return shader;
+    }
+
+    public static Map<String, EffectType> getNameToEffect() {
+        return NAME_TO_EFFECT;
+    }
+
+    public static EffectType getEffectType(String name) {
+        return NAME_TO_EFFECT.get(name);
     }
 }

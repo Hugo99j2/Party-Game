@@ -2,6 +2,7 @@ package com.daniel99j.dungeongame.ui.renderable;
 
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.math.Vector2;
+import com.daniel99j.dungeongame.ui.screenss.CombinedScreenSS;
 import com.hugo99j.chaosparty.ui.UiScreen;
 import com.daniel99j.dungeongame.ui.screenss.ScreenSS;
 
@@ -12,7 +13,7 @@ public class Renderable {
     public boolean isMiddleDown = false;
     public boolean isRightDown = false;
     private boolean hovered;
-    private ScreenSS style;
+    private CombinedScreenSS.ScreenParentSS style;
     private UiScreen screen;
 
     public Renderable(String elementId) {
@@ -89,11 +90,11 @@ public class Renderable {
         return screen;
     }
 
-    public void setStyle(ScreenSS style) {
+    public void setStyle(CombinedScreenSS.ScreenParentSS style) {
         this.style = style;
     }
 
-    public ScreenSS getStyle() {
+    public CombinedScreenSS.ScreenParentSS getStyle() {
         return style;
     }
 

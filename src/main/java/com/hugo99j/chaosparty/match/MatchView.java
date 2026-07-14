@@ -8,12 +8,14 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.tools.hiero.unicodefont.effects.Effect;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.*;
 import com.daniel99j.djutil.NumberUtils;
 import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.effect.ActiveEffect;
+import com.hugo99j.chaosparty.effect.EffectType;
 import com.hugo99j.chaosparty.ui.Debuggers;
 
 import java.util.ArrayList;
@@ -55,7 +57,20 @@ public class MatchView implements Disposable {
         return activeEffects;
     }
 
+    public void addEffect(EffectType type, float time) {
+        activeEffects.add(new ActiveEffect(type, time));
+    }
+
     public TextureRegion render() {
+        List<ActiveEffect> toRemove = new ArrayList<>();
+        for (ActiveEffect activeEffect : this.getActiveEffects()) {
+            activeEffect.setRemaining(activeEffect.getRemaining()-Gdx.graphics.getDeltaTime());
+            if(activeEffect.getRemaining() <= 0) {
+                toRemove.add(activeEffect);
+            }
+        }
+        activeEffects.removeAll(toRemove);
+
         camerashakeTime -= Gdx.graphics.getDeltaTime();
 
         if(this.player != null) {

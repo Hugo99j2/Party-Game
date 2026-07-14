@@ -105,8 +105,8 @@ public class Match {
     }
 
     public void finishCurrentMinigame() {
-        this.setCurrentMinigame(null);
         GameData.MAIN_INSTANCE.setScreen(new WinScreen());
+        this.setCurrentMinigame(null);
     }
 
     public List<MatchView> getMatchViews() {

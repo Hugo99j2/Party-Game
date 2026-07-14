@@ -7,8 +7,8 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.QueryCallback;
 import com.daniel99j.djutil.pathfinder.CachedPathfinder;
 import com.daniel99j.djutil.pathfinder.PathfindPos;
+import com.daniel99j.dungeongame.entity.AbstractObject;
 import com.hugo99j.chaosparty.GameData;
-import com.daniel99j.dungeongame.entity.AdvancedObject;
 import com.daniel99j.dungeongame.entity.CollisionCategories;
 import com.hugo99j.chaosparty.ui.Debuggers;
 import org.jetbrains.annotations.Nullable;
@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
 
-public abstract class PathfindingObject extends AdvancedObject {
+public abstract class PathfindingObject extends AbstractObject {
     private CachedPathfinder pathfinder;
     private PathfindPos oldPos = null;
     private PointLight light;

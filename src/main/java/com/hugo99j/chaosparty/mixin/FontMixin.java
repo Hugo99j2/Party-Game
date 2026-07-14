@@ -23,7 +23,6 @@ public abstract class FontMixin {
     @Shadow
     public abstract BitmapFont.BitmapFontData getData();
 
-    @SuppressWarnings("AddedMixinMembersNamePattern")
     @Unique
     private static final Map<Character, CharRegion> icons = new HashMap<>();
 
@@ -31,12 +30,12 @@ public abstract class FontMixin {
     private void addPages(BitmapFont.BitmapFontData data, Array<TextureRegion> pageRegions, boolean integer, CallbackInfo ci) {
         List<String> alreadyAdded = new ArrayList<>();
         for (Map.Entry<String, Character> entry : GameData.getIcons().entrySet()) {
-            TextureAtlas.AtlasRegion region = ImageUtil.get("ui/icon/" + entry.getKey());
+            TextureAtlas.AtlasRegion region = ImageUtil.get("ui/icon/" + (entry.getKey().contains("__space__") ? "empty" : entry.getKey()));
             if(!alreadyAdded.contains(entry.getKey())) {
                 alreadyAdded.add(entry.getKey());
                 pageRegions.add(region);
             }
-            icons.put(entry.getValue(), new CharRegion(pageRegions.indexOf(region, true), region.getU(), region.getV(), region.getU2(), region.getV2()));
+            icons.put(entry.getValue(), new CharRegion(pageRegions.indexOf(region, true), region.getU(), region.getV(), region.getU2(), region.getV2(), (entry.getKey().contains("__space__") ? Integer.parseInt(entry.getKey().replace("__space__", "")) : 0)));
         }
     }
 
@@ -45,7 +44,7 @@ public abstract class FontMixin {
         icons.forEach((key, value) -> {
             BitmapFont.Glyph glyph = new BitmapFont.Glyph();
             glyph.page = value.page;
-            glyph.width = 32;
+            glyph.width = value.forcedOffset == 0 ? 32 : (int) ((value.forcedOffset + data.padRight) / data.scaleX);
             glyph.height = -32;
             glyph.yoffset = -16;
             glyph.fixedWidth = true;
@@ -59,7 +58,7 @@ public abstract class FontMixin {
         icons.clear();
     }
 
-    private record CharRegion(int page, float u, float v, float u2, float v2) {
+    private record CharRegion(int page, float u, float v, float u2, float v2, int forcedOffset) {
 
     }
 }

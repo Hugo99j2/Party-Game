@@ -1,6 +1,7 @@
 package com.hugo99j.chaosparty.match;
 
 import com.badlogic.gdx.graphics.Color;
+import com.daniel99j.djutil.NumberUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.hugo99j.chaosparty.util.CostumePart;
@@ -30,6 +31,10 @@ public class User {
 
     public static User getUser(int i) {
         return loadedUsers.get(i-1);
+    }
+
+    public static List<User> getLoadedUsers() {
+        return loadedUsers;
     }
 
     public String getName() {
@@ -95,7 +100,11 @@ public class User {
             }
         } else {
             for (int i = 1; i <= 10; i++) {
-                loadedUsers.add(new User("Guest "+i));
+                User u = new User("Guest "+i);
+                for (CostumePart value : CostumePart.values()) {
+                    u.setWearing(value, Costumes.getVariants(value).get(NumberUtils.getRandomInt(0, Costumes.getVariants(value).size()-1)));
+                }
+                loadedUsers.add(u);
             }
         }
         saveUsers();

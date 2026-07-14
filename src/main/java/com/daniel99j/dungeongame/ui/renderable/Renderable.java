@@ -1,18 +1,17 @@
 package com.daniel99j.dungeongame.ui.renderable;
 
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Disposable;
 import com.daniel99j.dungeongame.ui.screenss.CombinedScreenSS;
 import com.hugo99j.chaosparty.ui.UiScreen;
-import com.daniel99j.dungeongame.ui.screenss.ScreenSS;
 
-public class Renderable {
+public class Renderable implements Disposable {
     private final String elementId;
     public boolean usesMouse = false;
     public boolean isLeftDown = false;
     public boolean isMiddleDown = false;
     public boolean isRightDown = false;
-    private boolean hovered;
+    private boolean selected;
     private CombinedScreenSS.ScreenParentSS style;
     private UiScreen screen;
 
@@ -20,8 +19,8 @@ public class Renderable {
         this.elementId = elementId;
     }
 
-    public boolean isHovered() {
-        return hovered;
+    public boolean isSelected() {
+        return selected;
     }
 
     public boolean capturingMouse() {
@@ -38,34 +37,7 @@ public class Renderable {
 
     public void render(RenderState state) {
         if(usesMouse) {
-            hovered = isInRange(state.mouseX(), state.mouseY());
-//            if(isInRange(state.mouseX(), state.mouseY())) {
-//                hovered = true;
-//                if (!isLeftDown && state.leftJust()) {
-//                    onDown(state.mouseX() - this.getX(), state.mouseY() - this.getY(), ClickType.LEFT);
-//                    isLeftDown = true;
-//                }
-//                if (!isMiddleDown && state.middleJust()) {
-//                    onDown(state.mouseX() - this.getX(), state.mouseY() - this.getY(), ClickType.MIDDLE);
-//                    isMiddleDown = true;
-//                }
-//                if (!isRightDown && state.rightJust()) {
-//                    onDown(state.mouseX() - this.getX(), state.mouseY() - this.getY(), ClickType.RIGHT);
-//                    isRightDown = true;
-//                }
-//            }
-//            if (isLeftDown && !state.left()) {
-//                onUp(state.mouseX() - this.getX(), state.mouseY() - this.getY(), ClickType.LEFT);
-//                isLeftDown = false;
-//            }
-//            if (isMiddleDown && !state.middle()) {
-//                onUp(state.mouseX() - this.getX(), state.mouseY() - this.getY(), ClickType.MIDDLE);
-//                isMiddleDown = false;
-//            }
-//            if (isRightDown && !state.right()) {
-//                onUp(state.mouseX() - this.getX(), state.mouseY() - this.getY(), ClickType.RIGHT);
-//                isRightDown = false;
-//            }
+            selected = isInRange(state.mouseX(), state.mouseY());
         }
     }
 
@@ -111,6 +83,11 @@ public class Renderable {
     }
 
     public void onControllerSelect() {
+
+    }
+
+    @Override
+    public void dispose() {
 
     }
 }

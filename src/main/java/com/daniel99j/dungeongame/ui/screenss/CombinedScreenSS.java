@@ -1,6 +1,8 @@
 package com.daniel99j.dungeongame.ui.screenss;
 
+import com.daniel99j.djutil.UsageLimited;
 import com.daniel99j.djutil.maths.MathsContext;
+import com.hugo99j.chaosparty.ui.UiScreen;
 
 import java.util.HashMap;
 import java.util.List;
@@ -11,6 +13,13 @@ public class CombinedScreenSS {
 
     protected CombinedScreenSS(ScreenSSBuilder builder) {
         add(builder, null, 0);
+    }
+
+    @UsageLimited
+    public void setScreen(UiScreen screen) {
+        for (ScreenParentSS value : this.getter.values()) {
+            value.setScreen(screen);
+        }
     }
 
     private void add(ScreenSSBuilder builder, ScreenParentSS parent, int index) {
@@ -35,6 +44,7 @@ public class CombinedScreenSS {
         private final List<ScreenParentSS> children = new java.util.ArrayList<>();
         private final int index;
         protected List<String> parentVars;
+        private UiScreen screen;
 
         protected ScreenParentSS(ScreenSSBuilder builder, ScreenParentSS parent, String elementId, int index) {
             super(builder.attributes, elementId);
@@ -42,6 +52,13 @@ public class CombinedScreenSS {
             this.index = index;
             this.parentVars = builder.parentVars;
             if(parent != null) parent.children.add(this);
+        }
+
+        public void setScreen(UiScreen screen) {
+            this.screen = screen;
+            for (ScreenParentSS child : this.children) {
+                child.setScreen(screen);
+            }
         }
 
         public ScreenSS getParent() {
@@ -70,6 +87,7 @@ public class CombinedScreenSS {
             if(parent == null) return context;
             if(name.equals("x") || name.equals("xSize")) context.withGlobalVariable("%", String.valueOf(parent.get("xSize")/100));
             if(name.equals("y") || name.equals("ySize")) context.withGlobalVariable("%", String.valueOf(parent.get("ySize")/100));
+            if(screen != null) screen.editSSContext(context);
             return context;
         }
 

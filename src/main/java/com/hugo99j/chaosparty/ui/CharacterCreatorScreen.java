@@ -1,19 +1,23 @@
 package com.hugo99j.chaosparty.ui;
 
-import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector2;
+import com.daniel99j.djutil.GenericValuesHolder;
+import com.daniel99j.djutil.maths.MathsContext;
 import com.daniel99j.dungeongame.sounds.SoundManager;
+import com.daniel99j.dungeongame.ui.renderable.RenderState;
 import com.daniel99j.dungeongame.ui.renderable.Renderable;
 import com.daniel99j.dungeongame.ui.screenss.ScreenSSBuilder;
-import com.daniel99j.dungeongame.ui.types.Button;
-import com.daniel99j.dungeongame.ui.types.Text;
 import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.match.User;
+import com.hugo99j.chaosparty.ui.element.TextInput;
 import com.hugo99j.chaosparty.util.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /** First screen of the application. Displayed after the application is created. */
 public class CharacterCreatorScreen extends UiScreen {
@@ -21,6 +25,9 @@ public class CharacterCreatorScreen extends UiScreen {
     float fade = 1;
     User user = User.getUser(1);
     CostumePart costumePart = CostumePart.HAT;
+    boolean editing = false;
+    TextInput textInput;
+    private int hintHeight = 0;
 
     public CharacterCreatorScreen() {
         super(ScreenSSBuilder.create()
@@ -43,10 +50,10 @@ public class CharacterCreatorScreen extends UiScreen {
                 .set("ySize", 1)
             .finishChild()
             .newChild("hint")
-            .set("x", "95vw-50")
+            .set("x", "100vw-8vw-50")
             .set("y", "50")
-            .set("xSize", "5vw")
-            .set("ySize", "999")
+            .set("xSize", "8vw")
+            .set("ySize", "${hint_height}")
             .finishChild()
             .newChild("up")
             .set("x", "50vw")
@@ -83,6 +90,20 @@ public class CharacterCreatorScreen extends UiScreen {
             .set("ySize", 100)
             .set("center", true)
             .finishChild()
+            .newChild("name_user")
+            .set("x", "50vw")
+            .set("y", "40vh")
+            .set("xSize", 300)
+            .set("ySize", 100)
+            .set("center", true)
+            .finishChild()
+            .newChild("player_selected")
+            .set("x", "50vw")
+            .set("y", "50vh")
+            .set("xSize", "100+sin(time*5)*10")
+            .set("ySize", "100+sin(time*5)*10")
+            .set("center", true)
+            .finishChild()
             .build()
         );
         backgroundTexture = new Texture(PathUtil.texture("gameyay.png"));
@@ -91,68 +112,6 @@ public class CharacterCreatorScreen extends UiScreen {
     @Override
     public void show() {
         super.show();
-        //syncViewport(GameConstants.width, GameConstants.height);
-        //new ScreenSS("0.5vw", "0.5vh", "320", "32", "5", true)
-        this.addRenderable(new Renderable("up") {
-            @Override
-            public void setScreen(UiScreen screen) {
-                super.setScreen(screen);
-                this.usesMouse = true;
-            }
-
-            @Override
-            public void onControllerSelect() {
-                super.onControllerSelect();
-                this.getScreen().setControllerSelected("player");
-                costumePart = Looper.previousValue(costumePart);
-            }
-        });
-
-        this.addRenderable(new Renderable("down") {
-            @Override
-            public void setScreen(UiScreen screen) {
-                super.setScreen(screen);
-                this.usesMouse = true;
-            }
-
-            @Override
-            public void onControllerSelect() {
-                super.onControllerSelect();
-                this.getScreen().setControllerSelected("player");
-                costumePart = Looper.nextValue(costumePart);
-            }
-        });
-
-        this.addRenderable(new Renderable("left") {
-            @Override
-            public void setScreen(UiScreen screen) {
-                super.setScreen(screen);
-                this.usesMouse = true;
-            }
-
-            @Override
-            public void onControllerSelect() {
-                super.onControllerSelect();
-                user.setWearing(costumePart, Looper.previousValue(Costumes.getVariants(costumePart), user.getWearing(costumePart)));
-                this.getScreen().setControllerSelected("player");
-            }
-        });
-
-        this.addRenderable(new Renderable("right") {
-            @Override
-            public void setScreen(UiScreen screen) {
-                super.setScreen(screen);
-                this.usesMouse = true;
-            }
-
-            @Override
-            public void onControllerSelect() {
-                super.onControllerSelect();
-                user.setWearing(costumePart, Looper.nextValue(Costumes.getVariants(costumePart), user.getWearing(costumePart)));
-                this.getScreen().setControllerSelected("player");
-            }
-        });
-
         this.addRenderable(new Renderable("player") {
             @Override
             public void setScreen(UiScreen screen) {
@@ -160,8 +119,80 @@ public class CharacterCreatorScreen extends UiScreen {
                 this.usesMouse = true;
             }
         });
-        //new ScreenSS("0.5vw", "0.7vh", "1", "1", "1", false)
-        //this.addRenderable(new Text("text", "<colour:red>The end."));
+        this.addRenderable(new Renderable("player_selected") {
+            @Override
+            public void render(RenderState state) {
+                if(!editing) {
+                    GameData.spriteBatch.setColor(Color.WHITE);
+                    GameData.spriteBatch.draw(ImageUtil.get("ui/select"), this.getX(), this.getY(), this.getStyle().getXSize() ,this.getStyle().getYSize());
+                }
+            }
+        });
+        textInput = new TextInput("name_user", 16 , false, "Name: ", user.getName(), "", "") {
+            @Override
+            public void render(RenderState state) {
+                if(!editing) {
+                    super.render(state);
+                }
+            }
+        };
+        this.addRenderable(textInput);
+    }
+
+    @Override
+    protected void controllerStick(Vector2 change) {
+        List<GenericValuesHolder<Vector2, Runnable, Object, Object, Object>> options;
+        if(editing) {
+             options = new ArrayList<>(List.of(
+                new GenericValuesHolder<Vector2, Runnable, Object, Object, Object>(new Vector2(-1, 0), () -> {
+                    user.setWearing(costumePart, Looper.previousValue(Costumes.getVariants(costumePart), user.getWearing(costumePart)));
+                }),
+                new GenericValuesHolder<Vector2, Runnable, Object, Object, Object>(new Vector2(1, 0), () -> {
+                    user.setWearing(costumePart, Looper.nextValue(Costumes.getVariants(costumePart), user.getWearing(costumePart)));
+                }),
+                new GenericValuesHolder<Vector2, Runnable, Object, Object, Object>(new Vector2(0, -1), () -> {
+                    costumePart = Looper.nextValue(costumePart);
+                }),
+                new GenericValuesHolder<Vector2, Runnable, Object, Object, Object>(new Vector2(0, 1), () -> {
+                    costumePart = Looper.previousValue(costumePart);
+                })
+            ));
+        } else {
+            options = new ArrayList<>(List.of(
+                new GenericValuesHolder<Vector2, Runnable, Object, Object, Object>(new Vector2(-1, 0), () -> {
+                    user = Looper.previousValue(User.getLoadedUsers(), user);
+                    textInput.setValue(user.getName());
+                }),
+                new GenericValuesHolder<Vector2, Runnable, Object, Object, Object>(new Vector2(1, 0), () -> {
+                    user = Looper.nextValue(User.getLoadedUsers(), user);
+                    textInput.setValue(user.getName());
+                }),
+                new GenericValuesHolder<>(new Vector2(0, -1), null),
+                new GenericValuesHolder<>(new Vector2(0, 1), null)
+            ));
+        }
+
+        float best = Float.MAX_VALUE;
+        Runnable bestRunnable = null;
+
+        for (GenericValuesHolder<Vector2, Runnable, Object, Object, Object> option : options) {
+            float distance = option.a().dst(change);
+            if (distance < best) {
+                best = distance;
+                bestRunnable = option.b();
+                //no same distance controls
+            } else if(distance == best && bestRunnable != null) {
+                bestRunnable = null;
+            }
+        }
+
+        if(bestRunnable != null) {
+            bestRunnable.run();
+            if(editing) SoundManager.getSound("swap_clothes").play(1);
+            else SoundManager.getSound("select").play(1);
+        } else {
+            super.controllerStick(change);
+        }
     }
 
     @Override
@@ -177,6 +208,22 @@ public class CharacterCreatorScreen extends UiScreen {
         super.render(delta);
         GameData.spriteBatch.end();
 
+        ControllerUtil controller = ((ControllerUtil) Controllers.getCurrent());
+
+        if(!editing && controller != null && controller.wasJustPressed(ControllerInput.A)) {
+            editing = true;
+        }
+        if(controller != null && controller.wasJustPressed(ControllerInput.B)) {
+            if (editing) editing = false;
+            else {
+                ToRun.run(() -> {
+                    GameData.MAIN_INSTANCE.setScreen(new MenuScreen());
+                    ((UiScreen) GameData.MAIN_INSTANCE.getScreen()).setControllerSelected("creator");
+                });
+                User.saveUsers();
+            }
+        }
+
         GameData.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         if(fade > 0) fade -= delta;
         fade = Math.max(fade, 0);
@@ -187,24 +234,43 @@ public class CharacterCreatorScreen extends UiScreen {
 
         GameData.spriteBatch.begin();
         GameData.spriteBatch.setColor(Color.WHITE);
-        for (CostumePart value : CostumePart.values()) {
-            if((value.shouldRender() || (costumePart.equals(CostumePart.COLOUR) && value.equals(CostumePart.COLOUR))) && (!costumePart.equals(CostumePart.COLOUR) || value.equals(CostumePart.COLOUR))) GameData.spriteBatch.draw(ImageUtil.get("costumes/"+this.user.getWearing(value)), this.getStyle().get("player").getX(), this.getStyle().get("player").getY(), this.getStyle().get("player").getXSize(), this.getStyle().get("player").getYSize());
+        if(editing) {
+            for (CostumePart value : CostumePart.values()) {
+                if ((value.shouldRender() || (costumePart.equals(CostumePart.COLOUR) && value.equals(CostumePart.COLOUR))) && (!costumePart.equals(CostumePart.COLOUR) || value.equals(CostumePart.COLOUR)))
+                    GameData.spriteBatch.draw(ImageUtil.get("costumes/" + this.user.getWearing(value)), this.getStyle().get("player").getX(), this.getStyle().get("player").getY(), this.getStyle().get("player").getXSize(), this.getStyle().get("player").getYSize());
+            }
+
+            GameData.spriteBatch.setColor(new Color(1, 1, 1, 0.5f));
+            GameData.spriteBatch.draw(ImageUtil.get("costumes/" + Looper.previousValue(Costumes.getVariants(costumePart), this.user.getWearing(costumePart))), this.getStyle().get("left").getX(), this.getStyle().get("player").getY(), this.getStyle().get("player").getXSize(), this.getStyle().get("player").getYSize());
+            GameData.spriteBatch.draw(ImageUtil.get("costumes/" + Looper.nextValue(Costumes.getVariants(costumePart), this.user.getWearing(costumePart))), this.getStyle().get("right").getX(), this.getStyle().get("player").getY(), this.getStyle().get("player").getXSize(), this.getStyle().get("player").getYSize());
+
+            //RenderUtil.renderText(costumePart.name(), 100, 100, 1, 100, 0, false)
+        } else {
+            user.setName(textInput.getValue());
+
+            drawUser(this.getStyle().get("player").getX(), this.getStyle().get("player").getY(), this.getStyle().get("player").getXSize(), this.getStyle().get("player").getYSize(), user);
+
+            GameData.spriteBatch.setColor(new Color(1, 1, 1, 0.5f));
+            drawUser(this.getStyle().get("left").getX(), this.getStyle().get("player").getY(), this.getStyle().get("player").getXSize(), this.getStyle().get("player").getYSize(), Looper.previousValue(User.getLoadedUsers(), user));
+            drawUser(this.getStyle().get("right").getX(), this.getStyle().get("player").getY(), this.getStyle().get("player").getXSize(), this.getStyle().get("player").getYSize(), Looper.nextValue(User.getLoadedUsers(), user));
         }
+        String hint = """
 
-        GameData.spriteBatch.setColor(new Color(1, 1, 1, 0.5f));
-        GameData.spriteBatch.draw(ImageUtil.get("costumes/"+Looper.previousValue(Costumes.getVariants(costumePart), this.user.getWearing(costumePart))), this.getStyle().get("left").getX(), this.getStyle().get("player").getY(), this.getStyle().get("player").getXSize(), this.getStyle().get("player").getYSize());
-        GameData.spriteBatch.draw(ImageUtil.get("costumes/"+Looper.nextValue(Costumes.getVariants(costumePart), this.user.getWearing(costumePart))), this.getStyle().get("right").getX(), this.getStyle().get("player").getY(), this.getStyle().get("player").getXSize(), this.getStyle().get("player").getYSize());
+                <icon:left_stick_leftright> Swap costume
+                <icon:left_stick_updown> Swap editing
+                """;
 
-        RenderUtil.renderText(costumePart.name(), 100, 100, 1, 100, 0, false);
-        RenderUtil.renderText("<icon:b> Exit\n<icon:left_stick_leftright> Swap costume\n<icon:left_stick_updown> Swap editing", this.getStyle().get("hint"));
+        if (editing) hint = "<icon:b> Exit" + hint;
+        else hint = "<icon:a> Choose character\n<icon:b> Exit menu" + hint;
+
+        RenderUtil.renderText(hint, this.getStyle().get("hint"));
+        this.hintHeight = RenderUtil.getHeight(hint);
         GameData.spriteBatch.end();
+    }
 
-        if(Controllers.getCurrent() != null && ((ControllerUtil) Controllers.getCurrent()).wasJustPressed(ControllerInput.B)) {
-            ToRun.run(() -> {
-                GameData.MAIN_INSTANCE.setScreen(new MenuScreen());
-                ((UiScreen) GameData.MAIN_INSTANCE.getScreen()).setControllerSelected("creator");
-            });
-            User.saveUsers();
+    private void drawUser(int x, int y, float xSize, float ySize, User user) {
+        for (CostumePart value : CostumePart.values()) {
+            if (value.shouldRender()) GameData.spriteBatch.draw(ImageUtil.get("costumes/" + user.getWearing(value)), x, y, xSize, ySize);
         }
     }
 
@@ -214,5 +280,11 @@ public class CharacterCreatorScreen extends UiScreen {
         // Destroy screen's assets here.
         backgroundTexture.dispose();
         /////font.dispose();
+    }
+
+    @Override
+    public void editSSContext(MathsContext context) {
+        super.editSSContext(context);
+        context.withVariable("hint_height", String.valueOf(this.hintHeight));
     }
 }

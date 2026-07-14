@@ -16,7 +16,7 @@ import com.hugo99j.chaosparty.util.RenderLayer;
 
 import static com.hugo99j.chaosparty.GameData.px;
 
-public class LiquidBarrelObject extends AdvancedObject {
+public class LiquidBarrelObject extends AbstractObject {
     private String sprite;
     private boolean explosive;
     private int ticksUntilExplode = -1;

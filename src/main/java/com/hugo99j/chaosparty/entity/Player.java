@@ -11,12 +11,15 @@ import com.hugo99j.chaosparty.bot.BotController;
 import com.hugo99j.chaosparty.match.MatchPlayer;
 import com.hugo99j.chaosparty.match.MatchView;
 import com.hugo99j.chaosparty.minigame.HotPotatoMinigame;
+import com.hugo99j.chaosparty.minigame.MapEditor;
 import com.hugo99j.chaosparty.ui.Debuggers;
 import com.hugo99j.chaosparty.util.*;
 import com.google.gson.JsonObject;
 import com.hugo99j.chaosparty.GameData;
 
-public class Player extends AdvancedObject {
+import static com.hugo99j.chaosparty.GameData.px;
+
+public class Player extends AbstractObject {
     private final MatchPlayer matchPlayer;
     private boolean flip;
     private short lastMask = -10;
@@ -69,18 +72,8 @@ public class Player extends AdvancedObject {
     }
 
     @Override
-    public void onAdd(boolean fromLoad) {
-        super.onAdd(fromLoad);
-        Filter f = new Filter();
-        f.categoryBits = CollisionCategories.PLAYER;
-        this.getPhysics().getFixtureList().get(0).setFilterData(f);
-    }
-
-    @Override
     protected PhysicsSettings createPhysics() {
-        PolygonShape shape = new PolygonShape();
-        shape.setAsBox(0.5f, 0.5f, new Vector2(0.5f, 0.5f), 0);
-        return new PhysicsSettings(BodyDef.BodyType.DynamicBody, shape, 1.0f, 1.1f, CollisionCategories.DEFAULT, CollisionCategories.all());
+        return PhysicsSettings.create(px(10), px(16), px(3), 0, 1, 1.1f).group(CollisionCategories.PLAYER);
     }
 
     @Override
@@ -145,7 +138,10 @@ public class Player extends AdvancedObject {
 
     @Override
     public boolean shouldRender(MatchView view) {
-        if(GameData.getCurrentMatch().getCurrentMinigame() instanceof HotPotatoMinigame potatoMinigame) {
+        if(GameData.getCurrentMatch().getCurrentMinigame() instanceof MapEditor) {
+            return false;
+        }
+        if(GameData.getCurrentMatch().getCurrentMinigame() instanceof HotPotatoMinigame) {
             if(this.isNoClip() && view.getPlayer() != this.matchPlayer && (view.getPlayer() == null || view.getPlayer().getPlayerObject() == null || !view.getPlayer().getPlayerObject().isNoClip())) {
                 return false;
             }

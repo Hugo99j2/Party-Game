@@ -1,19 +1,26 @@
 package com.hugo99j.chaosparty.match;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
+import com.daniel99j.dungeongame.entity.AbstractObject;
 import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.effect.EffectShaderManager;
 import com.hugo99j.chaosparty.entity.Player;
+import com.hugo99j.chaosparty.entity.PlayerSpawnPoint;
 import com.hugo99j.chaosparty.minigame.AbstractMinigame;
+import com.hugo99j.chaosparty.minigame.MapEditor;
 import com.hugo99j.chaosparty.minigame.MinigameScreenLayout;
 import com.hugo99j.chaosparty.ui.Debuggers;
 import com.hugo99j.chaosparty.ui.PlayScreen;
 import com.hugo99j.chaosparty.ui.WinScreen;
 import com.hugo99j.chaosparty.util.ImageUtil;
+import com.hugo99j.chaosparty.util.Logger;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Match {
     private AbstractMinigame currentMinigame = null;
@@ -40,8 +47,25 @@ public class Match {
                 matchView.setCenter(minigame.shouldAutoCenterCameras());
             }
             minigame.start();
+
+            Map<Integer, Vector2> spawns = new HashMap<>();
+            for (AbstractObject allObject : GameData.getLevelOrThrow().getAllObjects()) {
+                if(allObject instanceof PlayerSpawnPoint spawn) {
+                    spawns.put(spawn.id, spawn.getPos().cpy());
+                    if (!(GameData.getCurrentMatch().getCurrentMinigame() instanceof MapEditor)) {
+                        spawn.dispose();
+                    }
+                }
+            }
+
+            int i = 1;
             for (MatchPlayer player : players) {
-                GameData.level.addObject(new Player(player));
+                Player p = new Player(player);
+                if(spawns.containsKey(i)) {
+                    p.setPos(spawns.get(i));
+                } else Logger.error("Map "+this.getCurrentMinigame().getMapName()+" does not contain spawn point #"+i);
+                GameData.level.addObject(p);
+                i++;
             }
         }
         else {

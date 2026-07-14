@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector4;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Disposable;
+import com.daniel99j.djutil.UsageLimited;
 import com.daniel99j.djutil.ValueHolder;
 import com.daniel99j.djutil.pathfinder.PathfindDebugPos;
 import com.daniel99j.djutil.pathfinder.PathfindDebugType;
@@ -19,6 +20,7 @@ import com.daniel99j.dungeongame.entity.*;
 import com.hugo99j.chaosparty.match.MatchView;
 import com.hugo99j.chaosparty.ui.Debuggers;
 import com.hugo99j.chaosparty.util.RenderUtil;
+import org.checkerframework.checker.units.qual.A;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -29,8 +31,7 @@ import java.util.function.Function;
 
 public class Level implements Disposable {
     private final World box2dWorld;
-    private final ArrayList<AdvancedObject> advancedObjects = new ArrayList<>();
-    private final ArrayList<StaticObject> staticObjects = new ArrayList<>();
+    private final ArrayList<AbstractObject> objects = new ArrayList<>();
     private int time;
     public RayHandler rayHandler;
     private final ArrayList<LevelLight<?>> lights = new ArrayList<>();
@@ -80,8 +81,8 @@ public class Level implements Disposable {
         time++;
         collisions.forEach(Runnable::run);
         collisions.clear();
-        for (AdvancedObject advancedObject : new ArrayList<>(this.advancedObjects)) {
-            advancedObject.tick();
+        for (AbstractObject o : new ArrayList<>(this.objects)) {
+            o.tick();
         }
     }
 
@@ -181,19 +182,8 @@ public class Level implements Disposable {
         return box2dWorld;
     }
 
-    public ArrayList<AdvancedObject> getAdvancedObjects() {
-        return advancedObjects;
-    }
-
-    public ArrayList<StaticObject> getStaticObjects() {
-        return staticObjects;
-    }
-
     public ArrayList<AbstractObject> getAllObjects() {
-        ArrayList<AbstractObject> objects = new ArrayList<>();
-        objects.addAll(getAdvancedObjects());
-        objects.addAll(getStaticObjects());
-        return objects;
+        return new ArrayList<>(this.objects);
     }
 
     public void addObject(AbstractObject object) {
@@ -204,6 +194,11 @@ public class Level implements Disposable {
     public void addObjectFromLoad(AbstractObject object) {
         //noinspection usagelimited
         object.init(this, true);
+    }
+
+    @UsageLimited
+    public void addObjectToList(AbstractObject object) {
+        this.objects.add(object);
     }
 
     public void completedLoad() {
@@ -226,8 +221,7 @@ public class Level implements Disposable {
 
     public void removeObject(AbstractObject object) {
         object.dispose();
-        if(object instanceof AdvancedObject) this.advancedObjects.remove(object);
-        if(object instanceof StaticObject) this.staticObjects.remove(object);
+        this.objects.remove(object);
     }
 
     public <T extends Light> LevelLight<T> addLight(Function<RayHandler, T> function, SaveConfig saveConfig) {
@@ -308,8 +302,8 @@ public class Level implements Disposable {
         return objects;
     }
 
-    public List<AdvancedObject> getObjectsBetween(Vector2 start, Vector2 end) {
-        return this.getObjectsBetweenClass(start, end, AdvancedObject.class, true);
+    public List<AbstractObject> getObjectsBetween(Vector2 start, Vector2 end) {
+        return this.getObjectsBetweenClass(start, end, AbstractObject.class, true);
     }
 
     public void stopEmitting(ParticleEffect particle) {

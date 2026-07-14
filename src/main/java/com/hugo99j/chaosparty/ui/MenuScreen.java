@@ -1,23 +1,18 @@
 package com.hugo99j.chaosparty.ui;
 
-import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.daniel99j.dungeongame.sounds.SoundManager;
 import com.daniel99j.dungeongame.ui.screenss.ScreenSSBuilder;
-import com.daniel99j.dungeongame.ui.types.Button;
-import com.daniel99j.dungeongame.ui.types.Text;
+import com.hugo99j.chaosparty.minigame.*;
+import com.hugo99j.chaosparty.ui.element.Button;
+import com.hugo99j.chaosparty.ui.element.Text;
 import com.hugo99j.chaosparty.match.MatchPlayer;
 import com.hugo99j.chaosparty.match.User;
-import com.hugo99j.chaosparty.minigame.AbstractMinigame;
-import com.hugo99j.chaosparty.minigame.HotPotatoMinigame;
-import com.hugo99j.chaosparty.util.Logger;
 import com.hugo99j.chaosparty.util.PathUtil;
 import com.hugo99j.chaosparty.util.ToRun;
 import com.hugo99j.chaosparty.GameData;
-import com.hugo99j.chaosparty.minigame.DevMinigame;
-import com.hugo99j.chaosparty.minigame.HerdSheepMinigame;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,6 +60,13 @@ public class MenuScreen extends UiScreen {
             .set("ySize", 64)
             .set("scale", 2)
             .finishChild()
+            .newChild("new")
+            .set("x", "auto")
+            .set("y", "auto")
+            .set("xSize", 320)
+            .set("ySize", 64)
+            .set("scale", 2)
+            .finishChild()
             .newChild("creator")
             .set("x", "auto")
             .set("y", "auto")
@@ -104,7 +106,13 @@ public class MenuScreen extends UiScreen {
                 start(new HotPotatoMinigame());
             }
         });
-
+        this.addRenderable(new Button("new", "button", "New game!") {
+            @Override
+            public void onClick() {
+                super.onClick();
+                start(new NextGameToMake());
+            }
+        });
 
         this.addRenderable(new Button("creator", "button", "Character Creator") {
             @Override

@@ -16,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
 
 import static com.hugo99j.chaosparty.GameData.px;
 
-public class Potato extends AdvancedObject {
+public class Potato extends AbstractObject {
     private ParticleEffect hotEffect;
     private float spin = 0;
     private int ticksUntilCollision = 2;

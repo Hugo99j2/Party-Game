@@ -1,15 +1,15 @@
 package com.hugo99j.chaosparty.entity;
 
+import com.daniel99j.dungeongame.entity.AbstractObject;
 import com.hugo99j.chaosparty.match.MatchView;
 import com.hugo99j.chaosparty.util.RequiresRefresh;
 import com.daniel99j.dungeongame.entity.CollisionCategories;
 import com.daniel99j.dungeongame.entity.ObjectType;
 import com.daniel99j.dungeongame.entity.PhysicsSettings;
-import com.daniel99j.dungeongame.entity.StaticObject;
 import com.google.gson.JsonObject;
 import com.hugo99j.chaosparty.util.RenderLayer;
 
-public class CollisionObject extends StaticObject {
+public class CollisionObject extends AbstractObject {
     @RequiresRefresh
     float sizeX = 1;
     @RequiresRefresh

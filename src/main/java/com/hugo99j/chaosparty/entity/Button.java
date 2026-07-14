@@ -1,7 +1,7 @@
 package com.hugo99j.chaosparty.entity;
 
 import com.badlogic.gdx.math.Vector2;
-import com.daniel99j.dungeongame.entity.AdvancedObject;
+import com.daniel99j.dungeongame.entity.AbstractObject;
 import com.daniel99j.dungeongame.entity.ObjectType;
 import com.daniel99j.dungeongame.entity.PhysicsSettings;
 import com.hugo99j.chaosparty.match.MatchView;
@@ -10,7 +10,7 @@ import com.hugo99j.chaosparty.util.RenderLayer;
 import com.google.gson.JsonObject;
 import com.hugo99j.chaosparty.GameData;
 
-public class Button extends AdvancedObject {
+public class Button extends AbstractObject {
     @Override
     public void render(MatchView matchView) {
         Vector2 pos = this.getPos();

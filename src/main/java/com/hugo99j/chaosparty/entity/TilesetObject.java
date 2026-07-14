@@ -1,19 +1,21 @@
 package com.hugo99j.chaosparty.entity;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
+import com.daniel99j.dungeongame.entity.AbstractObject;
 import com.daniel99j.dungeongame.entity.CollisionCategories;
 import com.daniel99j.dungeongame.entity.ObjectType;
 import com.daniel99j.dungeongame.entity.PhysicsSettings;
-import com.daniel99j.dungeongame.entity.StaticObject;
 import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.match.MatchView;
+import com.hugo99j.chaosparty.util.Animator;
 import com.hugo99j.chaosparty.util.ImageUtil;
 import com.hugo99j.chaosparty.util.RenderLayer;
 import com.google.gson.JsonObject;
 import com.hugo99j.chaosparty.util.RequiresRefresh;
 
-public class TilesetObject extends StaticObject {
+public class TilesetObject extends AbstractObject {
     private int width = 1;
     private int height = 1;
     private String sprite;
@@ -26,14 +28,17 @@ public class TilesetObject extends StaticObject {
     private boolean textureHitbox;
     private int rotation;
     private Color tint;
+    @RequiresRefresh
+    private boolean animated = false;
 
-    public TilesetObject(String sprite, int width, int height, boolean flipX, boolean flipY, int rotation, float scale, boolean hasHitbox, Color tint, boolean textureHitbox) {
+    public TilesetObject(String sprite, int width, int height, boolean flipX, boolean flipY, int rotation, float scale, boolean hasHitbox, Color tint, boolean textureHitbox, boolean animated) {
         this.sprite = sprite;
+        this.animated = animated;
         this.width = width;
         this.height = height;
         this.scale = scale;
         //slightly extra so that
-        this.size = new Vector2((ImageUtil.get(this.sprite).packedWidth / 16.0f), (ImageUtil.get(this.sprite).packedHeight / 16.0f));
+        this.size = new Vector2((getCurrentSprite().packedWidth / 16.0f), (getCurrentSprite().packedHeight / 16.0f));
         this.flipX = flipX;
         this.flipY = flipY;
         this.hasHitbox = hasHitbox;
@@ -41,6 +46,12 @@ public class TilesetObject extends StaticObject {
         this.tint = tint.cpy();
         this.textureHitbox = textureHitbox;
     }
+
+    private TextureAtlas.AtlasRegion getCurrentSprite() {
+        if(animated) {
+            return Animator.get(sprite, this);
+        } else return ImageUtil.get(sprite);
+    };
 
     @Override
     protected PhysicsSettings createPhysics() {
@@ -60,7 +71,7 @@ public class TilesetObject extends StaticObject {
         for (float x = 0; x < this.width*this.size.x; x+=this.size.x) {
             for (float y = 0; y < this.height*this.size.y; y+=this.size.y) {
                 //, 0, 0, (int)this.size.x*16, (int)this.size.y*16
-                GameData.spriteBatch.draw(ImageUtil.get(sprite), this.getPos().x+x, this.getPos().y+y, 0.5f, 0.5f, this.size.x, this.size.y, flipX ? -1 : 1, flipY ? -1 : 1, rotation+90, true);
+                GameData.spriteBatch.draw(getCurrentSprite(), this.getPos().x+x, this.getPos().y+y, 0.5f, 0.5f, this.size.x, this.size.y, flipX ? -1 : 1, flipY ? -1 : 1, rotation+90, true);
             }
         }
         GameData.spriteBatch.setColor(old);
@@ -78,10 +89,11 @@ public class TilesetObject extends StaticObject {
         object.addProperty("scale", scale);
         object.addProperty("tint", tint.toString());
         object.addProperty("textureHitbox", textureHitbox);
+        object.addProperty("animated", animated);
     }
 
     public static TilesetObject read(JsonObject object) {
-        return new TilesetObject(object.get("sprite").getAsString(), object.get("width").getAsInt(), object.get("height").getAsInt(), object.get("flipX").getAsBoolean(), object.get("flipY").getAsBoolean(), object.get("rotation").getAsInt(), object.get("scale").getAsFloat(), object.get("hasHitbox").getAsBoolean(), Color.valueOf(object.get("tint").getAsString()), object.has("textureHitbox") ? object.get("textureHitbox").getAsBoolean() : false);
+        return new TilesetObject(object.get("sprite").getAsString(), object.get("width").getAsInt(), object.get("height").getAsInt(), object.get("flipX").getAsBoolean(), object.get("flipY").getAsBoolean(), object.get("rotation").getAsInt(), object.get("scale").getAsFloat(), object.get("hasHitbox").getAsBoolean(), Color.valueOf(object.get("tint").getAsString()), object.has("textureHitbox") ? object.get("textureHitbox").getAsBoolean() : false, object.has("animated") ? object.get("animated").getAsBoolean() : false);
     }
 
     @Override
@@ -144,6 +156,6 @@ public class TilesetObject extends StaticObject {
     }
 
     public static TilesetObject createDefault() {
-        return new TilesetObject("sheep", 2, 2, false, false, 0, 1, false, Color.WHITE, false);
+        return new TilesetObject("sheep", 2, 2, false, false, 0, 1, false, Color.WHITE, false, false);
     }
 }

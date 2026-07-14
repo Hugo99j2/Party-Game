@@ -22,7 +22,11 @@ import org.lwjgl.glfw.GLFWErrorCallback;
 
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -72,10 +76,22 @@ public class Main extends Game {
         glfwErrorCallback.set();
 
         if(Objects.equals(System.getenv("CODING_GAME"), "1")) {
-            //Create atlases
-            TexturePacker.Settings settings = new TexturePacker.Settings();
-            settings.combineSubdirectories = true;
-            TexturePacker.process(settings, PathUtil.codingDir(PathUtil.asset("textures")), PathUtil.codingDir(PathUtil.generated("atlases")), "main");
+            try {
+                Path path = Path.of(PathUtil.codingDir(PathUtil.generated("atlases/main.png")));
+                int oldFile = Files.exists(path) ? Arrays.hashCode(Files.readAllBytes(path)) : 0;
+                //Create atlases
+                TexturePacker.Settings settings = new TexturePacker.Settings();
+                settings.combineSubdirectories = true;
+                TexturePacker.process(settings, PathUtil.codingDir(PathUtil.asset("textures")), PathUtil.codingDir(PathUtil.generated("atlases")), "main");
+                int newFile = Arrays.hashCode(Files.readAllBytes(path));
+                if(oldFile != newFile) {
+                    throw new RuntimeException("Please restart as atlases have changed!!!");
+                } else {
+                    Logger.info("No atlas changes.");
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
         }
 
         //dont load it before texture packer else it will crash

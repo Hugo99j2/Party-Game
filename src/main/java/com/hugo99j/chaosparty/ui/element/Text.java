@@ -1,6 +1,5 @@
-package com.daniel99j.dungeongame.ui.types;
+package com.hugo99j.chaosparty.ui.element;
 
-import com.badlogic.gdx.utils.Align;
 import com.daniel99j.dungeongame.ui.renderable.RenderState;
 import com.daniel99j.dungeongame.ui.renderable.Renderable;
 import com.hugo99j.chaosparty.util.RenderUtil;

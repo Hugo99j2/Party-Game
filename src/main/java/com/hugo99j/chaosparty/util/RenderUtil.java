@@ -14,6 +14,7 @@ import com.daniel99j.dungeongame.ui.screenss.ScreenSS;
 import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.mixin.WindowAccessor;
 import com.hugo99j.chaosparty.ui.BitmapCacheScaler;
+import com.hugo99j.chaosparty.ui.Debuggers;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -27,6 +28,7 @@ public class RenderUtil {
     private static final ShaderProgram blurProgram;
     private static final Map<String, Color> colorMap = new HashMap<>();
     private static final Map<Color, String> colorMapOther = new HashMap<>();
+    private static int TEXT_HEIGHT = -1; //normally 27
 
     static  {
         String vertexShader = "attribute vec4 " + ShaderProgram.POSITION_ATTRIBUTE + ";\n" //
@@ -122,19 +124,57 @@ public class RenderUtil {
         GameData.FONT.draw(GameData.spriteBatch, newText, x, y, width, align, wrap);
     }
 
-    public static void renderText(String text, ScreenSS ss) {
+    public static TextData renderText(String text, ScreenSS ss) {
+        TextData data = getInfoAbout(text, ss);
+        GameData.FONT.getCache().translate(ss.getX()+data.offsetX, ss.getY()+data.offsetY);
+        GameData.FONT.getCache().draw(GameData.spriteBatch);
+        return data;
+    }
+
+    public static int getHeight(String text) {
+        if(TEXT_HEIGHT == -1) {
+            GameData.FONT.getData().setScale(1);
+            GameData.FONT.getCache().clear();
+            GlyphLayout layout = GameData.FONT.getCache().addText("TEST TEXT", 0, 0);
+            TEXT_HEIGHT = (int) layout.height;
+        }
+
+        if(text.isEmpty()) return 0;
+        int out = 27;
+        while(text.contains("\n")) {
+            out += 27 * 2;
+            text = text.replaceFirst("\n", "");
+        }
+        return out;
+    }
+
+    public static TextData getInfoAbout(String text, ScreenSS ss) {
         //GameData.FONT.getData().setScale(size);
         GameData.FONT.getData().setScale(1);
 
         String newText = text.replace("[", "[[");
+        newText = text.replace("\\<", "《");
         while(newText.contains("<colour:")) {
             String data = MiscUtils.getTextBetween(newText, "<colour:", ">");
-            newText = newText.replace("<colour:"+data+">", "["+data.toUpperCase()+"]");
+            String newData = data.toUpperCase();
+            if(data.equals("rainbow")) {
+                int argb = java.awt.Color.HSBtoRGB(0.5f+(float) Math.cos(GameData.time/2+ss.getX()+ss.getY())/2f, 1, 1);
+                // ARGB to RGBA
+                int rgba = (argb << 8) | ((argb >>> 24) & 0xFF);
+                Color c = new Color(rgba);
+                newData = "#" + c;
+            }
+            newText = newText.replace("<colour:"+data+">", "["+newData+"]");
         }
         while(newText.contains("<icon:")) {
             String data = MiscUtils.getTextBetween(newText, "<icon:", ">");
             newText = newText.replace("<icon:"+data+">", String.valueOf(GameData.getIcons().get(data)));
         }
+        while(newText.contains("<hidden:")) {
+            String data = MiscUtils.getTextBetween(newText, "<hidden:", ">");
+            newText = newText.replace("<hidden:"+data+">", "");
+        }
+        newText = newText.replace("《", "<");
 
         GameData.FONT.getCache().clear();
         GlyphLayout layout = GameData.FONT.getCache().addText(newText, 0, 0);
@@ -147,11 +187,12 @@ public class RenderUtil {
             float align = (float) ss.get("textAlign"); // 0 = left, 0.5 = center, 1 = right
             offsetX = (ss.getXSize() - layout.width * scale) * align;
         }
-        GameData.FONT.getCache().translate(ss.getX()+offsetX, ss.getY()+(layout.height*scale));
-        GameData.FONT.getCache().draw(GameData.spriteBatch);
+
+        return new TextData(layout, offsetX, layout.height*scale, scale, layout.width, layout.height);
     }
 
     public static boolean isFocused() {
+        if(GameData.DEBUGGING && Debuggers.isEnabled("forceFocus")) return true;
         Lwjgl3Application app = (Lwjgl3Application) Gdx.app;
         Lwjgl3Window window = ((WindowAccessor) app).getWindows().get(0);
         return window != null && window.isFocused();
@@ -164,4 +205,6 @@ public class RenderUtil {
     public static Color fromString(String color) {
         return colorMap.get(color.toLowerCase());
     }
+
+    public static record TextData(GlyphLayout layout, float offsetX, float offsetY, float scale, float width, float height) {}
 }

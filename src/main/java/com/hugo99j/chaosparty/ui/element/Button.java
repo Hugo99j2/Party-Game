@@ -1,8 +1,7 @@
-package com.daniel99j.dungeongame.ui.types;
+package com.hugo99j.chaosparty.ui.element;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
-import com.badlogic.gdx.utils.Align;
 import com.daniel99j.dungeongame.sounds.SoundManager;
 import com.daniel99j.dungeongame.ui.screenss.CombinedScreenSS;
 import com.daniel99j.dungeongame.ui.screenss.ScreenSSBuilder;
@@ -13,6 +12,8 @@ import com.daniel99j.dungeongame.ui.renderable.CursorType;
 import com.daniel99j.dungeongame.ui.renderable.RenderState;
 import com.daniel99j.dungeongame.ui.renderable.Renderable;
 import com.hugo99j.chaosparty.util.RenderUtil;
+
+import static com.hugo99j.chaosparty.GameData.px;
 
 public class Button extends Renderable {
     private NinePatch ninePatch;
@@ -42,8 +43,9 @@ public class Button extends Renderable {
             );
         }
         GameData.spriteBatch.setColor(Color.WHITE);
-        NinePatch patch = this.isHovered() ? this.ninePatchHovered : this.ninePatch;
-        patch.draw(GameData.spriteBatch, this.getX(), this.getY(), 0, 0, this.getStyle().getXSize() / (float) this.getStyle().get("scale"), this.getStyle().getYSize() / (float) this.getStyle().get("scale"), (float) this.getStyle().get("scale"), (float) this.getStyle().get("scale") ,0);
+        NinePatch patch = this.isSelected() ? this.ninePatchHovered : this.ninePatch;
+        float cornerPixelSize = 5;
+        patch.draw(GameData.spriteBatch, this.getX(), this.getY(), 0, 0, this.getStyle().getXSize() / cornerPixelSize, this.getStyle().getYSize() / cornerPixelSize, cornerPixelSize, cornerPixelSize,0);
         if(!this.text.isBlank()) RenderUtil.renderText(this.text, screenParentSS);
     }
 
@@ -63,6 +65,6 @@ public class Button extends Renderable {
 
     @Override
     public CursorType getCursorOverride() {
-        return this.isHovered() ? CursorType.HAND_POINT : null;
+        return this.isSelected() ? CursorType.HAND_POINT : null;
     }
 }

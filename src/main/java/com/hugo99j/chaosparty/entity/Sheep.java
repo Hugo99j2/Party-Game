@@ -2,7 +2,7 @@ package com.hugo99j.chaosparty.entity;
 
 import com.badlogic.gdx.math.Vector2;
 import com.daniel99j.djutil.NumberUtils;
-import com.daniel99j.dungeongame.entity.AdvancedObject;
+import com.daniel99j.dungeongame.entity.AbstractObject;
 import com.daniel99j.dungeongame.entity.ObjectType;
 import com.daniel99j.dungeongame.entity.PhysicsSettings;
 import com.hugo99j.chaosparty.match.MatchView;
@@ -13,7 +13,7 @@ import com.hugo99j.chaosparty.GameData;
 
 import static com.hugo99j.chaosparty.GameData.px;
 
-public class Sheep extends AdvancedObject {
+public class Sheep extends AbstractObject {
     private int sheepTime = 0;
     private Vector2 move = Vector2.Zero;
 

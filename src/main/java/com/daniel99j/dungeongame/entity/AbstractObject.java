@@ -40,7 +40,8 @@ public abstract class AbstractObject implements Disposable {
     }
 
     public void onAdd(boolean fromLoad) {
-
+        //noinspection usagelimited
+        this.getLevel().addObjectToList(this);
     }
 
     protected abstract PhysicsSettings createPhysics();
@@ -65,6 +66,10 @@ public abstract class AbstractObject implements Disposable {
     };
 
     public abstract void render(MatchView matchView);
+
+    public void tick() {
+
+    }
 
     public Vector2 getPos() {
         if(this.removed) return new Vector2();

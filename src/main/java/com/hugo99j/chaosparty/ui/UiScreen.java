@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector4;
 import com.daniel99j.djutil.ValueHolder;
+import com.daniel99j.djutil.maths.MathsContext;
 import com.daniel99j.dungeongame.sounds.SoundManager;
 import com.daniel99j.dungeongame.ui.renderable.ClickType;
 import com.daniel99j.dungeongame.ui.renderable.CursorType;
@@ -30,6 +31,8 @@ public class UiScreen implements Screen {
 
     public UiScreen(CombinedScreenSS combinedScreenSS) {
         this.combinedScreenSS = combinedScreenSS;
+        //noinspection usagelimited
+        this.combinedScreenSS.setScreen(this);
     }
 
     public void addRenderable(Renderable renderable) {
@@ -52,7 +55,6 @@ public class UiScreen implements Screen {
         }
         if(Controllers.getCurrent() != null && RenderUtil.isFocused()) {
             ControllerUtil controller = ((ControllerUtil) Controllers.getCurrent());
-            //Separate so it gets the timeouts and doesnt repeat input
             if(controller.wasJustPressed(ControllerInput.LEFT_STICK_ANY)) {
                 Vector2 controllerStickMove = new Vector2(controller.getValue(ControllerInput.LEFT_STICK_RIGHT), controller.getValue(ControllerInput.LEFT_STICK_UP));
                 if (controllerStickMove.len() > 0) controllerStick(controllerStickMove);
@@ -77,7 +79,7 @@ public class UiScreen implements Screen {
         }
     }
 
-    private void controllerStick(Vector2 change) {
+    protected void controllerStick(Vector2 change) {
         if(Controllers.getCurrent() != null) {
             Vector2 pos = Vector2.Zero.cpy();
             if(controllerSelected != null) {
@@ -142,6 +144,7 @@ public class UiScreen implements Screen {
 
     @Override
     public void dispose() {
+        this.renderables.forEach(Renderable::dispose);
         this.renderables.clear();
         this.controllerSelected = null;
     }
@@ -173,5 +176,8 @@ public class UiScreen implements Screen {
             }
         }
         throw new IllegalArgumentException("No element with id " + elementId);
+    }
+
+    public void editSSContext(MathsContext context) {
     }
 }

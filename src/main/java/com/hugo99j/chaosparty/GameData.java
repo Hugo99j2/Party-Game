@@ -25,6 +25,7 @@ import org.jetbrains.annotations.Nullable;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.function.Consumer;
 
 @SuppressWarnings("GDXJavaStaticResource")
 public class GameData {
@@ -44,6 +45,7 @@ public class GameData {
     public static int width, height;
 
     private static final Map<String, Character> icons = new HashMap<>();
+    private static final Map<Integer, Character> spaces = new HashMap<>();
 
     private static Match currentMatch;
 
@@ -72,12 +74,56 @@ public class GameData {
         return icons;
     }
 
+//    public static String appendSpace(String text, int space) {
+//        //((BitmapFont) GameData.FONT).getCache().addText()
+//    }
+
+    public static String getSpace(int space) {
+        //GlyphLayout#getGlyphWidth
+        StringBuilder out = new StringBuilder();
+        while (space != 0) {
+            if(space <= -100) {
+                out.append(spaces.get(-100));
+                space += 100;
+            } else if(space <= -50) {
+                out.append(spaces.get(-50));
+                space += 50;
+            } else if(space <= -10) {
+                out.append(spaces.get(-10));
+                space += 10;
+            } else if(space <= -1) {
+                out.append(spaces.get(-1));
+                space += 1000;
+            } else if(space >= 100) {
+                out.append(spaces.get(100));
+                space -= 100;
+            } else if(space >= 50) {
+                out.append(spaces.get(50));
+                space -= 50;
+            } else if(space >= 10) {
+                out.append(spaces.get(10));
+                space -= 10;
+            } else //noinspection ConstantValue
+                if(space >= 1) {
+                out.append(spaces.get(1));
+                space -= 1;
+            }
+        }
+        return out.toString();
+    }
+
     protected static void init(Main main) {
         MAIN_INSTANCE = main;
 
         char current = '\uE000';
         for (String s : PathUtil.getFilesIn(PathUtil.texture("ui/icon"))) {
             icons.put(s.replace("assets/textures/ui/icon/", "").replace(".png", ""), current);
+            current++;
+        }
+        List<Integer> spacing = new ArrayList<>(List.of(-100, -50, -10, -1, 1, 10, 50, 100));
+        for (Integer i : spacing) {
+            icons.put("__space__"+i, current);
+            spaces.put(i, current);
             current++;
         }
 

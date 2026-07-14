@@ -43,7 +43,8 @@ public class BotController {
 
     public void tick() {
         runPathfinding(false);
-        if(potatoCooldown < 0 && GameData.getCurrentMatch().getCurrentMinigame() instanceof HotPotatoMinigame hp && hp.getHotPlayer() == player.getMatchPlayer()) {
+        boolean isHot = GameData.getCurrentMatch().getCurrentMinigame() instanceof HotPotatoMinigame hp && hp.getHotPlayer() == player.getMatchPlayer();
+        if(potatoCooldown < 0 && isHot) {
             //if(true) return;
             boolean tried = false;
             for (Player target : GameData.getLevelOrThrow().getObjectsInRadius(player.getPos(), 15, Player.class, true, player)) {
@@ -79,6 +80,9 @@ public class BotController {
             }
         }
         potatoCooldown--;
+        if(!isHot) {
+            potatoCooldown = (int) ((0.5f*GameData.TICKS_PER_SECOND)* NumberUtils.getRandomFloat(1.0f, 1.7f));
+        }
     }
 
     private void runPathfinding(boolean invalid) {

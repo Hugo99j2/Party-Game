@@ -119,6 +119,7 @@ public class Debuggers {
             debugOptions.put("ignoreInvalidSS", new ValueHolder<>(false));
             debugOptions.put("showControllerSelect", new ValueHolder<>(false));
             debugOptions.put("forceSingleView", new ValueHolder<>(false));
+            debugOptions.put("forceFocus", new ValueHolder<>(false));
 
             PathUtil.getFilesIn(PathUtil.asset("sounds/")).forEach(e -> audioNames.add(e.replace("assets/sounds/", "").replace(".mp3", "")));
 
@@ -176,7 +177,7 @@ public class Debuggers {
 
         //GameData.gameViewport.apply();
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.GRAVE)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F8)) {
             debugOptions.get("showing").object = !isEnabled("showing");
             save();
         }

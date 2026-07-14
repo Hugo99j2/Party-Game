@@ -2,14 +2,10 @@ package com.hugo99j.chaosparty.ui;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.controllers.Controllers;
 import com.daniel99j.dungeongame.sounds.SoundManager;
-import com.daniel99j.dungeongame.ui.screenss.CombinedScreenSS;
 import com.daniel99j.dungeongame.ui.screenss.ScreenSSBuilder;
-import com.daniel99j.dungeongame.ui.types.Button;
-import com.daniel99j.dungeongame.ui.types.Text;
+import com.hugo99j.chaosparty.ui.element.Button;
 import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.util.ToRun;
 

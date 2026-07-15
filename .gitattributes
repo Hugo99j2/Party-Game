@@ -1,2 +1,2 @@
-* prefix=auto eol=lf
-*.bat prefix=auto eol=crlf
+* text=auto eol=lf
+*.bat text=auto eol=crlf

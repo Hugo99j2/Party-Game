@@ -237,7 +237,7 @@ public class Level implements Disposable {
     }
 
     public @Nullable AbstractObject getObjectByUUID(UUID uuid) {
-        return this.getAllObjects().stream().filter((object -> object.getUUID() == uuid)).findFirst().orElse(null);
+        return this.getAllObjects().stream().filter((object -> object.getUUID() == uuid && !object.isRemoved())).findFirst().orElse(null);
     }
 
     public ArrayList<LevelLight<?>> getLights() {

@@ -63,6 +63,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import static com.hugo99j.chaosparty.ui.debugger.ObjectEditor.*;
+import static com.hugo99j.chaosparty.ui.debugger.UndoRedoHistory.onEdited;
 
 public class Debuggers {
     private static Box2DDebugRenderer box2dDebugRenderer;
@@ -310,12 +311,7 @@ public class Debuggers {
                             ImGui.endMenu();
                         }
                         if(ImGui.menuItem("Save   CTRL+S")) {
-                            try {
-                                Files.write(Path.of(PathUtil.codingDir(PathUtil.data("maps/" + GameData.getCurrentMatch().getCurrentMinigame().getMapName() + ".map"))), LevelLoader.saveLevel(GameData.level).getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-                                Logger.info("Saved map");
-                            } catch (Exception e) {
-                                Logger.error("Failed to save map", e);
-                            }
+                            saveMap();
                         }
                         ImGui.endMenu();
                     }
@@ -327,6 +323,11 @@ public class Debuggers {
                     }
                 }
                 ImGui.endMainMenuBar();
+
+                if (Gdx.input.isKeyJustPressed(Input.Keys.S) && Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)) {
+                    saveMap();
+                }
+                UndoRedoHistory.render();
 
                 ImGui.begin("Logger");
                 for (String s : logger) {
@@ -343,7 +344,7 @@ public class Debuggers {
                 if(GameData.getCurrentMatch() != null && GameData.getCurrentMatch().getCurrentMinigame() instanceof MapEditor mapEditor) {
                     if (ImGui.button("Save map")) {
                         try {
-                            Files.write(Path.of(PathUtil.codingDir(PathUtil.data("maps/" + mapEditor.getMapName() + ".map"))), LevelLoader.saveLevel(GameData.level).getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+                            Files.write(Path.of(PathUtil.codingDir(PathUtil.data("maps/" + mapEditor.getMapName() + ".map"))), LevelLoader.saveLevel(GameData.level, true).getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
                         } catch (Exception e) {
                             throw new RuntimeException(e);
                         }
@@ -394,6 +395,8 @@ public class Debuggers {
                 ImGui.text("Cached images: " + ImageUtil.size());
                 ImGui.text("Cached files: " + PathUtil.size());
                 ImGui.text("Cached sounds: " + SoundManager.size());
+                ImGui.text("Revisions: " + UndoRedoHistory.size());
+                ImGui.text("Current revision: " + UndoRedoHistory.getCurrentRevision());
 
                 if(ImGui.button("Why is my code not working?")) {
                     debugOptions.put("lights", new ValueHolder<>(false));
@@ -606,6 +609,16 @@ public class Debuggers {
             Debuggers.customUiRenderers.remove(runnable);
         }
         activeScreenSS.clear();
+    }
+
+    private static void saveMap() {
+        try {
+            Files.write(Path.of(PathUtil.codingDir(PathUtil.data("maps/" + GameData.getCurrentMatch().getCurrentMinigame().getMapName() + ".map"))), LevelLoader.saveLevel(GameData.level, true).getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+            Logger.info("Saved map");
+            PathUtil.clearCache();
+        } catch (Exception e) {
+            Logger.error("Failed to save map", e);
+        }
     }
 
     private static void save() {
@@ -947,36 +960,43 @@ public class Debuggers {
             ImInt check = new ImInt((Integer) current);
             if(ImGui.inputInt(name, check)) {
                 setter.accept((T) (Object) check.get());
+                onEdited();
             }
         } else if(type.equals(Float.class)) {
             ImFloat check = new ImFloat((Float) current);
             if(ImGui.inputFloat(name, check)) {
                 setter.accept((T) (Object) check.get());
+                onEdited();
             }
         } else if(type.equals(Double.class)) {
             ImDouble check = new ImDouble((Double) current);
             if(ImGui.inputDouble(name, check)) {
                 setter.accept((T) (Object) check.get());
+                onEdited();
             }
         } else if(type.equals(String.class)) {
             ImString check = new ImString((String) current, ((String) current).length()+10000);
             if(ImGui.inputText(name, check, ImGuiInputTextFlags.EnterReturnsTrue)) {
                 setter.accept((T) check.get());
+                onEdited();
             }
         } else if(type.equals(UUID.class)) {
             ImString check = new ImString(current.toString());
             if(ImGui.inputText(name, check, ImGuiInputTextFlags.EnterReturnsTrue)) {
                 setter.accept((T) UUID.fromString(check.get()));
+                onEdited();
             }
         } else if(type.equals(Boolean.class)) {
             if(ImGui.checkbox(name, (Boolean) current)) {
                 setter.accept((T) ((Boolean) !((Boolean) current)));
+                onEdited();
             }
         } else if(type.equals(Vector2.class)) {
             float[] check = {((Vector2) current).x, ((Vector2) current).y};
             if(ImGui.inputFloat2(name, check)) {
                 ((Vector2) current).x = check[0];
                 ((Vector2) current).y = check[1];
+                onEdited();
             }
         } else if(type.equals(Color.class)) {
             float[] check = {((Color) current).r, ((Color) current).g, ((Color) current).b, ((Color) current).a};
@@ -985,6 +1005,7 @@ public class Debuggers {
                 ((Color) current).g = check[1];
                 ((Color) current).b = check[2];
                 ((Color) current).a = check[3];
+                //onEdited();
             }
         } else {
             ImGui.text("Unsupported type: " + name + " (value: " + current + ")");

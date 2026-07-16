@@ -78,4 +78,8 @@ public class PathUtil {
     public static int size() {
         return files.size();
     }
+
+    public static void clearCache() {
+        files.clear();
+    }
 }

@@ -23,7 +23,7 @@ public class PlayScreen implements Screen {
     @Override
     public void render(float delta) {
         if(GameData.getCurrentMatch() != null) GameData.getCurrentMatch().render(delta);
-        if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) || ((ControllerUtil) Controllers.getCurrent()).wasJustPressed(ControllerInput.MENU)) {
+        if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) || ControllerUtil.getCurrent().wasJustPressed(ControllerInput.MENU)) {
             PausedGameScreen screen = new PausedGameScreen();
             ToRun.run(() -> GameData.MAIN_INSTANCE.setScreen(screen));
             SoundManager.getSound("pause").playSingle(1);

@@ -4,6 +4,7 @@
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "BitmapCacheScalerMixin",
+    "ControllerMappingAccessor",
     "ControllerUtilMixin",
     "FontMixin",
     "MonitorFixMixin",

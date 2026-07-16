@@ -7,6 +7,8 @@ import com.hugo99j.chaosparty.ui.ControllerUtil;
 import java.util.UUID;
 
 public class DummyController implements Controller, ControllerUtil {
+    public static ControllerMapping DUMMY_MAPPING;
+
     @Override
     public boolean getButton(int buttonCode) {
         return false;
@@ -84,7 +86,7 @@ public class DummyController implements Controller, ControllerUtil {
 
     @Override
     public ControllerMapping getMapping() {
-        return Controllers.getCurrent().getMapping();
+        return DUMMY_MAPPING;
     }
 
     @Override

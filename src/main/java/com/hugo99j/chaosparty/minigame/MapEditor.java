@@ -7,6 +7,7 @@ import com.daniel99j.dungeongame.entity.AbstractObject;
 import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.entity.PlayerSpawnPoint;
 import com.hugo99j.chaosparty.match.MatchView;
+import com.hugo99j.chaosparty.ui.debugger.UndoRedoHistory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +37,7 @@ public class MapEditor extends AbstractMinigame {
             GameData.getLevelOrThrow().addObject(new PlayerSpawnPoint(3));
             GameData.getLevelOrThrow().addObject(new PlayerSpawnPoint(4));
         }
+        UndoRedoHistory.onMapLoad();
     }
 
     @Override

@@ -5,6 +5,7 @@ import com.google.gson.*;
 
 public class GsonUtil {
     public static final Gson PARSER = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
+    public static final Gson PARSER_COMPACT = new GsonBuilder().serializeNulls().create();
 
     public static JsonObject parse(String data) {
         return JsonParser.parseString(data).getAsJsonObject();

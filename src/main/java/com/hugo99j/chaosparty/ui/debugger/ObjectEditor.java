@@ -9,10 +9,7 @@ import com.daniel99j.dungeongame.level.LevelLoader;
 import com.google.gson.JsonObject;
 import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.entity.ObjectTypes;
-import com.hugo99j.chaosparty.util.GsonUtil;
-import com.hugo99j.chaosparty.util.Logger;
-import com.hugo99j.chaosparty.util.SafeObjectList;
-import com.hugo99j.chaosparty.util.ToRun;
+import com.hugo99j.chaosparty.util.*;
 import imgui.ImGui;
 import imgui.ImVec2;
 import imgui.ImVec4;
@@ -23,16 +20,16 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 import static com.hugo99j.chaosparty.ui.debugger.Debuggers.*;
+import static com.hugo99j.chaosparty.ui.debugger.UndoRedoHistory.onEdited;
 
 public class ObjectEditor {
     static Vector2 oldPos;
-    private static AbstractObject selected = null;
+    private static final SafeObjectHolder selected = new  SafeObjectHolder();
     private static final SafeObjectList popouts = new SafeObjectList();
     private static boolean preventMoving = false;
     private static Vector2 holdingOntoPos = null;
 
     static void renderObjectEditor() {
-        if(selected != null && selected.isRemoved()) selected = null;
         popouts.ensureSafety();
 
         for (AbstractObject popout : new ArrayList<>(popouts)) {
@@ -43,47 +40,51 @@ public class ObjectEditor {
 
         ImGui.begin("Objects");
 
+        boolean imGui = ImGui.isWindowHovered(ImGuiHoveredFlags.AnyWindow | ImGuiHoveredFlags.ChildWindows) || ImGui.isWindowFocused(ImGuiFocusedFlags.AnyWindow | ImGuiFocusedFlags.ChildWindows) || ImGui.getIO().getWantCaptureKeyboard() || ImGui.getIO().getWantCaptureMouse();
+
         if(GameData.level != null) {
-            if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && !ImGui.isWindowHovered(ImGuiHoveredFlags.AnyWindow)) {
+            if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && !imGui) {
                 int id = Debuggers.advancedPickColour >> 8;
                 boolean found = false;
                 for (AbstractObject allObject : GameData.getLevelOrThrow().getAllObjects()) {
                     if(allObject.getEntityId() == id/(Debuggers.isEnabled("showAdvancedObjectPicking") ? 10000 : 1)) {
                         Logger.info("Clicked " + allObject + " ("+ id +")");
-                        if(allObject != selected) {
+                        if(allObject != selected.get()) {
                             preventMoving = true;
+                            holdingOntoPos = null;
                         }
-                        selected = allObject;
+                        selected.set(allObject);
                         found = true;
                         break;
                     }
                 }
                 if(!found) {
                     Logger.info("No object selected");
-                    selected = null;
+                    selected.set(null);
                 }
             }
-            if(!Gdx.input.isButtonPressed(Input.Buttons.LEFT) || ImGui.isWindowHovered(ImGuiHoveredFlags.AnyWindow)) {
+            if(!Gdx.input.isButtonPressed(Input.Buttons.LEFT) || imGui) {
+                if(holdingOntoPos != null) onEdited();
                 preventMoving = false;
                 holdingOntoPos = null;
             }
 
-            if(!preventMoving && Gdx.input.isButtonPressed(Input.Buttons.LEFT) && selected != null && !ImGui.isWindowHovered(ImGuiHoveredFlags.AnyWindow)) {
+            if(!preventMoving && Gdx.input.isButtonPressed(Input.Buttons.LEFT) && selected.get() != null && !imGui) {
                 Vector3 screenCoords = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
                 Vector3 worldCoords = GameData.getCurrentMatch().getMatchViews().getFirst().gameViewport.unproject(screenCoords);
                 if(holdingOntoPos == null) {
-                    holdingOntoPos = selected.getPos().sub(worldCoords.x, worldCoords.y);
+                    holdingOntoPos = selected.get().getPos().sub(worldCoords.x, worldCoords.y);
                 }
-                selected.setPos(new Vector2(worldCoords.x, worldCoords.y).add(holdingOntoPos));
+                selected.get().setPos(new Vector2(worldCoords.x, worldCoords.y).add(holdingOntoPos));
 
                 if (Debuggers.isEnabled("alignPixel")) {
-                    float x = selected.getPos().x;
+                    float x = selected.get().getPos().x;
                     float snappedX = Math.round(x * 16f) / 16f;
-                    selected.setX(snappedX);
+                    selected.get().setX(snappedX);
 
-                    float y = selected.getPos().y;
+                    float y = selected.get().getPos().y;
                     float snappedY = Math.round(y * 16f) / 16f;
-                    selected.setY(snappedY);
+                    selected.get().setY(snappedY);
                 }
             }
 
@@ -94,20 +95,20 @@ public class ObjectEditor {
                 renderObjectSelector();
             }
 
-            if (Gdx.input.isKeyJustPressed(Input.Keys.C) && Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) && selected != null) {
-                JsonObject data = selected.write();
+            if (Gdx.input.isKeyJustPressed(Input.Keys.C) && Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) && selected.get() != null) {
+                JsonObject data = selected.get().write();
                 Gdx.app.getClipboard().setContents(data.toString());
             }
-            if (Gdx.input.isKeyJustPressed(Input.Keys.X) && Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) && selected != null) {
-                JsonObject data = selected.write();
+            if (Gdx.input.isKeyJustPressed(Input.Keys.X) && Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) && selected.get() != null) {
+                JsonObject data = selected.get().write();
                 Gdx.app.getClipboard().setContents(data.toString());
-                selected.dispose();
+                selected.get().dispose();
             }
             if (Gdx.input.isKeyJustPressed(Input.Keys.V) && Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)) {
                 try {
                     JsonObject data = GsonUtil.parse(Gdx.app.getClipboard().getContents());
                     data.addProperty("uuid", UUID.randomUUID().toString());
-                    selected = LevelLoader.createObject(data, GameData.level);
+                    selected.set(LevelLoader.createObject(data, GameData.level));
                 } catch (Exception e) {
                     Logger.error("Error pasting object", e);
                 }
@@ -137,7 +138,7 @@ public class ObjectEditor {
                     }
                     AbstractObject object = LevelLoader.createObject(data, GameData.getLevelOrThrow());
                     createObjectData = null;
-                    selected = object;
+                    selected.set(object);
                 } catch (Exception e) {
                     Logger.error("Error creating object", e);
                 }
@@ -150,7 +151,7 @@ public class ObjectEditor {
                         AbstractObject object = c.constructor().get();
                         GameData.getLevelOrThrow().addObject(object);
                         createObjectData = null;
-                        selected = object;
+                        selected.set(object);
                     } catch (Exception e) {
                         Logger.error("Error adding object", e);
                     }
@@ -173,11 +174,11 @@ public class ObjectEditor {
                 ImGui.tableNextColumn();
                 ImGui.pushID(allObject.getEntityId());
                 int flags = ImGuiSelectableFlags.SpanAllColumns;
-                boolean isSelected = allObject == selected;
+                boolean isSelected = allObject == selected.get();
                 if (isSelected)
                     flags |= ImGuiTreeNodeFlags.Selected;
                 if (ImGui.selectable(allObject + " (" + allObject.getEntityId() + ")", isSelected, flags))
-                    selected = allObject;
+                    selected.set(allObject);
                 if (ImGui.isItemHovered()) hoveredObject = allObject.getUUID();
                 ImGui.popID();
             }
@@ -189,7 +190,7 @@ public class ObjectEditor {
         ImGui.sameLine();
 
         ImGui.beginChild("Right Panel", new ImVec2(0, 0), ImGuiChildFlags.Border);
-        if(selected != null) renderEditingPane(selected, false);
+        if(selected.get() != null) renderEditingPane(selected.get(), false);
         ImGui.endChild();
 
     }
@@ -226,17 +227,22 @@ public class ObjectEditor {
         }
         if (ImGui.isItemActive()) changing = true;
 
-        if (ImGui.button("TP to player"))
+        if (ImGui.button("TP to player")) {
+            onEdited();
             object.setPos(GameData.getCurrentMatch().getPlayers().getFirst().getPlayerObject().getPos());
+        }
         ImGui.sameLine();
-        if (ImGui.button("TP player to this"))
+        if (ImGui.button("TP player to this")) {
             GameData.getCurrentMatch().getPlayers().getFirst().getPlayerObject().setPos(object.getPos());
+            onEdited();
+        }
 
         if (oldPos == null && changing) {
             oldPos = object.getPos();
         }
         if (oldPos != null && !changing) {
             oldPos = null;
+            onEdited();
         }
 
         ImGui.separatorText("Java variables");
@@ -261,7 +267,8 @@ public class ObjectEditor {
                     object.dispose();
                     //noinspection usagelimited
                     object.setUUIDReallyUnsafeDoNotUse(UUID.randomUUID());
-                    selected = o;
+                    selected.set(o);
+                    onEdited();
                 });
             } catch (Exception e) {
                 Logger.error("Error refreshing object", e);
@@ -275,7 +282,8 @@ public class ObjectEditor {
                 JsonObject data = object.write();
                 data.addProperty("uuid", UUID.randomUUID().toString());
                 AbstractObject o = LevelLoader.createObject(data, GameData.level);
-                selected = o;
+                selected.set(o);
+                onEdited();
             } catch (Exception e) {
                 Logger.error("Error duplicating object", e);
             }
@@ -284,6 +292,7 @@ public class ObjectEditor {
 
         if (ImGui.button("Delete")) {
             GameData.level.removeObject(object);
+            onEdited();
         }
     }
 }

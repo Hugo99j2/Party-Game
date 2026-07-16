@@ -113,7 +113,7 @@ public class LevelLoader {
         levelLight.light().setSoftnessLength(softShadowLength);
     }
 
-    public static String saveLevel(Level level) {
+    public static String saveLevel(Level level, boolean pretty) {
         JsonObject out = new JsonObject();
 
         JsonArray objects = new JsonArray();
@@ -130,6 +130,6 @@ public class LevelLoader {
 
         out.add("lights", lights);
 
-        return GsonUtil.PARSER.toJson(out);
+        return pretty ? GsonUtil.PARSER.toJson(out) : GsonUtil.PARSER_COMPACT.toJson(out);
     }
 }

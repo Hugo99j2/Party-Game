@@ -7,7 +7,7 @@ import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.match.Match;
 import com.hugo99j.chaosparty.match.MatchPlayer;
 import com.hugo99j.chaosparty.match.MatchView;
-import com.hugo99j.chaosparty.ui.Debuggers;
+import com.hugo99j.chaosparty.ui.debugger.Debuggers;
 
 import java.util.HashMap;
 import java.util.List;
@@ -26,7 +26,7 @@ public abstract class AbstractMinigame implements Disposable {
     }
 
     public void start() {
-        GameData.level = LevelLoader.loadFromData(mapName);
+        GameData.level = LevelLoader.loadFromDataOrDisk(mapName);
     }
 
     public abstract void tick();
@@ -75,7 +75,7 @@ public abstract class AbstractMinigame implements Disposable {
         GameData.spriteBatch.begin();
 
         GameData.spriteBatch.enableBlending();
-        GameData.getLevelOrThrow().render(view);
+        GameData.getLevelOrThrow().render(view, false);
 
         GameData.spriteBatch.end();
 

@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.daniel99j.dungeongame.sounds.SoundManager;
 import com.daniel99j.dungeongame.ui.screenss.ScreenSSBuilder;
 import com.hugo99j.chaosparty.minigame.*;
+import com.hugo99j.chaosparty.ui.debugger.Debuggers;
 import com.hugo99j.chaosparty.ui.element.Button;
 import com.hugo99j.chaosparty.ui.element.Text;
 import com.hugo99j.chaosparty.match.MatchPlayer;

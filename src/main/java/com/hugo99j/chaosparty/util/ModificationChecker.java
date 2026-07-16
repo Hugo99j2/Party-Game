@@ -2,6 +2,7 @@ package com.hugo99j.chaosparty.util;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.Vector4;
 
 import java.lang.reflect.Field;
@@ -17,6 +18,12 @@ public class ModificationChecker {
         add(Vector2.class, "One");
         add(Vector2.class, "X");
         add(Vector2.class, "Y");
+
+        add(Vector3.class, "Zero");
+        add(Vector3.class, "One");
+        add(Vector3.class, "X");
+        add(Vector3.class, "Y");
+        add(Vector3.class, "Z");
 
         add(Vector4.class, "Zero");
         add(Vector4.class, "One");

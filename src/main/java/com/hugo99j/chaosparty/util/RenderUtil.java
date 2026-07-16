@@ -5,16 +5,13 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Window;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
-import com.badlogic.gdx.graphics.glutils.GLFrameBuffer;
-import com.badlogic.gdx.graphics.glutils.GLOnlyTextureData;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.badlogic.gdx.utils.Align;
 import com.daniel99j.djutil.MiscUtils;
 import com.daniel99j.dungeongame.ui.screenss.ScreenSS;
 import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.mixin.WindowAccessor;
 import com.hugo99j.chaosparty.ui.BitmapCacheScaler;
-import com.hugo99j.chaosparty.ui.Debuggers;
+import com.hugo99j.chaosparty.ui.debugger.Debuggers;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;

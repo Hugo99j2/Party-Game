@@ -1,6 +1,6 @@
 package com.hugo99j.chaosparty.util;
 
-import com.hugo99j.chaosparty.ui.Debuggers;
+import com.hugo99j.chaosparty.ui.debugger.Debuggers;
 
 import java.io.*;
 

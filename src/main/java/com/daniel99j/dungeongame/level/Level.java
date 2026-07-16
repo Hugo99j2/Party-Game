@@ -5,12 +5,16 @@ import box2dLight.RayHandler;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.Vector4;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.utils.ScreenUtils;
 import com.daniel99j.djutil.UsageLimited;
 import com.daniel99j.djutil.ValueHolder;
 import com.daniel99j.djutil.pathfinder.PathfindDebugPos;
@@ -18,9 +22,9 @@ import com.daniel99j.djutil.pathfinder.PathfindDebugType;
 import com.hugo99j.chaosparty.GameData;
 import com.daniel99j.dungeongame.entity.*;
 import com.hugo99j.chaosparty.match.MatchView;
-import com.hugo99j.chaosparty.ui.Debuggers;
+import com.hugo99j.chaosparty.ui.debugger.Debuggers;
 import com.hugo99j.chaosparty.util.RenderUtil;
-import org.checkerframework.checker.units.qual.A;
+import imgui.ImGui;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -38,6 +42,8 @@ public class Level implements Disposable {
     public final ArrayList<ParticleEffect> particles = new ArrayList<>();
     private float lastRenderedFrame;
     private final List<Runnable> collisions = new ArrayList<>();
+    //begin at 1 so when picking black no object is selected
+    private int nextEntityId = 1;
 
     public Level() {
         this.box2dWorld = new World(new Vector2(0, 0), true);
@@ -86,7 +92,24 @@ public class Level implements Disposable {
         }
     }
 
-    public void render(MatchView matchView) {
+    public void render(MatchView matchView, boolean objectIds) {
+        if(!objectIds && GameData.DEBUGGING && Debuggers.isEnabled("advancedObjectPicking")) {
+            ShaderProgram old = GameData.spriteBatch.getShader();
+            GameData.spriteBatch.setShader(Debuggers.objectIdProgram);
+            render(matchView, true);
+            GameData.spriteBatch.setShader(old);
+            Pixmap pixmap = Pixmap.createFromFrameBuffer(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
+            Vector3 screenCoords = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
+            Vector3 worldCoords = GameData.getCurrentMatch().getMatchViews().getFirst().gameCamera.unproject(screenCoords);
+            Vector3 viewCoords = GameData.getCurrentMatch().getMatchViews().getFirst().gameViewport.project(worldCoords);
+
+            Debuggers.advancedPickColour = pixmap.getPixel((int) viewCoords.x, (int) viewCoords.y);
+            pixmap.dispose();
+            if(Debuggers.isEnabled("showAdvancedObjectPicking")) return; //Don't render actual objects over the top!
+            ScreenUtils.clear(Color.BLACK); //Hide picking rendering so transparent objects don't break
+        }
+
         ArrayList<AbstractObject> objects = getAllObjects();
         objects.sort((one, two) -> {
             float layer1 = one.getLayer();
@@ -94,7 +117,9 @@ public class Level implements Disposable {
             if(layer1 == layer2) return 0;
             return Float.compare(layer1, layer2);
         });
-        objects.forEach((a) -> a.renderInternal(matchView));
+        objects.forEach((a) -> a.renderInternal(matchView, objectIds));
+
+        if(objectIds) return; //No particles or lights or pathfinding whilst picking!!!
 
         for (ParticleEffect particle : new ArrayList<>(particles)) {
             if(particle.isComplete()) {
@@ -314,5 +339,9 @@ public class Level implements Disposable {
         stopEmitting(particle);
         particles.remove(particle);
         particle.dispose();
+    }
+
+    public int getNextEntityId() {
+        return nextEntityId++;
     }
 }

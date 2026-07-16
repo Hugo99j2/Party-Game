@@ -4,7 +4,7 @@ import com.daniel99j.djutil.maths.MathsContext;
 import com.daniel99j.djutil.maths.MathsInterpreter;
 import com.daniel99j.djutil.maths.MathsParsingError;
 import com.hugo99j.chaosparty.GameData;
-import com.hugo99j.chaosparty.ui.Debuggers;
+import com.hugo99j.chaosparty.ui.debugger.Debuggers;
 
 import java.util.HashMap;
 import java.util.Map;

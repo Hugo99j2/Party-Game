@@ -9,6 +9,7 @@
     "MonitorFixMixin",
     "ResizeSpeederUpperMixin",
     "ShapeRendererLineWidth",
+    "SpriteBatchMixin",
     "WindowAccessor",
     "WindowFixMixin"
   ],

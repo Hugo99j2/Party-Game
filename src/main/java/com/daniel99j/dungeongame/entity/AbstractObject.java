@@ -1,15 +1,20 @@
 package com.daniel99j.dungeongame.entity;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector4;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Disposable;
 import com.daniel99j.djutil.Either;
 import com.daniel99j.djutil.UsageLimited;
+import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.match.MatchView;
+import com.hugo99j.chaosparty.ui.debugger.Debuggers;
 import com.hugo99j.chaosparty.util.NoDebugOption;
 import com.daniel99j.dungeongame.level.Level;
 import com.google.gson.JsonObject;
+import com.hugo99j.chaosparty.util.NonEditable;
+import org.checkerframework.checker.units.qual.C;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -25,6 +30,8 @@ public abstract class AbstractObject implements Disposable {
     private boolean fromWorldLoad = false;
     private UUID uuid;
     private boolean removed = false;
+    @NonEditable
+    private int entityId;
 
     public AbstractObject() {
     }
@@ -32,6 +39,7 @@ public abstract class AbstractObject implements Disposable {
     @UsageLimited
     public final void init(Level level, boolean fromLoad) {
         this.level = level;
+        this.entityId = level.getNextEntityId();
         setPhysicsSettings(createPhysics());
         if(this.beforeLoadPos != null) this.setPos(this.beforeLoadPos);
         this.beforeLoadPos = null;
@@ -60,9 +68,18 @@ public abstract class AbstractObject implements Disposable {
         return level;
     }
 
-    public final void renderInternal(MatchView matchView) {
+    public final void renderInternal(MatchView matchView, boolean objectIds) {
         if(!shouldRender(matchView)) return;
-        render(matchView);
+        if(objectIds) {
+            Color old = GameData.spriteBatch.getColor().cpy();
+            GameData.spriteBatch.setColor(new Color((this.entityId * (Debuggers.isEnabled("showAdvancedObjectPicking") ? 10000 : 1) << 8) | 0xFF));
+            Debuggers.disableChangingColour = true;
+            render(matchView);
+            Debuggers.disableChangingColour = false;
+            GameData.spriteBatch.setColor(old);
+        } else {
+            render(matchView);
+        }
     };
 
     public abstract void render(MatchView matchView);
@@ -273,5 +290,9 @@ public abstract class AbstractObject implements Disposable {
 
     public boolean shouldRender(MatchView view) {
         return !removed;
+    }
+
+    public int getEntityId() {
+        return entityId;
     }
 }

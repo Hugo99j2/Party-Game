@@ -1,28 +1,20 @@
 package com.hugo99j.chaosparty.bot;
 
-import box2dLight.PointLight;
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector4;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.QueryCallback;
-import com.badlogic.gdx.physics.box2d.RayCastCallback;
 import com.daniel99j.djutil.NumberUtils;
 import com.daniel99j.djutil.ValueHolder;
 import com.daniel99j.djutil.pathfinder.CachedPathfinder;
 import com.daniel99j.djutil.pathfinder.PathfindPos;
-import com.daniel99j.djutil.pathfinder.PathfinderOptions;
-import com.daniel99j.dungeongame.entity.AbstractObject;
 import com.daniel99j.dungeongame.entity.CollisionCategories;
 import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.entity.LiquidBarrelObject;
 import com.hugo99j.chaosparty.entity.Player;
 import com.hugo99j.chaosparty.entity.Potato;
 import com.hugo99j.chaosparty.minigame.HotPotatoMinigame;
-import com.hugo99j.chaosparty.ui.ControllerInput;
-import com.hugo99j.chaosparty.ui.ControllerUtil;
-import com.hugo99j.chaosparty.ui.Debuggers;
-import net.java.games.input.AbstractController;
+import com.hugo99j.chaosparty.ui.debugger.Debuggers;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;

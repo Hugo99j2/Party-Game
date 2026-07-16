@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.tools.hiero.unicodefont.effects.Effect;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.*;
@@ -16,7 +15,7 @@ import com.daniel99j.djutil.NumberUtils;
 import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.effect.ActiveEffect;
 import com.hugo99j.chaosparty.effect.EffectType;
-import com.hugo99j.chaosparty.ui.Debuggers;
+import com.hugo99j.chaosparty.ui.debugger.Debuggers;
 
 import java.util.ArrayList;
 import java.util.List;

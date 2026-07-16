@@ -6,14 +6,35 @@ import box2dLight.PointLight;
 import com.badlogic.gdx.graphics.Color;
 import com.daniel99j.dungeongame.entity.*;
 import com.hugo99j.chaosparty.util.GsonUtil;
+import com.hugo99j.chaosparty.util.Logger;
 import com.hugo99j.chaosparty.util.PathUtil;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.hugo99j.chaosparty.entity.ObjectTypes;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.UUID;
 
 public class LevelLoader {
+    public static Level loadFromDataOrDisk(String path) {
+        if(path.contains("/")) {
+            if(!path.endsWith(".map")) {
+                Logger.error("Map file "+path+" does not end with .map!");
+                return null;
+            }
+            try {
+                String data = Files.readString(Path.of(path));
+                Level out = load(data);
+                out.completedLoad();
+                return out;
+            } catch (Exception e) {
+                Logger.error("Failed to load level from disk!", e);
+                return null;
+            }
+        } else return loadFromData(path);
+    }
+
     public static Level loadFromData(String name) {
         try {
             String data = PathUtil.get(PathUtil.data("maps/"+name+".map"), true);

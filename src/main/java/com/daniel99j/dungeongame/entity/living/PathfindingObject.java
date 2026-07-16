@@ -10,7 +10,7 @@ import com.daniel99j.djutil.pathfinder.PathfindPos;
 import com.daniel99j.dungeongame.entity.AbstractObject;
 import com.hugo99j.chaosparty.GameData;
 import com.daniel99j.dungeongame.entity.CollisionCategories;
-import com.hugo99j.chaosparty.ui.Debuggers;
+import com.hugo99j.chaosparty.ui.debugger.Debuggers;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;

@@ -75,7 +75,8 @@
         "rotation": 0,
         "scale": 1.0,
         "tint": "b5b5b5ff",
-        "textureHitbox": false
+        "textureHitbox": false,
+        "animated": false
       }
     },
     {
@@ -93,7 +94,8 @@
         "rotation": 0,
         "scale": 1.0,
         "tint": "ffffffff",
-        "textureHitbox": false
+        "textureHitbox": false,
+        "animated": false
       }
     },
     {
@@ -111,7 +113,8 @@
         "rotation": 0,
         "scale": 1.0,
         "tint": "ffffffff",
-        "textureHitbox": false
+        "textureHitbox": false,
+        "animated": false
       }
     },
     {
@@ -129,7 +132,8 @@
         "rotation": 0,
         "scale": 1.0,
         "tint": "ffffffff",
-        "textureHitbox": false
+        "textureHitbox": false,
+        "animated": false
       }
     },
     {
@@ -147,7 +151,8 @@
         "rotation": 0,
         "scale": 1.0,
         "tint": "ffffffff",
-        "textureHitbox": false
+        "textureHitbox": false,
+        "animated": false
       }
     },
     {
@@ -165,7 +170,8 @@
         "rotation": 0,
         "scale": 1.0,
         "tint": "ffffffff",
-        "textureHitbox": false
+        "textureHitbox": false,
+        "animated": false
       }
     },
     {
@@ -183,7 +189,8 @@
         "rotation": 0,
         "scale": 1.0,
         "tint": "ffffffff",
-        "textureHitbox": false
+        "textureHitbox": false,
+        "animated": false
       }
     },
     {
@@ -201,7 +208,44 @@
         "rotation": 0,
         "scale": 1.0,
         "tint": "ffffffff",
-        "textureHitbox": true
+        "textureHitbox": true,
+        "animated": false
+      }
+    },
+    {
+      "x": 0.0,
+      "y": 0.0,
+      "uuid": "85288a50-ffa3-4f88-8c34-e9b81db8665a",
+      "type": "player_spawn_point",
+      "custom_data": {
+        "id": 1
+      }
+    },
+    {
+      "x": 0.0,
+      "y": 0.0,
+      "uuid": "ee443994-eb02-4f7a-974e-cd95f1d3cd2d",
+      "type": "player_spawn_point",
+      "custom_data": {
+        "id": 2
+      }
+    },
+    {
+      "x": 0.0,
+      "y": 0.0,
+      "uuid": "6512cfd7-711c-4f07-b0fa-c50aa0d87423",
+      "type": "player_spawn_point",
+      "custom_data": {
+        "id": 3
+      }
+    },
+    {
+      "x": 0.0,
+      "y": 0.0,
+      "uuid": "b791d5c4-2a41-4133-aaf4-b3da8ff563eb",
+      "type": "player_spawn_point",
+      "custom_data": {
+        "id": 4
       }
     }
   ],

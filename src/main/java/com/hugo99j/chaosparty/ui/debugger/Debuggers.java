@@ -1,4 +1,4 @@
-package com.hugo99j.chaosparty.ui;
+package com.hugo99j.chaosparty.ui.debugger;
 
 import box2dLight.ConeLight;
 import box2dLight.DirectionalLight;
@@ -10,20 +10,19 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Graphics;
 import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.Vector4;
 import com.badlogic.gdx.physics.box2d.*;
 import com.daniel99j.djutil.MiscUtils;
-import com.daniel99j.djutil.NumberUtils;
 import com.daniel99j.djutil.ValueHolder;
 import com.daniel99j.djutil.pathfinder.PathfindDebugPos;
-import com.daniel99j.djutil.pathfinder.PathfindDebugType;
+import com.google.common.io.PatternFilenameFilter;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.hugo99j.chaosparty.effect.ActiveEffect;
 import com.hugo99j.chaosparty.effect.EffectType;
 import com.hugo99j.chaosparty.util.NoDebugOption;
 import com.hugo99j.chaosparty.util.RequiresRefresh;
@@ -38,7 +37,6 @@ import com.daniel99j.dungeongame.level.LevelLight;
 import com.daniel99j.dungeongame.level.LevelLoader;
 import com.daniel99j.dungeongame.level.SaveConfig;
 import com.google.gson.JsonObject;
-import com.hugo99j.chaosparty.entity.ObjectTypes;
 import com.hugo99j.chaosparty.match.MatchPlayer;
 import com.hugo99j.chaosparty.match.MatchView;
 import com.hugo99j.chaosparty.match.User;
@@ -54,28 +52,30 @@ import imgui.type.ImInt;
 import imgui.type.ImString;
 import org.lwjgl.opengl.GL30;
 
+import java.awt.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.*;
+import java.util.List;
 import java.util.function.Consumer;
+
+import static com.hugo99j.chaosparty.ui.debugger.ObjectEditor.*;
 
 public class Debuggers {
     private static Box2DDebugRenderer box2dDebugRenderer;
     private static ImGuiImplGlfw imGuiGlfw;
     private static ImGuiImplGl3 imGuiGl3;
     private static InputProcessor tmpProcessor;
-    private static final Map<String, ValueHolder<Boolean>> debugOptions = new LinkedHashMap<>();
-    private static UUID selectedObjectId = null;
+    static final Map<String, ValueHolder<Boolean>> debugOptions = new LinkedHashMap<>();
     private static UUID selectedLightId = null;
-    private static Vector2 oldPos;
     private static Vector2 oldLightPos;
-    private static String data = null;
+    static String data = null;
     //short for less memory
     private static final ArrayList<Short> fpsCounter = new ArrayList<>();
-    private static String createObjectData = null;
+    static String createObjectData = null;
     private static final ArrayList<String> logger = new ArrayList<>();
     public static final Map<String, ArrayList<PathfindDebugPos>> pathfindDebuggers = new HashMap<>();
     public static final Map<String, Integer> pathfindDebuggerTimers = new HashMap<>();
@@ -90,38 +90,62 @@ public class Debuggers {
     public static Map<Runnable, ValueHolder<Integer>> customUiRenderers = new HashMap<>();
     public static List<ScreenSS> activeScreenSS = new ArrayList<>();
     private static int screenSS = 0;
+    public static boolean disableChangingColour = false;
+    public static final ShaderProgram objectIdProgram;
+    public static int advancedPickColour = 0;
+
+    private static void option(String name, boolean defaultValue) {
+        debugOptions.put(name, new ValueHolder<>(defaultValue));
+    }
+
+    private static void category(String name) {
+        debugOptions.put("__"+name, new ValueHolder<>(false));
+    }
 
     static {
         if (GameData.DEBUGGING) {
-            debugOptions.put("showing", new ValueHolder<>(false));
-            debugOptions.put("hitboxes", new ValueHolder<>(false));
-            debugOptions.put("lights", new ValueHolder<>(true));
-            debugOptions.put("noclipToggleable", new ValueHolder<>(false));
-            debugOptions.put("noclip", new ValueHolder<>(false));
-            debugOptions.put("selecting", new ValueHolder<>(false));
-            debugOptions.put("selectingLight", new ValueHolder<>(false));
-            debugOptions.put("staticLightUpdates", new ValueHolder<>(false));
-            debugOptions.put("pathfindingRender", new ValueHolder<>(false));
-            debugOptions.put("disablePathfinding", new ValueHolder<>(false));
-            debugOptions.put("freecam", new ValueHolder<>(false));
-            debugOptions.put("tick", new ValueHolder<>(true));
-            debugOptions.put("markers", new ValueHolder<>(false));
-            debugOptions.put("invulnerable", new ValueHolder<>(false));
-            debugOptions.put("pauseTimers", new ValueHolder<>(false));
-            debugOptions.put("pixelPerfect", new ValueHolder<>(false));
-            debugOptions.put("wireframe", new ValueHolder<>(false));
-            debugOptions.put("tickMapEditor", new ValueHolder<>(false));
-            debugOptions.put("demoWindow", new ValueHolder<>(false));
-            debugOptions.put("showBetweenBoxes", new ValueHolder<>(true));
-            debugOptions.put("fakeControllers+1", new ValueHolder<>(false));
-            debugOptions.put("fakeControllers+2", new ValueHolder<>(false));
-            debugOptions.put("screenSSDebugger", new ValueHolder<>(false));
-            debugOptions.put("ignoreInvalidSS", new ValueHolder<>(false));
-            debugOptions.put("showControllerSelect", new ValueHolder<>(false));
-            debugOptions.put("forceSingleView", new ValueHolder<>(false));
-            debugOptions.put("forceFocus", new ValueHolder<>(false));
+            category("World");
+            option("hitboxes", false);
+            option("lights", true);
+            option("noclipToggleable", false);
+            option("noclip", false);
+            option("tick", true);
+            option("staticLightUpdates", false);
+            option("showBetweenBoxes", true);
+            option("disablePathfinding", false);
+            option("invulnerable", false);
 
-            PathUtil.getFilesIn(PathUtil.asset("sounds/")).forEach(e -> audioNames.add(e.replace("assets/sounds/", "").replace(".mp3", "")));
+            category("Rendering");
+            option("wireframe", false);
+            option("pixelPerfect", false);
+            option("pathfindingRender", false);
+            option("markers", false);
+            option("showAdvancedObjectPicking", false);
+
+            category("Minigame");
+            option("pauseTimers", false);
+
+            category("Controllers");
+            option("fakeControllers+1", false);
+            option("fakeControllers+2", false);
+            option("showControllerSelect", false);
+
+            category("Map Editor");
+            option("alignPixel", true);
+
+            category("UI");
+            option("screenSSDebugger", false);
+            option("ignoreInvalidSS", false);
+
+            category("Misc");
+            option("showing", false);
+            option("forceSingleView", false);
+            option("forceFocus", false);
+            option("advancedObjectPicking", true);
+            option("demoWindow", false);
+            option("tickMapEditor", false);
+            option("selectingLight", false);
+            option("freecam", false);
 
             try {
                 for (JsonElement options : GsonUtil.parse(Files.readString(Path.of("debug.json"))).get("options").getAsJsonArray()) {
@@ -133,6 +157,44 @@ public class Debuggers {
             } catch (Exception ignored) {
 
             }
+
+            PathUtil.getFilesIn(PathUtil.asset("sounds/")).forEach(e -> audioNames.add(e.replace("assets/sounds/", "").replace(".mp3", "")));
+            String vertexShader = "attribute vec4 " + ShaderProgram.POSITION_ATTRIBUTE + ";\n" //
+                + "attribute vec4 " + ShaderProgram.COLOR_ATTRIBUTE + ";\n" //
+                + "attribute vec2 " + ShaderProgram.TEXCOORD_ATTRIBUTE + "0;\n" //
+                + "uniform mat4 u_projTrans;\n" //
+                + "varying vec4 v_color;\n" //
+                + "varying vec2 v_texCoords;\n" //
+                + "\n" //
+                + "void main()\n" //
+                + "{\n" //
+                + "   v_color = " + ShaderProgram.COLOR_ATTRIBUTE + ";\n" //
+                + "   v_color.a = v_color.a * (255.0/254.0);\n" //
+                + "   v_texCoords = " + ShaderProgram.TEXCOORD_ATTRIBUTE + "0;\n" //
+                + "   gl_Position =  u_projTrans * " + ShaderProgram.POSITION_ATTRIBUTE + ";\n" //
+                + "}\n";
+            String fragmentShader =
+                """
+                    #ifdef GL_ES
+                    #define LOWP lowp
+                    precision mediump float;
+                    #else
+                    #define LOWP
+                    #endif
+                    varying LOWP vec4 v_color;
+                    varying vec2 v_texCoords;
+                    uniform sampler2D u_texture;
+                    uniform vec2 u_resolution;
+                    void main() {
+                        float alpha = floor(texture2D(u_texture, v_texCoords).a);
+                        gl_FragColor = v_color * alpha;
+                    }""";
+
+            ShaderProgram shader = new ShaderProgram(vertexShader, fragmentShader);
+            if (!shader.isCompiled()) throw new IllegalArgumentException("Error compiling object id shader: " + shader.getLog());
+            objectIdProgram = shader;
+        } else {
+            objectIdProgram = null;
         }
     }
 
@@ -147,6 +209,7 @@ public class Debuggers {
             ImGuiIO io = ImGui.getIO();
             io.getFonts().addFontDefault();
             io.getFonts().build();
+            io.addConfigFlags(ImGuiConfigFlags.DockingEnable);
             imGuiGlfw.init(windowHandle, true);
             imGuiGl3.init("#version 150");
 
@@ -182,7 +245,9 @@ public class Debuggers {
             save();
         }
 
-        if (isDebuggerOpen()) {
+        boolean isInMapEditor = GameData.getCurrentMatch() != null && GameData.getCurrentMatch().getCurrentMinigame() instanceof MapEditor;
+
+        if (isDebuggerOpen() || isInMapEditor) {
             if (isEnabled("staticLightUpdates") && GameData.level != null) {
                 for (LevelLight<?> light : GameData.level.getLights()) {
                     if (light.light().isStaticLight()) {
@@ -207,11 +272,62 @@ public class Debuggers {
             //on wayland you can't figure out which monitor... use primary instead.
             boolean isFullScreenOrMaximised = Gdx.graphics.isFullscreen() || (Lwjgl3ApplicationConfiguration.getDisplayMode(Gdx.graphics.getPrimaryMonitor()).width == Gdx.graphics.getWidth() && Gdx.graphics.getHeight()+200 >= Lwjgl3ApplicationConfiguration.getDisplayMode(Gdx.graphics.getPrimaryMonitor()).height);
 
+            ImGui.dockSpaceOverViewport(0, ImGui.getMainViewport(), ImGuiDockNodeFlags.PassthruCentralNode);
+
             if(!isFullScreenOrMaximised && !forceShow) {
                 ImGui.begin("Are you sure?");
                 if(ImGui.button("Force show UI")) forceShow = true;
                 ImGui.end();
             } else {
+                ImGui.beginMainMenuBar();
+                if(isInMapEditor) {
+                    if(ImGui.beginMenu("File")) {
+                        if(ImGui.menuItem("Open... CTRL+O")) {
+                            FileDialog dialog = new FileDialog((Frame) null, "Select map to open", FileDialog.LOAD);
+                            dialog.setFilenameFilter(new PatternFilenameFilter(".*\\.map$"));
+                            dialog.setVisible(true);
+
+                            String directory = dialog.getDirectory();
+                            String file = dialog.getFile();
+
+                            //selected a file
+                            if (file != null) {
+                                Logger.info("Loaded "+directory+file);
+                                GameData.startMatch(List.of(new MatchPlayer(User.getUser(5)))).setCurrentMinigame(new MapEditor(directory+file));
+                            }
+
+                            dialog.dispose();
+
+                        }
+                        if(ImGui.beginMenu("Open map...")) {
+                            for (String maps : PathUtil.getFilesIn(PathUtil.data("maps"))) {
+                                String real = maps.replace(".map", "").replace("data/maps/", "");
+                                if(ImGui.menuItem(real)) {
+                                    Logger.info("Loaded "+real);
+                                    GameData.startMatch(List.of(new MatchPlayer(User.getUser(5)))).setCurrentMinigame(new MapEditor(real));
+                                }
+                            }
+                            ImGui.endMenu();
+                        }
+                        if(ImGui.menuItem("Save   CTRL+S")) {
+                            try {
+                                Files.write(Path.of(PathUtil.codingDir(PathUtil.data("maps/" + GameData.getCurrentMatch().getCurrentMinigame().getMapName() + ".map"))), LevelLoader.saveLevel(GameData.level).getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+                                Logger.info("Saved map");
+                            } catch (Exception e) {
+                                Logger.error("Failed to save map", e);
+                            }
+                        }
+                        ImGui.endMenu();
+                    }
+                } else {
+                    if(ImGui.menuItem("Game")) {
+                        if(ImGui.menuItem("Quick-Load")) {
+
+                        }
+                    }
+                }
+                ImGui.endMainMenuBar();
+
                 ImGui.begin("Logger");
                 for (String s : logger) {
                     if (s.startsWith("<error>")) {
@@ -234,10 +350,6 @@ public class Debuggers {
                     }
                 }
 
-                if (ImGui.button("Kill")) {
-                    //GameData.player.damage(100000);
-                }
-
                 if (ImGui.button("Load map")) {
                     try {
                         GameData.startMatch(List.of(new MatchPlayer(User.getUser(5)))).setCurrentMinigame(new MapEditor(newMapNames.get(newMapEditorName)));
@@ -251,12 +363,16 @@ public class Debuggers {
                     newMapEditorName = newName.get();
                 }
 
+                ValueHolder<Boolean> lastHeaderActive = new ValueHolder<>(false);
                 debugOptions.forEach((s, valueHolder) -> {
-                    if (!s.equals("showing") && !s.equals("selecting") && !s.equals("selectingLight"))
-                        if (ImGui.checkbox(s, valueHolder.object)) {
+                    if (s.startsWith("__")) {
+                        lastHeaderActive.object = ImGui.collapsingHeader(s.replace("__", ""));
+                    } else {
+                        if (lastHeaderActive.object && ImGui.checkbox(s, valueHolder.object)) {
                             valueHolder.object = !valueHolder.object;
                             save();
                         }
+                    }
                 });
 
                 float[] fpsArray = new float[fpsCounter.size()];
@@ -349,15 +465,7 @@ public class Debuggers {
                 }
                 ImGui.end();
 
-                ImGui.begin("Objects");
-
-                if (createObjectData != null) {
-                    renderObjectCreator();
-                } else {
-                    hoveredObject = renderObjectSelector();
-                }
-
-                ImGui.end();
+                renderObjectEditor();
 
                 ImGui.begin("ScreenSS");
                 if(Debuggers.isEnabled("screenSSDebugger")) {
@@ -487,13 +595,6 @@ public class Debuggers {
                 Gdx.input.setInputProcessor(null);
             }
             //END
-
-            if (ImGui.isWindowHovered(ImGuiHoveredFlags.AnyWindow) || ImGui.isWindowFocused(
-                ImGuiFocusedFlags.AnyWindow)) {
-                ImGui.getStyle().setAlpha(1.0f);
-            } else {
-                ImGui.getStyle().setAlpha(0.2f);
-            }
         }
 
         List<Runnable> customRenderersToRemove = new ArrayList<>();
@@ -558,207 +659,6 @@ public class Debuggers {
                 addSS(activeScreenSS1, i, selectedHolder, prepend+"    ");
             }
         }
-    }
-
-    private static void renderObjectCreator() {
-        if (ImGui.button("Edit objects"))
-            createObjectData = null;
-        else {
-            ImString objectCreator = new ImString(createObjectData, 10000);
-
-            ImGui.inputTextMultiline("Create object", objectCreator, ImGuiInputTextFlags.None);
-
-            createObjectData = objectCreator.get();
-
-            boolean create = ImGui.button("Create");
-            ImGui.sameLine();
-            boolean forcedUUID = ImGui.button("Create (force UUID)");
-            if (create || forcedUUID) {
-                try {
-                    JsonObject data = GsonUtil.parse(createObjectData);
-                    if (!forcedUUID) {
-                        data.addProperty("uuid", UUID.randomUUID().toString());
-                    }
-                    AbstractObject object = LevelLoader.createObject(data, GameData.level);
-                    createObjectData = null;
-                    assert object != null;
-                    selectedObjectId = object.getUUID();
-                } catch (Exception e) {
-                    Logger.error("Error creating object", e);
-                }
-            }
-
-            ImGui.separatorText("Default Objects");
-            ObjectTypes.types.forEach((n, c) -> {
-                if(ImGui.button("Create " + n)) {
-                    try {
-                        AbstractObject object = c.constructor().get();
-                        GameData.getLevelOrThrow().addObject(object);
-                        createObjectData = null;
-                        selectedObjectId = object.getUUID();
-                    } catch (Exception e) {
-                        Logger.error("Error adding object", e);
-                    }
-                }
-            });
-        }
-    }
-
-    private static UUID renderObjectSelector() {
-        if(GameData.level == null) return null;
-        UUID hoveredObject = null;
-        if (ImGui.button("Add object")) createObjectData = "";
-
-        ImGui.sameLine();
-
-        ImVec4 oldColour = ImGui.getStyle().getColor(ImGuiCol.Button);
-        ImVec4 selectedColour = ImGui.getStyle().getColor(ImGuiCol.ButtonActive);
-        if (isEnabled("selecting"))
-            ImGui.getStyle().setColor(ImGuiCol.Button, selectedColour.x, selectedColour.y, selectedColour.z, selectedColour.w);
-        if (ImGui.button("Pick Object")) {
-            debugOptions.get("selecting").object = !isEnabled("selecting");
-        } else {
-            if (debugOptions.get("selecting").object) {
-                if (ImGui.isMouseClicked(ImGuiMouseButton.Left)) {
-                    selectedObjectId = getHoveredObject() == null ? null : getHoveredObject().getUUID();
-                    debugOptions.get("selecting").object = false;
-                } else {
-                    hoveredObject = getHoveredObject() == null ? null : getHoveredObject().getUUID();
-                }
-            }
-        }
-        ImGui.getStyle().setColor(ImGuiCol.Button, oldColour.x, oldColour.y, oldColour.z, oldColour.w);
-
-        ImGui.beginChild("Left Panel", new ImVec2(300, 0), ImGuiChildFlags.Border | ImGuiChildFlags.ResizeX);
-        ImGui.separatorText("All Objects");
-
-        if (ImGui.beginTable("Object Selector", 1, ImGuiTableFlags.RowBg)) {
-            int id = 0;
-            for (AbstractObject allObject : GameData.getLevelOrThrow().getAllObjects()) {
-                ImGui.tableNextRow();
-                ImGui.tableNextColumn();
-                ImGui.pushID(id);
-                int flags = ImGuiSelectableFlags.SpanAllColumns;
-                boolean selected = allObject.getUUID().equals(selectedObjectId);
-                if (selected)
-                    flags |= ImGuiTreeNodeFlags.Selected;
-                if (ImGui.selectable(allObject.toString() + " (" + allObject + ")", selected, flags))
-                    selectedObjectId = allObject.getUUID();
-                if (ImGui.isItemHovered()) hoveredObject = allObject.getUUID();
-                ImGui.popID();
-
-                id++;
-            }
-            ImGui.endTable();
-        }
-
-        ImGui.endChild();
-
-        ImGui.sameLine();
-
-        ImGui.beginChild("Right Panel", new ImVec2(0, 0), ImGuiChildFlags.Border);
-
-        ImGui.separatorText("Current Object");
-
-        AbstractObject selectedObject;
-        if (selectedObjectId != null && (selectedObject = GameData.level.getObjectByUUID(selectedObjectId)) != null) {
-
-            Vector2 middle = oldPos == null ? selectedObject.getPos() : oldPos;
-            int posOffset = ImGui.isKeyDown(ImGuiKey.ModShift) ? 1 : 10;
-
-            boolean changing = false;
-            slider("X Pos", selectedObject.getPos().x, selectedObject::setX, middle.x - posOffset, middle.x + posOffset, ImGui.isKeyDown(ImGuiKey.ModAlt) ? "%.0f" : "%.3f");
-            if (ImGui.isItemActive() && ImGui.isKeyDown(ImGuiKey.ModShift)) {
-                float x = selectedObject.getPos().x;
-                float snappedX = Math.round(x * 16f) / 16f;
-                selectedObject.setX(snappedX);
-            }
-            if (ImGui.isItemActive()) changing = true;
-            slider("Y Pos", selectedObject.getPos().y, selectedObject::setY, middle.y - posOffset, middle.y + posOffset, ImGui.isKeyDown(ImGuiKey.ModAlt) ? "%.0f" : "%.3f");
-            if (ImGui.isItemActive() && ImGui.isKeyDown(ImGuiKey.ModShift)) {
-                float y = selectedObject.getPos().y;
-                float snappedX = Math.round(y * 16f) / 16f;
-                selectedObject.setY(snappedX);
-            }
-            if (ImGui.isItemActive()) changing = true;
-
-            if (ImGui.button("TP to player")) selectedObject.setPos(GameData.getCurrentMatch().getPlayers().getFirst().getPlayerObject().getPos());
-            ImGui.sameLine();
-            if (ImGui.button("TP player to this")) GameData.getCurrentMatch().getPlayers().getFirst().getPlayerObject().setPos(selectedObject.getPos());
-
-            if (oldPos == null && changing) {
-                oldPos = selectedObject.getPos();
-            }
-            if (oldPos != null && !changing) {
-                oldPos = null;
-            }
-
-            ImGui.separatorText("Java variables");
-            if(ImGui.collapsingHeader("Show")) addVariables(selectedObject, selectedObject.getClass());
-
-            ImGui.separatorText("Data");
-            if (data != null) {
-                ImString input = new ImString(data, data.length() + 10000);
-
-                ImGui.inputTextMultiline(" ", input, ImGuiInputTextFlags.None);
-
-                data = input.get();
-            }
-            JsonObject object = selectedObject.write();
-            data = GsonUtil.PARSER.toJson(object);
-
-            if (ImGui.button("Refresh")) {
-                try {
-                    ToRun.run(() -> {
-                        JsonObject data = selectedObject.write();
-                        AbstractObject o = LevelLoader.createObject(data, GameData.level);
-                        selectedObject.dispose();
-                        //noinspection usagelimited
-                        selectedObject.setUUIDReallyUnsafeDoNotUse(UUID.randomUUID());
-                        selectedObjectId = o.getUUID();
-                    });
-                } catch (Exception e) {
-                    Logger.error("Error refreshing object", e);
-                }
-            }
-
-            ImGui.sameLine();
-
-            if (ImGui.button("Duplicate")) {
-                try {
-                    JsonObject data = selectedObject.write();
-                    data.addProperty("uuid", UUID.randomUUID().toString());
-                    AbstractObject o = LevelLoader.createObject(data, GameData.level);
-                    selectedObjectId = o.getUUID();
-                } catch (Exception e) {
-                    Logger.error("Error duplicating object", e);
-                }
-            }
-            ImGui.sameLine();
-
-            if (ImGui.button("Delete your computer")) {
-                for (int i = 0; i < 500; i++) {
-                    try {
-                        JsonObject data = selectedObject.write();
-                        data.addProperty("uuid", UUID.randomUUID().toString());
-                        AbstractObject o = LevelLoader.createObject(data, GameData.level);
-                        o.setPos(o.getPos().add(NumberUtils.getRandomFloat(-100, 100), NumberUtils.getRandomFloat(-100, 100)));
-                        selectedObjectId = o.getUUID();
-                    } catch (Exception e) {
-                        Logger.error("Error duplicating object", e);
-                    }
-                }
-            }
-            ImGui.sameLine();
-
-            if (ImGui.button("Delete")) {
-                GameData.level.removeObject(selectedObject);
-            }
-        }
-
-        ImGui.endChild();
-
-        return hoveredObject;
     }
 
     private static UUID renderLightSelector() {
@@ -917,7 +817,7 @@ public class Debuggers {
         }
     }
 
-    private static void slider(String name, float getter, Consumer<Float> setter, float min, float max, String format) {
+    static void slider(String name, float getter, Consumer<Float> setter, float min, float max, String format) {
         if (Float.isFinite(min) && Float.isFinite(max)) {
             float[] check = {getter};
             if (ImGui.sliderFloat(name, check, min, max, format)) {
@@ -928,7 +828,7 @@ public class Debuggers {
         }
     }
 
-    private static AbstractObject getHoveredObject() {
+    static AbstractObject getHoveredObject() {
         float mouseX = ImGui.getMousePosX();
         float mouseY = ImGui.getMousePosY();
 
@@ -999,7 +899,7 @@ public class Debuggers {
     }
 
 
-    private static void addVariables(AbstractObject selectedObject, Class<?> clazz) {
+    static void addVariables(AbstractObject selectedObject, Class<?> clazz) {
         for (Field declaredField : clazz.getDeclaredFields()) {
             if(declaredField.getAnnotation(NoDebugOption.class) != null || Modifier.isStatic(declaredField.getModifiers()) || Modifier.isFinal(declaredField.getModifiers())) continue;
             declaredField.setAccessible(true);
@@ -1007,6 +907,9 @@ public class Debuggers {
                 ImGui.textColored(255, 0, 0, 255, "R");
                 ImGui.setItemTooltip("Requires refresh");
                 ImGui.sameLine();
+            }
+            if(declaredField.getAnnotation(NonEditable.class) != null) {
+                ImGui.beginDisabled();
             }
             try {
                 addVariable(declaredField.getName(), declaredField.getType(), declaredField.get(selectedObject), (t) -> {
@@ -1019,6 +922,9 @@ public class Debuggers {
             } catch (Exception e) {
                 Logger.error("Error adding variable", e);
                 ImGui.text("Error adding variable: " + e.getMessage());
+            }
+            if(declaredField.getAnnotation(NonEditable.class) != null) {
+                ImGui.endDisabled();
             }
         }
 

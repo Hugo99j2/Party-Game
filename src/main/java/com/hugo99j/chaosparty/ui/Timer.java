@@ -1,8 +1,8 @@
 package com.hugo99j.chaosparty.ui;
 
-import com.badlogic.gdx.utils.Align;
 import com.daniel99j.dungeongame.ui.renderable.RenderState;
 import com.daniel99j.dungeongame.ui.renderable.Renderable;
+import com.hugo99j.chaosparty.ui.debugger.Debuggers;
 import com.hugo99j.chaosparty.util.RenderUtil;
 import com.hugo99j.chaosparty.GameData;
 

@@ -51,7 +51,7 @@ public class HotPotatoMinigame extends AbstractMinigame {
     @Override
     public void start() {
         super.start();
-        timer = new Timer("timer", 60, 2, false);
+        timer = new Timer("timer", 15, 2, false);
         timer.setStyle(ss.get("timer"));
         music = SoundManager.getSound("potato_music").playSingle(1);
         hotEffect = new ParticleEffect();
@@ -165,7 +165,7 @@ public class HotPotatoMinigame extends AbstractMinigame {
             matchView.getActiveEffects().clear();
         }
         this.hotPlayer = hotPlayer;
-        this.timer.setTime(10, false);
+        this.timer.setTime(15, false);
         for (MatchView matchView : GameData.getCurrentMatch().getMatchViews()) {
             if(matchView.getPlayer() == hotPlayer) {
                 matchView.addEffect(EffectType.LIQUID, 1000);

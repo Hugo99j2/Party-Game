@@ -55,13 +55,13 @@ public class UiScreen implements Screen {
             }
         }
         if(Controllers.getCurrent() != null && RenderUtil.isFocused()) {
-            ControllerUtil controller = ((ControllerUtil) Controllers.getCurrent());
+            ControllerUtil controller = ControllerUtil.getCurrent();
             if(controller.wasJustPressed(ControllerInput.LEFT_STICK_ANY)) {
                 Vector2 controllerStickMove = new Vector2(controller.getValue(ControllerInput.LEFT_STICK_RIGHT), controller.getValue(ControllerInput.LEFT_STICK_UP));
                 if (controllerStickMove.len() > 0) controllerStick(controllerStickMove);
             }
 
-            if(((ControllerUtil) Controllers.getCurrent()).wasJustPressed(ControllerInput.A) && controllerSelected != null) {
+            if(ControllerUtil.getCurrent().wasJustPressed(ControllerInput.A) && controllerSelected != null) {
                 controllerSelected.onDown(0, 0, ClickType.LEFT);
             }
         }

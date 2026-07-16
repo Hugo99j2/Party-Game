@@ -18,10 +18,7 @@ public class UndoRedoHistory {
     protected static void render() {
         if(GameData.level == null || GameData.getCurrentMatch() == null || !(GameData.getCurrentMatch().getCurrentMinigame() instanceof MapEditor)) return;
         if (Gdx.input.isKeyJustPressed(Input.Keys.Z) && Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)) {
-            loadRevision(currentRevision-1);
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.Y) && Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)) {
-            loadRevision(currentRevision+1);
+            loadRevision(currentRevision+(Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) ? 1 : -1));
         }
     }
 

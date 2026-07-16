@@ -1,18 +1,28 @@
 package com.hugo99j.chaosparty.util;
 
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.TextureData;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.math.Vector4;
+import com.badlogic.gdx.graphics.glutils.FrameBuffer;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.hugo99j.chaosparty.GameData;
+import net.fabricmc.loader.impl.util.log.Log;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
+import java.util.zip.Deflater;
 
 import static com.hugo99j.chaosparty.GameData.px;
 
 public class ImageUtil {
     private static final Map<String, TextureAtlas.AtlasRegion> cachedSprites = new HashMap<>();
+    private static final Map<String, Rectangle> cachedSpriteSizes = new HashMap<>();
 
     public static TextureAtlas.AtlasRegion get(String name) {
         if(cachedSprites.containsKey(name)) return cachedSprites.get(name);
@@ -28,46 +38,113 @@ public class ImageUtil {
 
     public static void clear() {
         cachedSprites.clear();
+        cachedSpriteSizes.clear();
     }
 
-    public static Vector4 getSize(String texture) {
-        TextureAtlas.AtlasRegion textureRegion = get(texture);
-        TextureData textureData = textureRegion.getTexture().getTextureData();
-        if (!textureData.isPrepared()) {
-            textureData.prepare();
+    /**
+     * Returns startX, startY, width, height
+     */
+    public static Rectangle getSize(String texture) {
+        if(!cachedSpriteSizes.containsKey(texture)) {
+            JsonArray jsonArray = GsonUtil.parse(PathUtil.get(PathUtil.generated("image_bounds.json"), true)).get("values").getAsJsonObject().get(texture).getAsJsonArray();
+            cachedSpriteSizes.put(texture, new Rectangle(jsonArray.get(0).getAsInt(), jsonArray.get(1).getAsInt(), jsonArray.get(2).getAsInt(), jsonArray.get(3).getAsInt()));
         }
-        Pixmap pixmap = textureData.consumePixmap();
+        return cachedSpriteSizes.get(texture);
+    }
 
-        Vector4 result = new Vector4(Float.MAX_VALUE, Float.MAX_VALUE, -Float.MAX_VALUE, -Float.MAX_VALUE);
-        boolean found = false;
+    public static boolean generateImageBounds() {
+        boolean mustRecalculate = true;
+        try {
+            int realHash = Arrays.hashCode(Files.readAllBytes(Path.of(PathUtil.codingDir(PathUtil.generated("atlases/main.png")))));
+            int lastHash = GsonUtil.parse(PathUtil.get(PathUtil.generated("image_bounds.json"), false)).get("version").getAsInt();
+            if(realHash == lastHash) mustRecalculate = false;
+        } catch (Exception e) {}
 
-        for (int x = 0; x < textureRegion.packedWidth; x++) {
-            for (int y = 0; y < textureRegion.packedHeight; y++) {
-                int pixel = pixmap.getPixel(x+textureRegion.getRegionX(), y+textureRegion.getRegionY());
-                int alpha = (pixel >>> 24) & 0xFF;
+        if(!mustRecalculate) {
+            Logger.info("No image bounds changes.");
+            return false;
+        }
 
-                if (alpha > 0) {
-                    if (!found) {
-                        result.set(x, y, x, y);
-                        found = true;
-                    } else {
-                        result.x = Math.min(result.x, x);
-                        result.y = Math.min(result.y, y);
-                        result.z = Math.max(result.z, x);
-                        result.w = Math.max(result.w, y);
+        Logger.info("Generating image bounds");
+        int maxSize = 128;
+
+        JsonObject out = new JsonObject();
+        JsonObject values = new JsonObject();
+
+        FrameBuffer buffer = new FrameBuffer(Pixmap.Format.RGBA8888, maxSize, maxSize, false);
+        buffer.begin();
+        OrthographicCamera camera = new OrthographicCamera();
+        Viewport uiViewport = new ScreenViewport(camera);
+        uiViewport.update(128, 128, true);
+        uiViewport.apply();
+        GameData.spriteBatch.setProjectionMatrix(camera.combined);
+
+        GameData.spriteBatch.begin();
+
+        List<String> paths = PathUtil.getFilesIn("assets/textures/");
+        for (String fileFull : paths) {
+            String file = fileFull.replace(".png", "").replace("assets/textures/", "");
+            if(!fileFull.endsWith(".png")) {
+                Logger.info(file +" was not an image, skipping");
+                continue;
+            }
+            TextureAtlas.AtlasRegion region = ImageUtil.get(file);
+            if(region.originalHeight > maxSize || region.originalWidth > maxSize) {
+                Logger.info(file +" was too large, skipping");
+                continue;
+            }
+
+            GameData.spriteBatch.draw(region, 0, 0, region.getRegionWidth(), region.getRegionHeight());
+            //noinspection GDXJavaFlushInsideLoop
+            GameData.spriteBatch.flush();
+
+            Pixmap pixmap = Pixmap.createFromFrameBuffer(0, 0, maxSize, maxSize);
+            PixmapIO.writePNG(Gdx.files.local("gen/output_"+ file +".png"), pixmap, Deflater.DEFAULT_COMPRESSION, true);
+
+            boolean foundPixel = false;
+            int minX = 10000, minY = 100000, maxX = -1, maxY = -1;
+
+            for (int xPos = 0; xPos < maxSize; xPos++) {
+                for (int yPos = 0; yPos < maxSize; yPos++) {
+                    int alpha = ((pixmap.getPixel(xPos, yPos) >> 24) & 0xFF);
+                    if (alpha > 0) {
+                        foundPixel = true;
+                        if (xPos < minX) minX = xPos;
+                        if (xPos > maxX) maxX = xPos;
+                        if (yPos < minY) minY = yPos;
+                        if (yPos > maxY) maxY = yPos;
                     }
                 }
             }
-        }
 
-        if (!found) {
-            throw new RuntimeException("Failed to find texture " + texture);
-        }
+            Rectangle boundingBox = new Rectangle(minX, minY, maxX-minX+1, maxY-minY+1);
+            if (!foundPixel) boundingBox = new Rectangle(0, 0, 0, 0);
 
-        if (textureData.disposePixmap()) {
+            JsonArray array = new JsonArray();
+            array.add((int) boundingBox.x);
+            array.add((int) boundingBox.y);
+            array.add((int) boundingBox.width);
+            array.add((int) boundingBox.height);
+            values.add(file, array);
             pixmap.dispose();
-        }
 
-        return new Vector4(px(result.x-1), px(result.y+1), px(result.z), px(result.w));
+            ScreenUtils.clear(Color.CLEAR);
+            Logger.info("Completed "+ file +" ("+(paths.indexOf(fileFull)+1)+"/"+paths.size()+")");
+        }
+        GameData.spriteBatch.end();
+        buffer.end();
+        buffer.dispose();
+
+        try {
+            out.add("values", values);
+            out.addProperty("version", Arrays.hashCode(Files.readAllBytes(Path.of(PathUtil.codingDir(PathUtil.generated("atlases/main.png"))))));
+
+            Path p = Path.of(PathUtil.codingDir("gen/image_bounds.json"));
+            Files.writeString(p, GsonUtil.PARSER_COMPACT.toJson(out));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        Logger.info("Bounds generation complete.");
+        return true;
     }
 }

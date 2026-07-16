@@ -1,20 +1,8 @@
 package com.hugo99j.chaosparty.minigame;
 
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Align;
 import com.daniel99j.dungeongame.sounds.SoundInstance;
 import com.daniel99j.dungeongame.sounds.SoundManager;
-import com.daniel99j.dungeongame.ui.renderable.RenderState;
-import com.daniel99j.dungeongame.ui.screenss.CombinedScreenSS;
-import com.daniel99j.dungeongame.ui.screenss.ScreenSSBuilder;
-import com.hugo99j.chaosparty.GameData;
-import com.hugo99j.chaosparty.entity.Sheep;
-import com.hugo99j.chaosparty.entity.TilesetObject;
-import com.hugo99j.chaosparty.match.MatchPlayer;
 import com.hugo99j.chaosparty.match.MatchView;
-import com.hugo99j.chaosparty.ui.Timer;
-import com.hugo99j.chaosparty.util.RenderUtil;
-import com.hugo99j.chaosparty.util.ToRun;
 
 import java.util.List;
 

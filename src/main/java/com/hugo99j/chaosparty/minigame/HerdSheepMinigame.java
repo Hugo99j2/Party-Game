@@ -8,7 +8,7 @@ import com.daniel99j.dungeongame.ui.renderable.RenderState;
 import com.daniel99j.dungeongame.ui.screenss.CombinedScreenSS;
 import com.daniel99j.dungeongame.ui.screenss.ScreenSSBuilder;
 import com.hugo99j.chaosparty.entity.Sheep;
-import com.hugo99j.chaosparty.entity.TilesetObject;
+import com.hugo99j.chaosparty.entity.SpriteObject;
 import com.hugo99j.chaosparty.match.MatchPlayer;
 import com.hugo99j.chaosparty.match.MatchView;
 import com.hugo99j.chaosparty.util.RenderUtil;
@@ -62,19 +62,19 @@ public class HerdSheepMinigame extends AbstractMinigame {
         timer.setStyle(ss.get("timer"));
         music = SoundManager.getSound("sheep_music").playSingle(1);
 
-        for (TilesetObject o : GameData.getLevelOrThrow().getObjectsBetweenClass(new Vector2(1, 9), new Vector2(11, 16), TilesetObject.class, false)) {
+        for (SpriteObject o : GameData.getLevelOrThrow().getObjectsBetweenClass(new Vector2(1, 9), new Vector2(11, 16), SpriteObject.class, false)) {
             o.setTint(GameData.getCurrentMatch().getPlayers().getFirst().getUser().getColour());
         }
-        for (TilesetObject o : GameData.getLevelOrThrow().getObjectsBetweenClass(new Vector2(20, 9), new Vector2(30, 16), TilesetObject.class, false)) {
+        for (SpriteObject o : GameData.getLevelOrThrow().getObjectsBetweenClass(new Vector2(20, 9), new Vector2(30, 16), SpriteObject.class, false)) {
             o.setTint(GameData.getCurrentMatch().getPlayers().get(1).getUser().getColour());
         }
         if (GameData.getCurrentMatch().getPlayers().size() >= 3) {
-            for (TilesetObject o : GameData.getLevelOrThrow().getObjectsBetweenClass(new Vector2(1, 1), new Vector2(11, 8), TilesetObject.class, false)) {
+            for (SpriteObject o : GameData.getLevelOrThrow().getObjectsBetweenClass(new Vector2(1, 1), new Vector2(11, 8), SpriteObject.class, false)) {
                 o.setTint(GameData.getCurrentMatch().getPlayers().get(2).getUser().getColour());
             }
         }
         if (GameData.getCurrentMatch().getPlayers().size() == 4) {
-            for (TilesetObject o : GameData.getLevelOrThrow().getObjectsBetweenClass(new Vector2(20, 1), new Vector2(30, 8), TilesetObject.class, false)) {
+            for (SpriteObject o : GameData.getLevelOrThrow().getObjectsBetweenClass(new Vector2(20, 1), new Vector2(30, 8), SpriteObject.class, false)) {
                 o.setTint(GameData.getCurrentMatch().getPlayers().get(3).getUser().getColour());
             }
         }

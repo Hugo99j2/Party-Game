@@ -70,6 +70,7 @@ public class Main extends Game {
         }, true));
         glfwErrorCallback.set();
 
+        boolean needsRestart = false;
         if(Objects.equals(System.getenv("CODING_GAME"), "1")) {
             try {
                 Path path = Path.of(PathUtil.codingDir(PathUtil.generated("atlases/main.png")));
@@ -80,7 +81,7 @@ public class Main extends Game {
                 TexturePacker.process(settings, PathUtil.codingDir(PathUtil.asset("textures")), PathUtil.codingDir(PathUtil.generated("atlases")), "main");
                 int newFile = Arrays.hashCode(Files.readAllBytes(path));
                 if(oldFile != newFile) {
-                    throw new RuntimeException("Please restart as atlases have changed!!!");
+                    needsRestart = true;
                 } else {
                     Logger.info("No atlas changes.");
                 }
@@ -91,6 +92,14 @@ public class Main extends Game {
 
         //dont load it before texture packer else it will crash
         GameData.init(this);
+
+        if(Objects.equals(System.getenv("CODING_GAME"), "1")) {
+            needsRestart = needsRestart || ImageUtil.generateImageBounds();
+        }
+
+        if(needsRestart) {
+            throw new RuntimeException("Please restart as atlases/image bounds have changed!!!");
+        }
 
         Gdx.input.setInputProcessor(new InputAdapter() {
             @Override

@@ -22,6 +22,7 @@ import com.daniel99j.djutil.pathfinder.PathfindDebugType;
 import com.hugo99j.chaosparty.GameData;
 import com.daniel99j.dungeongame.entity.*;
 import com.hugo99j.chaosparty.match.MatchView;
+import com.hugo99j.chaosparty.minigame.MapEditor;
 import com.hugo99j.chaosparty.ui.debugger.Debuggers;
 import com.hugo99j.chaosparty.util.RenderUtil;
 import imgui.ImGui;
@@ -93,7 +94,7 @@ public class Level implements Disposable {
     }
 
     public void render(MatchView matchView, boolean objectIds) {
-        if(!objectIds && GameData.DEBUGGING && Debuggers.isEnabled("advancedObjectPicking")) {
+        if(!objectIds && GameData.DEBUGGING && Debuggers.isEnabled("advancedObjectPicking") && GameData.getCurrentMatch() != null && GameData.getCurrentMatch().getCurrentMinigame() instanceof MapEditor) {
             ShaderProgram old = GameData.spriteBatch.getShader();
             GameData.spriteBatch.setShader(Debuggers.objectIdProgram);
             render(matchView, true);
@@ -237,7 +238,7 @@ public class Level implements Disposable {
     }
 
     public @Nullable AbstractObject getObjectByUUID(UUID uuid) {
-        return this.getAllObjects().stream().filter((object -> object.getUUID() == uuid && !object.isRemoved())).findFirst().orElse(null);
+        return this.getAllObjects().stream().filter((object -> object.getUUID().equals(uuid) && !object.isRemoved())).findFirst().orElse(null);
     }
 
     public ArrayList<LevelLight<?>> getLights() {

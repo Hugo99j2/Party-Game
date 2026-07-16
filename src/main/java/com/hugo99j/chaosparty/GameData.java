@@ -15,6 +15,7 @@ import com.daniel99j.djutil.pathfinder.PathfinderOptions;
 import com.daniel99j.dungeongame.entity.AbstractObject;
 import com.hugo99j.chaosparty.match.Match;
 import com.hugo99j.chaosparty.match.MatchPlayer;
+import com.hugo99j.chaosparty.minigame.AbstractMinigame;
 import com.hugo99j.chaosparty.ui.debugger.Debuggers;
 import com.hugo99j.chaosparty.util.PathUtil;
 import com.daniel99j.dungeongame.level.Level;
@@ -48,6 +49,11 @@ public class GameData {
 
     public static Match getCurrentMatch() {
         return currentMatch;
+    }
+
+    public static AbstractMinigame getCurrentMinigame() {
+        if(getCurrentMatch() == null) return null;
+        return getCurrentMatch().getCurrentMinigame();
     }
 
     public static PathfinderOptions.Builder createPathfinding(AbstractObject from) {

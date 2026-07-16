@@ -15,7 +15,7 @@ import com.hugo99j.chaosparty.util.RenderLayer;
 import com.google.gson.JsonObject;
 import com.hugo99j.chaosparty.util.RequiresRefresh;
 
-public class TilesetObject extends AbstractObject {
+public class SpriteObject extends AbstractObject {
     private int width = 1;
     private int height = 1;
     private String sprite;
@@ -31,13 +31,12 @@ public class TilesetObject extends AbstractObject {
     @RequiresRefresh
     private boolean animated = false;
 
-    public TilesetObject(String sprite, int width, int height, boolean flipX, boolean flipY, int rotation, float scale, boolean hasHitbox, Color tint, boolean textureHitbox, boolean animated) {
+    public SpriteObject(String sprite, int width, int height, boolean flipX, boolean flipY, int rotation, float scale, boolean hasHitbox, Color tint, boolean textureHitbox, boolean animated) {
         this.sprite = sprite;
         this.animated = animated;
         this.width = width;
         this.height = height;
         this.scale = scale;
-        //slightly extra so that
         this.size = new Vector2((getCurrentSprite().packedWidth / 16.0f), (getCurrentSprite().packedHeight / 16.0f));
         this.flipX = flipX;
         this.flipY = flipY;
@@ -60,8 +59,10 @@ public class TilesetObject extends AbstractObject {
             if(textureHitbox) {
                 settings = PhysicsSettings.textureImmovable(sprite, this.width, this.height);
             } else settings = PhysicsSettings.immovable(this.width*this.size.x, this.height*this.size.y, 0, 0);
+
+            settings = settings.collidesWith(CollisionCategories.allBut((short) (CollisionCategories.DONT_COLLIDE_WITH_EACH_OTHER | CollisionCategories.PATHFIND_BLOCKING))).group((short) (CollisionCategories.DONT_COLLIDE_WITH_EACH_OTHER | CollisionCategories.PATHFIND_BLOCKING));
         }
-        return hasHitbox ? settings.collidesWith(CollisionCategories.allBut(CollisionCategories.DONT_COLLIDE_WITH_EACH_OTHER)).group((short) (CollisionCategories.DONT_COLLIDE_WITH_EACH_OTHER | CollisionCategories.PATHFIND_BLOCKING)) : null;
+        return settings;
     }
 
     @Override
@@ -92,12 +93,12 @@ public class TilesetObject extends AbstractObject {
         object.addProperty("animated", animated);
     }
 
-    public static TilesetObject read(JsonObject object) {
-        return new TilesetObject(object.get("sprite").getAsString(), object.get("width").getAsInt(), object.get("height").getAsInt(), object.get("flipX").getAsBoolean(), object.get("flipY").getAsBoolean(), object.get("rotation").getAsInt(), object.get("scale").getAsFloat(), object.get("hasHitbox").getAsBoolean(), Color.valueOf(object.get("tint").getAsString()), object.has("textureHitbox") ? object.get("textureHitbox").getAsBoolean() : false, object.has("animated") ? object.get("animated").getAsBoolean() : false);
+    public static SpriteObject read(JsonObject object) {
+        return new SpriteObject(object.get("sprite").getAsString(), object.get("width").getAsInt(), object.get("height").getAsInt(), object.get("flipX").getAsBoolean(), object.get("flipY").getAsBoolean(), object.get("rotation").getAsInt(), object.get("scale").getAsFloat(), object.get("hasHitbox").getAsBoolean(), Color.valueOf(object.get("tint").getAsString()), object.has("textureHitbox") ? object.get("textureHitbox").getAsBoolean() : false, object.has("animated") ? object.get("animated").getAsBoolean() : false);
     }
 
     @Override
-    public ObjectType<TilesetObject> getType() {
+    public ObjectType<SpriteObject> getType() {
         return ObjectTypes.TILESET;
     }
 
@@ -108,7 +109,7 @@ public class TilesetObject extends AbstractObject {
 
     @Override
     public String toString() {
-        return "Tileset";
+        return "Sprite '"+this.sprite+"'";
     }
 
     public int getWidth() {
@@ -155,7 +156,7 @@ public class TilesetObject extends AbstractObject {
         this.sprite = sprite;
     }
 
-    public static TilesetObject createDefault() {
-        return new TilesetObject("sheep", 2, 2, false, false, 0, 1, false, Color.WHITE, false, false);
+    public static SpriteObject createDefault() {
+        return new SpriteObject("sheep", 2, 2, false, false, 0, 1, false, Color.WHITE, false, false);
     }
 }

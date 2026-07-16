@@ -32,7 +32,7 @@ import com.daniel99j.dungeongame.ui.screenss.CombinedScreenSS;
 import com.daniel99j.dungeongame.ui.screenss.ScreenSS;
 import com.hugo99j.chaosparty.GameData;
 import com.daniel99j.dungeongame.entity.AbstractObject;
-import com.hugo99j.chaosparty.entity.TilesetObject;
+import com.hugo99j.chaosparty.entity.SpriteObject;
 import com.daniel99j.dungeongame.level.LevelLight;
 import com.daniel99j.dungeongame.level.LevelLoader;
 import com.daniel99j.dungeongame.level.SaveConfig;
@@ -106,8 +106,6 @@ public class Debuggers {
     static {
         if (GameData.DEBUGGING) {
             category("World");
-            option("hitboxes", false);
-            option("lights", true);
             option("noclipToggleable", false);
             option("noclip", false);
             option("tick", true);
@@ -117,6 +115,8 @@ public class Debuggers {
             option("invulnerable", false);
 
             category("Rendering");
+            option("hitboxes", false);
+            option("lights", true);
             option("wireframe", false);
             option("pixelPerfect", false);
             option("pathfindingRender", false);
@@ -124,6 +124,7 @@ public class Debuggers {
             option("showAdvancedObjectPicking", false);
 
             category("Minigame");
+            option("forceSingleView", false);
             option("pauseTimers", false);
 
             category("Controllers");
@@ -132,6 +133,8 @@ public class Debuggers {
             option("showControllerSelect", false);
 
             category("Map Editor");
+            option("tickMapEditor", false);
+            option("advancedObjectPicking", true);
             option("alignPixel", true);
 
             category("UI");
@@ -140,11 +143,8 @@ public class Debuggers {
 
             category("Misc");
             option("showing", false);
-            option("forceSingleView", false);
             option("forceFocus", false);
-            option("advancedObjectPicking", true);
             option("demoWindow", false);
-            option("tickMapEditor", false);
             option("selectingLight", false);
             option("freecam", false);
 
@@ -187,7 +187,7 @@ public class Debuggers {
                     uniform sampler2D u_texture;
                     uniform vec2 u_resolution;
                     void main() {
-                        float alpha = floor(texture2D(u_texture, v_texCoords).a);
+                        float alpha = ceil(texture2D(u_texture, v_texCoords).a);
                         gl_FragColor = v_color * alpha;
                     }""";
 
@@ -569,9 +569,9 @@ public class Debuggers {
                                 GameData.shapeRenderer.setColor(0xdf / 255.0f, 0xf0 / 255.0f, 0x29 / 255.0f, 0.5f);
                                 GameData.shapeRenderer.rect(hitbox.x, hitbox.y, hitbox.z, hitbox.w);
                             }
-                        } else if (selectedObject instanceof TilesetObject tilesetObject) {
+                        } else if (selectedObject instanceof SpriteObject spriteObject) {
                             GameData.shapeRenderer.setColor(0xdf / 255.0f, 0xf0 / 255.0f, 0x29 / 255.0f, 0.5f);
-                            GameData.shapeRenderer.rect(tilesetObject.getPos().x, tilesetObject.getPos().y, tilesetObject.getWidth(), tilesetObject.getHeight());
+                            GameData.shapeRenderer.rect(spriteObject.getPos().x, spriteObject.getPos().y, spriteObject.getWidth(), spriteObject.getHeight());
                         }
                         GameData.shapeRenderer.end();
                     }
@@ -598,6 +598,12 @@ public class Debuggers {
                 Gdx.input.setInputProcessor(null);
             }
             //END
+
+            if (ImGui.isWindowHovered(ImGuiHoveredFlags.AnyWindow) || ImGui.isWindowFocused(ImGuiFocusedFlags.AnyWindow) || (GameData.getCurrentMinigame() instanceof MapEditor)) {
+                ImGui.getStyle().setAlpha(1.0f);
+            } else {
+                ImGui.getStyle().setAlpha(0.2f);
+            }
         }
 
         List<Runnable> customRenderersToRemove = new ArrayList<>();
@@ -901,9 +907,9 @@ public class Debuggers {
 
     public static void pause() {
         long t = System.currentTimeMillis();
-        t += 1;
+        t += 1; //ADD HERE
         if (t >= System.currentTimeMillis() - 10) {
-            Logger.error("Make sure to run breakpoint here!");
+            Logger.error("Make sure to add a breakpoint here!");
         }
     }
 

@@ -66,7 +66,7 @@ public class PausedGameScreen extends HoldFrameScreen {
     @Override
     public void render(float delta) {
         super.render(delta);
-        if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) || ((ControllerUtil) Controllers.getCurrent()).wasJustPressed(ControllerInput.MENU)) {
+        if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) || ControllerUtil.getCurrent().wasJustPressed(ControllerInput.MENU)) {
             unpause();
         }
     }

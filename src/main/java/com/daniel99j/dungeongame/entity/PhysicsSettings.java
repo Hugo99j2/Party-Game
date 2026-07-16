@@ -3,12 +3,15 @@ package com.daniel99j.dungeongame.entity;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.TextureData;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector4;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.hugo99j.chaosparty.util.ImageUtil;
+
+import static com.hugo99j.chaosparty.GameData.px;
 
 public record PhysicsSettings(BodyDef.BodyType bodyType, Shape shape, float density, float drag, short collisionGroup, short collidesWith) {
     public static PhysicsSettings create(float sizeX, float sizeY, float xOffset, float yOffset, float density, float drag) {
@@ -32,8 +35,8 @@ public record PhysicsSettings(BodyDef.BodyType bodyType, Shape shape, float dens
     }
 
     public static PhysicsSettings texture(String texture, float density, float drag, float scaleX, float scaleY) {
-        Vector4 size = ImageUtil.getSize(texture);
-        return create((size.z-size.x)*scaleX, (size.w-size.y)*scaleY, 0, 0, density, drag);
+        Rectangle bounds = ImageUtil.getSize(texture);
+        return create(px(bounds.width*scaleX), px(bounds.height*scaleY), px(bounds.x*scaleX), px(bounds.y*scaleY), density, drag);
     }
 
     public static PhysicsSettings textureImmovable(String texture, float scaleX, float scaleY) {

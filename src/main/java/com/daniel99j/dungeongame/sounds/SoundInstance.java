@@ -107,6 +107,7 @@ public class SoundInstance {
     }
 
     public void fade(float time, float to) {
+        play();
         float startTime = this.getCurrentTime();
         float endTime = startTime + time;
         float startVolume = this.getVolume();

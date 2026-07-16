@@ -9,8 +9,11 @@ import com.daniel99j.dungeongame.ui.renderable.RenderState;
 import com.daniel99j.dungeongame.ui.screenss.CombinedScreenSS;
 import com.daniel99j.dungeongame.ui.screenss.ScreenSSBuilder;
 import com.hugo99j.chaosparty.GameData;
+import com.hugo99j.chaosparty.bot.BotController;
+import com.hugo99j.chaosparty.bot.HotPotatoBot;
 import com.hugo99j.chaosparty.effect.ActiveEffect;
 import com.hugo99j.chaosparty.effect.EffectType;
+import com.hugo99j.chaosparty.entity.Player;
 import com.hugo99j.chaosparty.entity.Potato;
 import com.hugo99j.chaosparty.match.MatchPlayer;
 import com.hugo99j.chaosparty.match.MatchView;
@@ -187,5 +190,10 @@ public class HotPotatoMinigame extends AbstractMinigame {
 
     public MatchPlayer getHotPlayer() {
         return hotPlayer;
+    }
+
+    @Override
+    public BotController createBotController(Player player) {
+        return new HotPotatoBot(player);
     }
 }

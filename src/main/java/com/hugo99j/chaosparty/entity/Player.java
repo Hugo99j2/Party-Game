@@ -32,7 +32,7 @@ public class Player extends AbstractObject {
     public void tick() {
         super.tick();
         if(matchPlayer != null && (matchPlayer.controller == null ? 0 : matchPlayer.controller.hashCode()) != oldController) {
-            this.bot = matchPlayer.controller instanceof DummyController ? new BotController(this) : null;
+            this.bot = matchPlayer.controller instanceof DummyController ? GameData.getCurrentMinigame().createBotController(this) : null;
             oldController = matchPlayer.controller == null ? 0 : matchPlayer.controller.hashCode();
         }
 

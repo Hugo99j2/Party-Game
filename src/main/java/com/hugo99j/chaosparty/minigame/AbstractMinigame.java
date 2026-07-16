@@ -4,6 +4,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
 import com.daniel99j.dungeongame.level.LevelLoader;
 import com.hugo99j.chaosparty.GameData;
+import com.hugo99j.chaosparty.bot.BotController;
+import com.hugo99j.chaosparty.entity.Player;
 import com.hugo99j.chaosparty.match.Match;
 import com.hugo99j.chaosparty.match.MatchPlayer;
 import com.hugo99j.chaosparty.match.MatchView;
@@ -124,5 +126,9 @@ public abstract class AbstractMinigame implements Disposable {
 
     public boolean splitHorizontal2Views() {
         return true;
+    }
+
+    public BotController createBotController(Player player) {
+        return null;
     }
 }

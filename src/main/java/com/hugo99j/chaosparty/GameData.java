@@ -58,7 +58,7 @@ public class GameData {
 
     public static PathfinderOptions.Builder createPathfinding(AbstractObject from) {
         String name = String.valueOf(from.hashCode());
-        return PathfinderOptions.builder().diagonalNeighbourProvider().maxIterations(500).debugRenderConsumer(DEBUGGING ? pathfindDebugPos -> {
+        return PathfinderOptions.builder().diagonalNeighbourProvider().maxIterations(1000).debugRenderConsumer(DEBUGGING ? pathfindDebugPos -> {
             Debuggers.pathfindDebuggerTimers.put(name, GameData.TICKS_PER_SECOND*5);
             if (pathfindDebugPos.type().equals(PathfindDebugType.BEGIN_MARKER_NOTREAL)) {
                 Debuggers.pathfindDebuggers.put(name, new ArrayList<>());

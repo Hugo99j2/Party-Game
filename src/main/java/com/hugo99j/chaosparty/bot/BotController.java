@@ -25,56 +25,15 @@ public class BotController {
     private final CachedPathfinder pathfinder;
     private final Player player;
     private PathfindPos oldPos = null;
-    private int potatoCooldown = 0;
     private Vector2 pathfindTarget = null;
 
     public BotController(Player player) {
         this.player = player;
-        this.pathfinder = new CachedPathfinder(GameData.createPathfinding(player).walkablePredicate(this.createWalkPredicate()).build(), 100);
+        this.pathfinder = new CachedPathfinder(GameData.createPathfinding(player).walkablePredicate(this.createWalkPredicate()).build(), this.getMaxDistance());
     }
 
     public void tick() {
         runPathfinding(false);
-        boolean isHot = GameData.getCurrentMatch().getCurrentMinigame() instanceof HotPotatoMinigame hp && hp.getHotPlayer() == player.getMatchPlayer();
-        if(potatoCooldown < 0 && isHot) {
-            //if(true) return;
-            boolean tried = false;
-            for (Player target : GameData.getLevelOrThrow().getObjectsInRadius(player.getPos(), 15, Player.class, true, player)) {
-                if(target.isNoClip()) continue; //skip dead players
-                ValueHolder<Boolean> hit = new ValueHolder<>(false);
-                player.getLevel().getBox2dWorld().rayCast((fixture, point, normal, fraction) -> {
-                    //Skip players or explosive barrels
-                    if(fixture.getBody().getUserData() instanceof Player || (fixture.getBody().getUserData() instanceof LiquidBarrelObject liquidBarrelObject && liquidBarrelObject.isExplosive())) {
-                        return 0;
-                    }
-                    hit.object = true;
-                    return 1;
-                }, player.getPos(), target.getPos());
-                if(hit.object != true) {
-                    Potato potato = new Potato();
-                    potato.setX(player.getPos().x);
-                    potato.setY(player.getPos().y);
-                    GameData.getLevelOrThrow().addObject(potato);
-                    potato.moveTowardTarget(target.getPos(), 100);
-                    tried = true;
-                    break;
-                }
-            }
-            potatoCooldown = (int) ((0.5f*GameData.TICKS_PER_SECOND)* NumberUtils.getRandomFloat(0.7f, 1.7f));
-
-            if(!tried) {
-                //move toward other players
-                for (Player target : GameData.getLevelOrThrow().getObjectsInRadius(player.getPos(), 45, Player.class, true, player)) {
-                    if(target.isNoClip()) continue; //skip dead players
-                    pathfindTarget = target.getPos().cpy();
-                    break;
-                }
-            }
-        }
-        potatoCooldown--;
-        if(!isHot) {
-            potatoCooldown = (int) ((0.5f*GameData.TICKS_PER_SECOND)* NumberUtils.getRandomFloat(1.0f, 1.7f));
-        }
     }
 
     private void runPathfinding(boolean invalid) {
@@ -124,7 +83,7 @@ public class BotController {
     protected Predicate<PathfindPos> createWalkPredicate() {
         Vector4 hitbox = this.player.getHitboxWidthHeight(this.player.getPhysics().getFixtureList().first()).sub(this.player.getPos().x, this.player.getPos().y, 0, 0);
         Vector2 size = new Vector2(Math.abs(hitbox.x)+Math.abs(hitbox.z), Math.abs(hitbox.y)+Math.abs(hitbox.w));
-        float distance = size.len()+0.1f;
+        float distance = size.len()+0.2f;
         return (pos) -> {
             AtomicBoolean hit = new AtomicBoolean(false);
             QueryCallback callback = fixture -> {
@@ -134,7 +93,7 @@ public class BotController {
                 }
                 return true;
             };
-            GameData.level.getBox2dWorld().QueryAABB(callback, pos.getX()+hitbox.x, pos.getY()+hitbox.y, pos.getX()+hitbox.z, pos.getY()+hitbox.w);
+            GameData.getLevelOrThrow().getBox2dWorld().QueryAABB(callback, pos.getX()+hitbox.x-distance, pos.getY()+hitbox.y-distance, pos.getX()+hitbox.z+hitbox.x+distance, pos.getY()+hitbox.w+hitbox.y+distance);
             return !hit.get();
         };
     }
@@ -150,6 +109,18 @@ public class BotController {
     };
 
     public float getSpeed() {
-        return 4;
+        return 6;
+    }
+
+    public float getMaxDistance() {
+        return 5;
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public void setTarget(Vector2 pathfindTarget) {
+        this.pathfindTarget = pathfindTarget.cpy();
     }
 }

@@ -34,7 +34,7 @@ public class Lwjgl3Launcher {
         //// They can also be loaded from the root of assets/ .
         configuration.setWindowIcon("assets/textures/icon.png", "assets/textures/icon.png", "assets/textures/icon.png", "assets/textures/icon.png");
         configuration.setAudioConfig(32, 512, 9);
-        configuration.setPauseWhenLostFocus(true);
+        //configuration.setPauseWhenLostFocus(true);
         //configuration.set
 
         //// This could improve compatibility with Windows machines with buggy OpenGL drivers, Macs

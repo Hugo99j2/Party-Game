@@ -24,10 +24,12 @@ import static com.hugo99j.chaosparty.ui.debugger.UndoRedoHistory.onEdited;
 
 public class ObjectEditor {
     static Vector2 oldPos;
+    static Vector2 startObjectPos = null;
     private static final SafeObjectHolder selected = new  SafeObjectHolder();
     private static final SafeObjectList popouts = new SafeObjectList();
     private static boolean preventMoving = false;
     private static Vector2 holdingOntoPos = null;
+    private static boolean justChangedSelection = false;
 
     static void renderObjectEditor() {
         popouts.ensureSafety();
@@ -38,6 +40,8 @@ public class ObjectEditor {
             ImGui.end();
         }
 
+        if(justChangedSelection) ImGui.setNextWindowFocus();
+        justChangedSelection = false;
         ImGui.begin("Objects");
 
         boolean imGui = ImGui.isWindowHovered(ImGuiHoveredFlags.AnyWindow | ImGuiHoveredFlags.ChildWindows) || ImGui.isWindowFocused(ImGuiFocusedFlags.AnyWindow | ImGuiFocusedFlags.ChildWindows) || ImGui.getIO().getWantCaptureKeyboard() || ImGui.getIO().getWantCaptureMouse();
@@ -52,6 +56,8 @@ public class ObjectEditor {
                         if(allObject != selected.get()) {
                             preventMoving = true;
                             holdingOntoPos = null;
+                            startObjectPos = allObject.getPos().cpy();
+                            justChangedSelection = true;
                         }
                         selected.set(allObject);
                         found = true;
@@ -60,13 +66,17 @@ public class ObjectEditor {
                 }
                 if(!found) {
                     Logger.info("No object selected");
+                    preventMoving = true;
+                    holdingOntoPos = null;
+                    startObjectPos = null;
                     selected.set(null);
                 }
             }
             if(!Gdx.input.isButtonPressed(Input.Buttons.LEFT) || imGui) {
-                if(holdingOntoPos != null) onEdited();
+                if(holdingOntoPos != null && !selected.get().getPos().equals(startObjectPos)) onEdited();
                 preventMoving = false;
                 holdingOntoPos = null;
+                startObjectPos = null;
             }
 
             if(!preventMoving && Gdx.input.isButtonPressed(Input.Buttons.LEFT) && selected.get() != null && !imGui) {
@@ -180,6 +190,9 @@ public class ObjectEditor {
                 if (ImGui.selectable(allObject + " (" + allObject.getEntityId() + ")", isSelected, flags))
                     selected.set(allObject);
                 if (ImGui.isItemHovered()) hoveredObject = allObject.getUUID();
+                if(justChangedSelection && allObject.equals(selected.get())) {
+                    ImGui.setScrollHereY();
+                }
                 ImGui.popID();
             }
             ImGui.endTable();

@@ -10,6 +10,8 @@ import com.daniel99j.dungeongame.ui.renderable.RenderState;
 import com.daniel99j.dungeongame.ui.screenss.CombinedScreenSS;
 import com.daniel99j.dungeongame.ui.screenss.ScreenSSBuilder;
 import com.hugo99j.chaosparty.GameData;
+import com.hugo99j.chaosparty.bot.BotController;
+import com.hugo99j.chaosparty.bot.FallingFloorBot;
 import com.hugo99j.chaosparty.entity.FallingFloorObject;
 import com.hugo99j.chaosparty.entity.Player;
 import com.hugo99j.chaosparty.match.MatchView;
@@ -136,5 +138,14 @@ public class FallingFloorMinigame extends AbstractMinigame {
     public void setPaused(boolean paused) {
         if(paused) music.pause();
         else music.play();
+    }
+
+    public Color getSafeColour() {
+        return safeColour;
+    }
+
+    @Override
+    public BotController createBotController(Player player) {
+        return new FallingFloorBot(player);
     }
 }

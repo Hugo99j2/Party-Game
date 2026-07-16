@@ -111,7 +111,7 @@
       }
     },
     {
-      "x": 0.0,
+      "x": -0.0,
       "y": 1.0,
       "uuid": "6c83c27a-9da8-4651-b1f4-41579e747692",
       "type": "tileset",
@@ -121,11 +121,11 @@
         "sprite": "tilesets/fence_tb",
         "flipX": false,
         "flipY": false,
-        "hasHitbox": true,
+        "hasHitbox": false,
         "rotation": 0,
         "scale": 1.0,
         "tint": "ffffffff",
-        "textureHitbox": true,
+        "textureHitbox": false,
         "animated": false
       }
     },
@@ -140,11 +140,11 @@
         "sprite": "tilesets/fence_tb",
         "flipX": false,
         "flipY": false,
-        "hasHitbox": true,
+        "hasHitbox": false,
         "rotation": 0,
         "scale": 1.0,
         "tint": "ffffffff",
-        "textureHitbox": true,
+        "textureHitbox": false,
         "animated": false
       }
     },
@@ -159,11 +159,11 @@
         "sprite": "tilesets/fence_lr",
         "flipX": false,
         "flipY": false,
-        "hasHitbox": true,
+        "hasHitbox": false,
         "rotation": 0,
         "scale": 1.0,
         "tint": "ffffffff",
-        "textureHitbox": true,
+        "textureHitbox": false,
         "animated": false
       }
     },
@@ -178,11 +178,11 @@
         "sprite": "tilesets/fence_lr",
         "flipX": false,
         "flipY": false,
-        "hasHitbox": true,
+        "hasHitbox": false,
         "rotation": 0,
         "scale": 1.0,
         "tint": "ffffffff",
-        "textureHitbox": true,
+        "textureHitbox": false,
         "animated": false
       }
     },
@@ -260,6 +260,46 @@
         "tint": "ffffffff",
         "textureHitbox": false,
         "animated": false
+      }
+    },
+    {
+      "x": 0.0,
+      "y": -0.125,
+      "uuid": "880deda7-18a8-4cfa-9c94-b98a0554ce4e",
+      "type": "collision",
+      "custom_data": {
+        "sizeX": 32.0,
+        "sizeY": 1.0
+      }
+    },
+    {
+      "x": 0.0,
+      "y": 17.0,
+      "uuid": "353450a2-dd44-43b8-8d8d-adf9b5ea6e9e",
+      "type": "collision",
+      "custom_data": {
+        "sizeX": 32.0,
+        "sizeY": 1.0
+      }
+    },
+    {
+      "x": -0.375,
+      "y": 0.0,
+      "uuid": "2f362aec-9bf3-47e2-90a9-21a48198fc7f",
+      "type": "collision",
+      "custom_data": {
+        "sizeX": 1.0,
+        "sizeY": 18.0
+      }
+    },
+    {
+      "x": 31.375,
+      "y": 0.0,
+      "uuid": "9199186f-785a-492a-83ce-0650a1167d0d",
+      "type": "collision",
+      "custom_data": {
+        "sizeX": 1.0,
+        "sizeY": 18.0
       }
     },
     {

@@ -1,8 +1,8 @@
 {
   "objects": [
     {
-      "x": 6.0,
-      "y": 10.0,
+      "x": 6.9375,
+      "y": 27.875,
       "uuid": "3ffd38cd-b6b0-42f0-87cd-2d2da0bdf628",
       "type": "liquid_barrel",
       "custom_data": {
@@ -11,8 +11,8 @@
       }
     },
     {
-      "x": 11.0,
-      "y": 6.0,
+      "x": 28.0,
+      "y": 5.8125,
       "uuid": "3a1a1a79-c0f4-4b5b-bb53-6f1810246385",
       "type": "liquid_barrel",
       "custom_data": {
@@ -21,8 +21,8 @@
       }
     },
     {
-      "x": 29.0,
-      "y": 9.0,
+      "x": 37.1875,
+      "y": 21.1875,
       "uuid": "11a01c5f-b468-4730-a9a2-c3aa28c4040c",
       "type": "liquid_barrel",
       "custom_data": {
@@ -31,8 +31,8 @@
       }
     },
     {
-      "x": 39.0,
-      "y": 21.0,
+      "x": 37.25,
+      "y": 16.0,
       "uuid": "f440bc97-406a-4e04-bd65-3d2b9deca9bc",
       "type": "liquid_barrel",
       "custom_data": {
@@ -41,8 +41,8 @@
       }
     },
     {
-      "x": 58.0,
-      "y": 29.0,
+      "x": 27.75,
+      "y": 21.1875,
       "uuid": "e8c0d914-8261-4cf6-8599-180786702275",
       "type": "liquid_barrel",
       "custom_data": {
@@ -51,8 +51,8 @@
       }
     },
     {
-      "x": 16.0,
-      "y": 27.0,
+      "x": 27.875,
+      "y": 15.6875,
       "uuid": "5b8aac49-2739-4c74-8b15-f7586ce66618",
       "type": "liquid_barrel",
       "custom_data": {
@@ -86,7 +86,7 @@
       "type": "tileset",
       "custom_data": {
         "width": 1,
-        "height": 16,
+        "height": 35,
         "sprite": "tilesets/bricks",
         "flipX": false,
         "flipY": false,
@@ -99,8 +99,8 @@
       }
     },
     {
-      "x": 15.0,
-      "y": 4.0,
+      "x": 32.0,
+      "y": 18.3125,
       "uuid": "abfc86d0-0818-4f72-b173-9ff62e9eb49d",
       "type": "tileset",
       "custom_data": {
@@ -118,84 +118,8 @@
       }
     },
     {
-      "x": 11.0,
-      "y": 15.0,
-      "uuid": "efafb197-cac4-499b-8e6f-671fbf3ea822",
-      "type": "tileset",
-      "custom_data": {
-        "width": 1,
-        "height": 1,
-        "sprite": "tire",
-        "flipX": false,
-        "flipY": false,
-        "hasHitbox": true,
-        "rotation": 0,
-        "scale": 1.0,
-        "tint": "ffffffff",
-        "textureHitbox": false,
-        "animated": false
-      }
-    },
-    {
-      "x": 11.0,
-      "y": 15.375,
-      "uuid": "c8dc07bf-843a-49b0-8dae-ac56b3da01b2",
-      "type": "tileset",
-      "custom_data": {
-        "width": 1,
-        "height": 1,
-        "sprite": "tire",
-        "flipX": false,
-        "flipY": false,
-        "hasHitbox": true,
-        "rotation": 0,
-        "scale": 1.0,
-        "tint": "ffffffff",
-        "textureHitbox": false,
-        "animated": false
-      }
-    },
-    {
-      "x": 19.0,
-      "y": 8.125,
-      "uuid": "9aa61e5f-57a9-4908-9744-c0f1bb10f9c0",
-      "type": "tileset",
-      "custom_data": {
-        "width": 1,
-        "height": 1,
-        "sprite": "tire",
-        "flipX": false,
-        "flipY": false,
-        "hasHitbox": true,
-        "rotation": 0,
-        "scale": 1.0,
-        "tint": "ffffffff",
-        "textureHitbox": false,
-        "animated": false
-      }
-    },
-    {
-      "x": 19.0,
-      "y": 8.5,
-      "uuid": "79ef51ce-d64e-4369-ac97-72102296f95c",
-      "type": "tileset",
-      "custom_data": {
-        "width": 1,
-        "height": 1,
-        "sprite": "tire",
-        "flipX": false,
-        "flipY": false,
-        "hasHitbox": true,
-        "rotation": 0,
-        "scale": 1.0,
-        "tint": "ffffffff",
-        "textureHitbox": false,
-        "animated": false
-      }
-    },
-    {
-      "x": 15.0,
-      "y": 5.0,
+      "x": 32.0,
+      "y": 19.3125,
       "uuid": "a4de2d67-94dd-4049-a1fa-6652360bb941",
       "type": "tileset",
       "custom_data": {
@@ -213,8 +137,8 @@
       }
     },
     {
-      "x": 0.0,
-      "y": 0.0,
+      "x": 35.0,
+      "y": 20.0,
       "uuid": "85288a50-ffa3-4f88-8c34-e9b81db8665a",
       "type": "player_spawn_point",
       "custom_data": {
@@ -222,8 +146,8 @@
       }
     },
     {
-      "x": 0.0,
-      "y": 0.0,
+      "x": 30.0,
+      "y": 20.0,
       "uuid": "ee443994-eb02-4f7a-974e-cd95f1d3cd2d",
       "type": "player_spawn_point",
       "custom_data": {
@@ -231,8 +155,8 @@
       }
     },
     {
-      "x": 0.0,
-      "y": 0.0,
+      "x": 35.0,
+      "y": 17.0,
       "uuid": "6512cfd7-711c-4f07-b0fa-c50aa0d87423",
       "type": "player_spawn_point",
       "custom_data": {
@@ -240,12 +164,1066 @@
       }
     },
     {
-      "x": 0.0,
-      "y": 0.0,
+      "x": 30.0,
+      "y": 17.0,
       "uuid": "b791d5c4-2a41-4133-aaf4-b3da8ff563eb",
       "type": "player_spawn_point",
       "custom_data": {
         "id": 4
+      }
+    },
+    {
+      "x": 63.0,
+      "y": 1.0,
+      "uuid": "c9a50d74-8a77-4a2c-8ede-f83c002a0544",
+      "type": "tileset",
+      "custom_data": {
+        "width": 1,
+        "height": 35,
+        "sprite": "tilesets/bricks",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": false,
+        "animated": false
+      }
+    },
+    {
+      "x": 0.0,
+      "y": 0.0,
+      "uuid": "52bf93af-fcde-4e8e-af04-a9115c426a12",
+      "type": "tileset",
+      "custom_data": {
+        "width": 64,
+        "height": 1,
+        "sprite": "tilesets/bricks",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": false,
+        "animated": false
+      }
+    },
+    {
+      "x": 1.0,
+      "y": 35.0,
+      "uuid": "23105436-9526-4cfb-93de-6bc037e0b9f4",
+      "type": "tileset",
+      "custom_data": {
+        "width": 62,
+        "height": 1,
+        "sprite": "tilesets/bricks",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": false,
+        "animated": false
+      }
+    },
+    {
+      "x": 31.125,
+      "y": 17.5,
+      "uuid": "5f02cc4a-1cde-4314-82a5-3b68bf60ef6b",
+      "type": "tileset",
+      "custom_data": {
+        "width": 1,
+        "height": 1,
+        "sprite": "tire",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": true,
+        "animated": false
+      }
+    },
+    {
+      "x": 33.75,
+      "y": 17.3125,
+      "uuid": "f92ef722-23a8-4474-80f1-1e1a83c6b7c9",
+      "type": "tileset",
+      "custom_data": {
+        "width": 1,
+        "height": 1,
+        "sprite": "tire",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": true,
+        "animated": false
+      }
+    },
+    {
+      "x": 32.125,
+      "y": 16.875,
+      "uuid": "b3c9b015-7fe4-408d-9bca-b82910a4c611",
+      "type": "tileset",
+      "custom_data": {
+        "width": 1,
+        "height": 1,
+        "sprite": "tire",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": true,
+        "animated": false
+      }
+    },
+    {
+      "x": 35.375,
+      "y": 18.125,
+      "uuid": "4b7f8d5a-2420-4316-895e-d491a1124e30",
+      "type": "tileset",
+      "custom_data": {
+        "width": 1,
+        "height": 1,
+        "sprite": "tire",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": true,
+        "animated": false
+      }
+    },
+    {
+      "x": 35.375,
+      "y": 18.5,
+      "uuid": "227c960b-0a2e-4832-a373-829d567c60d6",
+      "type": "tileset",
+      "custom_data": {
+        "width": 1,
+        "height": 1,
+        "sprite": "tire",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": true,
+        "animated": false
+      }
+    },
+    {
+      "x": 34.3125,
+      "y": 18.9375,
+      "uuid": "1b334ebc-142f-41e7-8081-62e75e0cb642",
+      "type": "tileset",
+      "custom_data": {
+        "width": 1,
+        "height": 1,
+        "sprite": "tire",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": true,
+        "animated": false
+      }
+    },
+    {
+      "x": 29.8125,
+      "y": 18.0625,
+      "uuid": "a3f8f0cb-6345-4143-9255-fca809747998",
+      "type": "tileset",
+      "custom_data": {
+        "width": 1,
+        "height": 1,
+        "sprite": "tire",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": true,
+        "animated": false
+      }
+    },
+    {
+      "x": 29.8125,
+      "y": 18.4375,
+      "uuid": "c7c165b5-96db-4ee7-81a2-4955dd13c705",
+      "type": "tileset",
+      "custom_data": {
+        "width": 1,
+        "height": 1,
+        "sprite": "tire",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": true,
+        "animated": false
+      }
+    },
+    {
+      "x": 30.875,
+      "y": 19.0625,
+      "uuid": "fa7eb3f2-c7c2-42d7-886e-a03cfee5fc54",
+      "type": "tileset",
+      "custom_data": {
+        "width": 1,
+        "height": 1,
+        "sprite": "tire",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": true,
+        "animated": false
+      }
+    },
+    {
+      "x": 31.9375,
+      "y": 19.875,
+      "uuid": "97dd8561-2dbc-4354-b7f6-276dc39bf17d",
+      "type": "tileset",
+      "custom_data": {
+        "width": 1,
+        "height": 1,
+        "sprite": "tire",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": true,
+        "animated": false
+      }
+    },
+    {
+      "x": 31.9375,
+      "y": 20.25,
+      "uuid": "ddb612fb-81ef-4f04-8730-dd3506c85fc2",
+      "type": "tileset",
+      "custom_data": {
+        "width": 1,
+        "height": 1,
+        "sprite": "tire",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": true,
+        "animated": false
+      }
+    },
+    {
+      "x": 33.5,
+      "y": 20.4375,
+      "uuid": "41a55d30-b97f-4217-b198-2113532c2894",
+      "type": "tileset",
+      "custom_data": {
+        "width": 1,
+        "height": 1,
+        "sprite": "tire",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": true,
+        "animated": false
+      }
+    },
+    {
+      "x": 55.1875,
+      "y": 12.125,
+      "uuid": "50b338b5-9931-4399-ad78-b7b692e02c35",
+      "type": "liquid_barrel",
+      "custom_data": {
+        "sprite": "oil_drum",
+        "explosive": true
+      }
+    },
+    {
+      "x": 44.6875,
+      "y": 26.75,
+      "uuid": "57828fdb-310e-4448-8bd7-7ed87b6660ef",
+      "type": "liquid_barrel",
+      "custom_data": {
+        "sprite": "oil_drum",
+        "explosive": true
+      }
+    },
+    {
+      "x": 8.5625,
+      "y": 15.4375,
+      "uuid": "c5eb3921-e97b-4a7e-9481-b1d3f54591cf",
+      "type": "liquid_barrel",
+      "custom_data": {
+        "sprite": "oil_drum",
+        "explosive": true
+      }
+    },
+    {
+      "x": 14.375,
+      "y": 6.25,
+      "uuid": "1b157461-106e-4970-b514-b873a842ced1",
+      "type": "liquid_barrel",
+      "custom_data": {
+        "sprite": "oil_drum",
+        "explosive": true
+      }
+    },
+    {
+      "x": 22.375,
+      "y": 27.1875,
+      "uuid": "9fafa2b1-c1d5-4752-94b0-ff65566027c0",
+      "type": "liquid_barrel",
+      "custom_data": {
+        "sprite": "oil_drum",
+        "explosive": true
+      }
+    },
+    {
+      "x": 46.6875,
+      "y": 8.9375,
+      "uuid": "5aefb96f-51a9-429d-be0b-85068d3c0ee3",
+      "type": "liquid_barrel",
+      "custom_data": {
+        "sprite": "oil_drum",
+        "explosive": true
+      }
+    },
+    {
+      "x": 35.1875,
+      "y": 29.0,
+      "uuid": "0db19169-b6f5-4dba-9190-c3927f895dd7",
+      "type": "liquid_barrel",
+      "custom_data": {
+        "sprite": "oil_drum",
+        "explosive": true
+      }
+    },
+    {
+      "x": 58.6875,
+      "y": 29.875,
+      "uuid": "0b38a9b8-52ca-47c8-b42b-2ae38bb52b8c",
+      "type": "liquid_barrel",
+      "custom_data": {
+        "sprite": "oil_drum",
+        "explosive": true
+      }
+    },
+    {
+      "x": 54.5,
+      "y": 22.4375,
+      "uuid": "cd598e2e-ac9a-492d-a8fe-513fe6c86334",
+      "type": "liquid_barrel",
+      "custom_data": {
+        "sprite": "oil_drum",
+        "explosive": true
+      }
+    },
+    {
+      "x": 47.375,
+      "y": 17.5,
+      "uuid": "566a6f92-c4e1-4afb-9502-6d783c71c62b",
+      "type": "liquid_barrel",
+      "custom_data": {
+        "sprite": "oil_drum",
+        "explosive": true
+      }
+    },
+    {
+      "x": 17.875,
+      "y": 17.9375,
+      "uuid": "8c11875c-4b19-4086-88c0-958621eb81b5",
+      "type": "liquid_barrel",
+      "custom_data": {
+        "sprite": "oil_drum",
+        "explosive": true
+      }
+    },
+    {
+      "x": 32.5625,
+      "y": 21.8125,
+      "uuid": "589cfd04-1860-48a1-b902-4dc829966a3a",
+      "type": "liquid_barrel",
+      "custom_data": {
+        "sprite": "oil_drum",
+        "explosive": true
+      }
+    },
+    {
+      "x": 32.625,
+      "y": 14.9375,
+      "uuid": "9d290f4c-8a86-4644-8fab-de7d2af7c600",
+      "type": "liquid_barrel",
+      "custom_data": {
+        "sprite": "oil_drum",
+        "explosive": true
+      }
+    },
+    {
+      "x": 24.3125,
+      "y": 7.5625,
+      "uuid": "93c68071-06f5-412b-8d15-79cbc485a632",
+      "type": "liquid_barrel",
+      "custom_data": {
+        "sprite": "oil_drum",
+        "explosive": true
+      }
+    },
+    {
+      "x": 19.1875,
+      "y": 16.5625,
+      "uuid": "24eacd66-a923-4858-b5d6-bae8c11ff519",
+      "type": "liquid_barrel",
+      "custom_data": {
+        "sprite": "oil_drum",
+        "explosive": true
+      }
+    },
+    {
+      "x": 51.125,
+      "y": 14.5625,
+      "uuid": "934c0f92-8dd1-4f5e-b696-fda685dde1ed",
+      "type": "liquid_barrel",
+      "custom_data": {
+        "sprite": "oil_drum",
+        "explosive": true
+      }
+    },
+    {
+      "x": 19.6875,
+      "y": 11.875,
+      "uuid": "9558e8de-14af-4b67-9a36-4e3d21473010",
+      "type": "tileset",
+      "custom_data": {
+        "width": 1,
+        "height": 1,
+        "sprite": "tire",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": true,
+        "animated": false
+      }
+    },
+    {
+      "x": 19.6875,
+      "y": 12.25,
+      "uuid": "91621b84-584f-43cd-ae3d-e90c0104c444",
+      "type": "tileset",
+      "custom_data": {
+        "width": 1,
+        "height": 1,
+        "sprite": "tire",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": true,
+        "animated": false
+      }
+    },
+    {
+      "x": 8.3125,
+      "y": 21.3125,
+      "uuid": "0066d878-562c-4202-9270-d095fa4f1281",
+      "type": "tileset",
+      "custom_data": {
+        "width": 1,
+        "height": 1,
+        "sprite": "tire",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": true,
+        "animated": false
+      }
+    },
+    {
+      "x": 8.3125,
+      "y": 21.6875,
+      "uuid": "2d8d7fe9-996d-4d51-ba69-fddf4c27eb5e",
+      "type": "tileset",
+      "custom_data": {
+        "width": 1,
+        "height": 1,
+        "sprite": "tire",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": true,
+        "animated": false
+      }
+    },
+    {
+      "x": 19.5625,
+      "y": 23.875,
+      "uuid": "38aaa85d-4bf2-43ac-a2c8-d9ad5238421a",
+      "type": "tileset",
+      "custom_data": {
+        "width": 1,
+        "height": 1,
+        "sprite": "tire",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": true,
+        "animated": false
+      }
+    },
+    {
+      "x": 36.5625,
+      "y": 9.375,
+      "uuid": "77cad9c9-9147-4826-a119-baf5e46d1e3c",
+      "type": "tileset",
+      "custom_data": {
+        "width": 1,
+        "height": 1,
+        "sprite": "tire",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": true,
+        "animated": false
+      }
+    },
+    {
+      "x": 36.5625,
+      "y": 9.6875,
+      "uuid": "9f934a0c-ecea-40fb-94ff-7a2a5d76cfd7",
+      "type": "tileset",
+      "custom_data": {
+        "width": 1,
+        "height": 1,
+        "sprite": "tire",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": true,
+        "animated": false
+      }
+    },
+    {
+      "x": 57.0,
+      "y": 4.125,
+      "uuid": "0393f7a6-f3f9-491a-a09c-2d8922dcc873",
+      "type": "tileset",
+      "custom_data": {
+        "width": 1,
+        "height": 1,
+        "sprite": "tire",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": true,
+        "animated": false
+      }
+    },
+    {
+      "x": 53.3125,
+      "y": 17.4375,
+      "uuid": "46e48336-2d45-4332-9830-207acd7c2930",
+      "type": "tileset",
+      "custom_data": {
+        "width": 1,
+        "height": 1,
+        "sprite": "tire",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": true,
+        "animated": false
+      }
+    },
+    {
+      "x": 58.1875,
+      "y": 25.6875,
+      "uuid": "d6f0f7fc-7d26-4fdd-9764-bc3b08037a71",
+      "type": "tileset",
+      "custom_data": {
+        "width": 1,
+        "height": 1,
+        "sprite": "tire",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": true,
+        "animated": false
+      }
+    },
+    {
+      "x": 58.1875,
+      "y": 26.0,
+      "uuid": "82f5ddce-7a4c-4f78-8841-1d46a5fea308",
+      "type": "tileset",
+      "custom_data": {
+        "width": 1,
+        "height": 1,
+        "sprite": "tire",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": true,
+        "animated": false
+      }
+    },
+    {
+      "x": 53.3125,
+      "y": 17.8125,
+      "uuid": "c2a5c258-d8c0-4862-a0bd-872b6116adf7",
+      "type": "tileset",
+      "custom_data": {
+        "width": 1,
+        "height": 1,
+        "sprite": "tire",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": true,
+        "animated": false
+      }
+    },
+    {
+      "x": 42.25,
+      "y": 29.5625,
+      "uuid": "e731959f-3a06-4e9d-98a3-b6cdb03f3909",
+      "type": "tileset",
+      "custom_data": {
+        "width": 1,
+        "height": 1,
+        "sprite": "tire",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": true,
+        "animated": false
+      }
+    },
+    {
+      "x": 51.5,
+      "y": 31.0,
+      "uuid": "95e2b734-c477-4c67-ae6e-7b291788fce3",
+      "type": "tileset",
+      "custom_data": {
+        "width": 1,
+        "height": 1,
+        "sprite": "tire",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": true,
+        "animated": false
+      }
+    },
+    {
+      "x": 9.5625,
+      "y": 30.625,
+      "uuid": "e956af61-7a32-4e32-bbf8-206dcc9e232b",
+      "type": "tileset",
+      "custom_data": {
+        "width": 1,
+        "height": 1,
+        "sprite": "tire",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": true,
+        "animated": false
+      }
+    },
+    {
+      "x": 3.75,
+      "y": 15.875,
+      "uuid": "a71c28dd-1f4d-49b9-aafb-a02b2ba1c6d9",
+      "type": "tileset",
+      "custom_data": {
+        "width": 1,
+        "height": 1,
+        "sprite": "tire",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": true,
+        "animated": false
+      }
+    },
+    {
+      "x": 6.1875,
+      "y": 7.375,
+      "uuid": "938ca52e-2eb6-4151-9919-6ef619a05021",
+      "type": "tileset",
+      "custom_data": {
+        "width": 1,
+        "height": 1,
+        "sprite": "tire",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": true,
+        "animated": false
+      }
+    },
+    {
+      "x": 6.1875,
+      "y": 7.6875,
+      "uuid": "43b099f8-6825-463d-b41d-331d5298d040",
+      "type": "tileset",
+      "custom_data": {
+        "width": 1,
+        "height": 1,
+        "sprite": "tire",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": true,
+        "animated": false
+      }
+    },
+    {
+      "x": 9.5625,
+      "y": 10.5,
+      "uuid": "0cea1551-2a33-49cb-8ed2-ecfd417b158b",
+      "type": "tileset",
+      "custom_data": {
+        "width": 2,
+        "height": 1,
+        "sprite": "tilesets/bricks",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": false,
+        "animated": false
+      }
+    },
+    {
+      "x": 11.5625,
+      "y": 10.5,
+      "uuid": "147635cd-fca5-4248-ad8c-b51baeff6cc2",
+      "type": "tileset",
+      "custom_data": {
+        "width": 2,
+        "height": 1,
+        "sprite": "tilesets/bricks",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": false,
+        "animated": false
+      }
+    },
+    {
+      "x": 13.5625,
+      "y": 10.5,
+      "uuid": "43d8e4e8-7739-4467-966c-9f9292323a30",
+      "type": "tileset",
+      "custom_data": {
+        "width": 2,
+        "height": 1,
+        "sprite": "tilesets/bricks",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": false,
+        "animated": false
+      }
+    },
+    {
+      "x": 9.5625,
+      "y": 11.5,
+      "uuid": "e42da118-2d5e-45fd-9862-d529091c220a",
+      "type": "tileset",
+      "custom_data": {
+        "width": 2,
+        "height": 1,
+        "sprite": "brick",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": true,
+        "animated": false
+      }
+    },
+    {
+      "x": 11.5625,
+      "y": 11.5,
+      "uuid": "d7f2a7c0-a44f-455c-87cd-fab7092d1d01",
+      "type": "tileset",
+      "custom_data": {
+        "width": 2,
+        "height": 1,
+        "sprite": "brick",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": true,
+        "animated": false
+      }
+    },
+    {
+      "x": 13.5625,
+      "y": 11.5,
+      "uuid": "0057e261-275b-427f-adc9-e02497862a82",
+      "type": "tileset",
+      "custom_data": {
+        "width": 2,
+        "height": 1,
+        "sprite": "brick",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": true,
+        "animated": false
+      }
+    },
+    {
+      "x": 46.5625,
+      "y": 19.5625,
+      "uuid": "3923eab1-c322-477a-b92e-1ea52bebc1c6",
+      "type": "tileset",
+      "custom_data": {
+        "width": 1,
+        "height": 3,
+        "sprite": "tilesets/bricks",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": false,
+        "animated": false
+      }
+    },
+    {
+      "x": 46.5625,
+      "y": 22.5625,
+      "uuid": "d90553d8-52b2-4022-9038-6bff75e75e83",
+      "type": "tileset",
+      "custom_data": {
+        "width": 1,
+        "height": 1,
+        "sprite": "brick",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": true,
+        "animated": false
+      }
+    },
+    {
+      "x": 12.5,
+      "y": 25.0,
+      "uuid": "47090710-b492-4a62-89a5-665f483bf2aa",
+      "type": "tileset",
+      "custom_data": {
+        "width": 1,
+        "height": 2,
+        "sprite": "tilesets/bricks",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": false,
+        "animated": false
+      }
+    },
+    {
+      "x": 12.5,
+      "y": 27.0,
+      "uuid": "d7d7aca8-a4d6-42d5-a3b9-be803c90fc50",
+      "type": "tileset",
+      "custom_data": {
+        "width": 1,
+        "height": 1,
+        "sprite": "brick",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": true,
+        "animated": false
+      }
+    },
+    {
+      "x": 50.625,
+      "y": 8.375,
+      "uuid": "b5619bfc-b8aa-4376-83a4-762ab646c2d8",
+      "type": "tileset",
+      "custom_data": {
+        "width": 2,
+        "height": 1,
+        "sprite": "tilesets/bricks",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": false,
+        "animated": false
+      }
+    },
+    {
+      "x": 50.625,
+      "y": 9.375,
+      "uuid": "4ec8b8e4-94d0-4788-b713-80d9a2ddafdb",
+      "type": "tileset",
+      "custom_data": {
+        "width": 3,
+        "height": 1,
+        "sprite": "brick",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": true,
+        "animated": false
+      }
+    },
+    {
+      "x": 52.625,
+      "y": 6.375,
+      "uuid": "4c84231e-30e7-43f6-894d-7755d3d0a282",
+      "type": "tileset",
+      "custom_data": {
+        "width": 1,
+        "height": 3,
+        "sprite": "tilesets/bricks",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": false,
+        "animated": false
+      }
+    },
+    {
+      "x": 47.625,
+      "y": 6.1875,
+      "uuid": "ead0ce3d-f687-4e03-bd8a-6abd33212c65",
+      "type": "liquid_barrel",
+      "custom_data": {
+        "sprite": "oil_drum",
+        "explosive": true
+      }
+    },
+    {
+      "x": 54.1875,
+      "y": 3.25,
+      "uuid": "c2809756-d7e8-4cdd-848e-f41e8825dde2",
+      "type": "liquid_barrel",
+      "custom_data": {
+        "sprite": "oil_drum",
+        "explosive": true
       }
     }
   ],

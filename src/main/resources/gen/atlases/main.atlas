@@ -13,7 +13,7 @@ bit
   index: -1
 brick
   rotate: false
-  xy: 36, 392
+  xy: 86, 426
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -27,308 +27,315 @@ button
   index: -1
 costumes/colour_blue
   rotate: false
-  xy: 358, 922
+  xy: 392, 940
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 costumes/colour_green
   rotate: false
-  xy: 376, 940
+  xy: 424, 988
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 costumes/colour_maroon
   rotate: false
-  xy: 424, 988
+  xy: 442, 1006
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 costumes/colour_orange
   rotate: false
-  xy: 442, 1006
+  xy: 36, 358
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 costumes/colour_pink
   rotate: false
-  xy: 36, 374
+  xy: 54, 376
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 costumes/colour_purple
   rotate: false
-  xy: 88, 426
+  xy: 86, 408
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 costumes/colour_red
   rotate: false
-  xy: 294, 632
+  xy: 104, 426
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 costumes/colour_yellow
   rotate: false
-  xy: 358, 904
+  xy: 294, 632
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 costumes/dev_face
   rotate: false
-  xy: 442, 988
+  xy: 460, 1006
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 costumes/dev_shirt
   rotate: false
-  xy: 460, 1006
+  xy: 36, 340
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 costumes/face1
   rotate: false
-  xy: 478, 1006
+  xy: 36, 322
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 costumes/face2
   rotate: false
-  xy: 36, 338
+  xy: 54, 340
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 costumes/face3
   rotate: false
-  xy: 124, 426
+  xy: 122, 408
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 costumes/face4
   rotate: false
-  xy: 294, 596
+  xy: 140, 426
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 costumes/face5
   rotate: false
-  xy: 358, 868
+  xy: 294, 596
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 costumes/face6
   rotate: false
-  xy: 376, 886
+  xy: 358, 852
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 costumes/hat1
   rotate: false
-  xy: 394, 886
+  xy: 478, 970
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 costumes/hat2
   rotate: false
-  xy: 478, 970
+  xy: 36, 286
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 costumes/hat3
   rotate: false
-  xy: 36, 302
+  xy: 54, 304
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 costumes/hat4
   rotate: false
-  xy: 160, 426
+  xy: 158, 408
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 costumes/hat5
   rotate: false
-  xy: 294, 560
+  xy: 176, 426
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 costumes/hat6
   rotate: false
-  xy: 358, 832
+  xy: 294, 560
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 costumes/hat7
   rotate: false
-  xy: 376, 850
+  xy: 358, 816
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 costumes/hat8
   rotate: false
-  xy: 394, 868
+  xy: 36, 268
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 costumes/hat9
   rotate: false
-  xy: 36, 284
+  xy: 54, 286
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 costumes/pants1
   rotate: false
-  xy: 358, 778
+  xy: 294, 506
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 costumes/pants2
   rotate: false
-  xy: 376, 796
+  xy: 358, 762
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 costumes/pants3
   rotate: false
-  xy: 394, 814
+  xy: 36, 214
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 costumes/pants4
   rotate: false
-  xy: 36, 230
+  xy: 54, 232
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 costumes/pants5
   rotate: false
-  xy: 232, 426
+  xy: 230, 408
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 costumes/pants6
   rotate: false
-  xy: 294, 488
+  xy: 248, 426
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 costumes/pants7
   rotate: false
-  xy: 358, 760
+  xy: 294, 488
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 costumes/pants8
   rotate: false
-  xy: 376, 778
+  xy: 358, 744
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 costumes/pants9
   rotate: false
-  xy: 394, 796
+  xy: 36, 196
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 costumes/shirt1
   rotate: false
-  xy: 394, 724
+  xy: 36, 88
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 costumes/shirt2
   rotate: false
-  xy: 36, 140
+  xy: 54, 106
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 costumes/shirt3
   rotate: false
-  xy: 394, 706
+  xy: 36, 70
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 costumes/shirt4
   rotate: false
-  xy: 36, 122
+  xy: 54, 88
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 costumes/shirt5
   rotate: false
-  xy: 36, 104
+  xy: 36, 52
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 costumes/shirt6
   rotate: false
-  xy: 36, 86
+  xy: 54, 70
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 costumes/shirt7
   rotate: false
-  xy: 36, 68
+  xy: 36, 34
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 costumes/shirt8
   rotate: false
-  xy: 36, 50
+  xy: 54, 52
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
+falling_floor
+  rotate: false
+  xy: 36, 394
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
 fence_bc
   rotate: false
-  xy: 394, 904
+  xy: 460, 970
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 fence_tc
   rotate: false
-  xy: 36, 320
+  xy: 54, 322
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -342,7 +349,7 @@ gameyay
   index: -1
 goal_c
   rotate: false
-  xy: 142, 426
+  xy: 140, 408
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -356,21 +363,21 @@ icon
   index: -1
 missing
   rotate: false
-  xy: 294, 506
+  xy: 230, 426
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 oil_drum
   rotate: false
-  xy: 36, 410
+  xy: 294, 668
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 particle
   rotate: false
-  xy: 294, 668
+  xy: 358, 924
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -384,28 +391,28 @@ particle-star
   index: -1
 player
   rotate: false
-  xy: 36, 212
+  xy: 54, 214
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 player2
   rotate: false
-  xy: 250, 426
+  xy: 248, 408
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 player_spawn
   rotate: false
-  xy: 294, 470
+  xy: 266, 426
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 potato
   rotate: false
-  xy: 358, 742
+  xy: 294, 470
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -419,189 +426,189 @@ rick
   index: -1
 sheep
   rotate: false
-  xy: 376, 706
+  xy: 54, 124
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 tilesets/bricks
   rotate: false
-  xy: 70, 426
+  xy: 294, 650
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 tilesets/fence_lr
   rotate: false
-  xy: 460, 970
+  xy: 478, 988
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 tilesets/fence_tb
   rotate: false
-  xy: 478, 988
+  xy: 36, 304
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 tilesets/goal_lr
   rotate: false
-  xy: 294, 578
+  xy: 158, 426
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 tilesets/goal_tb
   rotate: false
-  xy: 358, 850
+  xy: 294, 578
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 tilesets/grass
   rotate: false
-  xy: 376, 868
+  xy: 358, 834
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 tilesets/grass-export
   rotate: false
-  xy: 376, 868
+  xy: 358, 834
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 tilesets/kitchen_tiles
   rotate: false
-  xy: 178, 426
+  xy: 176, 408
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 tilesets/road
   rotate: false
-  xy: 394, 742
+  xy: 54, 142
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 tire
   rotate: false
-  xy: 36, 32
+  xy: 36, 16
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ui/border
   rotate: false
-  xy: 312, 662
+  xy: 346, 696
   size: 4, 4
   orig: 4, 4
   offset: 0, 0
   index: -1
 ui/button
   rotate: false
-  xy: 294, 650
+  xy: 328, 684
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ui/button_hovered
   rotate: false
-  xy: 328, 684
+  xy: 358, 906
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ui/cursor
   rotate: false
-  xy: 424, 970
+  xy: 442, 988
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ui/icon/a
   rotate: false
-  xy: 358, 940
+  xy: 424, 1006
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ui/icon/b
   rotate: false
-  xy: 424, 1006
+  xy: 36, 376
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ui/icon/controller
   rotate: false
-  xy: 376, 922
+  xy: 358, 888
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ui/icon/controller_horizontal
   rotate: false
-  xy: 394, 940
+  xy: 424, 970
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ui/icon/dpad
   rotate: false
-  xy: 36, 356
+  xy: 54, 358
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ui/icon/dpad_center
   rotate: false
-  xy: 106, 426
+  xy: 104, 408
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ui/icon/dpad_down
   rotate: false
-  xy: 294, 614
+  xy: 122, 426
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ui/icon/dpad_left
   rotate: false
-  xy: 358, 886
+  xy: 294, 614
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ui/icon/dpad_leftright
   rotate: false
-  xy: 376, 904
+  xy: 358, 870
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ui/icon/dpad_right
   rotate: false
-  xy: 394, 922
+  xy: 442, 970
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ui/icon/dpad_up
   rotate: false
-  xy: 442, 970
+  xy: 460, 988
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ui/icon/dpad_updown
   rotate: false
-  xy: 460, 988
+  xy: 478, 1006
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -615,112 +622,112 @@ ui/icon/empty
   index: -1
 ui/icon/left_button
   rotate: false
-  xy: 294, 542
+  xy: 194, 426
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ui/icon/left_stick
   rotate: false
-  xy: 358, 814
+  xy: 294, 542
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ui/icon/left_stick_any
   rotate: false
-  xy: 376, 832
+  xy: 358, 798
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ui/icon/left_stick_button
   rotate: false
-  xy: 394, 850
+  xy: 36, 250
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ui/icon/left_stick_down
   rotate: false
-  xy: 36, 266
+  xy: 54, 268
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ui/icon/left_stick_left
   rotate: false
-  xy: 196, 426
+  xy: 194, 408
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ui/icon/left_stick_leftright
   rotate: false
-  xy: 294, 524
+  xy: 212, 426
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ui/icon/left_stick_right
   rotate: false
-  xy: 358, 796
+  xy: 294, 524
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ui/icon/left_stick_up
   rotate: false
-  xy: 376, 814
+  xy: 358, 780
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ui/icon/left_stick_updown
   rotate: false
-  xy: 394, 832
+  xy: 36, 232
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ui/icon/left_trigger
   rotate: false
-  xy: 36, 248
+  xy: 54, 250
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ui/icon/menu
   rotate: false
-  xy: 214, 426
+  xy: 212, 408
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ui/icon/right_button
   rotate: false
-  xy: 376, 760
+  xy: 358, 726
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ui/icon/right_stick
   rotate: false
-  xy: 394, 778
+  xy: 36, 178
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ui/icon/right_stick_any
   rotate: false
-  xy: 36, 194
+  xy: 54, 196
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ui/icon/right_stick_button
   rotate: false
-  xy: 268, 426
+  xy: 266, 408
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -734,77 +741,77 @@ ui/icon/right_stick_down
   index: -1
 ui/icon/right_stick_left
   rotate: false
-  xy: 358, 724
+  xy: 358, 708
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ui/icon/right_stick_leftright
   rotate: false
-  xy: 376, 742
+  xy: 36, 160
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ui/icon/right_stick_right
   rotate: false
-  xy: 394, 760
+  xy: 54, 178
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ui/icon/right_stick_up
   rotate: false
-  xy: 36, 176
+  xy: 36, 142
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ui/icon/right_stick_updown
   rotate: false
-  xy: 358, 706
+  xy: 54, 160
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ui/icon/right_trigger
   rotate: false
-  xy: 376, 724
+  xy: 36, 124
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ui/icon/upload
   rotate: false
-  xy: 36, 14
+  xy: 54, 34
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ui/icon/window
   rotate: false
-  xy: 54, 392
+  xy: 54, 16
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ui/icon/x
   rotate: false
-  xy: 54, 374
+  xy: 312, 650
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ui/icon/y
   rotate: false
-  xy: 54, 356
+  xy: 312, 632
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ui/select
   rotate: false
-  xy: 36, 158
+  xy: 36, 106
   size: 16, 16
   orig: 16, 16
   offset: 0, 0

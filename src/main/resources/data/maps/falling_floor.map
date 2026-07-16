@@ -1,0 +1,199 @@
+{
+  "objects": [
+    {
+      "x": 12.4375,
+      "y": 11.5625,
+      "uuid": "95c65e57-3604-4f58-b5ee-e87ea150dbaa",
+      "type": "player_spawn_point",
+      "custom_data": {
+        "id": 1
+      }
+    },
+    {
+      "x": 18.75,
+      "y": 11.5,
+      "uuid": "c7c846a8-08ee-4050-aa5c-4ef863d9885e",
+      "type": "player_spawn_point",
+      "custom_data": {
+        "id": 2
+      }
+    },
+    {
+      "x": 12.6875,
+      "y": 5.4375,
+      "uuid": "8980418e-2e27-4587-84ba-ae75dd3ebaf9",
+      "type": "player_spawn_point",
+      "custom_data": {
+        "id": 3
+      }
+    },
+    {
+      "x": 18.25,
+      "y": 5.5625,
+      "uuid": "65874d13-c3d4-4bf7-9f9a-fb8ead78060d",
+      "type": "player_spawn_point",
+      "custom_data": {
+        "id": 4
+      }
+    },
+    {
+      "x": 14.5,
+      "y": 7.5,
+      "uuid": "c4489d4e-35b9-4d85-ae66-67052af931e5",
+      "type": "falling_floor",
+      "custom_data": {}
+    },
+    {
+      "x": 0.0,
+      "y": 0.0,
+      "uuid": "f33e3a0e-d62f-49ca-86dc-491f40578537",
+      "type": "tileset",
+      "custom_data": {
+        "width": 34,
+        "height": 20,
+        "sprite": "tilesets/road",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": false,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "0059ffff",
+        "textureHitbox": false,
+        "animated": false
+      }
+    },
+    {
+      "x": 17.5,
+      "y": 7.5,
+      "uuid": "d7e16b62-28e2-423d-8111-8e6a2a21c59c",
+      "type": "falling_floor",
+      "custom_data": {}
+    },
+    {
+      "x": 14.5,
+      "y": 4.5,
+      "uuid": "ab65c089-87c3-43e9-991c-5c3e78861f6f",
+      "type": "falling_floor",
+      "custom_data": {}
+    },
+    {
+      "x": 11.5,
+      "y": 7.5,
+      "uuid": "e5672304-e6e6-44bd-b522-cec9fb9d6d1b",
+      "type": "falling_floor",
+      "custom_data": {}
+    },
+    {
+      "x": 14.5,
+      "y": 10.5,
+      "uuid": "e8693396-24b3-423d-b574-f2bb18e72142",
+      "type": "falling_floor",
+      "custom_data": {}
+    },
+    {
+      "x": 11.5,
+      "y": 10.5,
+      "uuid": "ca2705e5-9a5f-4949-9b89-9a9fdf05cec3",
+      "type": "falling_floor",
+      "custom_data": {}
+    },
+    {
+      "x": 17.5,
+      "y": 10.5,
+      "uuid": "0a239afc-e035-4aaf-8e85-9b37f2d28acb",
+      "type": "falling_floor",
+      "custom_data": {}
+    },
+    {
+      "x": 17.5,
+      "y": 4.5,
+      "uuid": "f1c1445e-3985-410c-8040-c2a45a299774",
+      "type": "falling_floor",
+      "custom_data": {}
+    },
+    {
+      "x": 11.5,
+      "y": 4.5,
+      "uuid": "0c1da41e-d51b-4175-b0aa-ac32f8ed4002",
+      "type": "falling_floor",
+      "custom_data": {}
+    },
+    {
+      "x": -13.9375,
+      "y": -13.1875,
+      "uuid": "787ccd21-41f9-4393-855a-531c6337549e",
+      "type": "tileset",
+      "custom_data": {
+        "width": 8,
+        "height": 1,
+        "sprite": "sheep",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": false,
+        "animated": false
+      }
+    },
+    {
+      "x": -6.4375,
+      "y": -12.6875,
+      "uuid": "fccc5177-94f9-4112-94d3-6ab00afcbe28",
+      "type": "tileset",
+      "custom_data": {
+        "width": 1,
+        "height": 6,
+        "sprite": "sheep",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": false,
+        "animated": false
+      }
+    },
+    {
+      "x": -13.75,
+      "y": -7.0,
+      "uuid": "d323ffc0-382a-483e-ac29-270c653167ff",
+      "type": "tileset",
+      "custom_data": {
+        "width": 8,
+        "height": 1,
+        "sprite": "sheep",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": false,
+        "animated": false
+      }
+    },
+    {
+      "x": -14.25,
+      "y": -12.6875,
+      "uuid": "2476c0dc-199a-43e2-a2af-01dd22f27ff9",
+      "type": "tileset",
+      "custom_data": {
+        "width": 1,
+        "height": 6,
+        "sprite": "sheep",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": false,
+        "animated": false
+      }
+    }
+  ],
+  "lights": []
+}

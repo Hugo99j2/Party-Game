@@ -16,6 +16,8 @@ public class ObjectTypes {
     public static final ObjectType<LiquidBarrelObject> LIQUID_BARREL = registerObjectType(new ObjectType<>("liquid_barrel", LiquidBarrelObject::read, LiquidBarrelObject::createDefault));
     public static final ObjectType<CollisionObject> COLLISION = registerObjectType(new ObjectType<>("collision", CollisionObject::read, CollisionObject::createDefault));
     public static final ObjectType<PlayerSpawnPoint> PLAYER_SPAWN_POINT = registerObjectType(new ObjectType<>("player_spawn_point", PlayerSpawnPoint::read, PlayerSpawnPoint::createDefault));
+    public static final ObjectType<FallingFloorObject> FALLING_FLOOR = registerObjectType(new ObjectType<>("falling_floor", FallingFloorObject::read, FallingFloorObject::createDefault));
+
 
     private static <T extends AbstractObject> ObjectType<T> registerObjectType(ObjectType<T> type) {
         types.put(type.id(), type);

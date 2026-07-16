@@ -17,8 +17,10 @@ import com.hugo99j.chaosparty.match.MatchView;
 import com.hugo99j.chaosparty.ui.ControllerInput;
 import com.hugo99j.chaosparty.ui.ControllerUtil;
 import com.hugo99j.chaosparty.ui.Timer;
+import com.hugo99j.chaosparty.util.Logger;
 import com.hugo99j.chaosparty.util.PathUtil;
 import com.hugo99j.chaosparty.util.ToRun;
+import org.spongepowered.asm.logging.ILogger;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -79,6 +81,7 @@ public class HotPotatoMinigame extends AbstractMinigame {
         hotEffect.setPosition(hotPlayer.getPlayerObject().getPos().x+0.3f, hotPlayer.getPlayerObject().getPos().y+1);
 
         if(((ControllerUtil) hotPlayer.controller).wasJustPressed(ControllerInput.RIGHT_BUMPER)) {
+            Logger.info("Potato");
             Potato potato = new Potato();
             potato.setX(hotPlayer.getPlayerObject().getPos().x);
             potato.setY(hotPlayer.getPlayerObject().getPos().y);

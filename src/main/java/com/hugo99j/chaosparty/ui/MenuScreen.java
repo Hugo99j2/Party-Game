@@ -61,6 +61,13 @@ public class MenuScreen extends UiScreen {
             .set("ySize", 64)
             .set("scale", 2)
             .finishChild()
+            .newChild("fall")
+            .set("x", "auto")
+            .set("y", "auto")
+            .set("xSize", 320)
+            .set("ySize", 64)
+            .set("scale", 2)
+            .finishChild()
             .newChild("new")
             .set("x", "auto")
             .set("y", "auto")
@@ -107,6 +114,13 @@ public class MenuScreen extends UiScreen {
                 start(new HotPotatoMinigame());
             }
         });
+        this.addRenderable(new Button("fall", "button", "Start Falling!") {
+            @Override
+            public void onClick() {
+                super.onClick();
+                start(new FallingFloorMinigame());
+            }
+        });
         this.addRenderable(new Button("new", "button", "New game!") {
             @Override
             public void onClick() {
@@ -124,7 +138,7 @@ public class MenuScreen extends UiScreen {
         });
 
         //new ScreenSS("0.5vw", "0.7vh", "1", "1", "1", false)
-        this.addRenderable(new Text("text", "<colour:blue>Hello world"));
+        this.addRenderable(new Text("text", "<colour:blue>CHAOS PARTY!"));
     }
 
     private void start(AbstractMinigame minigame) {

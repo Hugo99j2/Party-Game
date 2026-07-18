@@ -179,6 +179,11 @@ public class UiScreen implements Screen {
         throw new IllegalArgumentException("No element with id " + elementId);
     }
 
+    public String getControllerSelected() {
+        if(this.controllerSelected == null) return "";
+        return this.controllerSelected.getElementId();
+    }
+
     public void editSSContext(MathsContext context) {
     }
 }

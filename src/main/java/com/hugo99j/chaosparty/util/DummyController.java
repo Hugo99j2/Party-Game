@@ -119,6 +119,21 @@ public class DummyController implements Controller, ControllerUtil {
     }
 
     @Override
+    public boolean wasJustPressedThisTick(ControllerInput input) {
+        return false;
+    }
+
+    @Override
+    public void onTick() {
+
+    }
+
+    @Override
+    public void update() {
+
+    }
+
+    @Override
     public boolean isPressed(ControllerInput input) {
         return false;
     }

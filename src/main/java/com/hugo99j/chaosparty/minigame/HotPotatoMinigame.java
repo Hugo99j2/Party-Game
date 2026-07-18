@@ -48,6 +48,8 @@ public class HotPotatoMinigame extends AbstractMinigame {
     private ParticleEffect hotScreenEffect;
     private MatchPlayer hotPlayer;
     private boolean hotCollisionCooldown = false;
+    private int potatoPassThreshold = 0;
+    private float largestTime = 15;
 
     public HotPotatoMinigame() {
         super("hot_potato");
@@ -79,11 +81,12 @@ public class HotPotatoMinigame extends AbstractMinigame {
 
     @Override
     public void tick() {
+        potatoPassThreshold--;
         hotCollisionCooldown = false;
         this.defaultPlayerMovements();
         hotEffect.setPosition(hotPlayer.getPlayerObject().getPos().x+0.3f, hotPlayer.getPlayerObject().getPos().y+1);
 
-        if(((ControllerUtil) hotPlayer.controller).wasJustPressed(ControllerInput.RIGHT_BUMPER)) {
+        if(((ControllerUtil) hotPlayer.controller).wasJustPressedThisTick(ControllerInput.RIGHT_BUMPER)) {
             Logger.info("Potato");
             Potato potato = new Potato();
             potato.setX(hotPlayer.getPlayerObject().getPos().x);
@@ -92,7 +95,8 @@ public class HotPotatoMinigame extends AbstractMinigame {
             potato.getPhysics().applyForceToCenter(((ControllerUtil) hotPlayer.controller).getValue(ControllerInput.RIGHT_STICK_RIGHT)*10000, ((ControllerUtil) hotPlayer.controller).getValue(ControllerInput.RIGHT_STICK_UP)*10000, true);
         }
 
-        if(timer.getSeconds() <= 0) {
+        if(timer.getSeconds() <= 0 || potatoPassThreshold > 300) {
+            potatoPassThreshold = 0;
             getHotPlayer().getPlayerObject().setNoClip(true);
             for (MatchPlayer player : GameData.getCurrentMatch().getPlayers()) {
                 if(!player.getPlayerObject().isNoClip()) GameData.getCurrentMatch().getCurrentMinigame().addScore(player, 1);
@@ -114,6 +118,8 @@ public class HotPotatoMinigame extends AbstractMinigame {
                     matches++;
                 }
             }
+            this.timer.setTime(15, false);
+            largestTime = 15;
             if(matches <= 1) {
                 ToRun.run(() -> GameData.getCurrentMatch().finishCurrentMinigame());
             }
@@ -167,11 +173,16 @@ public class HotPotatoMinigame extends AbstractMinigame {
 
     public boolean setHotPlayer(MatchPlayer hotPlayer) {
         if(this.hotPlayer == hotPlayer) return false;
+        if(hotPlayer.getPlayerObject().isNoClip()) {
+            Logger.error("Shouldnt make dead player hot");
+        }
+        potatoPassThreshold += 50;
         for (MatchView matchView : GameData.getCurrentMatch().getMatchViews()) {
             matchView.getActiveEffects().clear();
         }
         this.hotPlayer = hotPlayer;
-        this.timer.setTime(15, false);
+        this.timer.setTime((int) Math.min(15-((15-this.timer.getSeconds())/1.5f), largestTime), false);
+        largestTime = Math.min(largestTime, timer.getSeconds());
         for (MatchView matchView : GameData.getCurrentMatch().getMatchViews()) {
             if(matchView.getPlayer() == hotPlayer) {
                 matchView.addEffect(EffectType.LIQUID, 1000);

@@ -16,6 +16,7 @@ import com.hugo99j.chaosparty.entity.FallingFloorObject;
 import com.hugo99j.chaosparty.entity.Player;
 import com.hugo99j.chaosparty.match.MatchView;
 import com.hugo99j.chaosparty.ui.Timer;
+import com.hugo99j.chaosparty.ui.element.ProgressBar;
 import com.hugo99j.chaosparty.util.Logger;
 import com.hugo99j.chaosparty.util.RenderUtil;
 import com.hugo99j.chaosparty.util.ToRun;
@@ -30,29 +31,18 @@ public class FallingFloorMinigame extends AbstractMinigame {
     private int maxTime = 5*GameData.TICKS_PER_SECOND;
     private Color safeColour = Color.GREEN;
     private int ticksUntilCanKill = 20;
+    private ProgressBar progressBar;
 
     private final CombinedScreenSS ss = ScreenSSBuilder.create()
-        .set("xSize", "1vw")
-        .set("ySize", "1vh")
+        .set("xSize", "100vw")
+        .set("ySize", "100vh")
         .set("x", 0)
         .set("y", 0)
-        .newChild("rightcorner")
-        .set("x", "20")
-        .set("y", "0.1vh")
-        .set("xSize", "0.02vw")
-        .set("ySize", "0.02vh")
-        .newChild("timer")
-        .set("x", "5%")
-        .set("y", "0")
-        .set("xSize", "95%")
-        .set("ySize", "40%")
-        .finishChild()
-        .newChild("score")
-        .set("x", "5%")
-        .set("y", "40%+20%")
-        .set("xSize", "95%")
-        .set("ySize", "40%")
-        .finishChild()
+        .newChild("colourbar")
+        .set("x", "50vw")
+        .set("y", "80vh")
+        .set("xSize", "4vw")
+        .set("ySize", "4vh")
         .finishChild()
         .build();
     private SoundInstance music;
@@ -69,6 +59,8 @@ public class FallingFloorMinigame extends AbstractMinigame {
     @Override
     public void start() {
         super.start();
+        progressBar = new ProgressBar("colourbar", 45);
+        progressBar.setStyle(ss.get("colourbar"));
         music = SoundManager.getSound("falling_floor_music").playSingle(1);
     }
 
@@ -106,6 +98,9 @@ public class FallingFloorMinigame extends AbstractMinigame {
             Logger.info(RenderUtil.toString(this.safeColour));
             this.randomiseColours();
         }
+        this.progressBar.setMax(maxTime);
+        this.progressBar.setValue(time);
+        this.progressBar.setColor(this.safeColour);
     }
 
     private void randomiseColours() {
@@ -117,6 +112,13 @@ public class FallingFloorMinigame extends AbstractMinigame {
             }
         }
         if(!safeShowedUp) randomiseColours();
+    }
+
+    @Override
+    public void render(float delta) {
+        GameData.spriteBatch.begin();
+        progressBar.render(new RenderState(false, false, false, false, false, false, 0, 0, delta));
+        GameData.spriteBatch.end();
     }
 
     @Override

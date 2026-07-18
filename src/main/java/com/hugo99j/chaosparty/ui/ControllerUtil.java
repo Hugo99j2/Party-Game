@@ -7,6 +7,9 @@ public interface ControllerUtil {
     boolean wasJustPressed(ControllerInput input);
     boolean isPressed(ControllerInput input);
     float getValue(ControllerInput input);
+    boolean wasJustPressedThisTick(ControllerInput input);
+    void onTick();
+    void update();
 
     float DEAD_ZONE = 0.25f;
 

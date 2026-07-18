@@ -79,8 +79,8 @@ public class Debuggers {
     private static final ArrayList<Short> fpsCounter = new ArrayList<>();
     static String createObjectData = null;
     private static final ArrayList<String> logger = new ArrayList<>();
-    public static final Map<String, ArrayList<PathfindDebugPos>> pathfindDebuggers = new HashMap<>();
-    public static final Map<String, Integer> pathfindDebuggerTimers = new HashMap<>();
+    public static final Map<UUID, ArrayList<PathfindDebugPos>> pathfindDebuggers = new HashMap<>();
+    public static final Map<UUID, Integer> pathfindDebuggerTimers = new HashMap<>();
     public static Vector2 freecam = Vector2.Zero;
     private static float lastTime = 0;
     private static int selectedSound = 0;
@@ -123,6 +123,7 @@ public class Debuggers {
             option("pathfindingRender", false);
             option("markers", false);
             option("showAdvancedObjectPicking", false);
+            option("validPathfindingSpotRenderer", false);
 
             category("Minigame");
             option("forceSingleView", false);

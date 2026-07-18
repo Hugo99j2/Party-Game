@@ -57,13 +57,12 @@ public class GameData {
     }
 
     public static PathfinderOptions.Builder createPathfinding(AbstractObject from) {
-        String name = String.valueOf(from.hashCode());
-        return PathfinderOptions.builder().diagonalNeighbourProvider().maxIterations(1000).debugRenderConsumer(DEBUGGING ? pathfindDebugPos -> {
-            Debuggers.pathfindDebuggerTimers.put(name, GameData.TICKS_PER_SECOND*5);
+        return PathfinderOptions.builder().diagonalNeighbourProvider().heuristicFunction((f, t) -> (double)(Math.abs(f.getX() - t.getX()) + Math.abs(f.getY() - t.getY()))*3).maxIterations(1000).debugRenderConsumer(DEBUGGING ? pathfindDebugPos -> {
+            Debuggers.pathfindDebuggerTimers.put(from.getUUID(), GameData.TICKS_PER_SECOND*5);
             if (pathfindDebugPos.type().equals(PathfindDebugType.BEGIN_MARKER_NOTREAL)) {
-                Debuggers.pathfindDebuggers.put(name, new ArrayList<>());
+                Debuggers.pathfindDebuggers.put(from.getUUID(), new ArrayList<>());
             } else if (!pathfindDebugPos.type().equals(PathfindDebugType.END_MARKER_NOTREAL)) {
-                Debuggers.pathfindDebuggers.get(name).add(pathfindDebugPos);
+                Debuggers.pathfindDebuggers.get(from.getUUID()).add(pathfindDebugPos);
             }
         } : null);
     }

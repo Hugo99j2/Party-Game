@@ -56,17 +56,17 @@ public class LiquidBarrelObject extends AbstractObject {
         GameData.getLevelOrThrow().particles.add(boom);
         SoundManager.getSound("explode").playSingle(1);
         int delay = 0;
-        for (LiquidBarrelObject objectsInRadius : this.getLevel().getObjectsInRadius(this.getPos().add(0.5f, 0.5f), 5, LiquidBarrelObject.class, true, this)) {
+        for (LiquidBarrelObject objectsInRadius : this.getLevel().getObjectsInRadius(this.getPos().add(0.5f, 0.5f), 5, LiquidBarrelObject.class, true, false, this)) {
             delay += NumberUtils.getRandomInt(3, 7);
             objectsInRadius.explodeAt(delay);
         }
-        for (Player player : this.getLevel().getObjectsInRadius(this.getPos().add(0.5f, 0.5f), 5, Player.class, false, null)) {
+        for (Player player : this.getLevel().getObjectsInRadius(this.getPos().add(0.5f, 0.5f), 5, Player.class, false, false, null)) {
             if(GameData.getCurrentMatch().getCurrentMinigame() instanceof HotPotatoMinigame hotPotatoMinigame) {
                 if(hotPotatoMinigame.getHotPlayer().equals(player.getMatchPlayer())) continue;
                 if(hotPotatoMinigame.setHotPlayer(player.getMatchPlayer())) break;
             }
         }
-        for (Player player : this.getLevel().getObjectsInRadius(this.getPos().add(0.5f, 0.5f), 20, Player.class, false, null)) {
+        for (Player player : this.getLevel().getObjectsInRadius(this.getPos().add(0.5f, 0.5f), 20, Player.class, false, false, null)) {
             for (MatchView matchView : GameData.getCurrentMatch().getMatchViews()) {
                 if(matchView.getPlayer().equals(player.getMatchPlayer())) {
                     matchView.setCamerashakeTime(1);

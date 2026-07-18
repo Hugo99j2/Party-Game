@@ -15,17 +15,23 @@ import com.hugo99j.chaosparty.entity.Player;
 import com.hugo99j.chaosparty.entity.Potato;
 import com.hugo99j.chaosparty.minigame.HotPotatoMinigame;
 import com.hugo99j.chaosparty.ui.debugger.Debuggers;
+import org.checkerframework.checker.units.qual.A;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
+import java.util.function.ToDoubleFunction;
 
 public class BotController {
     private final CachedPathfinder pathfinder;
     private final Player player;
     private PathfindPos oldPos = null;
     private Vector2 pathfindTarget = null;
+    private int nextNode = 0;
+    private List<Integer> completed = new ArrayList<>();
+    private ToDoubleFunction<PathfindPos> walkCost = null;
 
     public BotController(Player player) {
         this.player = player;
@@ -39,32 +45,49 @@ public class BotController {
     private void runPathfinding(boolean invalid) {
         if(GameData.DEBUGGING && Debuggers.isEnabled("disablePathfinding")) return;
         if(Debuggers.isEnabled("pathfindingRender")) {
-            if(Debuggers.pathfindDebuggerTimers.getOrDefault(String.valueOf(this.player.hashCode()), 99999) < 40) Debuggers.pathfindDebuggerTimers.put(String.valueOf(this.player.hashCode()), 40);
+            if(Debuggers.pathfindDebuggerTimers.getOrDefault(this.player.getUUID(), 99999) < 40) Debuggers.pathfindDebuggerTimers.put(this.player.getUUID(), 40);
         }
         Vector2 target = getTarget();
         if(target != null) {
             PathfindPos cachedTarget = toPathfindPos(target);
-            PathfindPos pos = toPathfindPos(this.player.getPos());
-            PathfindPos nextPos = null;
+            PathfindPos pos = toPathfindPos(this.player.getPos().add(0.5f, 0.5f));
             List<PathfindPos> nodes = pathfinder.findPath(oldPos == null ? pos : oldPos, cachedTarget, pos);
             if(nodes.size() <= 2) return; //2 so that if the path is just start to end, dont do it
             //its a hack fix to stop it pathfinding to invalid places
 
             if(pathfinder.wasLastInvalid() || invalid) {
                 oldPos = pos;
-                nextPos = nodes.get(1);
+                nextNode = 1;
+                completed.clear();
+                if(!invalid) runPathfinding(true);
             } else {
-                int i = 0;
-                for (PathfindPos node : nodes) {
-                    if(node.equals(pos)) {
-                        if(i >= nodes.size()-1) return;
-                        nextPos = nodes.get(i+1);
-                        break;
-                    }
-                    i++;
+//                int i = 0;
+//                for (PathfindPos node : nodes) {
+//                    if(new Vector2(node.getX(), node.getY()).add(0.5f, 0.5f).dst(this.player.getPos().add(0.5f, 0.5f)) < 0.1f) {
+//                        if(i >= nodes.size()-1) return;
+//                        nextPos = nodes.get(i+1);
+//                        break;
+//                    }
+//                    i++;
+//                }
+//
+//                if(nextPos == null) {
+//                    runPathfinding(true);
+//                    return;
+//                }
+                if(this.getPlayer().getPos().dst(new Vector2(nodes.get(nextNode).getX(), nodes.get(nextNode).getY())) < 0.5f) {
+                    nextNode++;
                 }
 
-                if(nextPos == null) {
+                if(GameData.DEBUGGING && Debuggers.isEnabled("pathfindingRender")) {
+                    for (PathfindPos node : nodes) {
+                        if(nodes.indexOf(node) <= nextNode) {
+                            completed.add(node.hashCode());
+                        }
+                    }
+                }
+
+                if(nextNode < 0 || nextNode >= nodes.size()) {
                     runPathfinding(true);
                     return;
                 }
@@ -72,7 +95,7 @@ public class BotController {
 
             float speed = Math.max(this.getSpeed()-this.player.getVelocity().len(), 0);
 
-            this.player.moveTowardTarget(new Vector2(nextPos.getX() + 0.5f, nextPos.getY() + 0.5f), speed);
+            this.player.moveTowardTarget(new Vector2(nodes.get(nextNode).getX(), nodes.get(nextNode).getY()), speed);
         }
     }
 
@@ -93,7 +116,7 @@ public class BotController {
                 }
                 return true;
             };
-            GameData.getLevelOrThrow().getBox2dWorld().QueryAABB(callback, pos.getX()+hitbox.x-distance, pos.getY()+hitbox.y-distance, pos.getX()+hitbox.z+hitbox.x+distance, pos.getY()+hitbox.w+hitbox.y+distance);
+            GameData.getLevelOrThrow().getBox2dWorld().QueryAABB(callback, pos.getX()+hitbox.x, pos.getY()+hitbox.y, pos.getX()+hitbox.z+hitbox.x, pos.getY()+hitbox.w+hitbox.y);
             return !hit.get();
         };
     }
@@ -122,5 +145,21 @@ public class BotController {
 
     public void setTarget(Vector2 pathfindTarget) {
         this.pathfindTarget = pathfindTarget.cpy();
+    }
+
+    public CachedPathfinder getPathfinder() {
+        return pathfinder;
+    }
+
+    public List<Integer> getCompleted() {
+        return completed;
+    }
+
+    protected void setWalkCost(ToDoubleFunction<PathfindPos> walkCost) {
+        if(walkCost == null) walkCost = (pos) -> 1.0D;
+        if(walkCost != this.walkCost) {
+            this.walkCost = walkCost;
+            this.getPathfinder().setOptions(this.getPathfinder().getOptions().newBuilder().positionCostFunction(this.walkCost).build());
+        }
     }
 }

@@ -19,7 +19,7 @@ import static com.hugo99j.chaosparty.GameData.px;
 public class Player extends AbstractObject {
     private final MatchPlayer matchPlayer;
     private boolean flip;
-    private short lastMask = -10;
+    private boolean noClip = false;
     private BotController bot;
     private int oldController;
 
@@ -119,18 +119,11 @@ public class Player extends AbstractObject {
     }
 
     public boolean isNoClip() {
-        return lastMask != -10;
+        return noClip;
     }
 
     public void setNoClip(boolean noClip) {
-        if(noClip && !isNoClip()) {
-            lastMask = this.getPhysics().getFixtureList().get(0).getFilterData().maskBits;
-            this.getPhysics().getFixtureList().get(0).getFilterData().maskBits = 0;
-        }
-        if(!noClip && isNoClip()) {
-            this.getPhysics().getFixtureList().get(0).getFilterData().maskBits = lastMask;
-            lastMask = -10;
-        }
+        this.noClip = noClip;
     }
 
     @Override
@@ -144,5 +137,15 @@ public class Player extends AbstractObject {
             }
         }
         return super.shouldRender(view);
+    }
+
+    public BotController getBot() {
+        return bot;
+    }
+
+    @Override
+    public boolean shouldCollideWith(AbstractObject other) {
+        if(noClip) return false;
+        return super.shouldCollideWith(other);
     }
 }

@@ -2,6 +2,7 @@ package com.hugo99j.chaosparty;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Graphics;
+import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.tools.texturepacker.TexturePacker;
@@ -167,6 +168,10 @@ public class Main extends Game {
         GameData.time += Gdx.graphics.getDeltaTime();
         ScreenUtils.clear(Color.BLACK);
 
+        for (Controller controller : Controllers.getControllers()) {
+            ((ControllerUtil) controller).update();
+        }
+
         //so adding new ones whilst in the list works
         ArrayList<Runnable> oldRunnables = new ArrayList<>(ToRun.runnables);
         ToRun.runnables.clear();
@@ -186,8 +191,10 @@ public class Main extends Game {
         //fbo.begin();
 
         //GameConstants.gameCamera.update();
+
         boolean inMapEditor = GameData.getCurrentMatch() != null && GameData.getCurrentMatch().getCurrentMinigame() instanceof MapEditor;
-        if((!inMapEditor || (GameData.DEBUGGING && Debuggers.isEnabled("tickMapEditor"))) && this.getScreen() instanceof PlayScreen) {
+        boolean tickIfMapEditor = (!inMapEditor || (GameData.DEBUGGING && Debuggers.isEnabled("tickMapEditor")));
+        if(this.getScreen() instanceof PlayScreen && (!GameData.DEBUGGING || Debuggers.isEnabled("tick"))) {
             //Only add to timer if the game should currently be ticking!
             activeTimer += Gdx.graphics.getDeltaTime();
 
@@ -204,11 +211,15 @@ public class Main extends Game {
                             Debuggers.customLevelRenderers.remove(runnable);
                         }
 
-                        if (GameData.level != null) GameData.level.tickWorld();
-                        if (GameData.getCurrentMatch() != null) GameData.getCurrentMatch().tick();
+                        if (GameData.level != null && tickIfMapEditor) GameData.level.tickWorld();
+                        if (GameData.getCurrentMatch() != null && tickIfMapEditor) GameData.getCurrentMatch().tick();
                         tickTimer = 0;
+
+                        for (Controller controller : Controllers.getControllers()) {
+                            ((ControllerUtil) controller).onTick();
+                        }
                     }
-                    if (GameData.level != null)
+                    if (GameData.level != null && tickIfMapEditor)
                         GameData.level.getBox2dWorld().step(GameData.SECONDS_PER_PHYSICS_TICK, 6, 2);
                 }
         }

@@ -4,8 +4,11 @@ import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 import com.daniel99j.djutil.GenericValuesHolder;
+import com.daniel99j.djutil.NumberUtils;
+import com.daniel99j.djutil.ValueHolder;
 import com.daniel99j.djutil.maths.MathsContext;
 import com.daniel99j.dungeongame.sounds.SoundManager;
 import com.daniel99j.dungeongame.ui.renderable.RenderState;
@@ -18,6 +21,7 @@ import com.hugo99j.chaosparty.util.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /** First screen of the application. Displayed after the application is created. */
 public class CharacterCreatorScreen extends UiScreen {
@@ -28,6 +32,8 @@ public class CharacterCreatorScreen extends UiScreen {
     boolean editing = false;
     TextInput textInput;
     private int hintHeight = 0;
+    private final ArrayList<SlidingClothes> slidingClothes = new ArrayList<>();
+    private final ArrayList<FutureSlidingClothes> futureSlidingClothes = new ArrayList<>();
 
     public CharacterCreatorScreen() {
         super(ScreenSSBuilder.create()
@@ -50,9 +56,9 @@ public class CharacterCreatorScreen extends UiScreen {
                 .set("ySize", 1)
             .finishChild()
             .newChild("hint")
-            .set("x", "100vw-8vw-50")
+            .set("x", "100vw-500")
             .set("y", "50")
-            .set("xSize", "8vw")
+            .set("xSize", "5000")
             .set("ySize", "${hint_height}")
             .finishChild()
             .newChild("up")
@@ -144,27 +150,61 @@ public class CharacterCreatorScreen extends UiScreen {
         List<GenericValuesHolder<Vector2, Runnable, Object, Object, Object>> options;
         if(editing) {
              options = new ArrayList<>(List.of(
-                new GenericValuesHolder<Vector2, Runnable, Object, Object, Object>(new Vector2(-1, 0), () -> {
-                    user.setWearing(costumePart, Looper.previousValue(Costumes.getVariants(costumePart), user.getWearing(costumePart)));
-                }),
                 new GenericValuesHolder<Vector2, Runnable, Object, Object, Object>(new Vector2(1, 0), () -> {
-                    user.setWearing(costumePart, Looper.nextValue(Costumes.getVariants(costumePart), user.getWearing(costumePart)));
+                    slidingClothes.clear();
+                    futureSlidingClothes.clear();
+                    String newClothing = Looper.previousValue(Costumes.getVariants(costumePart), user.getWearing(costumePart));
+                    String oldClothing = user.getWearing(costumePart);
+                    String nextClothingOption = Looper.nextValue(Costumes.getVariants(costumePart), oldClothing);
+                    String previousClothingOption = Looper.previousValue(Costumes.getVariants(costumePart), newClothing);
+
+                    user.setWearing(costumePart, newClothing);
+                    //slide new from left onto center
+                    slidingClothes.add(new SlidingClothes(newClothing, GameData.time, 0.7f, true, this.getStyle().get("left").getX(), this.getStyle().get("player").getX(), Interpolation.pow4, 0.5f, 1f));
+                    //slide center to right
+                    slidingClothes.add(new SlidingClothes(oldClothing, GameData.time, 0.7f, true, this.getStyle().get("player").getX(), this.getStyle().get("right").getX(), Interpolation.pow4, 1f, 0.5f));
+                    //fade put old selector on left
+                    futureSlidingClothes.add(new FutureSlidingClothes(new SlidingClothes(previousClothingOption, GameData.time+0.3f, 0.2f, true, this.getStyle().get("left").getX(), this.getStyle().get("left").getX(), Interpolation.linear, 0f, 0.5f), GameData.time+0.3f));
+                    //fade in new selector on right
+                    slidingClothes.add(new SlidingClothes(nextClothingOption, GameData.time, 0.2f, true, this.getStyle().get("right").getX(), this.getStyle().get("right").getX(), Interpolation.linear, 0.5f, 0));
+                }),
+                new GenericValuesHolder<Vector2, Runnable, Object, Object, Object>(new Vector2(-1, 0), () -> {
+                    slidingClothes.clear();
+                    futureSlidingClothes.clear();
+                    String newClothing = Looper.nextValue(Costumes.getVariants(costumePart), user.getWearing(costumePart));
+                    String oldClothing = user.getWearing(costumePart);
+                    String nextClothingOption = Looper.nextValue(Costumes.getVariants(costumePart), newClothing);
+                    String previousClothingOption = Looper.previousValue(Costumes.getVariants(costumePart), oldClothing);
+
+                    user.setWearing(costumePart, newClothing);
+                    //slide new from right onto center
+                    slidingClothes.add(new SlidingClothes(newClothing, GameData.time, 0.7f, true, this.getStyle().get("right").getX(), this.getStyle().get("player").getX(), Interpolation.pow4, 0.5f, 1f));
+                    //slide center to left
+                    slidingClothes.add(new SlidingClothes(oldClothing, GameData.time, 0.7f, true, this.getStyle().get("player").getX(), this.getStyle().get("left").getX(), Interpolation.pow4, 1f, 0.5f));
+                    //fade put old selector on left
+                    slidingClothes.add(new SlidingClothes(previousClothingOption, GameData.time, 0.2f, true, this.getStyle().get("left").getX(), this.getStyle().get("left").getX(), Interpolation.linear, 0.5f, 0));
+                    //fade in new selector on right
+                    futureSlidingClothes.add(new FutureSlidingClothes(new SlidingClothes(nextClothingOption, GameData.time+0.3f, 0.2f, true, this.getStyle().get("right").getX(), this.getStyle().get("right").getX(), Interpolation.linear, 0, 0.5f), GameData.time+0.3f));
                 }),
                 new GenericValuesHolder<Vector2, Runnable, Object, Object, Object>(new Vector2(0, -1), () -> {
                     costumePart = Looper.nextValue(costumePart);
+                    addCurrentWearing();
                 }),
                 new GenericValuesHolder<Vector2, Runnable, Object, Object, Object>(new Vector2(0, 1), () -> {
                     costumePart = Looper.previousValue(costumePart);
+                    addCurrentWearing();
                 })
             ));
         } else {
             options = new ArrayList<>(List.of(
                 new GenericValuesHolder<Vector2, Runnable, Object, Object, Object>(new Vector2(-1, 0), () -> {
                     user = Looper.previousValue(User.getLoadedUsers(), user);
+                    this.setControllerSelected("player");
                     textInput.setValue(user.getName());
                 }),
                 new GenericValuesHolder<Vector2, Runnable, Object, Object, Object>(new Vector2(1, 0), () -> {
                     user = Looper.nextValue(User.getLoadedUsers(), user);
+                    this.setControllerSelected("player");
                     textInput.setValue(user.getName());
                 }),
                 new GenericValuesHolder<>(new Vector2(0, -1), null),
@@ -190,9 +230,23 @@ public class CharacterCreatorScreen extends UiScreen {
             bestRunnable.run();
             if(editing) SoundManager.getSound("swap_clothes").play(1);
             else SoundManager.getSound("select").play(1);
-        } else {
-            super.controllerStick(change);
         }
+    }
+
+    private void addCurrentWearing() {
+        slidingClothes.clear();
+        futureSlidingClothes.clear();
+
+        String current = user.getWearing(costumePart);
+        String next = Looper.nextValue(Costumes.getVariants(costumePart), current);
+        String previous = Looper.previousValue(Costumes.getVariants(costumePart), current);
+
+        //right
+        slidingClothes.add(new SlidingClothes(next, GameData.time, 0, true, this.getStyle().get("right").getX(), this.getStyle().get("right").getX(), Interpolation.linear, 0.5f, 0.5f));
+        //center
+        slidingClothes.add(new SlidingClothes(current, GameData.time, 0, true, this.getStyle().get("player").getX(), this.getStyle().get("player").getX(), Interpolation.linear, 1f, 1f));
+        //left
+        slidingClothes.add(new SlidingClothes(previous, GameData.time, 0, true, this.getStyle().get("left").getX(), this.getStyle().get("left").getX(), Interpolation.linear, 0.5f, 0.5f));
     }
 
     @Override
@@ -216,11 +270,15 @@ public class CharacterCreatorScreen extends UiScreen {
         if(controller != null && controller.wasJustPressed(ControllerInput.B)) {
             if (editing) editing = false;
             else {
-                ToRun.run(() -> {
-                    GameData.MAIN_INSTANCE.setScreen(new MenuScreen());
-                    ((UiScreen) GameData.MAIN_INSTANCE.getScreen()).setControllerSelected("creator");
-                });
-                User.saveUsers();
+                if (this.getControllerSelected().equals("name_user")) {
+                    this.setControllerSelected("player");
+                } else {
+                    ToRun.run(() -> {
+                        GameData.MAIN_INSTANCE.setScreen(new MenuScreen());
+                        ((UiScreen) GameData.MAIN_INSTANCE.getScreen()).setControllerSelected("creator");
+                    });
+                    User.saveUsers();
+                }
             }
         }
 
@@ -235,17 +293,48 @@ public class CharacterCreatorScreen extends UiScreen {
         GameData.spriteBatch.begin();
         GameData.spriteBatch.setColor(Color.WHITE);
         if(editing) {
-            for (CostumePart value : CostumePart.values()) {
-                if ((value.shouldRender() || (costumePart.equals(CostumePart.COLOUR) && value.equals(CostumePart.COLOUR))) && (!costumePart.equals(CostumePart.COLOUR) || value.equals(CostumePart.COLOUR)))
-                    GameData.spriteBatch.draw(ImageUtil.get("costumes/" + this.user.getWearing(value)), this.getStyle().get("player").getX(), this.getStyle().get("player").getY(), this.getStyle().get("player").getXSize(), this.getStyle().get("player").getYSize());
+            if(ControllerUtil.getCurrent().wasJustPressed(ControllerInput.X)) {
+                user.setWearing(costumePart, Costumes.getVariants(costumePart).get(NumberUtils.getRandomInt(0, Costumes.getVariants(costumePart).size()-1)));
+                addCurrentWearing();
             }
 
-            GameData.spriteBatch.setColor(new Color(1, 1, 1, 0.5f));
-            GameData.spriteBatch.draw(ImageUtil.get("costumes/" + Looper.previousValue(Costumes.getVariants(costumePart), this.user.getWearing(costumePart))), this.getStyle().get("left").getX(), this.getStyle().get("player").getY(), this.getStyle().get("player").getXSize(), this.getStyle().get("player").getYSize());
-            GameData.spriteBatch.draw(ImageUtil.get("costumes/" + Looper.nextValue(Costumes.getVariants(costumePart), this.user.getWearing(costumePart))), this.getStyle().get("right").getX(), this.getStyle().get("player").getY(), this.getStyle().get("player").getXSize(), this.getStyle().get("player").getYSize());
+            if(slidingClothes.isEmpty()) {
+                addCurrentWearing();
+            }
 
-            //RenderUtil.renderText(costumePart.name(), 100, 100, 1, 100, 0, false)
+            if(costumePart != CostumePart.COLOUR) GameData.spriteBatch.draw(ImageUtil.get("player_blank"), this.getStyle().get("player").getX(), this.getStyle().get("player").getY(), this.getStyle().get("player").getXSize(), this.getStyle().get("player").getYSize());
+
+            Color old = GameData.spriteBatch.getColor().cpy();
+            for (SlidingClothes slidingClothing : slidingClothes) {
+                //float currentPos = slidingClothing.startX+(slidingClothing.destination-slidingClothing.startX)*((slidingClothing.startTime+slidingClothing.maxTime)/GameData.time);
+                float currentPos = slidingClothing.interpolation.apply(slidingClothing.startX, slidingClothing.destination, Math.clamp((GameData.time-slidingClothing.startTime)/slidingClothing.maxTime, 0, 1));
+
+                GameData.spriteBatch.setColor(Color.WHITE.cpy().mul(1, 1, 1, Interpolation.smooth.apply(slidingClothing.startAlpha, slidingClothing.endAlpha, Math.clamp((GameData.time-slidingClothing.startTime)/slidingClothing.maxTime, 0, 1))));
+
+                GameData.spriteBatch.draw(ImageUtil.get("costumes/" + slidingClothing.sprite), currentPos, this.getStyle().get("player").getY(), this.getStyle().get("player").getXSize(), this.getStyle().get("player").getYSize());
+            }
+            GameData.spriteBatch.setColor(old);
+
+            if(costumePart != CostumePart.COLOUR) drawUser(this.getStyle().get("player").getX(), this.getStyle().get("player").getY(), this.getStyle().get("player").getXSize(), this.getStyle().get("player").getYSize(), user, costumePart);
+
+            //slidingClothes.removeIf((s) -> (s.maxTime+s.startTime < GameData.time));
+
+            futureSlidingClothes.removeIf((s) -> {
+                if(s.start <= GameData.time) {
+                    slidingClothes.add(s.clothes);
+                    return true;
+                }
+                return false;
+            });
+
         } else {
+            slidingClothes.clear();
+            futureSlidingClothes.clear();
+
+            if(ControllerUtil.getCurrent().wasJustPressed(ControllerInput.Y)) {
+                this.setControllerSelected("name_user");
+            }
+
             user.setName(textInput.getValue());
 
             drawUser(this.getStyle().get("player").getX(), this.getStyle().get("player").getY(), this.getStyle().get("player").getXSize(), this.getStyle().get("player").getYSize(), user);
@@ -254,14 +343,22 @@ public class CharacterCreatorScreen extends UiScreen {
             drawUser(this.getStyle().get("left").getX(), this.getStyle().get("player").getY(), this.getStyle().get("player").getXSize(), this.getStyle().get("player").getYSize(), Looper.previousValue(User.getLoadedUsers(), user));
             drawUser(this.getStyle().get("right").getX(), this.getStyle().get("player").getY(), this.getStyle().get("player").getXSize(), this.getStyle().get("player").getYSize(), Looper.nextValue(User.getLoadedUsers(), user));
         }
-        String hint = """
-
-                <icon:left_stick_leftright> Swap costume
-                <icon:left_stick_updown> Swap editing
-                """;
-
-        if (editing) hint = "<icon:b> Exit" + hint;
-        else hint = "<icon:a> Choose character\n<icon:b> Exit menu" + hint;
+        String hint;
+        if (editing) hint = """
+            <icon:left_stick_leftright> Swap costume
+            <icon:left_stick_updown> Swap part
+            <icon:x> Randomise
+            <icon:b> Exit""";
+        else {
+            hint = "<icon:a> Edit character\n";
+            hint += "<icon:left_stick_leftright> Choose character\n";
+            if(this.getControllerSelected().equals("name_user")) {
+                hint += "<icon:b> Exit editing\n";
+            } else {
+                hint += "<icon:y> Edit name\n";
+                hint += "<icon:b> Exit menu";
+            }
+        }
 
         RenderUtil.renderText(hint, this.getStyle().get("hint"));
         this.hintHeight = RenderUtil.getHeight(hint);
@@ -269,8 +366,12 @@ public class CharacterCreatorScreen extends UiScreen {
     }
 
     private void drawUser(int x, int y, float xSize, float ySize, User user) {
+        drawUser(x, y, xSize, ySize, user, null);
+    }
+
+    private void drawUser(int x, int y, float xSize, float ySize, User user, CostumePart exclude) {
         for (CostumePart value : CostumePart.values()) {
-            if (value.shouldRender()) GameData.spriteBatch.draw(ImageUtil.get("costumes/" + user.getWearing(value)), x, y, xSize, ySize);
+            if (value.shouldRender() && value != exclude) GameData.spriteBatch.draw(ImageUtil.get("costumes/" + user.getWearing(value)), x, y, xSize, ySize);
         }
     }
 
@@ -287,4 +388,9 @@ public class CharacterCreatorScreen extends UiScreen {
         super.editSSContext(context);
         context.withVariable("hint_height", String.valueOf(this.hintHeight));
     }
+
+    private record FutureSlidingClothes(SlidingClothes clothes, float start) {}
+
+
+    private record SlidingClothes(String sprite, float startTime, float maxTime, boolean fade, float startX, float destination, Interpolation interpolation, float startAlpha, float endAlpha) {}
 }

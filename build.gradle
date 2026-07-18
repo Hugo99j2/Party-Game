@@ -52,7 +52,7 @@ dependencies {
 
   //implementation "net.fabricmc:sponge-mixin:0.17.3+mixin.0.8.7"
 
-  implementation "com.daniel99j:djutil:1.7.4"
+  implementation "com.daniel99j:djutil:1.7.5"
 
   implementation "com.badlogicgames.gdx-controllers:gdx-controllers-core:$gdxControllers"
   implementation "com.badlogicgames.gdx-controllers:gdx-controllers-desktop:$gdxControllers"
@@ -110,7 +110,7 @@ dependencies {
   implementation "net.fabricmc:sponge-mixin:$mixinVersion"
   implementation "io.github.llamalad7:mixinextras-fabric:$mixinExtrasVersion"
 
-  implementation "com.daniel99j:djutil:1.7.4"
+  implementation "com.daniel99j:djutil:1.7.5"
 
   implementation "com.badlogicgames.gdx-controllers:gdx-controllers-core:$gdxControllers"
   implementation "com.badlogicgames.gdx-controllers:gdx-controllers-desktop:$gdxControllers"

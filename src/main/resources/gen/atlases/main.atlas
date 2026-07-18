@@ -265,56 +265,56 @@ costumes/pants9
   index: -1
 costumes/shirt1
   rotate: false
-  xy: 36, 88
+  xy: 54, 88
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 costumes/shirt2
   rotate: false
-  xy: 54, 106
+  xy: 36, 52
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 costumes/shirt3
   rotate: false
-  xy: 36, 70
+  xy: 54, 70
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 costumes/shirt4
   rotate: false
-  xy: 54, 88
+  xy: 36, 34
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 costumes/shirt5
   rotate: false
-  xy: 36, 52
+  xy: 54, 52
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 costumes/shirt6
   rotate: false
-  xy: 54, 70
+  xy: 36, 16
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 costumes/shirt7
   rotate: false
-  xy: 36, 34
+  xy: 54, 34
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 costumes/shirt8
   rotate: false
-  xy: 54, 52
+  xy: 54, 16
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -403,16 +403,23 @@ player2
   orig: 16, 16
   offset: 0, 0
   index: -1
-player_spawn
+player_blank
   rotate: false
   xy: 266, 426
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
-potato
+player_spawn
   rotate: false
   xy: 294, 470
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+potato
+  rotate: false
+  xy: 358, 726
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -426,7 +433,7 @@ rick
   index: -1
 sheep
   rotate: false
-  xy: 54, 124
+  xy: 36, 70
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -489,14 +496,14 @@ tilesets/kitchen_tiles
   index: -1
 tilesets/road
   rotate: false
-  xy: 54, 142
+  xy: 36, 88
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 tire
   rotate: false
-  xy: 36, 16
+  xy: 312, 650
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -706,112 +713,126 @@ ui/icon/menu
   index: -1
 ui/icon/right_button
   rotate: false
-  xy: 358, 726
+  xy: 266, 408
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ui/icon/right_stick
   rotate: false
-  xy: 36, 178
+  xy: 294, 452
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ui/icon/right_stick_any
   rotate: false
-  xy: 54, 196
+  xy: 358, 708
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ui/icon/right_stick_button
   rotate: false
-  xy: 266, 408
+  xy: 36, 160
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ui/icon/right_stick_down
   rotate: false
-  xy: 294, 452
+  xy: 54, 178
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ui/icon/right_stick_left
   rotate: false
-  xy: 358, 708
+  xy: 36, 142
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ui/icon/right_stick_leftright
   rotate: false
-  xy: 36, 160
+  xy: 54, 160
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ui/icon/right_stick_right
   rotate: false
-  xy: 54, 178
+  xy: 36, 124
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ui/icon/right_stick_up
   rotate: false
-  xy: 36, 142
+  xy: 54, 142
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ui/icon/right_stick_updown
   rotate: false
-  xy: 54, 160
+  xy: 36, 106
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ui/icon/right_trigger
   rotate: false
-  xy: 36, 124
+  xy: 54, 124
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ui/icon/upload
   rotate: false
-  xy: 54, 34
+  xy: 312, 632
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ui/icon/window
   rotate: false
-  xy: 54, 16
+  xy: 312, 614
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ui/icon/x
   rotate: false
-  xy: 312, 650
+  xy: 312, 596
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ui/icon/y
   rotate: false
-  xy: 312, 632
+  xy: 312, 578
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+ui/progress_bar_overlay
+  rotate: false
+  xy: 36, 178
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+ui/progress_bar_progress
+  rotate: false
+  xy: 54, 196
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ui/select
   rotate: false
-  xy: 36, 106
+  xy: 54, 106
   size: 16, 16
   orig: 16, 16
   offset: 0, 0

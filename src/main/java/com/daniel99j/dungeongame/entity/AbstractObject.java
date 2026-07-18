@@ -299,4 +299,8 @@ public abstract class AbstractObject implements Disposable {
     public int getEntityId() {
         return entityId;
     }
+
+    public boolean shouldCollideWith(AbstractObject other) {
+        return true;
+    }
 }

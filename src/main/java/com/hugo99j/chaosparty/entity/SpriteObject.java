@@ -159,4 +159,9 @@ public class SpriteObject extends AbstractObject {
     public static SpriteObject createDefault() {
         return new SpriteObject("sheep", 2, 2, false, false, 0, 1, false, Color.WHITE, false, false);
     }
+
+    @Override
+    public boolean shouldCollideWith(AbstractObject other) {
+        return super.shouldCollideWith(other) && !(other instanceof SpriteObject);
+    }
 }

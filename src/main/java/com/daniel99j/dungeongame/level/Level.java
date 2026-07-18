@@ -19,19 +19,20 @@ import com.daniel99j.djutil.UsageLimited;
 import com.daniel99j.djutil.ValueHolder;
 import com.daniel99j.djutil.pathfinder.PathfindDebugPos;
 import com.daniel99j.djutil.pathfinder.PathfindDebugType;
+import com.daniel99j.djutil.pathfinder.PathfindPos;
 import com.hugo99j.chaosparty.GameData;
 import com.daniel99j.dungeongame.entity.*;
+import com.hugo99j.chaosparty.bot.BotController;
+import com.hugo99j.chaosparty.entity.LiquidBarrelObject;
+import com.hugo99j.chaosparty.entity.Player;
+import com.hugo99j.chaosparty.match.MatchPlayer;
 import com.hugo99j.chaosparty.match.MatchView;
 import com.hugo99j.chaosparty.minigame.MapEditor;
 import com.hugo99j.chaosparty.ui.debugger.Debuggers;
 import com.hugo99j.chaosparty.util.RenderUtil;
-import imgui.ImGui;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Function;
 
 public class Level implements Disposable {
@@ -75,6 +76,17 @@ public class Level implements Disposable {
             public void postSolve(Contact contact, ContactImpulse impulse) {
 
             }
+        });
+        this.box2dWorld.setContactFilter((fixtureA, fixtureB) -> {
+            Filter filterA = fixtureA.getFilterData();
+            Filter filterB = fixtureB.getFilterData();
+
+            if (filterA.groupIndex == filterB.groupIndex && filterA.groupIndex != 0) {
+                return filterA.groupIndex > 0;
+            }
+
+            boolean collide = (filterA.maskBits & filterB.categoryBits) != 0 && (filterA.categoryBits & filterB.maskBits) != 0;
+            return collide && ((AbstractObject) fixtureA.getBody().getUserData()).shouldCollideWith(((AbstractObject) fixtureB.getBody().getUserData())) && ((AbstractObject) fixtureB.getBody().getUserData()).shouldCollideWith(((AbstractObject) fixtureA.getBody().getUserData()));
         });
         RayHandler.setGammaCorrection(true);
         this.rayHandler = new RayHandler(this.getBox2dWorld());
@@ -131,52 +143,116 @@ public class Level implements Disposable {
         }
         GameData.spriteBatch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
-        if(Debuggers.isEnabled("pathfindingRender")) {
+        if(GameData.DEBUGGING && Debuggers.isEnabled("validPathfindingSpotRenderer") && matchView.getPlayer() != null && matchView.getPlayer().getPlayerObject() != null) {
+            int posX = (int) matchView.gameCamera.position.x;
+            int posY = (int) matchView.gameCamera.position.y;
+            GameData.spriteBatch.end();
+            GameData.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+            RenderUtil.enableBlending();
+            BotController bot = null;
+            for (MatchPlayer player : GameData.getCurrentMatch().getPlayers()) {
+                if(player.getPlayerObject().getBot() != null) bot = player.getPlayerObject().getBot();
+            }
+            if(bot != null) {
+                for (int x = posX - 6; x < posX + 6; x++) {
+                    for (int y = posY - 6; y < posY + 6; y++) {
+                        PathfindPos pathfindDebugPos = new PathfindPos(x, y);
+                        boolean valid = bot.getPathfinder().getOptions().getWalkablePredicate().test(pathfindDebugPos);
+                        GameData.shapeRenderer.setColor((valid ? Color.GREEN : Color.RED).cpy().mul(1, 1, 1, 0.7f));
+                        GameData.shapeRenderer.rect(pathfindDebugPos.getX(), pathfindDebugPos.getY(), 1, 1);
+                    }
+                }
+            }
+            GameData.shapeRenderer.end();
+            GameData.spriteBatch.begin();
+        }
+
+        if(GameData.DEBUGGING && Debuggers.isEnabled("pathfindingRender")) {
             GameData.spriteBatch.end();
             RenderUtil.enableBlending();
             Debuggers.pathfindDebuggers.forEach((hash, debuggers) -> {
+                List<Integer> complete = new ArrayList<>();
+                AbstractObject object = this.getObjectByUUID(hash);
+                if(object instanceof Player player && player.getBot() != null) {
+                    complete = player.getBot().getCompleted();
+                }
+
+                ShapeRenderer.ShapeType lastType = null;
+                GameData.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
                 for (PathfindDebugPos pathfindDebugPos : debuggers) {
-                    float transparency = Debuggers.pathfindDebuggerTimers.get(hash).floatValue()/(5* GameData.TICKS_PER_SECOND);
+                    float transparency = Debuggers.pathfindDebuggerTimers.get(hash).floatValue()/(5*GameData.TICKS_PER_SECOND);
 
                     //GameData.shapeRenderer.setProjectionMatrix(GameData.gameCamera.combined);
                     if (pathfindDebugPos.type().equals(PathfindDebugType.SUCCESSFUL_PATH)) {
-                        GameData.shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+                        if(lastType != ShapeRenderer.ShapeType.Line) {
+                            lastType = ShapeRenderer.ShapeType.Line;
+                            GameData.shapeRenderer.end();
+                            GameData.shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+                        }
                         GameData.shapeRenderer.setColor(Color.GREEN.cpy().mul(1, 1, 1, transparency));
                         GameData.shapeRenderer.line(pathfindDebugPos.pos().getX() + 0.5f, pathfindDebugPos.pos().getY() + 0.5f, pathfindDebugPos.previous().getX() + 0.5f, pathfindDebugPos.previous().getY() + 0.5f);
                     } else if (pathfindDebugPos.type().equals(PathfindDebugType.CONNECTION)) {
-                        GameData.shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+                        if(lastType != ShapeRenderer.ShapeType.Line) {
+                            lastType = ShapeRenderer.ShapeType.Line;
+                            GameData.shapeRenderer.end();
+                            GameData.shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+                        }
                         GameData.shapeRenderer.setColor(Color.YELLOW.cpy().mul(1, 1, 1, transparency));
                         GameData.shapeRenderer.line(pathfindDebugPos.pos().getX() + 0.5f, pathfindDebugPos.pos().getY() + 0.5f, pathfindDebugPos.previous().getX() + 0.5f, pathfindDebugPos.previous().getY() + 0.5f);
                     } else if (pathfindDebugPos.type().equals(PathfindDebugType.INVALID)) {
-                        GameData.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+                        if(lastType != ShapeRenderer.ShapeType.Filled) {
+                            lastType = ShapeRenderer.ShapeType.Filled;
+                            GameData.shapeRenderer.end();
+                            GameData.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+                        }
                         GameData.shapeRenderer.setColor(Color.GRAY.cpy().mul(1, 1, 1, transparency));
                         GameData.shapeRenderer.rect(pathfindDebugPos.pos().getX() + 0.3f, pathfindDebugPos.pos().getY() + 0.3f, 0.4f, 0.4f);
                     } else if (pathfindDebugPos.type().equals(PathfindDebugType.OPEN_SET)) {
-                        GameData.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+                        if(lastType != ShapeRenderer.ShapeType.Filled) {
+                            lastType = ShapeRenderer.ShapeType.Filled;
+                            GameData.shapeRenderer.end();
+                            GameData.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+                        }
                         GameData.shapeRenderer.setColor(Color.RED.cpy().mul(1, 1, 1, transparency));
                         GameData.shapeRenderer.rect(pathfindDebugPos.pos().getX() + 0.3f, pathfindDebugPos.pos().getY() + 0.3f, 0.4f, 0.4f);
                     } else if (pathfindDebugPos.type().equals(PathfindDebugType.CLOSED_SET)) {
-                        GameData.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-                        GameData.shapeRenderer.setColor(Color.YELLOW.cpy().mul(1, 1, 1, transparency));
+                        if(lastType != ShapeRenderer.ShapeType.Filled) {
+                            lastType = ShapeRenderer.ShapeType.Filled;
+                            GameData.shapeRenderer.end();
+                            GameData.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+                        }
+                        Color c = Color.YELLOW;
+                        if(complete.contains(pathfindDebugPos.pos().hashCode())) {
+                            c = Color.GREEN;
+                        }
+                        GameData.shapeRenderer.setColor(c.cpy().mul(1, 1, 1, transparency));
                         GameData.shapeRenderer.rect(pathfindDebugPos.pos().getX() + 0.3f, pathfindDebugPos.pos().getY() + 0.3f, 0.4f, 0.4f);
                     } else if (pathfindDebugPos.type().equals(PathfindDebugType.START)) {
-                        GameData.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+                        if(lastType != ShapeRenderer.ShapeType.Filled) {
+                            lastType = ShapeRenderer.ShapeType.Filled;
+                            GameData.shapeRenderer.end();
+                            GameData.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+                        }
                         GameData.shapeRenderer.setColor(Color.BLUE.cpy().mul(1, 1, 1, transparency));
                         GameData.shapeRenderer.rect(pathfindDebugPos.pos().getX() + 0.3f, pathfindDebugPos.pos().getY() + 0.3f, 0.4f, 0.4f);
                     } else if (pathfindDebugPos.type().equals(PathfindDebugType.END)) {
-                        GameData.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+                        if(lastType != ShapeRenderer.ShapeType.Filled) {
+                            lastType = ShapeRenderer.ShapeType.Filled;
+                            GameData.shapeRenderer.end();
+                            GameData.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+                        }
                         GameData.shapeRenderer.setColor(Color.PURPLE.cpy().mul(1, 1, 1, transparency));
                         GameData.shapeRenderer.rect(pathfindDebugPos.pos().getX() + 0.3f, pathfindDebugPos.pos().getY() + 0.3f, 0.4f, 0.4f);
                     }
-                    GameData.shapeRenderer.end();
                 }
+                GameData.shapeRenderer.end();
             });
             GameData.spriteBatch.begin();
         }
 
         if(GameData.DEBUGGING && Debuggers.isEnabled("pathfindingRender") && lastRenderedFrame != Gdx.graphics.getDeltaTime()) {
-            List<String> toRemove = new ArrayList<>();
-            for (Map.Entry<String, Integer> entry : Debuggers.pathfindDebuggerTimers.entrySet()) {
+            List<UUID> toRemove = new ArrayList<>();
+            for (Map.Entry<UUID, Integer> entry : Debuggers.pathfindDebuggerTimers.entrySet()) {
                 if (entry.getValue() <= 0) {
                     toRemove.add(entry.getKey());
                 } else {
@@ -273,7 +349,7 @@ public class Level implements Disposable {
         light.light().remove();
     }
 
-    public <T extends AbstractObject> List<T> getObjectsInRadius(Vector2 pos, float radius, Class<T> clazz, boolean physics, @Nullable T exclude) {
+    public <T extends AbstractObject> List<T> getObjectsInRadius(Vector2 pos, float radius, Class<T> clazz, boolean physics, boolean sort, @Nullable T exclude) {
         List<T> objects = getObjectsBetweenClass(pos.cpy().sub(radius, radius), pos.cpy().add(radius, radius), clazz, physics);
         if(!physics) {
             objects.removeIf(object -> object.getPos().dst(pos) > radius);
@@ -294,6 +370,8 @@ public class Level implements Disposable {
                 GameData.shapeRenderer.end();
             }, new ValueHolder<>(GameData.TICKS_PER_SECOND));
         }
+
+        if(sort) objects.sort(Comparator.comparingDouble(o -> o.getPos().dst(pos)));
         return objects;
     }
 
@@ -326,6 +404,26 @@ public class Level implements Disposable {
         }
 
         return objects;
+    }
+
+    public boolean raycast(Vector2 start, Vector2 end, Function<AbstractObject, Boolean> canHit) {
+        ValueHolder<Boolean> wasBlocked = new ValueHolder<>(false);
+        this.box2dWorld.rayCast((fixture, point, normal, fraction) -> {
+            if(!canHit.apply((AbstractObject) fixture.getBody().getUserData())) return 0;
+            wasBlocked.object = true;
+            return 1;
+        }, start, end);
+
+        if(GameData.DEBUGGING && Debuggers.isEnabled("showBetweenBoxes")) {
+            Debuggers.customLevelRenderers.put((v) -> {
+                GameData.shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+                GameData.shapeRenderer.setColor(wasBlocked.object ? Color.RED : Color.GREEN);
+                GameData.shapeRenderer.line(start.x, start.y, end.x, end.y);
+                GameData.shapeRenderer.line(start.x-0.1f, start.y+0.1f, start.x+0.1f, start.y-0.1f);
+                GameData.shapeRenderer.end();
+            }, new ValueHolder<>(GameData.TICKS_PER_SECOND));
+        }
+        return wasBlocked.object;
     }
 
     public List<AbstractObject> getObjectsBetween(Vector2 start, Vector2 end) {

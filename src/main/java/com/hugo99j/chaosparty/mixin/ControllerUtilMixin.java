@@ -26,13 +26,15 @@ public class ControllerUtilMixin implements ControllerUtil {
     @Unique
     private EnumMap<ControllerInput, ValueHolder<Float>> wasPressedValues;
     @Unique
+    private final List<ControllerInput> happenedThisTick = new ArrayList<>();
+    @Unique
     float lastUpdate;
     @Unique
     private static final float NOT_PRESSED = Float.MIN_VALUE;
 
     @Override
     public float getValue(ControllerInput input) {
-        tick();
+        init();
         if(!RenderUtil.isFocused()) return 0;
         //noinspection usagelimited
         return input.getGetValue().apply((Controller) this);
@@ -40,15 +42,21 @@ public class ControllerUtilMixin implements ControllerUtil {
 
     @Override
     public boolean isPressed(ControllerInput input) {
-        tick();
+        init();
         //noinspection usagelimited
         return input.getGetPressed().apply((Controller) this) && RenderUtil.isFocused();
     }
 
     @Override
     public boolean wasJustPressed(ControllerInput input) {
-        tick();
+        init();
         return wasPressedValues.get(input).object.equals(GameData.time);
+    }
+
+    @Override
+    public boolean wasJustPressedThisTick(ControllerInput input) {
+        init();
+        return happenedThisTick.contains(input);
     }
 
     @Unique
@@ -61,9 +69,14 @@ public class ControllerUtilMixin implements ControllerUtil {
         }
     }
 
-    @Unique
+    @Override
+    public void onTick() {
+        happenedThisTick.clear();
+    }
+
     @SuppressWarnings("usagelimited")
-    private void tick() {
+    @Override
+    public void update() {
         init();
         if(lastUpdate == GameData.time) return;
         lastUpdate = GameData.time;
@@ -77,6 +90,8 @@ public class ControllerUtilMixin implements ControllerUtil {
             } else if(value.getReInputTimer() != -1 && oldValue && GameData.time - wasPressedValues.get(value).object > value.getReInputTimer()) {
                 wasPressedValues.get(value).object = GameData.time;
             }
+
+            if(actuallyPressed && !oldValue) happenedThisTick.add(value);
         }
     }
 }

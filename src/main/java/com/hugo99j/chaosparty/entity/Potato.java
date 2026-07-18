@@ -19,7 +19,6 @@ import static com.hugo99j.chaosparty.GameData.px;
 public class Potato extends AbstractObject {
     private ParticleEffect hotEffect;
     private float spin = 0;
-    private int ticksUntilCollision = 2;
 
     @Override
     public void onAdd(boolean fromLoad) {
@@ -39,10 +38,6 @@ public class Potato extends AbstractObject {
     @Override
     public void tick() {
         super.tick();
-        ticksUntilCollision--;
-        if(ticksUntilCollision == 0) {
-            this.setPhysicsSettings(PhysicsSettings.create(px(14), 1, px(1), 0, 0.5f, 0.5f));
-        }
         hotEffect.setPosition(this.getPos().x+0.1f, this.getPos().y+0.4f);
         if(this.getVelocity().len() < 1) {
             goSplat(null);
@@ -78,7 +73,7 @@ public class Potato extends AbstractObject {
 
     @Override
     protected PhysicsSettings createPhysics() {
-        return PhysicsSettings.create(px(14), 1, px(1), 0, 0.5f, 0.5f).collidesWith(CollisionCategories.allBut(CollisionCategories.PLAYER));
+        return PhysicsSettings.texture("potato", 0, 0.5f, 1, 1);
     }
 
     @Override
@@ -113,5 +108,13 @@ public class Potato extends AbstractObject {
     public void dispose() {
         this.getLevel().stopEmitting(hotEffect);
         super.dispose();
+    }
+
+    @Override
+    public boolean shouldCollideWith(AbstractObject other) {
+        if(other instanceof Player player && GameData.getCurrentMinigame() instanceof HotPotatoMinigame potatoMinigame && player.getMatchPlayer().equals(potatoMinigame.getHotPlayer())) {
+            return false;
+        }
+        return super.shouldCollideWith(other);
     }
 }

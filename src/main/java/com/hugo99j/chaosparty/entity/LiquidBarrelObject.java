@@ -62,7 +62,7 @@ public class LiquidBarrelObject extends AbstractObject {
         }
         for (Player player : this.getLevel().getObjectsInRadius(this.getPos().add(0.5f, 0.5f), 5, Player.class, false, false, null)) {
             if(GameData.getCurrentMatch().getCurrentMinigame() instanceof HotPotatoMinigame hotPotatoMinigame) {
-                if(hotPotatoMinigame.getHotPlayer().equals(player.getMatchPlayer())) continue;
+                if(hotPotatoMinigame.getHotPlayer().equals(player.getMatchPlayer()) || player.isNoClip()) continue;
                 if(hotPotatoMinigame.setHotPlayer(player.getMatchPlayer())) break;
             }
         }

@@ -15,6 +15,7 @@ import com.hugo99j.chaosparty.bot.FallingFloorBot;
 import com.hugo99j.chaosparty.entity.FallingFloorObject;
 import com.hugo99j.chaosparty.entity.Player;
 import com.hugo99j.chaosparty.match.MatchView;
+import com.hugo99j.chaosparty.ui.ScreenCenterer;
 import com.hugo99j.chaosparty.ui.Timer;
 import com.hugo99j.chaosparty.ui.element.ProgressBar;
 import com.hugo99j.chaosparty.util.Logger;
@@ -41,8 +42,9 @@ public class FallingFloorMinigame extends AbstractMinigame {
         .newChild("colourbar")
         .set("x", "50vw")
         .set("y", "80vh")
-        .set("xSize", "4vw")
+        .set("xSize", "5vw")
         .set("ySize", "4vh")
+        .set("center", true)
         .finishChild()
         .build();
     private SoundInstance music;
@@ -71,6 +73,7 @@ public class FallingFloorMinigame extends AbstractMinigame {
         ticksUntilCanKill--;
         if(time <= 0) {
             maxTime-=(int) Math.min(20, maxTime/2.0f);
+            maxTime = (int) Math.max(maxTime, GameData.TICKS_PER_SECOND*0.05f);
             time = maxTime;
             if(ticksUntilCanKill <= 0) {
                 List<Player> toKill = new ArrayList<>();
@@ -133,7 +136,8 @@ public class FallingFloorMinigame extends AbstractMinigame {
 
     @Override
     public void setupViews(List<MatchView> matchViews) {
-        matchViews.add(new MatchView(32, 18));
+        matchViews.add(new MatchView(33, 18));
+        ((ScreenCenterer) matchViews.getFirst().gameViewport).party_Game$setCenter(true);
     }
 
     @Override

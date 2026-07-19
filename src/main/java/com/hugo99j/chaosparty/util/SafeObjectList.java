@@ -9,6 +9,7 @@ public class SafeObjectList extends ArrayList<AbstractObject> {
     public void ensureSafety() {
         ArrayList<AbstractObject> changedObjectButExistsUUID = new ArrayList<>();
         this.removeIf((object) -> {
+            if(object == null) return true;
             if(object.isRemoved()) {
                 if(GameData.level != null && GameData.level.getObjectByUUID(object.getUUID()) != null) {
                     changedObjectButExistsUUID.add(object);
@@ -24,6 +25,6 @@ public class SafeObjectList extends ArrayList<AbstractObject> {
             this.set(this.indexOf(changed), GameData.level.getObjectByUUID(changed.getUUID()));
         }
 
-        this.removeAll(changedObjectButExistsUUID);
+        //this.removeAll(changedObjectButExistsUUID);
     }
 }

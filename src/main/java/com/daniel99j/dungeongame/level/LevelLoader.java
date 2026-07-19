@@ -25,9 +25,7 @@ public class LevelLoader {
             }
             try {
                 String data = Files.readString(Path.of(path));
-                Level out = load(data);
-                out.completedLoad();
-                return out;
+                return load(data);
             } catch (Exception e) {
                 Logger.error("Failed to load level from disk!", e);
                 return null;
@@ -38,9 +36,7 @@ public class LevelLoader {
     public static Level loadFromData(String name) {
         try {
             String data = PathUtil.get(PathUtil.data("maps/"+name+".map"), true);
-            Level out = load(data);
-            out.completedLoad();
-            return out;
+            return load(data);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

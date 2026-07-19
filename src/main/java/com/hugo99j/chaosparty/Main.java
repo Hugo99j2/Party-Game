@@ -1,6 +1,7 @@
 package com.hugo99j.chaosparty;
 
 import com.badlogic.gdx.*;
+import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Graphics;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.Controllers;
@@ -277,5 +278,21 @@ public class Main extends Game {
             glfwErrorCallback.free();
             glfwErrorCallback = null;
         }
+    }
+
+    @Override
+    public void pause() {
+        super.pause();
+        //by turning off vsync it forces the game to render whilst minimised
+        Gdx.graphics.setVSync(false);
+        Gdx.graphics.setForegroundFPS(24);
+        //super.pause();
+    }
+
+    @Override
+    public void resume() {
+        super.resume();
+        Gdx.graphics.setVSync(true);
+        Gdx.graphics.setForegroundFPS(Lwjgl3ApplicationConfiguration.getDisplayMode().refreshRate + 1);
     }
 }

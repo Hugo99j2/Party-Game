@@ -10,11 +10,11 @@ import com.daniel99j.djutil.UsageLimited;
 import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.match.MatchView;
 import com.hugo99j.chaosparty.ui.debugger.Debuggers;
+import com.hugo99j.chaosparty.ui.debugger.ObjectEditor;
 import com.hugo99j.chaosparty.util.NoDebugOption;
 import com.daniel99j.dungeongame.level.Level;
 import com.google.gson.JsonObject;
 import com.hugo99j.chaosparty.util.NonEditable;
-import org.checkerframework.checker.units.qual.C;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -26,8 +26,8 @@ public abstract class AbstractObject implements Disposable {
     private Level level;
     @NoDebugOption
     private Either<PositionHolder, Body> physics;
+    @NoDebugOption
     private Vector2 beforeLoadPos = null;
-    private boolean fromWorldLoad = false;
     private UUID uuid;
     private boolean removed = false;
     @NonEditable
@@ -78,7 +78,19 @@ public abstract class AbstractObject implements Disposable {
             Debuggers.disableChangingColour = false;
             GameData.spriteBatch.setColor(old);
         } else {
+            boolean selected = ObjectEditor.isSelected(this) && Debuggers.isEnabled("highlightSelected");
+            Color old = null;
+            if(selected) {
+                old = GameData.spriteBatch.getColor().cpy();
+                float mul = Math.max(0, ((float) Math.sin(GameData.time*3)*2));
+                GameData.spriteBatch.setColor(new Color(Color.GREEN.r+mul, Color.GREEN.g+mul, Color.GREEN.b+mul, 1));
+                Debuggers.disableChangingColour = true;
+            }
             render(matchView);
+            if(selected) {
+                Debuggers.disableChangingColour = false;
+                GameData.spriteBatch.setColor(old);
+            }
         }
     };
 
@@ -123,16 +135,12 @@ public abstract class AbstractObject implements Disposable {
         this.removed = true;
     }
 
+    public void unmarkRemoved() {
+        this.removed = false;
+    }
+
     public boolean isRemoved() {
         return removed;
-    }
-
-    public void markFromWorldLoad() {
-        this.fromWorldLoad = true;
-    }
-
-    public boolean isFromWorldLoad() {
-        return this.fromWorldLoad;
     }
 
     public UUID getUUID() {
@@ -235,10 +243,6 @@ public abstract class AbstractObject implements Disposable {
     @Override
     public int hashCode() {
         return Objects.hash(uuid);
-    }
-
-    public int uniqueHash() {
-        return Objects.hash(level, physics, fromWorldLoad, uuid, removed);
     }
 
     @Override

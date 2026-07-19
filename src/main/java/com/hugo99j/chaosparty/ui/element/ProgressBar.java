@@ -1,6 +1,8 @@
 package com.hugo99j.chaosparty.ui.element;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.NinePatch;
+import com.daniel99j.dungeongame.ui.NinePatchLoader;
 import com.daniel99j.dungeongame.ui.renderable.RenderState;
 import com.daniel99j.dungeongame.ui.renderable.Renderable;
 import com.daniel99j.dungeongame.ui.screenss.CombinedScreenSS;
@@ -22,7 +24,12 @@ public class ProgressBar extends Renderable {
     @Override
     public void render(RenderState state) {
         super.render(state);
-        GameData.spriteBatch.draw(ImageUtil.get("ui/progress_bar_background"), this.getX(), this.getY(), this.getStyle().getXSize(), this.getStyle().getYSize());
+        NinePatch background = NinePatchLoader.getNinePatch("progress_bar_background");
+        NinePatch overlay = NinePatchLoader.getNinePatch("progress_bar_overlay");
+
+        float cornerPixelSize = 5;
+        background.draw(GameData.spriteBatch, this.getX(), this.getY(), 0, 0, this.getStyle().getXSize() / cornerPixelSize, this.getStyle().getYSize() / cornerPixelSize, cornerPixelSize, cornerPixelSize, 0);
+
         Color old = GameData.spriteBatch.getColor().cpy();
         if(color != null) {
             GameData.spriteBatch.setColor(color);
@@ -31,7 +38,7 @@ public class ProgressBar extends Renderable {
         if(color != null) {
             GameData.spriteBatch.setColor(old);
         }
-        GameData.spriteBatch.draw(ImageUtil.get("ui/progress_bar_overlay"), this.getX(), this.getY(), this.getStyle().getXSize(), this.getStyle().getYSize());
+        overlay.draw(GameData.spriteBatch, this.getX(), this.getY(), 0, 0, this.getStyle().getXSize() / cornerPixelSize, this.getStyle().getYSize() / cornerPixelSize, cornerPixelSize, cornerPixelSize, 0);
     }
 
     public void setColor(Color color) {

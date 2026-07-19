@@ -6,6 +6,7 @@
     "BitmapCacheScalerMixin",
     "ControllerMappingAccessor",
     "ControllerUtilMixin",
+    "ExtendViewportMixin",
     "FontMixin",
     "MonitorFixMixin",
     "ResizeSpeederUpperMixin",

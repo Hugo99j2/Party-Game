@@ -2,6 +2,8 @@ package com.hugo99j.chaosparty.loader;
 
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
+import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Window;
+import com.badlogic.gdx.backends.lwjgl3.Lwjgl3WindowListener;
 import com.hugo99j.chaosparty.Main;
 
 /** Launches the desktop (LWJGL3) application. */
@@ -34,7 +36,9 @@ public class Lwjgl3Launcher {
         //// They can also be loaded from the root of assets/ .
         configuration.setWindowIcon("assets/textures/icon.png", "assets/textures/icon.png", "assets/textures/icon.png", "assets/textures/icon.png");
         configuration.setAudioConfig(32, 512, 9);
-        //configuration.setPauseWhenLostFocus(true);
+        configuration.setPauseWhenLostFocus(true);
+        configuration.setPauseWhenMinimized(true);
+        configuration.setAutoIconify(false);
         //configuration.set
 
         //// This could improve compatibility with Windows machines with buggy OpenGL drivers, Macs

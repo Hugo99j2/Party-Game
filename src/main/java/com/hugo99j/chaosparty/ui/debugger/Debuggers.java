@@ -63,6 +63,7 @@ import java.util.*;
 import java.util.List;
 import java.util.function.Consumer;
 
+import static com.hugo99j.chaosparty.ui.debugger.DebugOptions.newMapNames;
 import static com.hugo99j.chaosparty.ui.debugger.ObjectEditor.*;
 import static com.hugo99j.chaosparty.ui.debugger.UndoRedoHistory.onEdited;
 
@@ -75,18 +76,13 @@ public class Debuggers {
     private static UUID selectedLightId = null;
     private static Vector2 oldLightPos;
     static String data = null;
-    //short for less memory
-    private static final ArrayList<Short> fpsCounter = new ArrayList<>();
     static String createObjectData = null;
     private static final ArrayList<String> logger = new ArrayList<>();
     public static final Map<UUID, ArrayList<PathfindDebugPos>> pathfindDebuggers = new HashMap<>();
     public static final Map<UUID, Integer> pathfindDebuggerTimers = new HashMap<>();
     public static Vector2 freecam = Vector2.Zero;
-    private static float lastTime = 0;
     private static int selectedSound = 0;
     private static final ArrayList<String> audioNames = new ArrayList<>();
-    private static int newMapEditorName = 0;
-    private static final List<String> newMapNames = new ArrayList<>();
     private static boolean forceShow = false;
     public static Map<Consumer<MatchView>, ValueHolder<Integer>> customLevelRenderers = new HashMap<>();
     public static Map<Runnable, ValueHolder<Integer>> customUiRenderers = new HashMap<>();
@@ -138,6 +134,7 @@ public class Debuggers {
             option("tickMapEditor", false);
             option("advancedObjectPicking", true);
             option("alignPixel", true);
+            option("highlightSelected", true);
 
             category("UI");
             option("screenSSDebugger", false);
@@ -341,74 +338,7 @@ public class Debuggers {
                 }
                 ImGui.end();
 
-                ImGui.begin("Options");
-
-                if(GameData.getCurrentMatch() != null && GameData.getCurrentMatch().getCurrentMinigame() instanceof MapEditor mapEditor) {
-                    if (ImGui.button("Save map")) {
-                        try {
-                            Files.write(Path.of(PathUtil.codingDir(PathUtil.data("maps/" + mapEditor.getMapName() + ".map"))), LevelLoader.saveLevel(GameData.level, true).getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-                        } catch (Exception e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
-                }
-
-                if (ImGui.button("Load map")) {
-                    try {
-                        GameData.startMatch(List.of(new MatchPlayer(User.getUser(5)))).setCurrentMinigame(new MapEditor(newMapNames.get(newMapEditorName)));
-                    } catch (Exception e) {
-                        Logger.error("Error loading map", e);
-                    }
-                }
-                ImGui.sameLine();
-                ImInt newName = new ImInt(newMapEditorName);
-                if(ImGui.combo("Map", newName, newMapNames.toArray(new String[0]))) {
-                    newMapEditorName = newName.get();
-                }
-
-                ValueHolder<Boolean> lastHeaderActive = new ValueHolder<>(false);
-                debugOptions.forEach((s, valueHolder) -> {
-                    if (s.startsWith("__")) {
-                        lastHeaderActive.object = ImGui.collapsingHeader(s.replace("__", ""));
-                    } else {
-                        if (lastHeaderActive.object && ImGui.checkbox(s, valueHolder.object)) {
-                            valueHolder.object = !valueHolder.object;
-                            save();
-                        }
-                    }
-                });
-
-                float[] fpsArray = new float[fpsCounter.size()];
-                int i = 0;
-
-                for (Short f : fpsCounter) {
-                    fpsArray[i++] = f;
-                }
-
-                ImGui.plotLines("FPS graph", fpsArray, 100, 1, "", 0, 200, new ImVec2(0, 80));
-                if (GameData.time > lastTime + 0.02f) {
-                    lastTime = GameData.time;
-                    if (fpsCounter.size() > 100) fpsCounter.removeFirst();
-                    fpsCounter.add((short) Gdx.graphics.getFramesPerSecond());
-                }
-
-                ImGui.text("Current FPS: " + Gdx.graphics.getFramesPerSecond());
-
-                ImGui.text("Cached images: " + ImageUtil.size());
-                ImGui.text("Cached files: " + PathUtil.size());
-                ImGui.text("Cached sounds: " + SoundManager.size());
-                ImGui.text("Revisions: " + UndoRedoHistory.size());
-                ImGui.text("Current revision: " + UndoRedoHistory.getCurrentRevision());
-
-                if(ImGui.button("Why is my code not working?")) {
-                    debugOptions.put("lights", new ValueHolder<>(false));
-                }
-
-                if(GameData.getCurrentMatch() != null && GameData.getCurrentMatch().getMatchViews() != null && !GameData.getCurrentMatch().getMatchViews().isEmpty()) {
-                    slider("zoom", GameData.getCurrentMatch().getMatchViews().getFirst().gameCamera.zoom, (e) -> {GameData.getCurrentMatch().getMatchViews().getFirst().gameCamera.zoom = e;}, 0, 20, "%.3f");
-                }
-
-                ImGui.end();
+                DebugOptions.render();
 
                 ImGui.begin("Effects");
                 for (String allEffect : EffectType.getNameToEffect().keySet()) {
@@ -629,7 +559,7 @@ public class Debuggers {
         }
     }
 
-    private static void save() {
+    static void save() {
         JsonObject data = new JsonObject();
         JsonArray array = new JsonArray();
         debugOptions.forEach((name, value) -> {

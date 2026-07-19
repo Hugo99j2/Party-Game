@@ -29,6 +29,7 @@ import com.hugo99j.chaosparty.match.MatchPlayer;
 import com.hugo99j.chaosparty.match.MatchView;
 import com.hugo99j.chaosparty.minigame.MapEditor;
 import com.hugo99j.chaosparty.ui.debugger.Debuggers;
+import com.hugo99j.chaosparty.ui.debugger.ObjectEditor;
 import com.hugo99j.chaosparty.util.RenderUtil;
 import org.jetbrains.annotations.Nullable;
 
@@ -303,12 +304,6 @@ public class Level implements Disposable {
         this.objects.add(object);
     }
 
-    public void completedLoad() {
-        for (AbstractObject o : this.getAllObjects()) {
-            o.markFromWorldLoad();
-        }
-    }
-
     public int getTime() {
         return time;
     }
@@ -442,5 +437,10 @@ public class Level implements Disposable {
 
     public int getNextEntityId() {
         return nextEntityId++;
+    }
+
+    @UsageLimited
+    public List<AbstractObject> getRealListOfObjects() {
+        return objects;
     }
 }

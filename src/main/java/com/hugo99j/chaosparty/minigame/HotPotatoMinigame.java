@@ -30,6 +30,8 @@ import java.util.Collections;
 import java.util.List;
 
 public class HotPotatoMinigame extends AbstractMinigame {
+    private static final int TIME = 20;
+
     private Timer timer;
     private final CombinedScreenSS ss = ScreenSSBuilder.create()
         .set("xSize", "1vw")
@@ -49,7 +51,7 @@ public class HotPotatoMinigame extends AbstractMinigame {
     private MatchPlayer hotPlayer;
     private boolean hotCollisionCooldown = false;
     private int potatoPassThreshold = 0;
-    private float largestTime = 15;
+    private float largestTime = TIME;
 
     public HotPotatoMinigame() {
         super("hot_potato");
@@ -58,7 +60,7 @@ public class HotPotatoMinigame extends AbstractMinigame {
     @Override
     public void start() {
         super.start();
-        timer = new Timer("timer", 15, 2, false);
+        timer = new Timer("timer", TIME, 2, false);
         timer.setStyle(ss.get("timer"));
         music = SoundManager.getSound("potato_music").playSingle(1);
         hotEffect = new ParticleEffect();
@@ -118,8 +120,8 @@ public class HotPotatoMinigame extends AbstractMinigame {
                     matches++;
                 }
             }
-            this.timer.setTime(15, false);
-            largestTime = 15;
+            this.timer.setTime(TIME, false);
+            largestTime = TIME;
             if(matches <= 1) {
                 ToRun.run(() -> GameData.getCurrentMatch().finishCurrentMinigame());
             }
@@ -181,7 +183,7 @@ public class HotPotatoMinigame extends AbstractMinigame {
             matchView.getActiveEffects().clear();
         }
         this.hotPlayer = hotPlayer;
-        this.timer.setTime((int) Math.min(15-((15-this.timer.getSeconds())/1.5f), largestTime), false);
+        this.timer.setTime((int) Math.min(TIME-((TIME-this.timer.getSeconds())/1.5f), largestTime), false);
         largestTime = Math.min(largestTime, timer.getSeconds());
         for (MatchView matchView : GameData.getCurrentMatch().getMatchViews()) {
             if(matchView.getPlayer() == hotPlayer) {

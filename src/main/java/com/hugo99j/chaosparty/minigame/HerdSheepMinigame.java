@@ -11,6 +11,7 @@ import com.hugo99j.chaosparty.entity.Sheep;
 import com.hugo99j.chaosparty.entity.SpriteObject;
 import com.hugo99j.chaosparty.match.MatchPlayer;
 import com.hugo99j.chaosparty.match.MatchView;
+import com.hugo99j.chaosparty.ui.ScreenCenterer;
 import com.hugo99j.chaosparty.util.RenderUtil;
 import com.hugo99j.chaosparty.util.ToRun;
 import com.hugo99j.chaosparty.GameData;
@@ -124,6 +125,7 @@ public class HerdSheepMinigame extends AbstractMinigame {
     @Override
     public void setupViews(List<MatchView> matchViews) {
         matchViews.add(new MatchView(32, 18));
+        ((ScreenCenterer) matchViews.getFirst().gameViewport).party_Game$setCenter(true);
     }
 
     @Override

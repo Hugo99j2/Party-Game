@@ -68,7 +68,7 @@ public class MenuScreen extends UiScreen {
             .set("ySize", 64)
             .set("scale", 2)
             .finishChild()
-            .newChild("new")
+            .newChild("counting")
             .set("x", "auto")
             .set("y", "auto")
             .set("xSize", 320)
@@ -121,11 +121,11 @@ public class MenuScreen extends UiScreen {
                 start(new FallingFloorMinigame());
             }
         });
-        this.addRenderable(new Button("new", "button", "New game!") {
+        this.addRenderable(new Button("counting", "button", "Counting") {
             @Override
             public void onClick() {
                 super.onClick();
-                start(new NextGameToMake());
+                start(new CountingMinigame());
             }
         });
 

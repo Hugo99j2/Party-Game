@@ -31,7 +31,7 @@ public class Clown extends AbstractObject {
         if(sheepTime <= 0) {
             sheepTime = NumberUtils.getRandomInt(40, 100);
             if (NumberUtils.getRandomInt(1, 2) == 1) {
-                move = new Vector2(NumberUtils.getRandomFloat(-1, 1), NumberUtils.getRandomFloat(-1, 1));
+                move = new Vector2(NumberUtils.getRandomFloat(-1, 1), 0);
             } else move = Vector2.Zero.cpy();
             move.nor();
         }

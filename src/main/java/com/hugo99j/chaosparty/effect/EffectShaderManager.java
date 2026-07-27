@@ -54,6 +54,7 @@ public class EffectShaderManager {
                 + "   gl_Position =  u_projTrans * " + ShaderProgram.POSITION_ATTRIBUTE + ";\n" //
                 + "}\n";
             String fragmentShader = """
+                #version 330
                 #ifdef GL_ES
                 #define LOWP lowp
                 precision mediump float;

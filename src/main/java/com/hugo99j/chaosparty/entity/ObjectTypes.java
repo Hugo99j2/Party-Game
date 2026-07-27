@@ -21,6 +21,7 @@ public class ObjectTypes {
     public static final ObjectType<PlayerSpawnPoint> PLAYER_SPAWN_POINT = registerObjectType("player_spawn_point", PlayerSpawnPoint::read, PlayerSpawnPoint::createDefault);
     public static final ObjectType<FallingFloorObject> FALLING_FLOOR = registerObjectType("falling_floor", FallingFloorObject::read, FallingFloorObject::createDefault);
     public static final ObjectType<TemporaryDevObject> TEMP_DEV_OBJECT = registerObjectType("temp_dev_object", TemporaryDevObject::read, TemporaryDevObject::createDefault);
+    public static final ObjectType<Clown> CLOWN = registerObjectType("clown", Clown::read, Clown::createDefault);
 
 
     private static <T extends AbstractObject> ObjectType<T> registerObjectType(String id, Function<JsonObject, T> reader, Supplier<T> defaultConstructor) {

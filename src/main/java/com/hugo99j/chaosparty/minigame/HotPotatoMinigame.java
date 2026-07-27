@@ -89,12 +89,11 @@ public class HotPotatoMinigame extends AbstractMinigame {
         hotEffect.setPosition(hotPlayer.getPlayerObject().getPos().x+0.3f, hotPlayer.getPlayerObject().getPos().y+1);
 
         if(((ControllerUtil) hotPlayer.controller).wasJustPressedThisTick(ControllerInput.RIGHT_BUMPER)) {
-            Logger.info("Potato");
             Potato potato = new Potato();
             potato.setX(hotPlayer.getPlayerObject().getPos().x);
             potato.setY(hotPlayer.getPlayerObject().getPos().y);
             GameData.getLevelOrThrow().addObject(potato);
-            potato.getPhysics().applyForceToCenter(((ControllerUtil) hotPlayer.controller).getValue(ControllerInput.RIGHT_STICK_RIGHT)*10000, ((ControllerUtil) hotPlayer.controller).getValue(ControllerInput.RIGHT_STICK_UP)*10000, true);
+            potato.getPhysics().applyForceToCenter(((ControllerUtil) hotPlayer.controller).getValue(ControllerInput.RIGHT_STICK_RIGHT)*7000, ((ControllerUtil) hotPlayer.controller).getValue(ControllerInput.RIGHT_STICK_UP)*7000, true);
         }
 
         if(timer.getSeconds() <= 0 || potatoPassThreshold > 300) {

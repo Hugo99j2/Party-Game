@@ -51,7 +51,7 @@ public class Clown extends AbstractObject {
 
     @Override
     protected PhysicsSettings createPhysics() {
-        return PhysicsSettings.create(px(14), 1, px(1), 0, 0.5f, 0.5f);
+        return PhysicsSettings.texture("clown", 0.5f, 0.5f, 1f, 1f);
     }
 
     @Override
@@ -80,5 +80,10 @@ public class Clown extends AbstractObject {
 
     public static Clown createDefault() {
         return new Clown();
+    }
+
+    @Override
+    public boolean shouldCollideWith(AbstractObject other) {
+        return super.shouldCollideWith(other) && !(other instanceof Clown);
     }
 }

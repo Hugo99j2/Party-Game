@@ -72,12 +72,12 @@ public class CombinedScreenSS {
         }
 
         @Override
-        public int getX() {
+        public float getX() {
             return super.getX()+(parent == null ? 0 : parent.getX());
         }
 
         @Override
-        public int getY() {
+        public float getY() {
             return super.getY()+(parent == null ? 0 : parent.getY());
         }
 
@@ -153,8 +153,8 @@ public class CombinedScreenSS {
             return has("gap") ? getAsInt("gap") : 0;
         }
 
-        private int getInnerSize(boolean xAxis) {
-            int size = xAxis ? getXSize() : getYSize();
+        private float getInnerSize(boolean xAxis) {
+            float size = xAxis ? getXSize() : getYSize();
             int before = xAxis ? getPaddingLeft() : getPaddingTop();
             int after = xAxis ? getPaddingRight() : getPaddingBottom();
             return Math.max(0, size - before - after);
@@ -169,7 +169,7 @@ public class CombinedScreenSS {
 
         private double getMainAxisPosition(ScreenParentSS child, boolean xAxis) {
             boolean reverse = getFlexDirection().endsWith("-reverse");
-            int innerSize = getInnerSize(xAxis);
+            float innerSize = getInnerSize(xAxis);
             int childCount = children.size();
             int gap = getGap();
             int totalChildSize = 0;
@@ -193,7 +193,7 @@ public class CombinedScreenSS {
             return getYSize() - getPaddingTop() - position - child.getYSize();
         }
 
-        private int getMainSize(boolean xAxis) {
+        private float getMainSize(boolean xAxis) {
             return xAxis ? getXSize() : getYSize();
         }
 
@@ -218,8 +218,8 @@ public class CombinedScreenSS {
 
         private double getCrossAxisPosition(ScreenParentSS child, boolean xAxis) {
             String align = getAlignItems();
-            int innerSize = getInnerSize(xAxis);
-            int childSize = xAxis ? child.getXSize() : child.getYSize();
+            float innerSize = getInnerSize(xAxis);
+            float childSize = xAxis ? child.getXSize() : child.getYSize();
             double free = Math.max(0, innerSize - childSize);
 
             if(xAxis) {

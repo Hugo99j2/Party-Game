@@ -70,11 +70,11 @@ public class Renderable implements Disposable {
         return style;
     }
 
-    public int getX() {
+    public float getX() {
         return this.style.getX();
     }
 
-    public int getY() {
+    public float getY() {
         return this.style.getY();
     }
 

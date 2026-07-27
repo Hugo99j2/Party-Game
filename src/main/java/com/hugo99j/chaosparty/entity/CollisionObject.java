@@ -1,7 +1,10 @@
 package com.hugo99j.chaosparty.entity;
 
 import com.daniel99j.dungeongame.entity.AbstractObject;
+import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.match.MatchView;
+import com.hugo99j.chaosparty.minigame.MapEditor;
+import com.hugo99j.chaosparty.util.ImageUtil;
 import com.hugo99j.chaosparty.util.RequiresRefresh;
 import com.daniel99j.dungeongame.entity.CollisionCategories;
 import com.daniel99j.dungeongame.entity.ObjectType;
@@ -9,7 +12,7 @@ import com.daniel99j.dungeongame.entity.PhysicsSettings;
 import com.google.gson.JsonObject;
 import com.hugo99j.chaosparty.util.RenderLayer;
 
-public class CollisionObject extends AbstractObject {
+public class CollisionObject extends AbstractObject implements DontCollideTogether {
     @RequiresRefresh
     float sizeX = 1;
     @RequiresRefresh
@@ -22,6 +25,7 @@ public class CollisionObject extends AbstractObject {
 
     @Override
     public void render(MatchView matchView) {
+        if(GameData.getCurrentMinigame() instanceof MapEditor) GameData.spriteBatch.draw(ImageUtil.get("barrier"), this.getPos().x, this.getPos().y, this.sizeX, this.sizeY);
     }
 
     @Override
@@ -54,5 +58,10 @@ public class CollisionObject extends AbstractObject {
 
     public static CollisionObject createDefault() {
         return new CollisionObject();
+    }
+
+    @Override
+    public boolean shouldCollideWith(AbstractObject other) {
+        return super.shouldCollideWith(other) && !(other instanceof DontCollideTogether);
     }
 }

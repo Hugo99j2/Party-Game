@@ -365,11 +365,11 @@ public class CharacterCreatorScreen extends UiScreen {
         GameData.spriteBatch.end();
     }
 
-    private void drawUser(int x, int y, float xSize, float ySize, User user) {
+    private void drawUser(float x, float y, float xSize, float ySize, User user) {
         drawUser(x, y, xSize, ySize, user, null);
     }
 
-    private void drawUser(int x, int y, float xSize, float ySize, User user, CostumePart exclude) {
+    private void drawUser(float x, float y, float xSize, float ySize, User user, CostumePart exclude) {
         for (CostumePart value : CostumePart.values()) {
             if (value.shouldRender() && value != exclude) GameData.spriteBatch.draw(ImageUtil.get("costumes/" + user.getWearing(value)), x, y, xSize, ySize);
         }

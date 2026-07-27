@@ -73,17 +73,17 @@ public class ScreenSS {
         return MathsContext.create().withGlobalVariable("vw", String.valueOf(GameData.width/100.0f)).withGlobalVariable("vh", String.valueOf(GameData.height/100.0f)).withGlobalVariable("time", String.valueOf(GameData.time));
     }
 
-    public int getX() {
-        return getAsInt("x") - (center ? getXSize()/2 : 0);
+    public float getX() {
+        return (float) (get("x") - (center ? getXSize()/2 : 0));
     }
-    public int getY() {
-        return getAsInt("y") - (center ? getYSize()/2 : 0);
+    public float getY() {
+        return (float) (get("y") - (center ? getYSize()/2 : 0));
     }
-    public int getXSize() {
-        return getAsInt("xSize");
+    public float getXSize() {
+        return (float) get("xSize");
     }
-    public int getYSize() {
-        return getAsInt("ySize");
+    public float getYSize() {
+        return (float) get("ySize");
     }
 
     public boolean has(String v) {

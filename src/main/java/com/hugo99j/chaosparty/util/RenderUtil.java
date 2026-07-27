@@ -123,7 +123,7 @@ public class RenderUtil {
     }
 
     public static void renderTextWorld(String text, float x, float y, float size) {
-        renderText(text, ScreenSSBuilder.create().newChild("main").set("x", x).set("y", y).set("xSize", 1000).set("ySize", size).finishChild().build().get("main"));
+        renderText(text, ScreenSSBuilder.create().newChild("main").set("x", x).set("y", y).set("xSize", 1000).set("ySize", size).set("textOverrideSize", size).finishChild().build().get("main"));
     }
 
     public static TextData renderText(String text, ScreenSS ss) {
@@ -183,6 +183,7 @@ public class RenderUtil {
         float scaleX = (ss.getXSize()/layout.width);
         float scaleY = (ss.getYSize()/layout.height);
         float scale = Math.min(scaleX, scaleY);
+        if(ss.has("textOverrideSize")) scale = (float) ss.get("textOverrideSize") * GameData.spriteBatch.getProjectionMatrix().getScaleX() / 16;
         ((BitmapCacheScaler) GameData.FONT.getCache()).scale(scale);
         float offsetX = 0;
         if(ss.has("textAlign") && ss.get("textAlign") != 0) {

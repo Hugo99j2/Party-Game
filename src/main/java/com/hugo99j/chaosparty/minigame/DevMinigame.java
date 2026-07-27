@@ -54,7 +54,7 @@ public class DevMinigame extends AbstractMinigame {
     public void render(float delta) {
         GameData.spriteBatch.begin();
         timer.render(new RenderState(false, false, false, false, false, false, 0, 0, delta));
-        RenderUtil.renderText("Score: 1", ss.get("score").getX(), ss.get("score").getY(), 1f, 100, Align.left, false);
+        RenderUtil.renderText("Score: 1", (int) ss.get("score").getX(), (int) ss.get("score").getY(), 1f, 100, Align.left, false);
         GameData.spriteBatch.end();
     }
 

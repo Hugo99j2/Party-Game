@@ -30,7 +30,8 @@ public class GameData {
     public static @Nullable Level level;
     public static final int TICKS_PER_SECOND = 40;
     public static final float SECONDS_PER_TICK = 1.0f/TICKS_PER_SECOND;
-    public static final float SECONDS_PER_PHYSICS_TICK = 1.0f/TICKS_PER_SECOND/10.0f;
+    public static final int PHYSICS_TICKS_PER_TICK = 10;
+    public static final float SECONDS_PER_PHYSICS_TICK = 1.0f/TICKS_PER_SECOND/PHYSICS_TICKS_PER_TICK;
     public static final SpriteBatch spriteBatch = new SpriteBatch();
     public static final OrthographicCamera uiCamera = new OrthographicCamera();
     public static Viewport uiViewport = new ScreenViewport(uiCamera);

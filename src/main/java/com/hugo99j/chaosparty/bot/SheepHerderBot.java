@@ -102,11 +102,6 @@ public class SheepHerderBot extends BotController {
         return null;
     }
 
-    @Override
-    public float getSpeed() {
-        return 200;
-    }
-
     public enum Mode {
         NEEDS_TARGET,
         GOING_TO_TARGET,

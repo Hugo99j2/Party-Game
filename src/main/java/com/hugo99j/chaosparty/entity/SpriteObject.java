@@ -15,7 +15,7 @@ import com.hugo99j.chaosparty.util.RenderLayer;
 import com.google.gson.JsonObject;
 import com.hugo99j.chaosparty.util.RequiresRefresh;
 
-public class SpriteObject extends AbstractObject {
+public class SpriteObject extends AbstractObject implements DontCollideTogether {
     private int width = 1;
     private int height = 1;
     private String sprite;
@@ -162,6 +162,6 @@ public class SpriteObject extends AbstractObject {
 
     @Override
     public boolean shouldCollideWith(AbstractObject other) {
-        return super.shouldCollideWith(other) && !(other instanceof SpriteObject);
+        return super.shouldCollideWith(other) && !(other instanceof DontCollideTogether);
     }
 }

@@ -1,7 +1,7 @@
 {
   "objects": [
     {
-      "x": 10.6875,
+      "x": 4.0,
       "y": -0.125,
       "uuid": "95c65e57-3604-4f58-b5ee-e87ea150dbaa",
       "type": "player_spawn_point",
@@ -10,7 +10,7 @@
       }
     },
     {
-      "x": 26.5625,
+      "x": 11.4375,
       "y": -0.125,
       "uuid": "c7c846a8-08ee-4050-aa5c-4ef863d9885e",
       "type": "player_spawn_point",
@@ -19,7 +19,7 @@
       }
     },
     {
-      "x": 3.9375,
+      "x": 18.625,
       "y": -0.125,
       "uuid": "8980418e-2e27-4587-84ba-ae75dd3ebaf9",
       "type": "player_spawn_point",
@@ -28,7 +28,7 @@
       }
     },
     {
-      "x": 18.5625,
+      "x": 25.4375,
       "y": 0.0,
       "uuid": "65874d13-c3d4-4bf7-9f9a-fb8ead78060d",
       "type": "player_spawn_point",
@@ -164,6 +164,26 @@
       "uuid": "d30b8e66-4841-4148-8eec-27a109ac655a",
       "type": "clown",
       "custom_data": {}
+    },
+    {
+      "x": -1.0,
+      "y": 1.0,
+      "uuid": "60d27980-da21-4747-80d6-a8d890a7aa3c",
+      "type": "collision",
+      "custom_data": {
+        "sizeX": 1.0,
+        "sizeY": 18.0
+      }
+    },
+    {
+      "x": 34.0,
+      "y": 1.0,
+      "uuid": "04228b1f-903d-4333-9408-6f97e54a873f",
+      "type": "collision",
+      "custom_data": {
+        "sizeX": 1.0,
+        "sizeY": 18.0
+      }
     }
   ],
   "lights": []

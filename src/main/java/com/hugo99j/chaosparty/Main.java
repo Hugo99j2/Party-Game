@@ -33,7 +33,7 @@ public class Main extends Game {
     private boolean cursorCaught = false;
     private GLFWErrorCallback glfwErrorCallback;
     private float activeTimer;
-    private float tickTimer;
+    private int physicsTicks;
     private int oldXSize, oldYSize;
 
     @Override
@@ -200,9 +200,10 @@ public class Main extends Game {
             activeTimer += Gdx.graphics.getDeltaTime();
 
             if (activeTimer > GameData.SECONDS_PER_PHYSICS_TICK)
-                while ((activeTimer -= GameData.SECONDS_PER_PHYSICS_TICK) > 0) {
-                    tickTimer += GameData.SECONDS_PER_PHYSICS_TICK;
-                    if (tickTimer >= GameData.SECONDS_PER_TICK) {
+                while (activeTimer > GameData.SECONDS_PER_PHYSICS_TICK) {
+                    activeTimer -= GameData.SECONDS_PER_PHYSICS_TICK;
+                    physicsTicks++;
+                    if (physicsTicks == GameData.PHYSICS_TICKS_PER_TICK) {
                         List<Consumer<MatchView>> customRenderersToRemove = new ArrayList<>();
                         Debuggers.customLevelRenderers.forEach((r, v) -> {
                             v.object = v.object - 1;
@@ -214,7 +215,7 @@ public class Main extends Game {
 
                         if (GameData.level != null && tickIfMapEditor) GameData.level.tickWorld();
                         if (GameData.getCurrentMatch() != null && tickIfMapEditor) GameData.getCurrentMatch().tick();
-                        tickTimer = 0;
+                        physicsTicks = 0;
 
                         for (Controller controller : Controllers.getControllers()) {
                             ((ControllerUtil) controller).onTick();

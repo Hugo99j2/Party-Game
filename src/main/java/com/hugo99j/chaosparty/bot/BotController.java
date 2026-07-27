@@ -145,7 +145,7 @@ public class BotController {
     };
 
     public float getSpeed() {
-        return 600;
+        return GameData.getCurrentMinigame().getPlayerSpeed(this.player.getMatchPlayer());
     }
 
     public float getMaxDistance() {

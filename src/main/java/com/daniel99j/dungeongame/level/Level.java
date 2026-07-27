@@ -248,6 +248,13 @@ public class Level implements Disposable {
                     }
                 }
                 GameData.shapeRenderer.end();
+                GameData.spriteBatch.begin();
+                for (PathfindDebugPos pathfindDebugPos : debuggers) {
+                    if(pathfindDebugPos.cost() > 0) {
+                        RenderUtil.renderTextWorld(String.valueOf(pathfindDebugPos.cost()), pathfindDebugPos.pos().getX()+0.5f, pathfindDebugPos.pos().getY()+0.5f, 2);
+                    }
+                }
+                GameData.spriteBatch.end();
             });
             GameData.spriteBatch.begin();
         }

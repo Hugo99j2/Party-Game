@@ -107,7 +107,7 @@ public class HerdSheepMinigame extends AbstractMinigame {
         timer.render(new RenderState(false, false, false, false, false, false, 0, 0, delta));
         int offset = 0;
         for (MatchPlayer player : GameData.getCurrentMatch().getPlayers()) {
-            RenderUtil.renderText(player.getName()+": "+GameData.getCurrentMatch().getCurrentMinigame().getScore(player), ss.get("score").getX(), ss.get("score").getY()+offset, 1f, ss.get("score").getXSize(), Align.left, false);
+            RenderUtil.renderText(player.getName()+": "+GameData.getCurrentMatch().getCurrentMinigame().getScore(player), (int) ss.get("score").getX(), (int) (ss.get("score").getY()+offset), 1f, (int) ss.get("score").getXSize(), Align.left, false);
             offset += 50;
         }
         //RenderUtil.renderText("Scores: ", ss.get("score").getX(), ss.get("score").getY()+offset, 1f, ss.get("score").getXSize(), Align.left, false);

@@ -36,7 +36,7 @@ public abstract class AbstractMinigame implements Disposable {
     protected void defaultPlayerMovements() {
         for (MatchPlayer player : GameData.getCurrentMatch().getPlayers()) {
             if(player.controller == null || player.getPlayerObject() == null) continue;
-            float speed = 600;
+            float speed = getPlayerSpeed(player);
             float move = Math.max(speed-player.getPlayerObject().getVelocity().len(), 0);
 
             Vector2 movement = new Vector2(0, 0);
@@ -53,6 +53,10 @@ public abstract class AbstractMinigame implements Disposable {
             else if(movement.len() > 0) player.getPlayerObject().getPhysics().applyForceToCenter(new Vector2(movement.x*move, movement.y*move), true);
 
         }
+    }
+
+    public float getPlayerSpeed(MatchPlayer player) {
+        return 400;
     }
 
     public void renderSegment(float delta, MatchView view) {

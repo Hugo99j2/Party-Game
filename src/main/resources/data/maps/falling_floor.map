@@ -1,8 +1,8 @@
 {
   "objects": [
     {
-      "x": 12.4375,
-      "y": 11.5625,
+      "x": 16.0,
+      "y": 8.0,
       "uuid": "95c65e57-3604-4f58-b5ee-e87ea150dbaa",
       "type": "player_spawn_point",
       "custom_data": {
@@ -10,8 +10,8 @@
       }
     },
     {
-      "x": 18.75,
-      "y": 11.5,
+      "x": 16.0,
+      "y": 8.0,
       "uuid": "c7c846a8-08ee-4050-aa5c-4ef863d9885e",
       "type": "player_spawn_point",
       "custom_data": {
@@ -19,8 +19,8 @@
       }
     },
     {
-      "x": 12.6875,
-      "y": 5.4375,
+      "x": 16.0,
+      "y": 8.0,
       "uuid": "8980418e-2e27-4587-84ba-ae75dd3ebaf9",
       "type": "player_spawn_point",
       "custom_data": {
@@ -28,8 +28,8 @@
       }
     },
     {
-      "x": 18.25,
-      "y": 5.5625,
+      "x": 16.0,
+      "y": 8.0,
       "uuid": "65874d13-c3d4-4bf7-9f9a-fb8ead78060d",
       "type": "player_spawn_point",
       "custom_data": {

@@ -1,10 +1,8 @@
 package com.daniel99j.dungeongame.entity;
 
 public class CollisionCategories {
-    public static final short DONT_COLLIDE_WITH_EACH_OTHER = get();
     public static final short DEFAULT = get();
     public static final short PLAYER = get();
-    public static final short ENEMY = get();
     public static final short WALL = get();
     public static final short PATHFIND_BLOCKING = get();
     public static final short LIGHT_BLOCKING = get();

@@ -40,20 +40,6 @@ public abstract class AbstractMinigame implements Disposable {
             float move = Math.max(speed-player.getPlayerObject().getVelocity().len(), 0);
 
             Vector2 movement = new Vector2(0, 0);
-
-//            if(Gdx.input.isKeyPressed(Input.Keys.W)) {
-//                movement.add(0, 1);
-//            };
-//            if(Gdx.input.isKeyPressed(Input.Keys.A)) {
-//                movement.add(-1, 0);
-//            };
-//            if(Gdx.input.isKeyPressed(Input.Keys.S)) {
-//                movement.add(0, -1);
-//            };
-//            if(Gdx.input.isKeyPressed(Input.Keys.D)) {
-//                movement.add(1, 0);
-//            };
-
             Vector2 controller = new Vector2(player.controller.getAxis(player.controller.getMapping().axisLeftX), -player.controller.getAxis(player.controller.getMapping().axisLeftY));
             if (controller.len() > 0.2f) movement = controller;
 

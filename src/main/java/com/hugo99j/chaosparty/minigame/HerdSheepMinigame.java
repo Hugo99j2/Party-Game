@@ -7,6 +7,9 @@ import com.daniel99j.dungeongame.sounds.SoundManager;
 import com.daniel99j.dungeongame.ui.renderable.RenderState;
 import com.daniel99j.dungeongame.ui.screenss.CombinedScreenSS;
 import com.daniel99j.dungeongame.ui.screenss.ScreenSSBuilder;
+import com.hugo99j.chaosparty.bot.BotController;
+import com.hugo99j.chaosparty.bot.SheepHerderBot;
+import com.hugo99j.chaosparty.entity.Player;
 import com.hugo99j.chaosparty.entity.Sheep;
 import com.hugo99j.chaosparty.entity.SpriteObject;
 import com.hugo99j.chaosparty.match.MatchPlayer;
@@ -132,5 +135,10 @@ public class HerdSheepMinigame extends AbstractMinigame {
     public void setPaused(boolean paused) {
         if(paused) music.pause();
         else music.play();
+    }
+
+    @Override
+    public BotController createBotController(Player player) {
+        return new SheepHerderBot(player);
     }
 }

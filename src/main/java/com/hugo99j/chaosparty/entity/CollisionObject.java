@@ -17,7 +17,7 @@ public class CollisionObject extends AbstractObject {
 
     @Override
     protected PhysicsSettings createPhysics() {
-        return PhysicsSettings.immovable(sizeX, sizeY, 0, 0).collidesWith(CollisionCategories.allBut(CollisionCategories.DONT_COLLIDE_WITH_EACH_OTHER)).group(CollisionCategories.DONT_COLLIDE_WITH_EACH_OTHER);
+        return PhysicsSettings.immovable(sizeX, sizeY, 0, 0).group(CollisionCategories.PATHFIND_BLOCKING);
     }
 
     @Override

@@ -144,7 +144,7 @@ public class Level implements Disposable {
         }
         GameData.spriteBatch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
-        if(GameData.DEBUGGING && Debuggers.isEnabled("validPathfindingSpotRenderer") && matchView.getPlayer() != null && matchView.getPlayer().getPlayerObject() != null) {
+        if(GameData.DEBUGGING && Debuggers.isEnabled("validPathfindingSpotRenderer")) {
             int posX = (int) matchView.gameCamera.position.x;
             int posY = (int) matchView.gameCamera.position.y;
             GameData.spriteBatch.end();
@@ -155,8 +155,9 @@ public class Level implements Disposable {
                 if(player.getPlayerObject().getBot() != null) bot = player.getPlayerObject().getBot();
             }
             if(bot != null) {
-                for (int x = posX - 6; x < posX + 6; x++) {
-                    for (int y = posY - 6; y < posY + 6; y++) {
+                int size = 10;
+                for (int x = posX - size; x < posX + size; x++) {
+                    for (int y = posY - size; y < posY + size; y++) {
                         PathfindPos pathfindDebugPos = new PathfindPos(x, y);
                         boolean valid = bot.getPathfinder().getOptions().getWalkablePredicate().test(pathfindDebugPos);
                         GameData.shapeRenderer.setColor((valid ? Color.GREEN : Color.RED).cpy().mul(1, 1, 1, 0.7f));

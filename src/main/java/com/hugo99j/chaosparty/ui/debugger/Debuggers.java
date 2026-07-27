@@ -120,6 +120,7 @@ public class Debuggers {
             option("markers", false);
             option("showAdvancedObjectPicking", false);
             option("validPathfindingSpotRenderer", false);
+            option("botDebug", true);
 
             category("Minigame");
             option("forceSingleView", false);

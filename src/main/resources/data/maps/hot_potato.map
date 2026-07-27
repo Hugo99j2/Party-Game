@@ -965,45 +965,7 @@
       "uuid": "0cea1551-2a33-49cb-8ed2-ecfd417b158b",
       "type": "tileset",
       "custom_data": {
-        "width": 2,
-        "height": 1,
-        "sprite": "tilesets/bricks",
-        "flipX": false,
-        "flipY": false,
-        "hasHitbox": true,
-        "rotation": 0,
-        "scale": 1.0,
-        "tint": "ffffffff",
-        "textureHitbox": false,
-        "animated": false
-      }
-    },
-    {
-      "x": 11.5625,
-      "y": 10.5,
-      "uuid": "147635cd-fca5-4248-ad8c-b51baeff6cc2",
-      "type": "tileset",
-      "custom_data": {
-        "width": 2,
-        "height": 1,
-        "sprite": "tilesets/bricks",
-        "flipX": false,
-        "flipY": false,
-        "hasHitbox": true,
-        "rotation": 0,
-        "scale": 1.0,
-        "tint": "ffffffff",
-        "textureHitbox": false,
-        "animated": false
-      }
-    },
-    {
-      "x": 13.5625,
-      "y": 10.5,
-      "uuid": "43d8e4e8-7739-4467-966c-9f9292323a30",
-      "type": "tileset",
-      "custom_data": {
-        "width": 2,
+        "width": 6,
         "height": 1,
         "sprite": "tilesets/bricks",
         "flipX": false,
@@ -1022,45 +984,7 @@
       "uuid": "e42da118-2d5e-45fd-9862-d529091c220a",
       "type": "tileset",
       "custom_data": {
-        "width": 2,
-        "height": 1,
-        "sprite": "brick",
-        "flipX": false,
-        "flipY": false,
-        "hasHitbox": true,
-        "rotation": 0,
-        "scale": 1.0,
-        "tint": "ffffffff",
-        "textureHitbox": true,
-        "animated": false
-      }
-    },
-    {
-      "x": 11.5625,
-      "y": 11.5,
-      "uuid": "d7f2a7c0-a44f-455c-87cd-fab7092d1d01",
-      "type": "tileset",
-      "custom_data": {
-        "width": 2,
-        "height": 1,
-        "sprite": "brick",
-        "flipX": false,
-        "flipY": false,
-        "hasHitbox": true,
-        "rotation": 0,
-        "scale": 1.0,
-        "tint": "ffffffff",
-        "textureHitbox": true,
-        "animated": false
-      }
-    },
-    {
-      "x": 13.5625,
-      "y": 11.5,
-      "uuid": "0057e261-275b-427f-adc9-e02497862a82",
-      "type": "tileset",
-      "custom_data": {
-        "width": 2,
+        "width": 6,
         "height": 1,
         "sprite": "brick",
         "flipX": false,
@@ -1224,6 +1148,168 @@
       "custom_data": {
         "sprite": "oil_drum",
         "explosive": true
+      }
+    },
+    {
+      "x": 30.0,
+      "y": 1.0,
+      "uuid": "0a3a453a-1ad2-4db5-9869-057ea565d6f2",
+      "type": "tileset",
+      "custom_data": {
+        "width": 1,
+        "height": 3,
+        "sprite": "tilesets/bricks",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": false,
+        "animated": false
+      }
+    },
+    {
+      "x": 30.0,
+      "y": 4.0,
+      "uuid": "601f4d30-a2a8-44ce-a7c8-f222cbfd4220",
+      "type": "tileset",
+      "custom_data": {
+        "width": 3,
+        "height": 1,
+        "sprite": "tilesets/bricks",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": false,
+        "animated": false
+      }
+    },
+    {
+      "x": 34.0,
+      "y": 1.0,
+      "uuid": "b94ea290-e13f-45de-90ea-ea5d3ceeaa5e",
+      "type": "tileset",
+      "custom_data": {
+        "width": 1,
+        "height": 4,
+        "sprite": "tilesets/bricks",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": false,
+        "animated": false
+      }
+    },
+    {
+      "x": 33.0,
+      "y": 1.0,
+      "uuid": "4d77bbd6-52b9-4112-ae4f-6c9d4eee4889",
+      "type": "liquid_barrel",
+      "custom_data": {
+        "sprite": "oil_drum",
+        "explosive": true
+      }
+    },
+    {
+      "x": 24.5625,
+      "y": 29.375,
+      "uuid": "9187ffea-9586-4d10-be25-f2dd88bdd895",
+      "type": "tileset",
+      "custom_data": {
+        "width": 5,
+        "height": 1,
+        "sprite": "tilesets/bricks",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": false,
+        "animated": false
+      }
+    },
+    {
+      "x": 24.5625,
+      "y": 30.375,
+      "uuid": "0e24e6f7-8647-4d4e-adba-060b4237d600",
+      "type": "tileset",
+      "custom_data": {
+        "width": 5,
+        "height": 1,
+        "sprite": "brick",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": true,
+        "animated": false
+      }
+    },
+    {
+      "x": 42.5625,
+      "y": 4.4375,
+      "uuid": "e77ced9d-0db4-4903-beeb-fee3d271382b",
+      "type": "tileset",
+      "custom_data": {
+        "width": 1,
+        "height": 1,
+        "sprite": "tire",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": true,
+        "animated": false
+      }
+    },
+    {
+      "x": 42.5625,
+      "y": 4.8125,
+      "uuid": "735d16cf-e864-48e2-98fa-8955fa35583c",
+      "type": "tileset",
+      "custom_data": {
+        "width": 1,
+        "height": 1,
+        "sprite": "tire",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": true,
+        "animated": false
+      }
+    },
+    {
+      "x": 42.5625,
+      "y": 5.1875,
+      "uuid": "b7ff5074-b4a1-439d-8f76-2bdb272945db",
+      "type": "tileset",
+      "custom_data": {
+        "width": 1,
+        "height": 1,
+        "sprite": "tire",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": true,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": true,
+        "animated": false
       }
     }
   ],

@@ -15,6 +15,7 @@ import com.hugo99j.chaosparty.entity.Player;
 import com.hugo99j.chaosparty.entity.Potato;
 import com.hugo99j.chaosparty.minigame.HotPotatoMinigame;
 import com.hugo99j.chaosparty.ui.debugger.Debuggers;
+import com.hugo99j.chaosparty.util.RenderUtil;
 import org.checkerframework.checker.units.qual.A;
 import org.jetbrains.annotations.Nullable;
 
@@ -38,6 +39,8 @@ public class BotController {
         this.pathfinder = new CachedPathfinder(GameData.createPathfinding(player).walkablePredicate(this.createWalkPredicate()).build(), this.getMaxDistance());
     }
 
+    protected void addDebugInfo(List<String> info) {}
+
     public void tick() {
         runPathfinding(false);
     }
@@ -52,8 +55,14 @@ public class BotController {
             PathfindPos cachedTarget = toPathfindPos(target);
             PathfindPos pos = toPathfindPos(this.player.getPos().add(0.5f, 0.5f));
             List<PathfindPos> nodes = pathfinder.findPath(oldPos == null ? pos : oldPos, cachedTarget, pos);
-            if(nodes.size() <= 2) return; //2 so that if the path is just start to end, dont do it
-            //its a hack fix to stop it pathfinding to invalid places
+
+            //2 so that if the path is just start to end, dont do it
+            //its a hack fix to stop it pathfinding to invalid places and getting stuck
+            boolean isShort = nodes.size() <= 2;
+            if(isShort && allowsShortPaths()) {
+                this.player.moveTowardTarget(target, this.getSpeed());
+                return;
+            } else if(isShort) return;
 
             if(pathfinder.wasLastInvalid() || invalid) {
                 oldPos = pos;
@@ -99,6 +108,10 @@ public class BotController {
         }
     }
 
+    public boolean allowsShortPaths() {
+        return false;
+    }
+
     private static PathfindPos toPathfindPos(Vector2 pos) {
         return new PathfindPos((int) Math.floor(pos.x), (int) Math.floor(pos.y));
     }
@@ -132,7 +145,7 @@ public class BotController {
     };
 
     public float getSpeed() {
-        return 6;
+        return 600;
     }
 
     public float getMaxDistance() {
@@ -160,6 +173,18 @@ public class BotController {
         if(walkCost != this.walkCost) {
             this.walkCost = walkCost;
             this.getPathfinder().setOptions(this.getPathfinder().getOptions().newBuilder().positionCostFunction(this.walkCost).build());
+        }
+    }
+
+    public void render() {
+        if(GameData.DEBUGGING && Debuggers.isEnabled("botDebug")) {
+            List<String> text = new ArrayList<>();
+            addDebugInfo(text);
+            StringBuilder combined = new StringBuilder();
+            for (String s : text) {
+                combined.append(s).append("\n");
+            }
+            RenderUtil.renderTextWorld(combined.toString(), this.getPlayer().getPos().x, this.getPlayer().getPos().y, 2);
         }
     }
 }

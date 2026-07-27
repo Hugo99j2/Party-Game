@@ -5,10 +5,13 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.daniel99j.dungeongame.entity.*;
 import com.hugo99j.chaosparty.bot.BotController;
+import com.hugo99j.chaosparty.bot.SheepHerderBot;
 import com.hugo99j.chaosparty.match.MatchPlayer;
 import com.hugo99j.chaosparty.match.MatchView;
 import com.hugo99j.chaosparty.minigame.HotPotatoMinigame;
 import com.hugo99j.chaosparty.minigame.MapEditor;
+import com.hugo99j.chaosparty.ui.ControllerInput;
+import com.hugo99j.chaosparty.ui.ControllerUtil;
 import com.hugo99j.chaosparty.ui.debugger.Debuggers;
 import com.hugo99j.chaosparty.util.*;
 import com.google.gson.JsonObject;
@@ -66,6 +69,8 @@ public class Player extends AbstractObject {
             if(value.shouldRender()) GameData.spriteBatch.draw(ImageUtil.get("costumes/"+this.matchPlayer.getUser().getWearing(value)), pos.x+(flip ? 1 : 0), pos.y, (flip ? -1 : 1), 1);
         }
         GameData.spriteBatch.setColor(old);
+
+        if(bot != null) bot.render();
     }
 
     @Override
@@ -116,6 +121,7 @@ public class Player extends AbstractObject {
         if(object instanceof Player player && GameData.getCurrentMatch().getCurrentMinigame() instanceof HotPotatoMinigame potatoMinigame && potatoMinigame.getHotPlayer().getPlayerObject() == this) {
             potatoMinigame.setHotPlayerAndCooldown(player.getMatchPlayer());
         }
+        if(object instanceof Sheep sheep && this.bot instanceof SheepHerderBot herder) herder.onSheepHit(sheep);
     }
 
     public boolean isNoClip() {

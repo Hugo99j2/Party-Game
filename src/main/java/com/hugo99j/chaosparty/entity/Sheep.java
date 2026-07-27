@@ -1,11 +1,16 @@
 package com.hugo99j.chaosparty.entity;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Contact;
 import com.daniel99j.djutil.NumberUtils;
 import com.daniel99j.dungeongame.entity.AbstractObject;
+import com.daniel99j.dungeongame.entity.CollisionCategories;
 import com.daniel99j.dungeongame.entity.ObjectType;
 import com.daniel99j.dungeongame.entity.PhysicsSettings;
+import com.hugo99j.chaosparty.bot.SheepHerderBot;
 import com.hugo99j.chaosparty.match.MatchView;
+import com.hugo99j.chaosparty.ui.ControllerInput;
+import com.hugo99j.chaosparty.ui.ControllerUtil;
 import com.hugo99j.chaosparty.util.ImageUtil;
 import com.hugo99j.chaosparty.util.RenderLayer;
 import com.google.gson.JsonObject;
@@ -36,6 +41,21 @@ public class Sheep extends AbstractObject {
     }
 
     @Override
+    public void onCollision(Contact contact, AbstractObject object) {
+        if(object instanceof Player player) {
+            if(player.getBot() != null) {
+                if(((SheepHerderBot) player.getBot()).getMode() == SheepHerderBot.Mode.PUSHING_TARGET) {
+                    this.setVelocity(object.getVelocity());
+                }
+            } else {
+                if(((ControllerUtil) player.getMatchPlayer().controller).isPressed(ControllerInput.X)) {
+                    this.setVelocity(object.getVelocity());
+                }
+            }
+        }
+    }
+
+    @Override
     public void render(MatchView matchView) {
         Vector2 pos = this.getPos();
         GameData.spriteBatch.draw(ImageUtil.get("sheep"), pos.x, pos.y, 1, 1);
@@ -43,7 +63,7 @@ public class Sheep extends AbstractObject {
 
     @Override
     protected PhysicsSettings createPhysics() {
-        return PhysicsSettings.create(px(14), 1, px(1), 0, 0.5f, 0.5f);
+        return PhysicsSettings.create(px(14), 1, px(1), 0, 0.5f, 0.5f).group(CollisionCategories.PATHFIND_BLOCKING);
     }
 
     @Override

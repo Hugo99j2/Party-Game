@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.daniel99j.djutil.MiscUtils;
 import com.daniel99j.dungeongame.ui.screenss.ScreenSS;
+import com.daniel99j.dungeongame.ui.screenss.ScreenSSBuilder;
 import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.mixin.WindowAccessor;
 import com.hugo99j.chaosparty.ui.BitmapCacheScaler;
@@ -119,6 +120,10 @@ public class RenderUtil {
             newText = newText.replace("<colour:"+data+">", "["+data.toUpperCase()+"]");
         }
         GameData.FONT.draw(GameData.spriteBatch, newText, x, y, width, align, wrap);
+    }
+
+    public static void renderTextWorld(String text, float x, float y, float size) {
+        renderText(text, ScreenSSBuilder.create().newChild("main").set("x", x).set("y", y).set("xSize", 1000).set("ySize", size).finishChild().build().get("main"));
     }
 
     public static TextData renderText(String text, ScreenSS ss) {

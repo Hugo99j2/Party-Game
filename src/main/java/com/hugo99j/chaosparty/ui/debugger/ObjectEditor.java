@@ -64,7 +64,7 @@ public class ObjectEditor {
 
                             if(selected.get() instanceof SelectionGroup group) {
                                 if(group.selected.contains(allObject)) {
-                                    if(group.selected.size() > 1) group.selected.remove(allObject);
+                                    group.selected.remove(allObject);
                                 } else group.selected.add(allObject);
                                 group.update();
                             } else {
@@ -75,10 +75,17 @@ public class ObjectEditor {
                                 //group.update(); //it auto updates now
                                 selected.set(group);
                             }
-                            preventMoving = true;
-                            holdingOntoPos = null;
-                            startObjectPos = selected.get().getPos().cpy();
-                            justChangedSelection = true;
+                            if(selected.get() == null) {
+                                preventMoving = true;
+                                holdingOntoPos = null;
+                                startObjectPos = null;
+                                selected.set(null);
+                            } else {
+                                preventMoving = true;
+                                holdingOntoPos = null;
+                                startObjectPos = selected.get().getPos().cpy();
+                                justChangedSelection = true;
+                            }
                         } else {
                             Logger.info("Clicked " + allObject + " (" + id + ")");
                             if (allObject != selected.get()) {
@@ -383,12 +390,15 @@ public class ObjectEditor {
                 if(combined == null) combined = object.getPos();
                 else combined.add(object.getPos());
             }
-            if(selected.isEmpty()) throw new RuntimeException("How?");
-            Vector2 center = combined.cpy().scl(1.0f/selected.size());
-            super.setPos(center);
-            offsets.clear();
-            for (AbstractObject object : selected) {
-                offsets.put(object.getUUID(), object.getPos().sub(center));
+            if(selected.isEmpty()) {
+                this.dispose();
+            } else {
+                Vector2 center = combined.cpy().scl(1.0f / selected.size());
+                super.setPos(center);
+                offsets.clear();
+                for (AbstractObject object : selected) {
+                    offsets.put(object.getUUID(), object.getPos().sub(center));
+                }
             }
         }
 

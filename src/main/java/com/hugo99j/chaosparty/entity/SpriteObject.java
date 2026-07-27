@@ -60,7 +60,7 @@ public class SpriteObject extends AbstractObject {
                 settings = PhysicsSettings.textureImmovable(sprite, this.width, this.height);
             } else settings = PhysicsSettings.immovable(this.width*this.size.x, this.height*this.size.y, 0, 0);
 
-            settings = settings.collidesWith(CollisionCategories.allBut((short) (CollisionCategories.DONT_COLLIDE_WITH_EACH_OTHER | CollisionCategories.PATHFIND_BLOCKING))).group((short) (CollisionCategories.DONT_COLLIDE_WITH_EACH_OTHER | CollisionCategories.PATHFIND_BLOCKING));
+            settings = settings.group(CollisionCategories.PATHFIND_BLOCKING);
         }
         return settings;
     }

@@ -186,12 +186,12 @@ public abstract class AbstractObject implements Disposable {
     }
 
     public void moveTowardTarget(Vector2 targetPosition, float speed, float accuracy) {
-        Vector2 currentPosition = this.getPhysics().getPosition();
-        Vector2 direction = targetPosition.cpy().sub(currentPosition);
-        if(accuracy != 0) direction.rotateDeg(accuracy);
-        direction.nor();
-
-        this.getPhysics().setLinearVelocity(direction.x * speed, direction.y * speed);
+        targetPosition = targetPosition.cpy();
+        targetPosition.sub(this.getPos());
+        if(accuracy != 0) targetPosition.rotateDeg(accuracy);
+        targetPosition.nor();
+        float move = Math.max(speed-this.getVelocity().len(), 0);
+        this.getPhysics().applyForceToCenter(new Vector2(targetPosition.x*move, targetPosition.y*move), true);
     }
 
     public Vector4 getHitboxWorld(Fixture fixture) {

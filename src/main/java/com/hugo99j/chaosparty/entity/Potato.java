@@ -73,7 +73,7 @@ public class Potato extends AbstractObject {
 
     @Override
     protected PhysicsSettings createPhysics() {
-        return PhysicsSettings.texture("potato", 0, 0.5f, 1, 1);
+        return PhysicsSettings.texture("potato", 2, 4f, 1, 1);
     }
 
     @Override

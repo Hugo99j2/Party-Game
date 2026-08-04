@@ -75,7 +75,7 @@ public class Clown extends AbstractObject {
 
     @Override
     public String toString() {
-        return "Sheep";
+        return "Clown";
     }
 
     public static Clown createDefault() {

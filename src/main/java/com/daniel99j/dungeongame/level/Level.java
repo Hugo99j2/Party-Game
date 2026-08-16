@@ -94,7 +94,7 @@ public class Level implements Disposable {
         this.rayHandler = new RayHandler(this.getBox2dWorld());
         this.rayHandler.setBlurNum(3);
         this.rayHandler.setAmbientLight(1);
-        RayHandler.useDiffuseLight(true);
+        RayHandler.useDiffuseLight(false);
         this.rayHandler.setShadows(true);
     }
 

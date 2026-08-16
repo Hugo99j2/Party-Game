@@ -70,14 +70,6 @@ public abstract class AbstractMinigame implements Disposable {
         GameData.getLevelOrThrow().render(view, false);
 
         GameData.spriteBatch.end();
-
-        if(!GameData.DEBUGGING || Debuggers.isEnabled("lights")) {
-//                GameConstants.gameCamera.update();
-//                GameConstants.gameViewport.apply();
-            GameData.level.rayHandler.useCustomViewport(view.gameViewport.getScreenX(), view.gameViewport.getScreenY(), view.gameViewport.getScreenWidth(), view.gameViewport.getScreenHeight());
-            GameData.level.rayHandler.setCombinedMatrix(view.gameCamera);
-            GameData.level.rayHandler.updateAndRender();
-        }
     }
 
     public String getMapName() {

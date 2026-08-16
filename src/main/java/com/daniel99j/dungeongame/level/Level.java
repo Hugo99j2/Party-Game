@@ -31,6 +31,7 @@ import com.hugo99j.chaosparty.minigame.MapEditor;
 import com.hugo99j.chaosparty.ui.debugger.Debuggers;
 import com.hugo99j.chaosparty.ui.debugger.ObjectEditor;
 import com.hugo99j.chaosparty.util.RenderUtil;
+import com.hugo99j.chaosparty.util.ScreenFboUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -93,7 +94,7 @@ public class Level implements Disposable {
         this.rayHandler = new RayHandler(this.getBox2dWorld());
         this.rayHandler.setBlurNum(3);
         this.rayHandler.setAmbientLight(1);
-        RayHandler.useDiffuseLight(false);
+        RayHandler.useDiffuseLight(true);
         this.rayHandler.setShadows(true);
     }
 
@@ -143,6 +144,21 @@ public class Level implements Disposable {
             particle.draw(GameData.spriteBatch, lastRenderedFrame == Gdx.graphics.getDeltaTime() ? 0 : Gdx.graphics.getDeltaTime());
         }
         GameData.spriteBatch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+
+        if(!GameData.DEBUGGING || Debuggers.isEnabled("lights")) {
+            GameData.spriteBatch.end();
+//                GameConstants.gameCamera.update();
+//                GameConstants.gameViewport.apply();
+            //GameData.getLevelOrThrow().rayHandler.useDefaultViewport(matchView.gameViewport);
+            GameData.getLevelOrThrow().rayHandler.setCombinedMatrix(matchView.gameCamera);
+            GameData.getLevelOrThrow().rayHandler.useCustomViewport(matchView.gameViewport.getScreenX(), matchView.gameViewport.getScreenY(), matchView.gameViewport.getScreenWidth(), matchView.gameViewport.getScreenHeight());
+            rayHandler.update(); //unfortunately culling is done here, so I can't update once
+            int[] previousState = ScreenFboUtils.retrieveFboStatus();
+            rayHandler.prepareRender();
+            ScreenFboUtils.restoreFboStatus(previousState);
+            rayHandler.renderOnly();
+            GameData.spriteBatch.begin();
+        }
 
         if(GameData.DEBUGGING && Debuggers.isEnabled("validPathfindingSpotRenderer")) {
             int posX = (int) matchView.gameCamera.position.x;

@@ -7,11 +7,10 @@ import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.daniel99j.djutil.MiscUtils;
-import com.daniel99j.dungeongame.ui.screenss.ScreenSS;
-import com.daniel99j.dungeongame.ui.screenss.ScreenSSBuilder;
+import com.hugo99j.chaosparty.ui.screenss.ScreenSS;
+import com.hugo99j.chaosparty.ui.screenss.ScreenSSBuilder;
 import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.mixin.WindowAccessor;
-import com.hugo99j.chaosparty.ui.BitmapCacheScaler;
 import com.hugo99j.chaosparty.ui.debugger.Debuggers;
 
 import java.lang.reflect.Field;
@@ -123,12 +122,12 @@ public class RenderUtil {
     }
 
     public static void renderTextWorld(String text, float x, float y, float size) {
-        renderText(text, ScreenSSBuilder.create().newChild("main").set("x", x).set("y", y).set("xSize", 1000).set("ySize", size).set("textOverrideSize", size).finishChild().build().get("main"));
+        renderText(text, x, y, size, size);
     }
 
-    public static TextData renderText(String text, ScreenSS ss) {
-        TextData data = getInfoAbout(text, ss);
-        GameData.FONT.getCache().translate(ss.getX()+data.offsetX, ss.getY()+data.offsetY);
+    public static TextData renderText(String text, float x, float y, float width, float height) {
+        TextData data = getInfoAbout(text, x, y, width, height);
+        GameData.FONT.getCache().translate(x+data.offsetX, y+data.offsetY);
         GameData.FONT.getCache().draw(GameData.spriteBatch);
         return data;
     }
@@ -150,7 +149,7 @@ public class RenderUtil {
         return out;
     }
 
-    public static TextData getInfoAbout(String text, ScreenSS ss) {
+    public static TextData getInfoAbout(String text, float x, float y, float width, float height) {
         //GameData.FONT.getData().setScale(size);
         GameData.FONT.getData().setScale(1);
 
@@ -160,7 +159,7 @@ public class RenderUtil {
             String data = MiscUtils.getTextBetween(newText, "<colour:", ">");
             String newData = data.toUpperCase();
             if(data.equals("rainbow")) {
-                int argb = java.awt.Color.HSBtoRGB(0.5f+(float) Math.cos(GameData.time/2+ss.getX()+ss.getY())/2f, 1, 1);
+                int argb = java.awt.Color.HSBtoRGB(0.5f+(float) Math.cos(GameData.time/2+x+y)/2f, 1, 1);
                 // ARGB to RGBA
                 int rgba = (argb << 8) | ((argb >>> 24) & 0xFF);
                 Color c = new Color(rgba);
@@ -180,16 +179,16 @@ public class RenderUtil {
 
         GameData.FONT.getCache().clear();
         GlyphLayout layout = GameData.FONT.getCache().addText(newText, 0, 0);
-        float scaleX = (ss.getXSize()/layout.width);
-        float scaleY = (ss.getYSize()/layout.height);
+        float scaleX = (width/layout.width);
+        float scaleY = (height/layout.height);
         float scale = Math.min(scaleX, scaleY);
-        if(ss.has("textOverrideSize")) scale = (float) ss.get("textOverrideSize") * GameData.spriteBatch.getProjectionMatrix().getScaleX() / 16;
+        //if(ss.has("textOverrideSize")) scale = (float) ss.get("textOverrideSize") * GameData.spriteBatch.getProjectionMatrix().getScaleX() / 16;
         ((BitmapCacheScaler) GameData.FONT.getCache()).scale(scale);
         float offsetX = 0;
-        if(ss.has("textAlign") && ss.get("textAlign") != 0) {
-            float align = (float) ss.get("textAlign"); // 0 = left, 0.5 = center, 1 = right
-            offsetX = (ss.getXSize() - layout.width * scale) * align;
-        }
+//        if(ss.has("textAlign") && ss.get("textAlign") != 0) {
+//            float align = (float) ss.get("textAlign"); // 0 = left, 0.5 = center, 1 = right
+//            offsetX = (width - layout.width * scale) * align;
+//        }
 
         return new TextData(layout, offsetX, layout.height*scale, scale, layout.width, layout.height);
     }

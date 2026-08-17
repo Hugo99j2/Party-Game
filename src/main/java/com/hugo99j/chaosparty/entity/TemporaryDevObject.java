@@ -5,6 +5,7 @@ import com.daniel99j.dungeongame.entity.ObjectType;
 import com.daniel99j.dungeongame.entity.PhysicsSettings;
 import com.google.gson.JsonObject;
 import com.hugo99j.chaosparty.match.MatchView;
+import com.hugo99j.chaosparty.ui.debugger.CopiedObjectSelection;
 import com.hugo99j.chaosparty.util.RenderLayer;
 
 public class TemporaryDevObject extends AbstractObject {
@@ -24,6 +25,9 @@ public class TemporaryDevObject extends AbstractObject {
     }
 
     public static TemporaryDevObject read(JsonObject object) {
+        if(object.has("object_group")) {
+            return new CopiedObjectSelection(object.get("objects").getAsJsonArray());
+        }
         throw new RuntimeException("Cannot create");
     }
 

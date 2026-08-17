@@ -1,28 +1,24 @@
 package com.hugo99j.chaosparty.mixin;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.desktop.support.JamepadController;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.utils.Array;
 import com.daniel99j.djutil.ValueHolder;
 import com.hugo99j.chaosparty.GameData;
-import com.hugo99j.chaosparty.ui.ControllerInput;
-import com.hugo99j.chaosparty.ui.ControllerUtil;
+import com.hugo99j.chaosparty.util.ControllerInput;
+import com.hugo99j.chaosparty.util.ControllerUtil;
 import com.hugo99j.chaosparty.util.RenderUtil;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.*;
 
 @SuppressWarnings("AddedMixinMembersNamePattern")
 @Mixin(JamepadController.class)
-public class ControllerUtilMixin implements ControllerUtil {
+public abstract class ControllerUtilMixin implements ControllerUtil {
+    @Shadow
+    public abstract void startVibration(int duration, float strength);
+
     @Unique
     private EnumMap<ControllerInput, ValueHolder<Float>> wasPressedValues;
     @Unique
@@ -93,5 +89,10 @@ public class ControllerUtilMixin implements ControllerUtil {
 
             if(actuallyPressed && !oldValue) happenedThisTick.add(value);
         }
+    }
+
+    @Override
+    public void vibrate(int time, float intensity) {
+        this.startVibration(time, intensity);
     }
 }

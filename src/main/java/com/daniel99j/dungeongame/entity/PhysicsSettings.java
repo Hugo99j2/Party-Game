@@ -27,12 +27,21 @@ public record PhysicsSettings(BodyDef.BodyType bodyType, Shape shape, float dens
     }
 
     public PhysicsSettings group(short collisionGroup) {
+        PhysicsSettings newSettings = new PhysicsSettings(bodyType, shape, density, drag, collisionGroup, collidesWith);
+        if(collisionGroup == CollisionCategories.LIGHT_BLOCKING) {
+            newSettings = newSettings.andCollidesWith(CollisionCategories.LIGHT_BLOCKING);
+        }
+        return newSettings;
+    }
+
+    public PhysicsSettings andCollidesWith(short collidesWith) {
+        return new PhysicsSettings(bodyType, shape, density, drag, collisionGroup, (short) (collidesWith | this.collidesWith));
+    }
+
+    public PhysicsSettings onlyCollidesWith(short collidesWith) {
         return new PhysicsSettings(bodyType, shape, density, drag, collisionGroup, collidesWith);
     }
 
-    public PhysicsSettings collidesWith(short collidesWith) {
-        return new PhysicsSettings(bodyType, shape, density, drag, collisionGroup, collidesWith);
-    }
 
     public static PhysicsSettings texture(String texture, float density, float drag, float scaleX, float scaleY) {
         Rectangle bounds = ImageUtil.getSize(texture);

@@ -10,8 +10,8 @@ import com.hugo99j.chaosparty.entity.PlayerSpawnPoint;
 import com.hugo99j.chaosparty.minigame.AbstractMinigame;
 import com.hugo99j.chaosparty.minigame.MapEditor;
 import com.hugo99j.chaosparty.ui.debugger.Debuggers;
-import com.hugo99j.chaosparty.ui.PlayScreen;
-import com.hugo99j.chaosparty.ui.WinScreen;
+import com.hugo99j.chaosparty.ui.screen.PlayScreen;
+import com.hugo99j.chaosparty.ui.screen.WinScreen;
 import com.hugo99j.chaosparty.util.ImageUtil;
 import com.hugo99j.chaosparty.util.Logger;
 import org.jetbrains.annotations.Nullable;
@@ -25,6 +25,7 @@ public class Match {
     private AbstractMinigame currentMinigame = null;
     private final List<MatchView> matchViews = new ArrayList<>();
     private final List<MatchPlayer> players;
+    private Map<String, Map<MatchPlayer, Integer>> scores = new HashMap<>();
 
     public Match(List<MatchPlayer> players) {
         this.players = new ArrayList<>(players);
@@ -128,7 +129,9 @@ public class Match {
     }
 
     public void finishCurrentMinigame() {
-        GameData.MAIN_INSTANCE.setScreen(new WinScreen());
+        this.scores.put("test", new HashMap<>());
+        this.scores.get("test").putAll(this.getCurrentMinigame().getScores());
+        GameData.MAIN_INSTANCE.setScreen(new WinScreen(this.getScores()));
         this.setCurrentMinigame(null);
     }
 
@@ -138,5 +141,9 @@ public class Match {
 
     public List<MatchPlayer> getPlayers() {
         return players;
+    }
+
+    public Map<String, Map<MatchPlayer, Integer>> getScores() {
+        return scores;
     }
 }

@@ -113,4 +113,8 @@ public abstract class AbstractMinigame implements Disposable {
     public BotController createBotController(Player player) {
         return null;
     }
+
+    public Map<MatchPlayer, Integer> getScores() {
+        return scores;
+    }
 }

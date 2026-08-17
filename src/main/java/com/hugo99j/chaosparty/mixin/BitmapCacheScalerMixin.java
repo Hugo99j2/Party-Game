@@ -1,7 +1,7 @@
 package com.hugo99j.chaosparty.mixin;
 
 import com.badlogic.gdx.graphics.g2d.BitmapFontCache;
-import com.hugo99j.chaosparty.ui.BitmapCacheScaler;
+import com.hugo99j.chaosparty.util.BitmapCacheScaler;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 

@@ -5,25 +5,23 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.daniel99j.dungeongame.sounds.SoundInstance;
 import com.daniel99j.dungeongame.sounds.SoundManager;
-import com.daniel99j.dungeongame.ui.renderable.RenderState;
-import com.daniel99j.dungeongame.ui.screenss.CombinedScreenSS;
-import com.daniel99j.dungeongame.ui.screenss.ScreenSSBuilder;
+import com.hugo99j.chaosparty.ui.renderable.RenderState;
+import com.hugo99j.chaosparty.ui.screenss.CombinedScreenSS;
+import com.hugo99j.chaosparty.ui.screenss.ScreenSSBuilder;
 import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.bot.BotController;
 import com.hugo99j.chaosparty.bot.HotPotatoBot;
-import com.hugo99j.chaosparty.effect.ActiveEffect;
 import com.hugo99j.chaosparty.effect.EffectType;
 import com.hugo99j.chaosparty.entity.Player;
 import com.hugo99j.chaosparty.entity.Potato;
 import com.hugo99j.chaosparty.match.MatchPlayer;
 import com.hugo99j.chaosparty.match.MatchView;
-import com.hugo99j.chaosparty.ui.ControllerInput;
-import com.hugo99j.chaosparty.ui.ControllerUtil;
-import com.hugo99j.chaosparty.ui.Timer;
+import com.hugo99j.chaosparty.util.ControllerInput;
+import com.hugo99j.chaosparty.util.ControllerUtil;
+import com.hugo99j.chaosparty.ui.element.Timer;
 import com.hugo99j.chaosparty.util.Logger;
 import com.hugo99j.chaosparty.util.PathUtil;
 import com.hugo99j.chaosparty.util.ToRun;
-import org.spongepowered.asm.logging.ILogger;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -60,8 +58,9 @@ public class HotPotatoMinigame extends AbstractMinigame {
     @Override
     public void start() {
         super.start();
-        timer = new Timer("timer", TIME, 2, false);
-        timer.setStyle(ss.get("timer"));
+        //TODO: FIX
+        //timer = new Timer("timer", TIME, 2, false);
+        //timer.setStyle(ss.get("timer"));
         music = SoundManager.getSound("potato_music").playSingle(1);
         hotEffect = new ParticleEffect();
         hotEffect.load(Gdx.files.internal(PathUtil.asset("particles/flame.p")), GameData.atlas);

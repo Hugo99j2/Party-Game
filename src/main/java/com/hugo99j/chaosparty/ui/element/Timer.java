@@ -1,17 +1,17 @@
-package com.hugo99j.chaosparty.ui;
+package com.hugo99j.chaosparty.ui.element;
 
-import com.daniel99j.dungeongame.ui.renderable.RenderState;
-import com.daniel99j.dungeongame.ui.renderable.Renderable;
+import com.hugo99j.chaosparty.ui.renderable.RenderState;
+import com.hugo99j.chaosparty.ui.renderable.UiElement;
 import com.hugo99j.chaosparty.ui.debugger.Debuggers;
 import com.hugo99j.chaosparty.util.RenderUtil;
 import com.hugo99j.chaosparty.GameData;
 
-public class Timer extends Renderable {
+public abstract class Timer extends UiElement {
     //Does the timer count up or down?
     private boolean up;
     //Time remaining/time at
     private float time;
-    //3 -> '5:20:05' 2 -> '20:05' 1 -> '5'
+    //3 -> '1:23:05' 2 -> '23:05' 1 -> '5'
     private final int display;
 
     public Timer(String elementId, int time, int display, boolean countUp) {
@@ -47,7 +47,7 @@ public class Timer extends Renderable {
             String n = String.valueOf(seconds % 60);
             s += n.length() == 2 || display == 1 ? n : "0"+n;
         }
-        RenderUtil.renderText(s, this.getStyle());
+        //RenderUtil.renderText(s, this.getStyle());
     }
 
     public int getSeconds() {

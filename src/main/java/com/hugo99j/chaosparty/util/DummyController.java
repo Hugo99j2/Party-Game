@@ -1,8 +1,6 @@
 package com.hugo99j.chaosparty.util;
 
 import com.badlogic.gdx.controllers.*;
-import com.hugo99j.chaosparty.ui.ControllerInput;
-import com.hugo99j.chaosparty.ui.ControllerUtil;
 
 import java.util.UUID;
 
@@ -136,5 +134,10 @@ public class DummyController implements Controller, ControllerUtil {
     @Override
     public boolean isPressed(ControllerInput input) {
         return false;
+    }
+
+    @Override
+    public void vibrate(int time, float intensity) {
+
     }
 }

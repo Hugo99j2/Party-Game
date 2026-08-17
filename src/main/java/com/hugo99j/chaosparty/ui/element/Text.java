@@ -1,10 +1,10 @@
 package com.hugo99j.chaosparty.ui.element;
 
-import com.daniel99j.dungeongame.ui.renderable.RenderState;
-import com.daniel99j.dungeongame.ui.renderable.Renderable;
+import com.hugo99j.chaosparty.ui.renderable.RenderState;
+import com.hugo99j.chaosparty.ui.renderable.UiElement;
 import com.hugo99j.chaosparty.util.RenderUtil;
 
-public class Text extends Renderable {
+public abstract class Text extends UiElement {
     private final String text;
 
     public Text(String id, String text) {
@@ -15,6 +15,6 @@ public class Text extends Renderable {
     @Override
     public void render(RenderState state) {
         super.render(state);
-        RenderUtil.renderText(this.text, this.getStyle());
+        RenderUtil.renderText(this.text, this.getX(), this.getY(), this.getWidth(), this.getHeight());
     }
 }

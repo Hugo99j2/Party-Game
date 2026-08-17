@@ -6,9 +6,9 @@ import com.daniel99j.djutil.NumberUtils;
 import com.daniel99j.dungeongame.entity.AbstractObject;
 import com.daniel99j.dungeongame.sounds.SoundInstance;
 import com.daniel99j.dungeongame.sounds.SoundManager;
-import com.daniel99j.dungeongame.ui.renderable.RenderState;
-import com.daniel99j.dungeongame.ui.screenss.CombinedScreenSS;
-import com.daniel99j.dungeongame.ui.screenss.ScreenSSBuilder;
+import com.hugo99j.chaosparty.ui.renderable.RenderState;
+import com.hugo99j.chaosparty.ui.screenss.CombinedScreenSS;
+import com.hugo99j.chaosparty.ui.screenss.ScreenSSBuilder;
 import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.bot.BotController;
 import com.hugo99j.chaosparty.bot.FallingFloorBot;
@@ -16,13 +16,10 @@ import com.hugo99j.chaosparty.entity.FallingFloorObject;
 import com.hugo99j.chaosparty.entity.Player;
 import com.hugo99j.chaosparty.match.MatchView;
 import com.hugo99j.chaosparty.ui.ScreenCenterer;
-import com.hugo99j.chaosparty.ui.Timer;
 import com.hugo99j.chaosparty.ui.element.ProgressBar;
 import com.hugo99j.chaosparty.util.Logger;
 import com.hugo99j.chaosparty.util.RenderUtil;
 import com.hugo99j.chaosparty.util.ToRun;
-import net.fabricmc.loader.impl.util.log.Log;
-import org.checkerframework.checker.units.qual.A;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,8 +58,9 @@ public class FallingFloorMinigame extends AbstractMinigame {
     @Override
     public void start() {
         super.start();
-        progressBar = new ProgressBar("colourbar", 45);
-        progressBar.setStyle(ss.get("colourbar"));
+        //TODO: FIX
+        //progressBar = new ProgressBar("colourbar", 45);
+        //progressBar.setStyle(ss.get("colourbar"));
         music = SoundManager.getSound("falling_floor_music").playSingle(1);
     }
 

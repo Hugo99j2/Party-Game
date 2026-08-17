@@ -1,8 +1,8 @@
-package com.daniel99j.dungeongame.ui.screenss;
+package com.hugo99j.chaosparty.ui.screenss;
 
 import com.daniel99j.djutil.UsageLimited;
 import com.daniel99j.djutil.maths.MathsContext;
-import com.hugo99j.chaosparty.ui.UiScreen;
+import com.hugo99j.chaosparty.ui.screen.UiScreen;
 
 import java.util.HashMap;
 import java.util.List;

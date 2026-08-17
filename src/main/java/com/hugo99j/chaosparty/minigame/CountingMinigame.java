@@ -5,8 +5,8 @@ import com.daniel99j.dungeongame.sounds.SoundManager;
 import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.match.MatchPlayer;
 import com.hugo99j.chaosparty.match.MatchView;
-import com.hugo99j.chaosparty.ui.ControllerInput;
-import com.hugo99j.chaosparty.ui.ControllerUtil;
+import com.hugo99j.chaosparty.util.ControllerInput;
+import com.hugo99j.chaosparty.util.ControllerUtil;
 import com.hugo99j.chaosparty.ui.ScreenCenterer;
 
 import java.util.List;

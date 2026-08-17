@@ -4,9 +4,9 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
 import com.daniel99j.dungeongame.sounds.SoundInstance;
 import com.daniel99j.dungeongame.sounds.SoundManager;
-import com.daniel99j.dungeongame.ui.renderable.RenderState;
-import com.daniel99j.dungeongame.ui.screenss.CombinedScreenSS;
-import com.daniel99j.dungeongame.ui.screenss.ScreenSSBuilder;
+import com.hugo99j.chaosparty.ui.renderable.RenderState;
+import com.hugo99j.chaosparty.ui.screenss.CombinedScreenSS;
+import com.hugo99j.chaosparty.ui.screenss.ScreenSSBuilder;
 import com.hugo99j.chaosparty.bot.BotController;
 import com.hugo99j.chaosparty.bot.SheepHerderBot;
 import com.hugo99j.chaosparty.entity.Player;
@@ -18,7 +18,7 @@ import com.hugo99j.chaosparty.ui.ScreenCenterer;
 import com.hugo99j.chaosparty.util.RenderUtil;
 import com.hugo99j.chaosparty.util.ToRun;
 import com.hugo99j.chaosparty.GameData;
-import com.hugo99j.chaosparty.ui.Timer;
+import com.hugo99j.chaosparty.ui.element.Timer;
 
 import java.util.List;
 
@@ -62,8 +62,28 @@ public class HerdSheepMinigame extends AbstractMinigame {
     @Override
     public void start() {
         super.start();
-        timer = new Timer("timer", 45, 2, false);
-        timer.setStyle(ss.get("timer"));
+        //TODO: FIX
+        timer = new Timer("timer", 45, 2, false) {
+            @Override
+            public float getX() {
+                return 0;
+            }
+
+            @Override
+            public float getY() {
+                return 0;
+            }
+
+            @Override
+            public float getWidth() {
+                return 0;
+            }
+
+            @Override
+            public float getHeight() {
+                return 0;
+            }
+        };
         music = SoundManager.getSound("sheep_music").playSingle(1);
 
         for (SpriteObject o : GameData.getLevelOrThrow().getObjectsBetweenClass(new Vector2(1, 9), new Vector2(11, 16), SpriteObject.class, false)) {
@@ -111,7 +131,7 @@ public class HerdSheepMinigame extends AbstractMinigame {
             offset += 50;
         }
         //RenderUtil.renderText("Scores: ", ss.get("score").getX(), ss.get("score").getY()+offset, 1f, ss.get("score").getXSize(), Align.left, false);
-        RenderUtil.renderText("Scores: ", ss.get("score"));
+        //RenderUtil.renderText("Scores: ", ss.get("score"));
         GameData.spriteBatch.end();
     }
 

@@ -3,7 +3,7 @@ package com.hugo99j.chaosparty.match;
 import com.badlogic.gdx.controllers.Controller;
 import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.entity.Player;
-import com.hugo99j.chaosparty.ui.ReconnectControllersScreen;
+import com.hugo99j.chaosparty.ui.screen.ReconnectControllersScreen;
 import org.jetbrains.annotations.Nullable;
 
 public class MatchPlayer {

@@ -30,8 +30,9 @@ public class SpriteObject extends AbstractObject implements DontCollideTogether 
     private Color tint;
     @RequiresRefresh
     private boolean animated = false;
+    private boolean blocksLight = false;
 
-    public SpriteObject(String sprite, int width, int height, boolean flipX, boolean flipY, int rotation, float scale, boolean hasHitbox, Color tint, boolean textureHitbox, boolean animated) {
+    public SpriteObject(String sprite, int width, int height, boolean flipX, boolean flipY, int rotation, float scale, boolean hasHitbox, Color tint, boolean textureHitbox, boolean animated, boolean blocksLight) {
         this.sprite = sprite;
         this.animated = animated;
         this.width = width;
@@ -44,6 +45,7 @@ public class SpriteObject extends AbstractObject implements DontCollideTogether 
         this.rotation = rotation;
         this.tint = tint.cpy();
         this.textureHitbox = textureHitbox;
+        this.blocksLight = blocksLight;
     }
 
     private TextureAtlas.AtlasRegion getCurrentSprite() {
@@ -61,6 +63,7 @@ public class SpriteObject extends AbstractObject implements DontCollideTogether 
             } else settings = PhysicsSettings.immovable(this.width*this.size.x, this.height*this.size.y, 0, 0);
 
             settings = settings.group(CollisionCategories.PATHFIND_BLOCKING);
+            if(blocksLight) settings.group(CollisionCategories.LIGHT_BLOCKING);
         }
         return settings;
     }
@@ -91,10 +94,11 @@ public class SpriteObject extends AbstractObject implements DontCollideTogether 
         object.addProperty("tint", tint.toString());
         object.addProperty("textureHitbox", textureHitbox);
         object.addProperty("animated", animated);
+        object.addProperty("blocks_light", blocksLight);
     }
 
     public static SpriteObject read(JsonObject object) {
-        return new SpriteObject(object.get("sprite").getAsString(), object.get("width").getAsInt(), object.get("height").getAsInt(), object.get("flipX").getAsBoolean(), object.get("flipY").getAsBoolean(), object.get("rotation").getAsInt(), object.get("scale").getAsFloat(), object.get("hasHitbox").getAsBoolean(), Color.valueOf(object.get("tint").getAsString()), object.has("textureHitbox") ? object.get("textureHitbox").getAsBoolean() : false, object.has("animated") ? object.get("animated").getAsBoolean() : false);
+        return new SpriteObject(object.get("sprite").getAsString(), object.get("width").getAsInt(), object.get("height").getAsInt(), object.get("flipX").getAsBoolean(), object.get("flipY").getAsBoolean(), object.get("rotation").getAsInt(), object.get("scale").getAsFloat(), object.get("hasHitbox").getAsBoolean(), Color.valueOf(object.get("tint").getAsString()), object.has("textureHitbox") ? object.get("textureHitbox").getAsBoolean() : false, object.has("animated") ? object.get("animated").getAsBoolean() : false, object.has("blocks_light") ? object.get("blocks_light").getAsBoolean() : false);
     }
 
     @Override
@@ -157,7 +161,7 @@ public class SpriteObject extends AbstractObject implements DontCollideTogether 
     }
 
     public static SpriteObject createDefault() {
-        return new SpriteObject("sheep", 2, 2, false, false, 0, 1, false, Color.WHITE, false, false);
+        return new SpriteObject("tilesets/bricks", 4, 2, false, false, 0, 1, false, Color.WHITE, false, false, true);
     }
 
     @Override

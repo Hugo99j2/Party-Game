@@ -1,4 +1,4 @@
-package com.daniel99j.dungeongame.ui.screenss;
+package com.hugo99j.chaosparty.ui.screenss;
 
 import com.daniel99j.djutil.maths.MathsContext;
 import com.daniel99j.djutil.maths.MathsInterpreter;
@@ -42,11 +42,6 @@ public class ScreenSS {
             }
         }
         if(getters.containsKey(name)) {
-            if(GameData.DEBUGGING && Debuggers.isEnabled("screenSSDebugger")) {
-                //fine as it doesnt run immediately
-                if(!Debuggers.activeScreenSS.contains(this)) Debuggers.activeScreenSS.add(this);
-            }
-
             try {
                 double result = MathsInterpreter.eval(getters.get(name), this.createContext(name));
                 cache.put(name, new CacheKey(result, GameData.time));

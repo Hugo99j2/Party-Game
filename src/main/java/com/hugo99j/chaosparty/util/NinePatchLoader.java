@@ -1,10 +1,6 @@
-package com.daniel99j.dungeongame.ui;
+package com.hugo99j.chaosparty.util;
 
 import com.badlogic.gdx.graphics.g2d.NinePatch;
-import com.hugo99j.chaosparty.GameData;
-import com.hugo99j.chaosparty.util.GsonUtil;
-import com.hugo99j.chaosparty.util.ImageUtil;
-import com.hugo99j.chaosparty.util.PathUtil;
 import com.google.gson.JsonObject;
 
 import java.util.HashMap;

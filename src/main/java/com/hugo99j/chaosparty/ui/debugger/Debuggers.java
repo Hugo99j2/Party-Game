@@ -16,6 +16,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.Vector4;
 import com.badlogic.gdx.physics.box2d.*;
+import com.daniel99j.djutil.GenericValuesHolder;
 import com.daniel99j.djutil.MiscUtils;
 import com.daniel99j.djutil.ValueHolder;
 import com.daniel99j.djutil.pathfinder.PathfindDebugPos;
@@ -28,8 +29,7 @@ import com.hugo99j.chaosparty.util.NoDebugOption;
 import com.hugo99j.chaosparty.util.RequiresRefresh;
 import com.daniel99j.dungeongame.sounds.SoundInstance;
 import com.daniel99j.dungeongame.sounds.SoundManager;
-import com.daniel99j.dungeongame.ui.screenss.CombinedScreenSS;
-import com.daniel99j.dungeongame.ui.screenss.ScreenSS;
+import com.hugo99j.chaosparty.ui.screenss.ScreenSS;
 import com.hugo99j.chaosparty.GameData;
 import com.daniel99j.dungeongame.entity.AbstractObject;
 import com.hugo99j.chaosparty.entity.SpriteObject;
@@ -46,7 +46,6 @@ import imgui.*;
 import imgui.flag.*;
 import imgui.gl3.ImGuiImplGl3;
 import imgui.glfw.ImGuiImplGlfw;
-import imgui.internal.ImGuiWindow;
 import imgui.type.ImDouble;
 import imgui.type.ImFloat;
 import imgui.type.ImInt;
@@ -86,8 +85,6 @@ public class Debuggers {
     private static boolean forceShow = false;
     public static Map<Consumer<MatchView>, ValueHolder<Integer>> customLevelRenderers = new HashMap<>();
     public static Map<Runnable, ValueHolder<Integer>> customUiRenderers = new HashMap<>();
-    public static List<ScreenSS> activeScreenSS = new ArrayList<>();
-    private static int screenSS = 0;
     public static boolean disableChangingColour = false;
     public static final ShaderProgram objectIdProgram;
     public static int advancedPickColour = 0;
@@ -358,18 +355,7 @@ public class Debuggers {
                 boolean showLights = ImGui.isWindowFocused(ImGuiFocusedFlags.RootAndChildWindows);
                 ImGui.end();
 
-                ImGui.begin("Controlller");
-                if(Controllers.getCurrent() == null) {
-                    ImGui.text("None connected");
-                } else {
-                    for (int j = 0; j < 30; j++) {
-                        ImGui.text("Button " + j + ": " + Controllers.getCurrent().getButton(j));
-                    }
-                    for (int j = 0; j < 10; j++) {
-                        ImGui.text("Axis " + j + ": " + Controllers.getCurrent().getAxis(j));
-                    }
-                }
-                ImGui.end();
+                DebugController.render();
 
                 ImGui.begin("Sounds");
                 if (ImGui.button("Play Sound")) {
@@ -403,81 +389,7 @@ public class Debuggers {
 
                 renderObjectEditor();
 
-                ImGui.begin("ScreenSS");
-                if(Debuggers.isEnabled("screenSSDebugger")) {
-                    ImGui.beginChild("Left Panel", new ImVec2(300, 0), ImGuiChildFlags.Border | ImGuiChildFlags.ResizeX);
-                    ImGui.separatorText("All Objects");
-
-                    ScreenSS currentlySelected = null;
-
-                    if (ImGui.beginTable("Object Selector", 1, ImGuiTableFlags.RowBg)) {
-                        ValueHolder<Integer> id = new ValueHolder<>(0);
-                        ValueHolder<ScreenSS> selected = new ValueHolder<>(null);
-                        for (ScreenSS ss : Debuggers.activeScreenSS) {
-                            if(!(ss instanceof CombinedScreenSS.ScreenParentSS) || ((CombinedScreenSS.ScreenParentSS) ss).getParent() == null) addSS(ss, id, selected, "");
-                        }
-                        currentlySelected = selected.object;
-                        ImGui.endTable();
-                    }
-
-                    ImGui.endChild();
-
-                    ImGui.sameLine();
-
-                    ImGui.beginChild("ScreenSS Right Panel", new ImVec2(0, 0), ImGuiChildFlags.Border);
-
-                    ImGui.separatorText("Current ScreenSS");
-
-                    if(currentlySelected != null) {
-                        ImString added = new ImString();
-                        if(ImGui.inputText("To add", added, ImGuiInputTextFlags.EnterReturnsTrue) && !added.get().isBlank()) {
-                            currentlySelected.getGetters().put(added.get(), "1");
-                        }
-                        ValueHolder<ScreenSS> screenSSValueHolder = new ValueHolder<>(currentlySelected);
-                        List<String> toRemove = new ArrayList<>();
-                        currentlySelected.getGetters().forEach((g, v) -> {
-                            if(ImGui.isKeyDown(ImGuiKey.ModShift)) {
-                                try {
-                                    if (v.endsWith("%")) {
-                                        slider(g, Float.parseFloat(v.replace("%", "")), (val) -> ToRun.run(() -> screenSSValueHolder.object.getGetters().put(g, val + "%")), 0, 100, "%.0f");
-                                    } else if (v.endsWith("vw")) {
-                                        slider(g, Float.parseFloat(v.replace("vw", "")), (val) -> ToRun.run(() -> screenSSValueHolder.object.getGetters().put(g, val + "vw")), 0, 1, "%.3f");
-                                    } else if (v.endsWith("vh")) {
-                                        slider(g, Float.parseFloat(v.replace("vh", "")), (val) -> ToRun.run(() -> screenSSValueHolder.object.getGetters().put(g, val + "vh")), 0, 1, "%.3f");
-                                    } else if (v.contains("vw")) {
-                                        slider(g, Float.parseFloat(v.replace("vw", "")), (val) -> ToRun.run(() -> screenSSValueHolder.object.getGetters().put(g, val + "vw")), 0, 1, "%.3f");
-                                        //no + or - etc
-                                    } else if (v.matches("^-?\\d+(\\.\\d+)?[A-Za-z]*$")) {
-                                        float current = Float.parseFloat(v);
-                                        slider(g, current, (val) -> ToRun.run(() -> screenSSValueHolder.object.getGetters().put(g, String.valueOf(val))), 0, (current > 100 ? 10000 : current > 10 ? 100 : 10), "%.3f");
-                                    } else ImGui.text("Cannot create slider");
-                                } catch (Exception e) {
-                                    ImGui.text("Error creating slider");
-                                }
-                            } else {
-                                ImString text = new ImString(v, v.length()+100);
-                                if(ImGui.inputText(g, text, isEnabled("ignoreInvalidSS") ? ImGuiInputTextFlags.None : ImGuiInputTextFlags.EnterReturnsTrue)) {
-                                    ToRun.run(() -> {screenSSValueHolder.object.getGetters().put(g, text.get());});
-                                }
-                                ImGui.sameLine();
-                                ImGui.text("(Current: "+screenSSValueHolder.object.get(g)+")");
-                            }
-                            ImGui.sameLine();
-                            if(ImGui.button("X")) {
-                                toRemove.add(g);
-                            }
-                        });
-                        for (String s : toRemove) {
-                            currentlySelected.getGetters().remove(s);
-                        }
-                    }
-
-                    ImGui.endChild();
-                } else {
-                    ImGui.text("Enable screenSSDebugger to use");
-                }
-                ImGui.end();
-
+                UiViewer.render();
                 //DEBUGGERS
 
                 // incase imgui changes the gameViewport
@@ -547,7 +459,6 @@ public class Debuggers {
         for (Runnable runnable : customRenderersToRemove) {
             Debuggers.customUiRenderers.remove(runnable);
         }
-        activeScreenSS.clear();
     }
 
     private static void saveMap() {
@@ -573,44 +484,6 @@ public class Debuggers {
         try {
             Files.writeString(Path.of("debug.json"), new GsonBuilder().disableHtmlEscaping().setPrettyPrinting().create().toJson(data));
         } catch (Exception ignored) {}
-    }
-
-    private static void addSS(ScreenSS ss, ValueHolder<Integer> i, ValueHolder<ScreenSS> selectedHolder, String prepend) {
-        int id = i.object;
-        ImGui.tableNextRow();
-        ImGui.tableNextColumn();
-        ImGui.pushID(id);
-
-        int flags = ImGuiSelectableFlags.SpanAllColumns;
-        boolean selected = screenSS == ss.hashCode();
-        if (selected) {
-            flags |= ImGuiTreeNodeFlags.Selected;
-            selectedHolder.object = ss;
-        }
-        if (ImGui.selectable(prepend + ss.getElementId() + " (" + id + ")", selected, flags)) screenSS = ss.hashCode();
-
-        GameData.shapeRenderer.setProjectionMatrix(GameData.uiCamera.combined);
-        if (ImGui.isItemHovered()) {
-            Color c = Color.SCARLET.cpy();
-            c.a = 0.5f;
-            RenderUtil.enableBlending();
-            GameData.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-            GameData.shapeRenderer.setColor(c);
-        } else {
-            //((ShapeRendererLineWidth) GameData.shapeRenderer).setDefaultRectLineWidth(100);
-            GameData.shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-            GameData.shapeRenderer.setColor(Color.ORANGE);
-        }
-        GameData.shapeRenderer.rect(ss.getX(), ss.getY(), ss.getXSize(), ss.getYSize());
-        GameData.shapeRenderer.end();
-        ImGui.popID();
-        i.object++;
-
-        for (ScreenSS activeScreenSS1 : Debuggers.activeScreenSS) {
-            if(activeScreenSS1 instanceof CombinedScreenSS.ScreenParentSS parent && parent.getParent() == ss) {
-                addSS(activeScreenSS1, i, selectedHolder, prepend+"    ");
-            }
-        }
     }
 
     private static UUID renderLightSelector() {
@@ -851,7 +724,29 @@ public class Debuggers {
     }
 
 
-    static void addVariables(AbstractObject selectedObject, Class<?> clazz) {
+    static void addVariables(AbstractObject selectedObject, Class<?> clazz, Consumer<GenericValuesHolder<Field, AbstractObject, Object, ?, ?>> setter) {
+        if(selectedObject instanceof SelectionGroup group) {
+            group.selected.ensureSafety();
+            boolean allMatch = true;
+            for (AbstractObject abstractObject : group.selected) {
+                if(abstractObject.getClass() != group.selected.get(0).getClass()) {
+                    allMatch = false;
+                    break;
+                }
+            }
+            if(allMatch) {
+                addVariables(group.selected.get(0), group.selected.get(0).getClass(), (holder) -> {
+                    for (AbstractObject abstractObject : group.selected) {
+                        try {
+                            holder.a().set(abstractObject, holder.c());
+                        } catch (IllegalAccessException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                });
+                return;
+            }
+        }
         for (Field declaredField : clazz.getDeclaredFields()) {
             if(declaredField.getAnnotation(NoDebugOption.class) != null || Modifier.isStatic(declaredField.getModifiers()) || Modifier.isFinal(declaredField.getModifiers())) continue;
             declaredField.setAccessible(true);
@@ -866,8 +761,8 @@ public class Debuggers {
             try {
                 addVariable(declaredField.getName(), declaredField.getType(), declaredField.get(selectedObject), (t) -> {
                     try {
-                        declaredField.set(selectedObject, t);
-                    } catch (IllegalAccessException e) {
+                        setter.accept(new GenericValuesHolder<>(declaredField, selectedObject, t));
+                    } catch (Exception e) {
                         Logger.error("Error setting variable", e);
                     }
                 });
@@ -880,7 +775,7 @@ public class Debuggers {
             }
         }
 
-        if(clazz.getSuperclass() != null) addVariables(selectedObject, clazz.getSuperclass());
+        if(clazz.getSuperclass() != null) addVariables(selectedObject, clazz.getSuperclass(), setter);
     }
 
     private static <T> void addVariable(String name, Class<?> clazz, T current, Consumer<T> setter) {
@@ -933,21 +828,41 @@ public class Debuggers {
         } else if(type.equals(Vector2.class)) {
             float[] check = {((Vector2) current).x, ((Vector2) current).y};
             if(ImGui.inputFloat2(name, check)) {
-                ((Vector2) current).x = check[0];
-                ((Vector2) current).y = check[1];
+                setter.accept((T) new Vector2(check[0], check[1]));
                 onEdited();
             }
         } else if(type.equals(Color.class)) {
             float[] check = {((Color) current).r, ((Color) current).g, ((Color) current).b, ((Color) current).a};
             if(ImGui.colorEdit4(name, check)) {
-                ((Color) current).r = check[0];
-                ((Color) current).g = check[1];
-                ((Color) current).b = check[2];
-                ((Color) current).a = check[3];
-                //onEdited();
+                setter.accept((T) new Color(check[0], check[1], check[2], check[3]));
+            }
+        } else if(type.equals(Map.class)) {
+            int flags = ImGuiTableFlags.Borders | ImGuiTableFlags.RowBg;
+            if(ImGui.collapsingHeader(name)) {
+                ImGui.indent();
+                if (ImGui.beginTable(name, 1, flags)) {
+                    ((Map<?, ?>) current).forEach((key, value) -> {
+                        ImGui.tableNextRow();
+                        ImGui.tableNextColumn();
+                        addVariable(key.toString(), value.getClass(), value, (v) -> {
+                            setMapValue(current, key, v);
+                        });
+                    });
+                    ImGui.endTable();
+                }
+                ImGui.unindent();
             }
         } else {
-            ImGui.text("Unsupported type: " + name + " (value: " + current + ")");
+            ImGui.text("Unsupported type: " + clazz + " (name: " + name + "value: " + current + ")");
         }
+    }
+
+    private static <A, B> void setMapValue(Object current, A key, B v) {
+        //noinspection unchecked
+        setMapValue((HashMap<A, B>) current, key, v);
+    }
+
+    private static <A, B> void setMapValue(HashMap<A, B> current, A key, B v) {
+        current.put(key, v);
     }
 }

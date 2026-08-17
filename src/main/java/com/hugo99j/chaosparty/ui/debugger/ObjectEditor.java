@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.daniel99j.dungeongame.entity.AbstractObject;
 import com.daniel99j.dungeongame.level.Level;
 import com.daniel99j.dungeongame.level.LevelLoader;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.entity.ObjectTypes;
@@ -151,6 +152,11 @@ public class ObjectEditor {
             if (Gdx.input.isKeyJustPressed(Input.Keys.X) && Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) && selected.get() != null) {
                 JsonObject data = selected.get().write();
                 Gdx.app.getClipboard().setContents(data.toString());
+                if(selected.get() instanceof SelectionGroup group) {
+                    for (AbstractObject abstractObject : group.selected) {
+                        abstractObject.dispose();
+                    }
+                }
                 selected.get().dispose();
                 UndoRedoHistory.onEdited();
             }
@@ -164,6 +170,15 @@ public class ObjectEditor {
                     Logger.error("Error pasting object", e);
                 }
             }
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.DEL) && selected.get() != null) {
+            if(selected.get() instanceof SelectionGroup group) {
+                for (AbstractObject abstractObject : group.selected) {
+                    abstractObject.dispose();
+                }
+            }
+            selected.get().dispose();
+            UndoRedoHistory.onEdited();
         }
         ImGui.end();
 
@@ -308,7 +323,13 @@ public class ObjectEditor {
         }
 
         ImGui.separatorText("Java variables");
-        addVariables(object, object.getClass());
+        addVariables(object, object.getClass(), (holder) -> {
+            try {
+                holder.a().set(holder.b(), holder.c());
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+        });
 
         ImGui.separatorText("Data");
         if (data != null) {
@@ -424,6 +445,18 @@ public class ObjectEditor {
                     }
                 }
             }
+        }
+
+        @Override
+        public void writeAdditional(JsonObject object) {
+            super.writeAdditional(object);
+            object.addProperty("object_group", true);
+            JsonArray array = new JsonArray();
+            selected.ensureSafety();
+            for (AbstractObject abstractObject : selected) {
+                array.add(abstractObject.write());
+            }
+            object.add("objects", array);
         }
 
         @Override

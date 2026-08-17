@@ -11,9 +11,12 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.daniel99j.dungeongame.sounds.SoundManager;
 import com.hugo99j.chaosparty.match.MatchView;
 import com.hugo99j.chaosparty.minigame.MapEditor;
-import com.hugo99j.chaosparty.ui.*;
-import com.daniel99j.dungeongame.ui.renderable.CursorType;
+import com.hugo99j.chaosparty.ui.debugger.DebugController;
+import com.hugo99j.chaosparty.ui.renderable.CursorType;
 import com.hugo99j.chaosparty.ui.debugger.Debuggers;
+import com.hugo99j.chaosparty.ui.screen.MenuScreen;
+import com.hugo99j.chaosparty.ui.screen.PlayScreen;
+import com.hugo99j.chaosparty.ui.screen.UiScreen;
 import com.hugo99j.chaosparty.util.*;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -138,7 +141,7 @@ public class Main extends Game {
 
     @Override
     public void render() {
-        if(Gdx.input.isKeyJustPressed(Input.Keys.F11) || (Controllers.getCurrent() != null && ((ControllerUtil) Controllers.getCurrent()).wasJustPressed(ControllerInput.SCREEN))) {
+        if(Gdx.input.isKeyJustPressed(Input.Keys.F11) || ControllerUtil.getCurrent().wasJustPressed(ControllerInput.SCREEN)) {
             if (!Gdx.graphics.isFullscreen()) {
                 oldXSize = GameData.width;
                 oldYSize = GameData.height;
@@ -220,6 +223,7 @@ public class Main extends Game {
                         for (Controller controller : Controllers.getControllers()) {
                             ((ControllerUtil) controller).onTick();
                         }
+                        DebugController.tick();
                     }
                     if (GameData.level != null && tickIfMapEditor)
                         GameData.level.getBox2dWorld().step(GameData.SECONDS_PER_PHYSICS_TICK, 6, 2);

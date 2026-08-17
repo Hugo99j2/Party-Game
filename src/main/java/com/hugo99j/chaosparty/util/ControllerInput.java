@@ -1,11 +1,11 @@
-package com.hugo99j.chaosparty.ui;
+package com.hugo99j.chaosparty.util;
 
 import com.badlogic.gdx.controllers.Controller;
 import com.daniel99j.djutil.UsageLimited;
 
 import java.util.function.Function;
 
-import static com.hugo99j.chaosparty.ui.ControllerUtil.DEAD_ZONE;
+import static com.hugo99j.chaosparty.util.ControllerUtil.DEAD_ZONE;
 
 public enum ControllerInput {
     LEFT_STICK_UP(

@@ -2,20 +2,11 @@ package com.hugo99j.chaosparty.mixin;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.*;
-import com.badlogic.gdx.utils.Array;
-import com.hugo99j.chaosparty.GameData;
-import com.hugo99j.chaosparty.ui.BitmapCacheScaler;
 import com.hugo99j.chaosparty.ui.debugger.Debuggers;
-import com.hugo99j.chaosparty.util.ImageUtil;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 @Mixin(SpriteBatch.class)
 public class SpriteBatchMixin {

@@ -1,7 +1,7 @@
-package com.hugo99j.chaosparty.ui;
+package com.hugo99j.chaosparty.util;
 
 import com.badlogic.gdx.controllers.Controllers;
-import com.hugo99j.chaosparty.util.DummyController;
+import com.hugo99j.chaosparty.ui.debugger.DebugController;
 
 public interface ControllerUtil {
     boolean wasJustPressed(ControllerInput input);
@@ -10,11 +10,15 @@ public interface ControllerUtil {
     boolean wasJustPressedThisTick(ControllerInput input);
     void onTick();
     void update();
+    void vibrate(int time, float intensity);
 
     float DEAD_ZONE = 0.25f;
 
     static ControllerUtil getCurrent() {
-        if(Controllers.getCurrent() == null) return new DummyController();
+        if(Controllers.getCurrent() == null) {
+            if(DebugController.INSTANCE != null) return DebugController.INSTANCE;
+            return new DummyController();
+        }
         return (ControllerUtil) Controllers.getCurrent();
     }
 }

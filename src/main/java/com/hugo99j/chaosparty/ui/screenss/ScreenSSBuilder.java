@@ -1,4 +1,4 @@
-package com.daniel99j.dungeongame.ui.screenss;
+package com.hugo99j.chaosparty.ui.screenss;
 
 import com.daniel99j.djutil.MiscUtils;
 

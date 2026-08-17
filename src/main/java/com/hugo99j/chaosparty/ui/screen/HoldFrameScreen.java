@@ -1,15 +1,14 @@
-package com.hugo99j.chaosparty.ui;
+package com.hugo99j.chaosparty.ui.screen;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.daniel99j.dungeongame.ui.screenss.CombinedScreenSS;
+import com.hugo99j.chaosparty.ui.screenss.CombinedScreenSS;
 import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.util.RenderUtil;
 
 public abstract class HoldFrameScreen extends UiScreen {
     private final Texture frame;
 
-    public HoldFrameScreen(CombinedScreenSS combinedScreenSS) {
-        super(combinedScreenSS);
+    public HoldFrameScreen() {
         frame = RenderUtil.getCurrentFrameBuffer();
     }
 

@@ -1,4 +1,4 @@
-package com.daniel99j.dungeongame.ui.renderable;
+package com.hugo99j.chaosparty.ui.renderable;
 
 import org.lwjgl.glfw.GLFW;
 

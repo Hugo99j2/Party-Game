@@ -1,10 +1,10 @@
-package com.hugo99j.chaosparty.ui;
+package com.hugo99j.chaosparty.ui.screen;
 
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.daniel99j.dungeongame.ui.screenss.ScreenSSBuilder;
+import com.hugo99j.chaosparty.ui.screenss.ScreenSSBuilder;
 import com.hugo99j.chaosparty.ui.debugger.Debuggers;
 import com.hugo99j.chaosparty.ui.element.Button;
 import com.hugo99j.chaosparty.ui.element.Text;
@@ -19,35 +19,35 @@ public class ReconnectControllersScreen extends UiScreen {
     Texture backgroundTexture;
 
     public ReconnectControllersScreen() {
-        super(ScreenSSBuilder.create()
-            .set("x", "0vw")
-            .set("y", "0vh")
-            .set("xSize", "100vw")
-            .set("ySize", "100vh")
-            .newChild("menu")
-            .set("x", "0.5vw")
-            .set("y", "0.5vh")
-            .set("xSize", 320)
-            .set("ySize", 64)
-            .set("center", true)
-            .set("scale", 2)
-            .finishChild()
-            .newChild("menu2")
-            .set("x", "0.5vw")
-            .set("y", "0.3vh")
-            .set("xSize", 320)
-            .set("ySize", 64)
-            .set("center", true)
-            .set("scale", 2)
-            .finishChild()
-            .newChild("text")
-            .set("x", "0.5vw")
-            .set("y", "0.7vh")
-            .set("xSize", 1)
-            .set("ySize", 1)
-            .finishChild()
-            .build()
-        );
+//        super(ScreenSSBuilder.create()
+//            .set("x", "0vw")
+//            .set("y", "0vh")
+//            .set("xSize", "100vw")
+//            .set("ySize", "100vh")
+//            .newChild("menu")
+//            .set("x", "0.5vw")
+//            .set("y", "0.5vh")
+//            .set("xSize", 320)
+//            .set("ySize", 64)
+//            .set("center", true)
+//            .set("scale", 2)
+//            .finishChild()
+//            .newChild("menu2")
+//            .set("x", "0.5vw")
+//            .set("y", "0.3vh")
+//            .set("xSize", 320)
+//            .set("ySize", 64)
+//            .set("center", true)
+//            .set("scale", 2)
+//            .finishChild()
+//            .newChild("text")
+//            .set("x", "0.5vw")
+//            .set("y", "0.7vh")
+//            .set("xSize", 1)
+//            .set("ySize", 1)
+//            .finishChild()
+//            .build()
+//        );
 
         backgroundTexture = new Texture(PathUtil.texture("gameyay.png"));
     }
@@ -57,15 +57,15 @@ public class ReconnectControllersScreen extends UiScreen {
         super.show();
         //syncViewport(GameConstants.width, GameConstants.height);
         //new ScreenSS("0.5vw", "0.5vh", "320", "32", "5", true)
-        this.addRenderable(new Button("menu", "button", "Done") {
-            @Override
-            public void onClick() {
-                super.onClick();
-                reconnect();
-            }
-        });
-        //new ScreenSS("0.5vw", "0.7vh", "1", "1", "1", false)
-        this.addRenderable(new Text("text", "<colour:red>Please reconnect controllers!"));
+//        this.addElement(new Button("menu", "button", "Done") {
+//            @Override
+//            public void onClick() {
+//                super.onClick();
+//                reconnect();
+//            }
+//        });
+//        //new ScreenSS("0.5vw", "0.7vh", "1", "1", "1", false)
+//        this.addElement(new Text("text", "<colour:red>Please reconnect controllers!"));
         reconnect();
     }
 

@@ -1,16 +1,14 @@
 package com.hugo99j.chaosparty.minigame;
 
 import com.badlogic.gdx.utils.Align;
-import com.daniel99j.dungeongame.ui.renderable.RenderState;
-import com.daniel99j.dungeongame.ui.screenss.CombinedScreenSS;
-import com.daniel99j.dungeongame.ui.screenss.ScreenSSBuilder;
-import com.hugo99j.chaosparty.match.MatchPlayer;
+import com.hugo99j.chaosparty.ui.renderable.RenderState;
+import com.hugo99j.chaosparty.ui.screenss.CombinedScreenSS;
+import com.hugo99j.chaosparty.ui.screenss.ScreenSSBuilder;
 import com.hugo99j.chaosparty.match.MatchView;
 import com.hugo99j.chaosparty.util.RenderUtil;
 import com.hugo99j.chaosparty.util.ToRun;
 import com.hugo99j.chaosparty.GameData;
-import com.hugo99j.chaosparty.ui.Timer;
-import com.hugo99j.chaosparty.ui.WinScreen;
+import com.hugo99j.chaosparty.ui.element.Timer;
 
 import java.util.List;
 
@@ -37,8 +35,9 @@ public class DevMinigame extends AbstractMinigame {
 
     public DevMinigame() {
         super("dev");
-        timer = new Timer("timer", 10, 2, false);
-        timer.setStyle(ss.get("timer"));
+        //TODO: FIX
+        //timer = new Timer("timer", 10, 2, false);
+        //timer.setStyle(ss.get("timer"));
     }
 
     @Override

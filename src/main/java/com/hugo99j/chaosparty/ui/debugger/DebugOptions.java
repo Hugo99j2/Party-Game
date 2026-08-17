@@ -112,10 +112,6 @@ public class DebugOptions {
         ImGui.text("Revisions: " + UndoRedoHistory.size());
         ImGui.text("Current revision: " + UndoRedoHistory.getCurrentRevision());
 
-        if(ImGui.button("Why is my code not working?")) {
-            debugOptions.put("lights", new ValueHolder<>(false));
-        }
-
         if(GameData.getCurrentMatch() != null && GameData.getCurrentMatch().getMatchViews() != null && !GameData.getCurrentMatch().getMatchViews().isEmpty()) {
             slider("zoom", GameData.getCurrentMatch().getMatchViews().getFirst().gameCamera.zoom, (e) -> {GameData.getCurrentMatch().getMatchViews().getFirst().gameCamera.zoom = e;}, 0, 20, "%.3f");
         }
@@ -125,6 +121,7 @@ public class DebugOptions {
     }
 
     protected static class Ruler extends TemporaryDevObject {
+        @SuppressWarnings("unused")
         private float angle;
 
         @Override

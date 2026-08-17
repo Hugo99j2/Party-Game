@@ -78,16 +78,16 @@ public abstract class AbstractObject implements Disposable {
             Debuggers.disableChangingColour = false;
             GameData.spriteBatch.setColor(old);
         } else {
-            boolean selected = ObjectEditor.isSelected(this) && Debuggers.isEnabled("highlightSelected");
+            boolean shouldPulse = ObjectEditor.isSelected(this) && Debuggers.isEnabled("highlightSelected") && GameData.time % 2 >= 1;
             Color old = null;
-            if(selected) {
+            if(shouldPulse) {
                 old = GameData.spriteBatch.getColor().cpy();
-                float mul = Math.max(0, ((float) Math.sin(GameData.time*3)*2));
-                GameData.spriteBatch.setColor(new Color(Color.GREEN.r+mul, Color.GREEN.g+mul, Color.GREEN.b+mul, 1));
+                Color mixed = old.cpy().mul(0.5f).add(Color.GREEN.cpy().mul(0.5f));
+                GameData.spriteBatch.setColor(mixed);
                 Debuggers.disableChangingColour = true;
             }
             render(matchView);
-            if(selected) {
+            if(shouldPulse) {
                 Debuggers.disableChangingColour = false;
                 GameData.spriteBatch.setColor(old);
             }

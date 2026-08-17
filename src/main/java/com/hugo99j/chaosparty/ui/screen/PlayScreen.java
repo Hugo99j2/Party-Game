@@ -1,11 +1,12 @@
-package com.hugo99j.chaosparty.ui;
+package com.hugo99j.chaosparty.ui.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.controllers.Controllers;
 import com.daniel99j.dungeongame.sounds.SoundManager;
 import com.hugo99j.chaosparty.GameData;
+import com.hugo99j.chaosparty.util.ControllerInput;
+import com.hugo99j.chaosparty.util.ControllerUtil;
 import com.hugo99j.chaosparty.util.ToRun;
 
 /** First screen of the application. Displayed after the application is created. */

@@ -3,15 +3,13 @@ package com.hugo99j.chaosparty.ui.element;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
-import com.daniel99j.dungeongame.ui.renderable.RenderState;
-import com.daniel99j.dungeongame.ui.renderable.Renderable;
+import com.hugo99j.chaosparty.ui.renderable.RenderState;
+import com.hugo99j.chaosparty.ui.renderable.UiElement;
 import com.hugo99j.chaosparty.GameData;
-import com.hugo99j.chaosparty.util.ImageUtil;
 import com.hugo99j.chaosparty.util.Logger;
 import com.hugo99j.chaosparty.util.RenderUtil;
-import net.fabricmc.loader.impl.util.log.Log;
 
-public class TextInput extends Renderable {
+public abstract class TextInput extends UiElement {
     private String prefix;
     private String suffix;
     private int maxLength;
@@ -46,16 +44,16 @@ public class TextInput extends Renderable {
         if(this.cursorPos < 0) this.cursorPos = 0;
 
         String cleanValue = this.value.replace("<", "\\<");
-        RenderUtil.TextData realTextInfo = RenderUtil.renderText(this.prefix+cleanValue+this.suffix, this.getStyle());
+        //RenderUtil.TextData realTextInfo = RenderUtil.renderText(this.prefix+cleanValue+this.suffix, this.getStyle());
         if(this.isSelected()) {
             if((blinkTimer % 1) < 0.5f) {
                 String cursorText = "<colour:clear>" + (this.prefix + cleanValue.substring(0, this.cursorPos)).replace("<colour:", "<hidden:") + "<colour:white>|";
-                RenderUtil.TextData fakeTextInfo = RenderUtil.getInfoAbout(cursorText, this.getStyle());
+                //RenderUtil.TextData fakeTextInfo = RenderUtil.getInfoAbout(cursorText, this.getStyle());
 
-                int diff = (int) (realTextInfo.width() - fakeTextInfo.width());
-                if (diff > 0) cursorText += GameData.getSpace(diff);
+                //int diff = (int) (realTextInfo.width() - fakeTextInfo.width());
+                //if (diff > 0) cursorText += GameData.getSpace(diff);
 
-                RenderUtil.renderText(cursorText, this.getStyle());
+                //RenderUtil.renderText(cursorText, this.getStyle());
             }
 
             if(!this.wasSelected) {

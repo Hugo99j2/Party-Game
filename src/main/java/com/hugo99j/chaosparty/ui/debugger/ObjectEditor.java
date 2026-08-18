@@ -73,7 +73,7 @@ public class ObjectEditor {
                                 group.selected.add(allObject);
                                 group.selected.add(selected.get());
                                 GameData.getLevelOrThrow().addObject(group);
-                                //group.update(); //it auto updates now
+                                //group.updateUtil(); //it auto updates now
                                 selected.set(group);
                             }
                             if(selected.get() == null) {

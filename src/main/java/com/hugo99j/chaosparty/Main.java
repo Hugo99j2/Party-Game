@@ -115,7 +115,7 @@ public class Main extends Game {
         });
 
         GameData.uiViewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
-        //GameData.gameViewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
+        //GameData.gameViewport.updateUtil(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
         this.setScreen(new MenuScreen());
 
         Debuggers.init();
@@ -131,7 +131,7 @@ public class Main extends Game {
         GameData.height = height;
 
         // Resize your screen here. The parameters represent the new window size.
-        //GameData.gameViewport.update(width, height, true);
+        //GameData.gameViewport.updateUtil(width, height, true);
         GameData.uiViewport.update(width, height, true);
 
         if(GameData.getCurrentMatch() != null) GameData.getCurrentMatch().updateViews();
@@ -173,8 +173,9 @@ public class Main extends Game {
         ScreenUtils.clear(Color.BLACK);
 
         for (Controller controller : Controllers.getControllers()) {
-            ((ControllerUtil) controller).update();
+            ((ControllerUtil) controller).updateUtil();
         }
+        if(DebugController.INSTANCE instanceof ControllerUtil u) u.updateUtil();
 
         //so adding new ones whilst in the list works
         ArrayList<Runnable> oldRunnables = new ArrayList<>(ToRun.runnables);
@@ -194,7 +195,7 @@ public class Main extends Game {
 
         //fbo.begin();
 
-        //GameConstants.gameCamera.update();
+        //GameConstants.gameCamera.updateUtil();
 
         boolean inMapEditor = GameData.getCurrentMatch() != null && GameData.getCurrentMatch().getCurrentMinigame() instanceof MapEditor;
         boolean tickIfMapEditor = (!inMapEditor || (GameData.DEBUGGING && Debuggers.isEnabled("tickMapEditor")));

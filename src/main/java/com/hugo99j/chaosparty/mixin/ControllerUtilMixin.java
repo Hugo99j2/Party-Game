@@ -72,7 +72,7 @@ public abstract class ControllerUtilMixin implements ControllerUtil {
 
     @SuppressWarnings("usagelimited")
     @Override
-    public void update() {
+    public void updateUtil() {
         init();
         if(lastUpdate == GameData.time) return;
         lastUpdate = GameData.time;

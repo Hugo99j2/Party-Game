@@ -127,7 +127,7 @@ public class DummyController implements Controller, ControllerUtil {
     }
 
     @Override
-    public void update() {
+    public void updateUtil() {
 
     }
 

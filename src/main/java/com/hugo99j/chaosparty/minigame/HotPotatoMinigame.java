@@ -58,9 +58,27 @@ public class HotPotatoMinigame extends AbstractMinigame {
     @Override
     public void start() {
         super.start();
-        //TODO: FIX
-        //timer = new Timer("timer", TIME, 2, false);
-        //timer.setStyle(ss.get("timer"));
+        timer = new Timer("timer", TIME, 2, false) {
+            @Override
+            public float getX() {
+                return 0;
+            }
+
+            @Override
+            public float getY() {
+                return 0;
+            }
+
+            @Override
+            public float getWidth() {
+                return 0;
+            }
+
+            @Override
+            public float getHeight() {
+                return 0;
+            }
+        };
         music = SoundManager.getSound("potato_music").playSingle(1);
         hotEffect = new ParticleEffect();
         hotEffect.load(Gdx.files.internal(PathUtil.asset("particles/flame.p")), GameData.atlas);

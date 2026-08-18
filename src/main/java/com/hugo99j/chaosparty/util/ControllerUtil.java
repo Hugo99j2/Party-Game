@@ -9,14 +9,14 @@ public interface ControllerUtil {
     float getValue(ControllerInput input);
     boolean wasJustPressedThisTick(ControllerInput input);
     void onTick();
-    void update();
+    void updateUtil();
     void vibrate(int time, float intensity);
 
     float DEAD_ZONE = 0.25f;
 
     static ControllerUtil getCurrent() {
         if(Controllers.getCurrent() == null) {
-            if(DebugController.INSTANCE != null) return DebugController.INSTANCE;
+            if(DebugController.INSTANCE != null) return (ControllerUtil) DebugController.INSTANCE;
             return new DummyController();
         }
         return (ControllerUtil) Controllers.getCurrent();

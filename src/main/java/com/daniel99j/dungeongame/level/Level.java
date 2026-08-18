@@ -147,12 +147,12 @@ public class Level implements Disposable {
 
         if(!GameData.DEBUGGING || Debuggers.isEnabled("lights")) {
             GameData.spriteBatch.end();
-//                GameConstants.gameCamera.update();
+//                GameConstants.gameCamera.updateUtil();
 //                GameConstants.gameViewport.apply();
             //GameData.getLevelOrThrow().rayHandler.useDefaultViewport(matchView.gameViewport);
             GameData.getLevelOrThrow().rayHandler.setCombinedMatrix(matchView.gameCamera);
             GameData.getLevelOrThrow().rayHandler.useCustomViewport(matchView.gameViewport.getScreenX(), matchView.gameViewport.getScreenY(), matchView.gameViewport.getScreenWidth(), matchView.gameViewport.getScreenHeight());
-            rayHandler.update(); //unfortunately culling is done here, so I can't update once
+            rayHandler.update(); //unfortunately culling is done here, so I can't updateUtil once
             int[] previousState = ScreenFboUtils.retrieveFboStatus();
             rayHandler.prepareRender();
             ScreenFboUtils.restoreFboStatus(previousState);
@@ -288,7 +288,7 @@ public class Level implements Disposable {
             toRemove.forEach(Debuggers.pathfindDebuggers.keySet()::remove);
         }
 
-        //makes particles update at normal speed with multiple screens
+        //makes particles updateUtil at normal speed with multiple screens
         lastRenderedFrame = Gdx.graphics.getDeltaTime();
     }
 

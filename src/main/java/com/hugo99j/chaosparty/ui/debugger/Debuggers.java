@@ -393,7 +393,7 @@ public class Debuggers {
                 //DEBUGGERS
 
                 // incase imgui changes the gameViewport
-//                GameData.gameCamera.update();
+//                GameData.gameCamera.updateUtil();
 //                GameData.gameViewport.apply();
 
                 if (GameData.level != null) {

@@ -23,13 +23,13 @@ import com.daniel99j.djutil.pathfinder.PathfindPos;
 import com.hugo99j.chaosparty.GameData;
 import com.daniel99j.dungeongame.entity.*;
 import com.hugo99j.chaosparty.bot.BotController;
-import com.hugo99j.chaosparty.entity.LiquidBarrelObject;
 import com.hugo99j.chaosparty.entity.Player;
 import com.hugo99j.chaosparty.match.MatchPlayer;
 import com.hugo99j.chaosparty.match.MatchView;
 import com.hugo99j.chaosparty.minigame.MapEditor;
 import com.hugo99j.chaosparty.ui.debugger.Debuggers;
-import com.hugo99j.chaosparty.ui.debugger.ObjectEditor;
+import com.hugo99j.chaosparty.ui.debugger.LightEditor;
+import com.hugo99j.chaosparty.util.Logger;
 import com.hugo99j.chaosparty.util.RenderUtil;
 import com.hugo99j.chaosparty.util.ScreenFboUtils;
 import org.jetbrains.annotations.Nullable;
@@ -103,7 +103,9 @@ public class Level implements Disposable {
         collisions.forEach(Runnable::run);
         collisions.clear();
         for (AbstractObject o : new ArrayList<>(this.objects)) {
-            o.tick();
+            if(o.isRemoved()) {
+                Logger.error("Trying to tick removed object '"+o+"'");
+            } else o.tick();
         }
     }
 
@@ -113,14 +115,19 @@ public class Level implements Disposable {
             GameData.spriteBatch.setShader(Debuggers.objectIdProgram);
             render(matchView, true);
             GameData.spriteBatch.setShader(old);
-            Pixmap pixmap = Pixmap.createFromFrameBuffer(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+            //Pixmap pixmap = Pixmap.createFromFrameBuffer(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
             Vector3 screenCoords = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
             Vector3 worldCoords = GameData.getCurrentMatch().getMatchViews().getFirst().gameCamera.unproject(screenCoords);
             Vector3 viewCoords = GameData.getCurrentMatch().getMatchViews().getFirst().gameViewport.project(worldCoords);
 
-            Debuggers.advancedPickColour = pixmap.getPixel((int) viewCoords.x, (int) viewCoords.y);
-            pixmap.dispose();
+            //Debuggers.advancedPickColour = pixmap.getPixel((int) viewCoords.x, (int) viewCoords.y);
+            byte[] bytes = ScreenUtils.getFrameBufferPixels((int) viewCoords.x, (int) viewCoords.y, 1, 1, true);
+            Debuggers.advancedPickColour = ((bytes[0] & 0xFF) << 24) |
+                ((bytes[1] & 0xFF) << 16) |
+                ((bytes[2] & 0xFF) << 8)  |
+                (bytes[3] & 0xFF);
+            //pixmap.dispose();
             if(Debuggers.isEnabled("showAdvancedObjectPicking")) return; //Don't render actual objects over the top!
             ScreenUtils.clear(Color.BLACK); //Hide picking rendering so transparent objects don't break
         }
@@ -341,15 +348,17 @@ public class Level implements Disposable {
     }
 
     public void removeObject(AbstractObject object) {
-        object.dispose();
         this.objects.remove(object);
+        if(object.isRemoved()) return;
+        object.dispose();
     }
 
-    public <T extends Light> LevelLight<T> addLight(Function<RayHandler, T> function, SaveConfig saveConfig) {
+    public <T extends Light> LevelLight<T> addLight(Function<RayHandler, T> function) {
         T light = function.apply(this.rayHandler);
         light.setContactFilter((short) 1, (short) 0, CollisionCategories.LIGHT_BLOCKING);
-        LevelLight<T> levelLight = new LevelLight<>(light, saveConfig, UUID.randomUUID());
+        LevelLight<T> levelLight = new LevelLight<>(light, UUID.randomUUID());
         this.lights.add(levelLight);
+        LightEditor.onAdded(levelLight, this);
         return levelLight;
     }
 
@@ -364,8 +373,10 @@ public class Level implements Disposable {
     }
 
     public void removeLight(LevelLight<?> light) {
+        if(light == null || light.isDisposed()) return;
+        light.dispose();
         this.lights.remove(light);
-        light.light().remove();
+        LightEditor.onRemoved(light, this);
     }
 
     public <T extends AbstractObject> List<T> getObjectsInRadius(Vector2 pos, float radius, Class<T> clazz, boolean physics, boolean sort, @Nullable T exclude) {

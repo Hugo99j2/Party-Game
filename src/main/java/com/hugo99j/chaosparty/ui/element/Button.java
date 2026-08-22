@@ -3,8 +3,6 @@ package com.hugo99j.chaosparty.ui.element;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.daniel99j.dungeongame.sounds.SoundManager;
-import com.hugo99j.chaosparty.ui.screenss.CombinedScreenSS;
-import com.hugo99j.chaosparty.ui.screenss.ScreenSSBuilder;
 import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.util.NinePatchLoader;
 import com.hugo99j.chaosparty.ui.renderable.ClickType;
@@ -19,7 +17,6 @@ public abstract class Button extends UiElement {
     private NinePatch ninePatch;
     private NinePatch ninePatchHovered;
     private String text;
-    private CombinedScreenSS.ScreenParentSS screenParentSS;
 
     public Button(String elementId, String texture, String text) {
         super(elementId);

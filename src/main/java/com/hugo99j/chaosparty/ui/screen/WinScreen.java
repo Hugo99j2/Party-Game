@@ -6,23 +6,18 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.daniel99j.djutil.NumberUtils;
+import com.hugo99j.chaosparty.ui.element.Button;
 import com.hugo99j.chaosparty.ui.element.DivElement;
 import com.hugo99j.chaosparty.ui.renderable.RenderState;
 import com.hugo99j.chaosparty.ui.renderable.UiElement;
-import com.hugo99j.chaosparty.ui.screenss.CombinedScreenSS;
-import com.hugo99j.chaosparty.ui.screenss.ScreenSSBuilder;
-import com.hugo99j.chaosparty.ui.element.Button;
-import com.hugo99j.chaosparty.ui.element.Text;
 import com.hugo99j.chaosparty.match.MatchPlayer;
 import com.hugo99j.chaosparty.util.*;
 import com.hugo99j.chaosparty.GameData;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.hugo99j.chaosparty.ui.screenss.ScreenSSFunctions.*;
+import static com.hugo99j.chaosparty.ui.ScreenSSFunctions.*;
 
 /** First screen of the application. Displayed after the application is created. */
 public class WinScreen extends UiScreen {
@@ -45,84 +40,38 @@ public class WinScreen extends UiScreen {
         players = scores.values().stream().toList().getFirst().keySet().stream().toList();
     }
 
-    private static CombinedScreenSS createSS() {
-        ScreenSSBuilder b = ScreenSSBuilder.create()
-            .set("x", "0vw")
-            .set("y", "0vh")
-            .set("xSize", "100vw")
-            .set("ySize", "100vh")
-            .set("display", "flex")
-            .set("flexDirection", "column")
-            .set("justifyContent", "center")
-            .set("alignItems", "center")
-            .set("padding", 48)
-            .set("gap", 24)
-            .newChild("text")
-            .set("x", "auto")
-            .set("y", "auto")
-            .set("xSize", 1)
-            .set("ySize", 1)
-            .finishChild()
-            .newChild("menu")
-            .set("x", "auto")
-            .set("y", "auto")
-            .set("xSize", 320)
-            .set("ySize", 64)
-            .set("scale", 2)
-            .finishChild()
-            .newChild("menu2")
-            .set("x", "auto")
-            .set("y", "auto")
-            .set("xSize", 320)
-            .set("ySize", 64)
-            .set("scale", 2)
-            .finishChild();
-
-        int i = 0;
-        for (MatchPlayer player : GameData.getCurrentMatch().getPlayers()) {
-                b.newChild("score"+i)
-                .set("x", "auto")
-                .set("y", "auto")
-                .set("xSize", 320)
-                .set("ySize", 64)
-                .set("scale", 2)
-                .finishChild();
-                i++;
-        }
-        return b.build();
-    }
-
     @Override
     public void show() {
         super.show();
 
         int columns = 8;
         int rows = 5;
+        float sizePerBox = 80;
 
         DivElement columnHolder = this.addElement(new DivElement("main_div") {
             @Override
             public float getPadding() {
-                return 0;
+                return 10;
             }
 
             @Override
             public float getX() {
-                return 0;
+                return centerX(this, GameData.width/2f);
             }
 
             @Override
             public float getY() {
-                return 0;
+                return centerY(this, GameData.height/2f);
             }
 
             @Override
             public float getWidth() {
-                return GameData.width;
+                return smartFitWidth(this, sizePerBox*columns, 0, GameData.width*0.9f);
             }
 
             @Override
             public float getHeight() {
-                return GameData.height;
+                return getWidth()/columns*rows;
             }
         });
         for (int column = 0; column < columns; column++) {
@@ -130,7 +79,7 @@ public class WinScreen extends UiScreen {
             DivElement rowHolder = this.addElement(new DivElement("row_holder_"+column) {
                 @Override
                 public float getX() {
-                    return autoColumnsXPos(this);
+                    return parentXAdd(this, autoColumnsXPos(this));
                 }
 
                 @Override
@@ -150,7 +99,7 @@ public class WinScreen extends UiScreen {
 
                 @Override
                 public float getPadding() {
-                    return 0;
+                    return 10;
                 }
 
                 @Override
@@ -168,7 +117,7 @@ public class WinScreen extends UiScreen {
 
                     @Override
                     public float getY() {
-                        return autoRowsYPos(this);
+                        return parentYAdd(this, autoRowsYPos(this));
                     }
 
                     @Override
@@ -222,16 +171,37 @@ public class WinScreen extends UiScreen {
             }
         }
 
+        this.addElement(new Button("menu", "button", "Next game ->") {
+            @Override
+            public float getX() {
+                return GameData.width-getWidth()-10;
+            }
+
+            @Override
+            public float getY() {
+                return getHeight()+10;
+            }
+
+            @Override
+            public float getWidth() {
+                return 360;
+            }
+
+            @Override
+            public float getHeight() {
+                return 72;
+            }
+
+            @Override
+            public void onClick() {
+                super.onClick();
+                ToRun.run(() -> GameData.MAIN_INSTANCE.setScreen(new MenuScreen()));
+            }
+        });
+
         //syncViewport(GameConstants.width, GameConstants.height);
         //new ScreenSS("0.5vw", "0.5vh", "320", "32", "5", true)
 //        this.addElement(new Text("text", "<colour:green>YOU WON!"));
-//        this.addElement(new Button("menu", "button", "Back to menu") {
-//            @Override
-//            public void onClick() {
-//                super.onClick();
-//                ToRun.run(() -> GameData.MAIN_INSTANCE.setScreen(new MenuScreen()));
-//            }
-//        });
 //        this.addElement(new Button("menu2", "button", "Back to menu") {
 //            @Override
 //            public void onClick() {

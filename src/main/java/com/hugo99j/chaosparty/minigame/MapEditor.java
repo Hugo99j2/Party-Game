@@ -7,6 +7,7 @@ import com.daniel99j.dungeongame.entity.AbstractObject;
 import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.entity.PlayerSpawnPoint;
 import com.hugo99j.chaosparty.match.MatchView;
+import com.hugo99j.chaosparty.ui.debugger.ObjectEditor;
 import com.hugo99j.chaosparty.ui.debugger.UndoRedoHistory;
 
 import java.util.ArrayList;
@@ -36,6 +37,9 @@ public class MapEditor extends AbstractMinigame {
             GameData.getLevelOrThrow().addObject(new PlayerSpawnPoint(2));
             GameData.getLevelOrThrow().addObject(new PlayerSpawnPoint(3));
             GameData.getLevelOrThrow().addObject(new PlayerSpawnPoint(4));
+        }
+        if(GameData.getLevelOrThrow().getObjectsInRadius(Vector2.Zero, 10000, ObjectEditor.MapScreenshotter.class, false, false, null).isEmpty()) {
+            GameData.getLevelOrThrow().addObject(new ObjectEditor.MapScreenshotter(10, 10));
         }
         UndoRedoHistory.onMapLoad();
     }

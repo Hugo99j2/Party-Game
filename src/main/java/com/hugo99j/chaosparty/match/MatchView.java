@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class MatchView implements Disposable {
-    private FrameBuffer fbo = new FrameBuffer(Pixmap.Format.RGBA8888, GameData.width, GameData.height, false);
+    public FrameBuffer fbo = new FrameBuffer(Pixmap.Format.RGBA8888, GameData.width, GameData.height, false);
     public final OrthographicCamera gameCamera = new OrthographicCamera();
     public Viewport gameViewport;
     public int worldWidth, worldHeight;

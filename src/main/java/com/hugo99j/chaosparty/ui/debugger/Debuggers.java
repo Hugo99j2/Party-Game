@@ -1,14 +1,10 @@
 package com.hugo99j.chaosparty.ui.debugger;
 
-import box2dLight.ConeLight;
-import box2dLight.DirectionalLight;
-import box2dLight.PointLight;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Graphics;
-import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -29,13 +25,11 @@ import com.hugo99j.chaosparty.util.NoDebugOption;
 import com.hugo99j.chaosparty.util.RequiresRefresh;
 import com.daniel99j.dungeongame.sounds.SoundInstance;
 import com.daniel99j.dungeongame.sounds.SoundManager;
-import com.hugo99j.chaosparty.ui.screenss.ScreenSS;
 import com.hugo99j.chaosparty.GameData;
 import com.daniel99j.dungeongame.entity.AbstractObject;
 import com.hugo99j.chaosparty.entity.SpriteObject;
 import com.daniel99j.dungeongame.level.LevelLight;
 import com.daniel99j.dungeongame.level.LevelLoader;
-import com.daniel99j.dungeongame.level.SaveConfig;
 import com.google.gson.JsonObject;
 import com.hugo99j.chaosparty.match.MatchPlayer;
 import com.hugo99j.chaosparty.match.MatchView;
@@ -118,6 +112,7 @@ public class Debuggers {
             option("showAdvancedObjectPicking", false);
             option("validPathfindingSpotRenderer", false);
             option("botDebug", true);
+            option("renderDevObjects", true);
 
             category("Minigame");
             option("forceSingleView", false);
@@ -277,54 +272,7 @@ public class Debuggers {
                 if(ImGui.button("Force show UI")) forceShow = true;
                 ImGui.end();
             } else {
-                ImGui.beginMainMenuBar();
-                if(isInMapEditor) {
-                    if(ImGui.beginMenu("File")) {
-                        if(ImGui.menuItem("Open... CTRL+O")) {
-                            FileDialog dialog = new FileDialog((Frame) null, "Select map to open", FileDialog.LOAD);
-                            dialog.setFilenameFilter(new PatternFilenameFilter(".*\\.map$"));
-                            dialog.setVisible(true);
-
-                            String directory = dialog.getDirectory();
-                            String file = dialog.getFile();
-
-                            //selected a file
-                            if (file != null) {
-                                Logger.info("Loaded "+directory+file);
-                                GameData.startMatch(List.of(new MatchPlayer(User.getUser(5)))).setCurrentMinigame(new MapEditor(directory+file));
-                            }
-
-                            dialog.dispose();
-
-                        }
-                        if(ImGui.beginMenu("Open map...")) {
-                            for (String maps : PathUtil.getFilesIn(PathUtil.data("maps"))) {
-                                String real = maps.replace(".map", "").replace("data/maps/", "");
-                                if(ImGui.menuItem(real)) {
-                                    Logger.info("Loaded "+real);
-                                    GameData.startMatch(List.of(new MatchPlayer(User.getUser(5)))).setCurrentMinigame(new MapEditor(real));
-                                }
-                            }
-                            ImGui.endMenu();
-                        }
-                        if(ImGui.menuItem("Save   CTRL+S")) {
-                            saveMap();
-                        }
-                        ImGui.endMenu();
-                    }
-                } else {
-                    if(ImGui.menuItem("Game")) {
-                        if(ImGui.menuItem("Quick-Load")) {
-
-                        }
-                    }
-                }
-                ImGui.endMainMenuBar();
-
-                if (Gdx.input.isKeyJustPressed(Input.Keys.S) && Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)) {
-                    saveMap();
-                }
-                UndoRedoHistory.render();
+                MenuBar.render();
 
                 ImGui.begin("Logger");
                 for (String s : logger) {
@@ -350,10 +298,10 @@ public class Debuggers {
 
                 UUID hoveredObject = null;
 
-                ImGui.begin("Lights");
-                UUID hoveredLight = renderLightSelector();
-                boolean showLights = ImGui.isWindowFocused(ImGuiFocusedFlags.RootAndChildWindows);
-                ImGui.end();
+//                ImGui.begin("Lights");
+//                UUID hoveredLight = renderLightSelector();
+//                boolean showLights = ImGui.isWindowFocused(ImGuiFocusedFlags.RootAndChildWindows);
+//                ImGui.end();
 
                 DebugController.render();
 
@@ -420,16 +368,6 @@ public class Debuggers {
                         }
                         GameData.shapeRenderer.end();
                     }
-
-                    if (showLights) for (LevelLight<?> light : GameData.level.getLights()) {
-                        Color c = light.light().getColor().cpy();
-                        if (light.uuid().equals(hoveredLight)) c = Color.YELLOW;
-                        //GameData.shapeRenderer.setProjectionMatrix(GameData.gameCamera.combined);
-                        GameData.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-                        GameData.shapeRenderer.setColor(c);
-                        GameData.shapeRenderer.circle(light.light().getPosition().x, light.light().getPosition().y, 0.2f, 20);
-                        GameData.shapeRenderer.end();
-                    }
                 }
             }
 
@@ -461,7 +399,7 @@ public class Debuggers {
         }
     }
 
-    private static void saveMap() {
+    protected static void saveMap() {
         try {
             Files.write(Path.of(PathUtil.codingDir(PathUtil.data("maps/" + GameData.getCurrentMatch().getCurrentMinigame().getMapName() + ".map"))), LevelLoader.saveLevel(GameData.level, true).getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
             Logger.info("Saved map");
@@ -484,155 +422,6 @@ public class Debuggers {
         try {
             Files.writeString(Path.of("debug.json"), new GsonBuilder().disableHtmlEscaping().setPrettyPrinting().create().toJson(data));
         } catch (Exception ignored) {}
-    }
-
-    private static UUID renderLightSelector() {
-        if(GameData.level == null) return null;
-        UUID hoveredLight = null;
-        if (ImGui.button("Add point light")) {
-            assert GameData.level != null;
-            GameData.level.addLight((rayHandler -> new PointLight(rayHandler, 128)), SaveConfig.ALWAYS);
-        }
-
-        ImGui.sameLine();
-
-        if (ImGui.button("Add cone light")) {
-            assert GameData.level != null;
-            selectedLightId = GameData.level.addLight((rayHandler -> new ConeLight(rayHandler, 128, Color.RED, 5, 0, 0, 0, 45)), SaveConfig.ALWAYS).uuid();
-        }
-
-        ImGui.sameLine();
-
-        if (ImGui.button("Add directional light")) {
-            assert GameData.level != null;
-            selectedLightId = GameData.level.addLight((rayHandler -> new DirectionalLight(rayHandler, 128, Color.RED, 30)), SaveConfig.ALWAYS).uuid();
-        }
-
-        ImGui.sameLine();
-
-        ImVec4 oldColour = ImGui.getStyle().getColor(ImGuiCol.Button);
-        ImVec4 selectedColour = ImGui.getStyle().getColor(ImGuiCol.ButtonActive);
-        if (isEnabled("selectingLight"))
-            ImGui.getStyle().setColor(ImGuiCol.Button, selectedColour.x, selectedColour.y, selectedColour.z, selectedColour.w);
-        if (ImGui.button("Pick Light")) {
-            debugOptions.get("selectingLight").object = !isEnabled("selectingLight");
-        } else {
-            if (debugOptions.get("selectingLight").object) {
-                if (ImGui.isMouseClicked(ImGuiMouseButton.Left)) {
-                    selectedLightId = getHoveredLight() == null ? null : getHoveredLight().uuid();
-                    debugOptions.get("selectingLight").object = false;
-                } else {
-                    hoveredLight = getHoveredLight() == null ? null : getHoveredLight().uuid();
-                }
-            }
-        }
-        ImGui.getStyle().setColor(ImGuiCol.Button, oldColour.x, oldColour.y, oldColour.z, oldColour.w);
-
-        ImGui.beginChild("Light Left Panel", new ImVec2(300, 0), ImGuiChildFlags.Border | ImGuiChildFlags.ResizeX);
-        ImGui.separatorText("All Lights");
-
-        if (ImGui.beginTable("Light Selector", 1, ImGuiTableFlags.RowBg)) {
-            int id = 0;
-            for (LevelLight<?> light : GameData.getLevelOrThrow().getLights()) {
-                ImGui.tableNextRow();
-                ImGui.tableNextColumn();
-                ImGui.pushID(id);
-                int flags = ImGuiSelectableFlags.SpanAllColumns;
-                boolean selected = light.uuid().equals(selectedLightId);
-                if (selected)
-                    flags |= ImGuiTreeNodeFlags.Selected;
-                if (ImGui.selectable(light.toString() + " (" + id + ")", selected, flags))
-                    selectedLightId = light.uuid();
-                if (ImGui.isItemHovered()) hoveredLight = light.uuid();
-                ImGui.popID();
-
-                id++;
-            }
-            ImGui.endTable();
-        }
-
-        ImGui.endChild();
-
-        ImGui.sameLine();
-
-        ImGui.beginChild("Light Right Panel", new ImVec2(0, 0), ImGuiChildFlags.Border);
-
-        ImGui.separatorText("Current Light");
-
-        LevelLight<?> selectedLight;
-        if (selectedLightId != null && (selectedLight = GameData.level.getLights().stream().filter((o) -> o.uuid().equals(selectedLightId)).findFirst().orElse(null)) != null) {
-            Vector2 middle = oldLightPos == null ? selectedLight.light().getPosition().cpy() : oldLightPos;
-            int posOffset = 10;
-
-            boolean changing = false;
-            slider("X Pos", selectedLight.light().getPosition().x, (x) -> selectedLight.light().setPosition(x, selectedLight.light().getY()), middle.x - posOffset, middle.x + posOffset, ImGui.isKeyDown(ImGuiKey.ModAlt) ? "%.0f" : "%.3f");
-            if (ImGui.isItemActive()) changing = true;
-            slider("Y Pos", selectedLight.light().getPosition().y, (y) -> selectedLight.light().setPosition(selectedLight.light().getX(), y), middle.y - posOffset, middle.y + posOffset, ImGui.isKeyDown(ImGuiKey.ModAlt) ? "%.0f" : "%.3f");
-            if (ImGui.isItemActive()) changing = true;
-
-//            if (ImGui.button("TP to player")) selectedLight.light().setPosition(GameData.player.getPos());
-//            ImGui.sameLine();
-//            if (ImGui.button("TP player to this")) GameData.player.setPos(selectedLight.light().getPosition());
-
-            if (oldLightPos == null && changing) {
-                oldLightPos = selectedLight.light().getPosition().cpy();
-            }
-            if (oldLightPos != null && !changing) {
-                oldLightPos = null;
-            }
-
-            float[] colours = {
-                selectedLight.light().getColor().r,
-                selectedLight.light().getColor().g,
-                selectedLight.light().getColor().b,
-                selectedLight.light().getColor().a
-            };
-            if (ImGui.colorPicker4("Colour", colours)) {
-                selectedLight.light().setColor(colours[0], colours[1], colours[2], colours[3]);
-            }
-
-            if (ImGui.checkbox("X-Ray", selectedLight.light().isXray())) {
-                selectedLight.light().setXray(!selectedLight.light().isXray());
-            }
-
-            if (ImGui.checkbox("Static", selectedLight.light().isStaticLight())) {
-                selectedLight.light().setStaticLight(!selectedLight.light().isStaticLight());
-            }
-
-            if (ImGui.checkbox("Soft", selectedLight.light().isSoft())) {
-                selectedLight.light().setSoft(!selectedLight.light().isSoft());
-            }
-
-            if (ImGui.checkbox("Active", selectedLight.light().isActive())) {
-                selectedLight.light().setActive(!selectedLight.light().isActive());
-            }
-
-            slider("Softness", selectedLight.light().getSoftShadowLength(), selectedLight.light()::setSoftnessLength, 0, 5, "%.3f");
-
-            slider("Distance", selectedLight.light().getDistance(), selectedLight.light()::setDistance, 0, 100, "%.3f");
-
-            if (selectedLight.light() instanceof ConeLight coneLight) {
-                ImGui.separatorText("Cone Light");
-
-                slider("Direction", selectedLight.light().getDirection(), selectedLight.light()::setDirection, 0, 360, "%.0f");
-
-                slider("Cone size", coneLight.getConeDegree(), coneLight::setConeDegree, 0, 180, "%.3f");
-            }
-
-            if (selectedLight.light() instanceof DirectionalLight) {
-                ImGui.separatorText("Directional Light");
-
-                slider("Direction", selectedLight.light().getDirection(), selectedLight.light()::setDirection, 0, 360, "%.0f");
-            }
-
-            if (ImGui.button("Delete")) {
-                GameData.level.removeLight(selectedLight);
-            }
-        }
-
-        ImGui.endChild();
-
-        return hoveredLight;
     }
 
     private static void intInput(String name, int getter, Consumer<Integer> setter) {
@@ -725,6 +514,10 @@ public class Debuggers {
 
 
     static void addVariables(AbstractObject selectedObject, Class<?> clazz, Consumer<GenericValuesHolder<Field, AbstractObject, Object, ?, ?>> setter) {
+        if(selectedObject instanceof LightEditor.SelectedLightObject selectedLight) {
+            LightEditor.render(selectedLight);
+            return;
+        }
         if(selectedObject instanceof SelectionGroup group) {
             group.selected.ensureSafety();
             boolean allMatch = true;

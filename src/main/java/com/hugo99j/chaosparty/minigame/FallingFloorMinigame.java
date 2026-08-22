@@ -7,8 +7,6 @@ import com.daniel99j.dungeongame.entity.AbstractObject;
 import com.daniel99j.dungeongame.sounds.SoundInstance;
 import com.daniel99j.dungeongame.sounds.SoundManager;
 import com.hugo99j.chaosparty.ui.renderable.RenderState;
-import com.hugo99j.chaosparty.ui.screenss.CombinedScreenSS;
-import com.hugo99j.chaosparty.ui.screenss.ScreenSSBuilder;
 import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.bot.BotController;
 import com.hugo99j.chaosparty.bot.FallingFloorBot;
@@ -30,20 +28,6 @@ public class FallingFloorMinigame extends AbstractMinigame {
     private Color safeColour = Color.GREEN;
     private int ticksUntilCanKill = 20;
     private ProgressBar progressBar;
-
-    private final CombinedScreenSS ss = ScreenSSBuilder.create()
-        .set("xSize", "100vw")
-        .set("ySize", "100vh")
-        .set("x", 0)
-        .set("y", 0)
-        .newChild("colourbar")
-        .set("x", "50vw")
-        .set("y", "80vh")
-        .set("xSize", "5vw")
-        .set("ySize", "4vh")
-        .set("center", true)
-        .finishChild()
-        .build();
     private SoundInstance music;
 
     public FallingFloorMinigame() {
@@ -58,9 +42,27 @@ public class FallingFloorMinigame extends AbstractMinigame {
     @Override
     public void start() {
         super.start();
-        //TODO: FIX
-        //progressBar = new ProgressBar("colourbar", 45);
-        //progressBar.setStyle(ss.get("colourbar"));
+        progressBar = new ProgressBar("colourbar", 45) {
+            @Override
+            public float getX() {
+                return 0;
+            }
+
+            @Override
+            public float getY() {
+                return 0;
+            }
+
+            @Override
+            public float getWidth() {
+                return 0;
+            }
+
+            @Override
+            public float getHeight() {
+                return 0;
+            }
+        };
         music = SoundManager.getSound("falling_floor_music").playSingle(1);
     }
 

@@ -6,12 +6,20 @@ import com.daniel99j.dungeongame.entity.PhysicsSettings;
 import com.google.gson.JsonObject;
 import com.hugo99j.chaosparty.match.MatchView;
 import com.hugo99j.chaosparty.ui.debugger.CopiedObjectSelection;
+import com.hugo99j.chaosparty.ui.debugger.Debuggers;
+import com.hugo99j.chaosparty.ui.debugger.LightEditor;
+import com.hugo99j.chaosparty.ui.debugger.ObjectEditor;
 import com.hugo99j.chaosparty.util.RenderLayer;
 
 public class TemporaryDevObject extends AbstractObject {
     @Override
     public void render(MatchView matchView) {
 
+    }
+
+    @Override
+    public boolean shouldRender(MatchView view) {
+        return super.shouldRender(view) && Debuggers.isEnabled("renderDevObjects");
     }
 
     @Override
@@ -27,6 +35,12 @@ public class TemporaryDevObject extends AbstractObject {
     public static TemporaryDevObject read(JsonObject object) {
         if(object.has("object_group")) {
             return new CopiedObjectSelection(object.get("objects").getAsJsonArray());
+        }
+        if(object.has("light")) {
+            return new LightEditor.SelectedLightObject(object.get("light").getAsJsonObject());
+        }
+        if(object.has("camera")) {
+            return new ObjectEditor.MapScreenshotter(object.get("camera").getAsJsonObject());
         }
         throw new RuntimeException("Cannot create");
     }

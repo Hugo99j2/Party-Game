@@ -1,7 +1,6 @@
 package com.hugo99j.chaosparty.ui.screen;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.hugo99j.chaosparty.ui.screenss.CombinedScreenSS;
 import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.util.RenderUtil;
 

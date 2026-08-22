@@ -5,8 +5,6 @@ import com.badlogic.gdx.utils.Align;
 import com.daniel99j.dungeongame.sounds.SoundInstance;
 import com.daniel99j.dungeongame.sounds.SoundManager;
 import com.hugo99j.chaosparty.ui.renderable.RenderState;
-import com.hugo99j.chaosparty.ui.screenss.CombinedScreenSS;
-import com.hugo99j.chaosparty.ui.screenss.ScreenSSBuilder;
 import com.hugo99j.chaosparty.bot.BotController;
 import com.hugo99j.chaosparty.bot.SheepHerderBot;
 import com.hugo99j.chaosparty.entity.Player;
@@ -24,30 +22,6 @@ import java.util.List;
 
 public class HerdSheepMinigame extends AbstractMinigame {
     private Timer timer;
-    private final CombinedScreenSS ss = ScreenSSBuilder.create()
-        .set("xSize", "1vw")
-        .set("ySize", "1vh")
-        .set("x", 0)
-        .set("y", 0)
-        .newChild("rightcorner")
-        .set("x", "20")
-        .set("y", "0.1vh")
-        .set("xSize", "0.02vw")
-        .set("ySize", "0.02vh")
-        .newChild("timer")
-        .set("x", "5%")
-        .set("y", "0")
-        .set("xSize", "95%")
-        .set("ySize", "40%")
-        .finishChild()
-        .newChild("score")
-        .set("x", "5%")
-        .set("y", "40%+20%")
-        .set("xSize", "95%")
-        .set("ySize", "40%")
-        .finishChild()
-        .finishChild()
-        .build();
     private SoundInstance music;
 
     public HerdSheepMinigame() {
@@ -62,7 +36,6 @@ public class HerdSheepMinigame extends AbstractMinigame {
     @Override
     public void start() {
         super.start();
-        //TODO: FIX
         timer = new Timer("timer", 45, 2, false) {
             @Override
             public float getX() {
@@ -127,7 +100,7 @@ public class HerdSheepMinigame extends AbstractMinigame {
         timer.render(new RenderState(false, false, false, false, false, false, 0, 0, delta));
         int offset = 0;
         for (MatchPlayer player : GameData.getCurrentMatch().getPlayers()) {
-            RenderUtil.renderText(player.getName()+": "+GameData.getCurrentMatch().getCurrentMinigame().getScore(player), (int) ss.get("score").getX(), (int) (ss.get("score").getY()+offset), 1f, (int) ss.get("score").getXSize(), Align.left, false);
+            //RenderUtil.renderText(player.getName()+": "+GameData.getCurrentMatch().getCurrentMinigame().getScore(player), (int) ss.get("score").getX(), (int) (ss.get("score").getY()+offset), 1f, (int) ss.get("score").getXSize(), Align.left, false);
             offset += 50;
         }
         //RenderUtil.renderText("Scores: ", ss.get("score").getX(), ss.get("score").getY()+offset, 1f, ss.get("score").getXSize(), Align.left, false);

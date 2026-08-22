@@ -19,7 +19,7 @@ import com.hugo99j.chaosparty.GameData;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.hugo99j.chaosparty.ui.screenss.ScreenSSFunctions.*;
+import static com.hugo99j.chaosparty.ui.ScreenSSFunctions.*;
 
 /** First screen of the application. Displayed after the application is created. */
 public class MenuScreen extends UiScreen {
@@ -58,15 +58,42 @@ public class MenuScreen extends UiScreen {
 
             @Override
             public float getPadding() {
-                return 10;
+                return 20;
             }
         });
 
-        this.addElement(new Button("play", "button", "Test game") {
+        this.addElement(new Text("text", "<colour:blue>CHAOS PARTY!") {
+            @Override
+            public float getX() {
+                return parentX(this, 0);
+            }
+
+            @Override
+            public float getY() {
+                return parentY(this, 0)+autoRowsYPos(this);
+            }
+
+            @Override
+            public float getWidth() {
+                return parentWidth(this, 100);
+            }
+
+            @Override
+            public float getHeight() {
+                return autoRowsHeight(this);
+            }
+
+            @Override
+            public UiElement getParent() {
+                return mainBody;
+            }
+        });
+
+        this.addElement(new Button("play", "button", "Play a game") {
             @Override
             public void onClick() {
                 super.onClick();
-                ToRun.run(() -> GameData.startMatch(List.of(new MatchPlayer(User.getUser(1)))).setCurrentMinigame(new DevMinigame()));
+                ToRun.run(() -> GameData.MAIN_INSTANCE.setScreen(new SelectMinigameScreen()));
             }
 
             @Override
@@ -256,37 +283,9 @@ public class MenuScreen extends UiScreen {
                 return mainBody;
             }
         });
-
-        //new ScreenSS("0.5vw", "0.7vh", "1", "1", "1", false)
-        this.addElement(new Text("text", "<colour:blue>CHAOS PARTY!") {
-            @Override
-            public float getX() {
-                return parentX(this, 0);
-            }
-
-            @Override
-            public float getY() {
-                return parentY(this, 0)+autoRowsYPos(this);
-            }
-
-            @Override
-            public float getWidth() {
-                return parentWidth(this, 100);
-            }
-
-            @Override
-            public float getHeight() {
-                return autoRowsHeight(this);
-            }
-
-            @Override
-            public UiElement getParent() {
-                return mainBody;
-            }
-        });
     }
 
-    private void start(AbstractMinigame minigame) {
+    public static void start(AbstractMinigame minigame) {
         List<MatchPlayer> players = new ArrayList<>();
         int amount = 0;
         if(GameData.DEBUGGING && Debuggers.isEnabled("fakeControllers+1")) amount+=1;

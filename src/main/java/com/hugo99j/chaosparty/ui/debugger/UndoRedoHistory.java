@@ -11,6 +11,10 @@ import com.hugo99j.chaosparty.entity.TemporaryDevObject;
 import com.hugo99j.chaosparty.minigame.MapEditor;
 import com.hugo99j.chaosparty.util.Logger;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.nio.file.*;
 import java.util.*;
 
 
@@ -18,15 +22,16 @@ public class UndoRedoHistory {
     private static final ArrayList<String> revisions = new ArrayList<>();
     private static int currentRevision = 0;
 
-    protected static void render() {
-        if(GameData.level == null || GameData.getCurrentMatch() == null || !(GameData.getCurrentMatch().getCurrentMinigame() instanceof MapEditor)) return;
-        if (Gdx.input.isKeyJustPressed(Input.Keys.Z) && Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)) {
-            loadRevision(currentRevision+(Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) ? 1 : -1));
-        }
+    static {
+        MenuBar.registerBuilder((b) -> {
+            if(GameData.getCurrentMinigame() instanceof MapEditor) b.addItem("Edit", Input.Keys.Z, "Undo", () -> {
+                loadRevision(currentRevision+(Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) ? 1 : -1));
+            });
+        });
     }
 
     protected static void onEdited() {
-        if(GameData.level == null || GameData.getCurrentMatch() == null || !(GameData.getCurrentMatch().getCurrentMinigame() instanceof MapEditor)) return;
+        if(!(GameData.getCurrentMinigame() instanceof MapEditor)) return;
 
         //weve undone then edited, clear future edits (redos)
         while(revisions.size() > (currentRevision + 1)) {
@@ -74,6 +79,25 @@ public class UndoRedoHistory {
             Logger.info("Created revision");
             revisions.add(data);
             currentRevision++;
+
+            try {
+                if(currentRevision > 0) {
+                    String name = GameData.getCurrentMatch().getCurrentMinigame().getMapName();
+                    if (name.contains(File.separator)) {
+                        name = name.replace(File.separator, "_");
+                        name = name.replace(":", "__");
+                    }
+                    Path path = Path.of("map_backups", name);
+                    if (!Files.exists(path.getParent())) Files.createDirectory(path.getParent());
+
+                    try (FileSystem zip = FileSystems.newFileSystem(URI.create("jar:" + path.toUri() + "_" + System.currentTimeMillis() + ".zip"), Map.of("create", "true"))) {
+                        Path pathInZip = zip.getPath("/" + name);
+                        Files.writeString(pathInZip, data);
+                    }
+                }
+            } catch (Exception e) {
+                Logger.error("Failed to create backup of revision", e);
+            }
         } catch (Exception e) {
             Logger.error("Failed to create revision", e);
         }

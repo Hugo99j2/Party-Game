@@ -2,8 +2,6 @@ package com.hugo99j.chaosparty.minigame;
 
 import com.badlogic.gdx.utils.Align;
 import com.hugo99j.chaosparty.ui.renderable.RenderState;
-import com.hugo99j.chaosparty.ui.screenss.CombinedScreenSS;
-import com.hugo99j.chaosparty.ui.screenss.ScreenSSBuilder;
 import com.hugo99j.chaosparty.match.MatchView;
 import com.hugo99j.chaosparty.util.RenderUtil;
 import com.hugo99j.chaosparty.util.ToRun;
@@ -14,30 +12,30 @@ import java.util.List;
 
 public class DevMinigame extends AbstractMinigame {
     private Timer timer;
-    private CombinedScreenSS ss = ScreenSSBuilder.create()
-        .set("x", "0.1vw")
-        .set("y", "0.1vh")
-        .set("xSize", "0.02vw")
-        .set("ySize", "0.02vh")
-        .newChild("timer")
-        .set("x", "5%")
-        .set("y", "0")
-        .set("xSize", "95%")
-        .set("ySize", "40%")
-        .finishChild()
-        .newChild("score")
-        .set("x", "5%")
-        .set("y", "40%+20%")
-        .set("xSize", "95%")
-        .set("ySize", "40%")
-        .finishChild()
-        .build();
 
     public DevMinigame() {
         super("dev");
-        //TODO: FIX
-        //timer = new Timer("timer", 10, 2, false);
-        //timer.setStyle(ss.get("timer"));
+        timer = new Timer("timer", 10, 2, false) {
+            @Override
+            public float getX() {
+                return 0;
+            }
+
+            @Override
+            public float getY() {
+                return 0;
+            }
+
+            @Override
+            public float getWidth() {
+                return 0;
+            }
+
+            @Override
+            public float getHeight() {
+                return 0;
+            }
+        };
     }
 
     @Override
@@ -53,7 +51,7 @@ public class DevMinigame extends AbstractMinigame {
     public void render(float delta) {
         GameData.spriteBatch.begin();
         timer.render(new RenderState(false, false, false, false, false, false, 0, 0, delta));
-        RenderUtil.renderText("Score: 1", (int) ss.get("score").getX(), (int) ss.get("score").getY(), 1f, 100, Align.left, false);
+        //RenderUtil.renderText("Score: 1", (int) ss.get("score").getX(), (int) ss.get("score").getY(), 1f, 100, Align.left, false);
         GameData.spriteBatch.end();
     }
 

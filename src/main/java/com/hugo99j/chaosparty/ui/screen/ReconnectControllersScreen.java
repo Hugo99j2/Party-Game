@@ -3,69 +3,72 @@ package com.hugo99j.chaosparty.ui.screen;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
-import com.hugo99j.chaosparty.ui.screenss.ScreenSSBuilder;
+import com.hugo99j.chaosparty.ui.debugger.DebugController;
 import com.hugo99j.chaosparty.ui.debugger.Debuggers;
-import com.hugo99j.chaosparty.ui.element.Button;
-import com.hugo99j.chaosparty.ui.element.Text;
 import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.match.MatchPlayer;
+import com.hugo99j.chaosparty.ui.element.Button;
+import com.hugo99j.chaosparty.ui.element.Text;
 import com.hugo99j.chaosparty.util.DummyController;
-import com.hugo99j.chaosparty.util.PathUtil;
+import com.hugo99j.chaosparty.util.ImageUtil;
 import com.hugo99j.chaosparty.util.ToRun;
 
 /** First screen of the application. Displayed after the application is created. */
 public class ReconnectControllersScreen extends UiScreen {
-    Texture backgroundTexture;
-
     public ReconnectControllersScreen() {
-//        super(ScreenSSBuilder.create()
-//            .set("x", "0vw")
-//            .set("y", "0vh")
-//            .set("xSize", "100vw")
-//            .set("ySize", "100vh")
-//            .newChild("menu")
-//            .set("x", "0.5vw")
-//            .set("y", "0.5vh")
-//            .set("xSize", 320)
-//            .set("ySize", 64)
-//            .set("center", true)
-//            .set("scale", 2)
-//            .finishChild()
-//            .newChild("menu2")
-//            .set("x", "0.5vw")
-//            .set("y", "0.3vh")
-//            .set("xSize", 320)
-//            .set("ySize", 64)
-//            .set("center", true)
-//            .set("scale", 2)
-//            .finishChild()
-//            .newChild("text")
-//            .set("x", "0.5vw")
-//            .set("y", "0.7vh")
-//            .set("xSize", 1)
-//            .set("ySize", 1)
-//            .finishChild()
-//            .build()
-//        );
-
-        backgroundTexture = new Texture(PathUtil.texture("gameyay.png"));
     }
 
     @Override
     public void show() {
         super.show();
-        //syncViewport(GameConstants.width, GameConstants.height);
-        //new ScreenSS("0.5vw", "0.5vh", "320", "32", "5", true)
-//        this.addElement(new Button("menu", "button", "Done") {
-//            @Override
-//            public void onClick() {
-//                super.onClick();
-//                reconnect();
-//            }
-//        });
-//        //new ScreenSS("0.5vw", "0.7vh", "1", "1", "1", false)
-//        this.addElement(new Text("text", "<colour:red>Please reconnect controllers!"));
+        Text text = this.addElement(new Text("text", "<colour:red>Please reconnect controllers!") {
+            @Override
+            public float getX() {
+                return GameData.width/2f;
+            }
+
+            @Override
+            public float getY() {
+                return GameData.height/2f;
+            }
+
+            @Override
+            public float getWidth() {
+                return GameData.width/100f;
+            }
+
+            @Override
+            public float getHeight() {
+                return getWidth()/5;
+            }
+        });
+        this.addElement(new Button("menu", "button", "Done") {
+            @Override
+            public float getX() {
+                return text.getX();
+            }
+
+            @Override
+            public float getY() {
+                return text.getY()+10+text.getHeight();
+            }
+
+            @Override
+            public float getWidth() {
+                return text.getWidth();
+            }
+
+            @Override
+            public float getHeight() {
+                return text.getHeight();
+            }
+
+            @Override
+            public void onClick() {
+                super.onClick();
+                reconnect();
+            }
+        });
         reconnect();
     }
 
@@ -76,16 +79,20 @@ public class ReconnectControllersScreen extends UiScreen {
         if(GameData.DEBUGGING && Debuggers.isEnabled("fakeControllers+1")) fakeControllers+=1;
         if(GameData.DEBUGGING && Debuggers.isEnabled("fakeControllers+2")) fakeControllers+=2;
         for (MatchPlayer player : GameData.getCurrentMatch().getPlayers()) {
-            if(Controllers.getControllers().size <= i) {
-                if(fakeControllers > 0) {
-                    player.controller = (Controller) new DummyController();
-                    fakeControllers--;
-                    continue;
+            if(i == 0 && DebugController.INSTANCE != null) {
+                player.controller = (Controller) DebugController.INSTANCE;
+            } else {
+                if (Controllers.getControllers().size <= i) {
+                    if (fakeControllers > 0) {
+                        player.controller = new DummyController();
+                        fakeControllers--;
+                        continue;
+                    }
+                    connected = false;
+                    break;
                 }
-                connected = false;
-                break;
+                player.controller = Controllers.getControllers().get(i);
             }
-            player.controller = Controllers.getControllers().get(i);
             i++;
         }
         if(connected) ToRun.run(() -> GameData.MAIN_INSTANCE.setScreen(new PlayScreen()));
@@ -94,22 +101,11 @@ public class ReconnectControllersScreen extends UiScreen {
     @Override
     public void render(float delta) {
         GameData.spriteBatch.begin();
-        // Draw your screen here. "delta" is the time since last render in seconds.
-        float worldWidth = GameData.uiViewport.getWorldWidth();
-        float worldHeight = GameData.uiViewport.getWorldHeight();
-
         GameData.spriteBatch.setColor(Color.RED);
+        GameData.spriteBatch.draw(ImageUtil.get("gameyay"), 0, 0, GameData.width, GameData.height);
+        GameData.spriteBatch.setColor(Color.WHITE);
 
-        GameData.spriteBatch.draw(backgroundTexture, 0, 0, worldWidth, worldHeight);
         super.render(delta);
         GameData.spriteBatch.end();
-    }
-
-    @Override
-    public void dispose() {
-        super.dispose();
-        // Destroy screen's assets here.
-        backgroundTexture.dispose();
-        /////font.dispose();
     }
 }

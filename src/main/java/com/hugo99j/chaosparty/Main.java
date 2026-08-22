@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.daniel99j.dungeongame.sounds.SoundManager;
 import com.hugo99j.chaosparty.match.MatchView;
 import com.hugo99j.chaosparty.minigame.MapEditor;
+import com.hugo99j.chaosparty.ui.ScreenSSFunctions;
 import com.hugo99j.chaosparty.ui.debugger.DebugController;
 import com.hugo99j.chaosparty.ui.renderable.CursorType;
 import com.hugo99j.chaosparty.ui.debugger.Debuggers;
@@ -152,6 +153,7 @@ public class Main extends Game {
         }
 
         SoundManager.tick(Gdx.graphics.getDeltaTime());
+        ScreenSSFunctions.beginFrame();
 
         boolean cursorShouldBeCaught = !(Debuggers.isDebuggerOpen() || (this.getScreen() instanceof UiScreen ui && ui.isUsingMouse()));
         if(cursorShouldBeCaught != cursorCaught) {

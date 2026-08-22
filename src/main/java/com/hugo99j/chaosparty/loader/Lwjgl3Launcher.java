@@ -1,10 +1,12 @@
 package com.hugo99j.chaosparty.loader;
 
-import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
-import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Window;
-import com.badlogic.gdx.backends.lwjgl3.Lwjgl3WindowListener;
+import com.badlogic.gdx.backends.lwjgl3.*;
+import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.Main;
+import com.hugo99j.chaosparty.minigame.MapEditor;
+import com.hugo99j.chaosparty.ui.debugger.DebugOptions;
+
+import javax.swing.*;
 
 /** Launches the desktop (LWJGL3) application. */
 public class Lwjgl3Launcher {
@@ -39,6 +41,30 @@ public class Lwjgl3Launcher {
         configuration.setPauseWhenLostFocus(true);
         configuration.setPauseWhenMinimized(true);
         configuration.setAutoIconify(false);
+        configuration.setWindowedMode(640, 480);
+        configuration.setWindowListener(new Lwjgl3WindowAdapter() {
+            @Override
+            public boolean closeRequested() {
+                if(GameData.DEBUGGING && GameData.getCurrentMinigame() instanceof MapEditor && DebugOptions.isUnsaved()) {
+                    try {
+                        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+
+                    int result = JOptionPane.showConfirmDialog(
+                        null,
+                        "You have unsaved work. Are you sure you want to exit?",
+                        "Unsaved Work",
+                        JOptionPane.YES_NO_CANCEL_OPTION,
+                        JOptionPane.WARNING_MESSAGE
+                    );
+
+                    return result == JOptionPane.YES_OPTION || result == JOptionPane.CLOSED_OPTION;
+                }
+                return super.closeRequested();
+            }
+        });
         //configuration.set
 
         //// This could improve compatibility with Windows machines with buggy OpenGL drivers, Macs

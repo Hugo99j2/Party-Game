@@ -12,13 +12,14 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.hugo99j.chaosparty.entity.ObjectTypes;
 
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.UUID;
 
 public class LevelLoader {
     public static Level loadFromDataOrDisk(String path) {
-        if(path.contains("/")) {
+        if(path.contains(File.separator)) {
             if(!path.endsWith(".map")) {
                 Logger.error("Map file "+path+" does not end with .map!");
                 return null;
@@ -85,16 +86,15 @@ public class LevelLoader {
         int rays = data.get("rays").getAsInt();
         float x = data.get("x").getAsFloat();
         float y = data.get("y").getAsFloat();
-        SaveConfig saveConfig = SaveConfig.valueOf(data.get("saveConfig").getAsString());
 
         LevelLight<?> levelLight;
 
         if(type.equals("PointLight")) {
-            levelLight = out.addLight((rayHandler -> new PointLight(rayHandler, rays, colour, distance, x, y)), saveConfig);
+            levelLight = out.addLight((rayHandler -> new PointLight(rayHandler, rays, colour, distance, x, y)));
         } else if(type.equals("ConeLight")) {
-            levelLight = out.addLight((rayHandler -> new ConeLight(rayHandler, rays, colour, distance, x, y, direction, data.get("coneDegree").getAsFloat())), saveConfig);
+            levelLight = out.addLight((rayHandler -> new ConeLight(rayHandler, rays, colour, distance, x, y, direction, data.get("coneDegree").getAsFloat())));
         } else if(type.equals("DirectionalLight")) {
-            levelLight = out.addLight((rayHandler -> new DirectionalLight(rayHandler, rays, colour, direction)), saveConfig);
+            levelLight = out.addLight((rayHandler -> new DirectionalLight(rayHandler, rays, colour, direction)));
         } else {
             throw new IllegalStateException("Unknown light type");
         }

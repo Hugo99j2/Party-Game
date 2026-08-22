@@ -52,7 +52,20 @@
         "scale": 1.0,
         "tint": "ffffffff",
         "textureHitbox": false,
-        "animated": false
+        "animated": false,
+        "blocks_light": false
+      }
+    },
+    {
+      "x": 11.805898,
+      "y": 4.3260384,
+      "uuid": "59ea322d-3b4d-46bc-aafe-0495230a07f2",
+      "type": "temp_dev_object",
+      "custom_data": {
+        "camera": {
+          "width": 10,
+          "height": 10
+        }
       }
     }
   ],

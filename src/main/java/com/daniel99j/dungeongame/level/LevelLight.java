@@ -2,17 +2,20 @@ package com.daniel99j.dungeongame.level;
 
 import box2dLight.ConeLight;
 import box2dLight.Light;
+import com.badlogic.gdx.utils.Disposable;
 import com.daniel99j.djutil.UsageLimited;
 import com.google.gson.JsonObject;
+import com.hugo99j.chaosparty.GameData;
 
 import java.util.Objects;
 import java.util.UUID;
 
-public final class LevelLight<T extends Light> {
+public final class LevelLight<T extends Light> implements Disposable {
     private final T light;
     private UUID uuid;
+    private boolean disposed;
 
-    public LevelLight(T light, SaveConfig saveConfig, UUID uuid) {
+    public LevelLight(T light, UUID uuid) {
         this.light = light;
         this.uuid = uuid;
     }
@@ -55,7 +58,7 @@ public final class LevelLight<T extends Light> {
     public boolean equals(Object obj) {
         if (obj == this) return true;
         if (obj == null || obj.getClass() != this.getClass()) return false;
-        var that = (LevelLight) obj;
+        var that = (LevelLight<?>) obj;
         return Objects.equals(this.light, that.light) &&
             Objects.equals(this.uuid, that.uuid);
     }
@@ -72,4 +75,15 @@ public final class LevelLight<T extends Light> {
             "uuid=" + uuid + ']';
     }
 
+    @Override
+    public void dispose() {
+        if(this.disposed) return;
+        this.disposed = true;
+        this.light.remove();
+        GameData.getLevelOrThrow().removeLight(this);
+    }
+
+    public boolean isDisposed() {
+        return disposed;
+    }
 }

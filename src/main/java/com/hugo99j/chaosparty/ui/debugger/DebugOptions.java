@@ -56,8 +56,7 @@ public class DebugOptions {
             }
         }
 
-        boolean notSaved = UndoRedoHistory.getCurrentRevision() != savedRevision && !ImGui.isKeyDown(ImGuiKey.ModAlt);
-        if(notSaved) {
+        if(isUnsaved()) {
             ImGui.beginDisabled();
         }
         if (ImGui.button("Load map")) {
@@ -68,7 +67,7 @@ public class DebugOptions {
                 Logger.error("Error loading map", e);
             }
         }
-        if(notSaved) {
+        if(isUnsaved()) {
             ImGui.endDisabled();
             ImGui.setItemTooltip("You have not saved the map! Hold ALT to bypass.");
         }
@@ -118,6 +117,10 @@ public class DebugOptions {
 
         ImGui.end();
 
+    }
+
+    public static boolean isUnsaved() {
+        return UndoRedoHistory.getCurrentRevision() != savedRevision && !ImGui.isKeyDown(ImGuiKey.ModAlt) && GameData.getCurrentMinigame() instanceof  MapEditor;
     }
 
     protected static class Ruler extends TemporaryDevObject {

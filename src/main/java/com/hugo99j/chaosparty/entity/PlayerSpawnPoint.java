@@ -7,6 +7,7 @@ import com.google.gson.JsonObject;
 import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.match.MatchView;
 import com.hugo99j.chaosparty.minigame.MapEditor;
+import com.hugo99j.chaosparty.ui.debugger.Debuggers;
 import com.hugo99j.chaosparty.util.*;
 
 public class PlayerSpawnPoint extends AbstractObject {
@@ -25,6 +26,11 @@ public class PlayerSpawnPoint extends AbstractObject {
     @Override
     public void render(MatchView matchView) {
         GameData.spriteBatch.draw(ImageUtil.get("player_spawn"), this.getPos().x, this.getPos().y, 1, 1);
+    }
+
+    @Override
+    public boolean shouldRender(MatchView view) {
+        return super.shouldRender(view) && Debuggers.isEnabled("renderDevObjects");
     }
 
     @Override

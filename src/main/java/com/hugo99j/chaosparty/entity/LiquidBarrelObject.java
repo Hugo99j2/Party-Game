@@ -46,7 +46,7 @@ public class LiquidBarrelObject extends AbstractObject {
     }
 
     private void explodeNow() {
-        if(!explosive) return;
+        if(!explosive || this.isRemoved()) return;
         var boom = new ParticleEffect();
         boom.load(Gdx.files.internal(PathUtil.asset("particles/boom.p")), GameData.atlas);
         boom.setEmittersCleanUpBlendFunction(false);

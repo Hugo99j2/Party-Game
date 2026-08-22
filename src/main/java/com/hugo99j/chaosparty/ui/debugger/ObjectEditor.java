@@ -1,18 +1,31 @@
 package com.hugo99j.chaosparty.ui.debugger;
 
+import box2dLight.ConeLight;
+import box2dLight.DirectionalLight;
+import box2dLight.PointLight;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.PixmapIO;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.FrameBuffer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.daniel99j.dungeongame.entity.AbstractObject;
 import com.daniel99j.dungeongame.level.Level;
 import com.daniel99j.dungeongame.level.LevelLoader;
+import com.google.common.io.PatternFilenameFilter;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.entity.ObjectTypes;
 import com.hugo99j.chaosparty.entity.TemporaryDevObject;
+import com.hugo99j.chaosparty.match.MatchPlayer;
 import com.hugo99j.chaosparty.match.MatchView;
+import com.hugo99j.chaosparty.match.User;
 import com.hugo99j.chaosparty.minigame.MapEditor;
 import com.hugo99j.chaosparty.util.*;
 import imgui.ImGui;
@@ -21,7 +34,10 @@ import imgui.ImVec4;
 import imgui.flag.*;
 import imgui.type.ImString;
 
+import java.awt.*;
 import java.util.*;
+import java.util.List;
+import java.util.zip.Deflater;
 
 import static com.hugo99j.chaosparty.ui.debugger.Debuggers.*;
 import static com.hugo99j.chaosparty.ui.debugger.UndoRedoHistory.onEdited;
@@ -34,6 +50,55 @@ public class ObjectEditor {
     private static boolean preventMoving = false;
     private static Vector2 holdingOntoPos = null;
     private static boolean justChangedSelection = false;
+
+    static {
+        MenuBar.registerBuilder((b) -> {
+            b.addItem("File", Input.Keys.O, "Open", () -> {
+                FileDialog dialog = new FileDialog((Frame) null, "Select map to open", FileDialog.LOAD);
+                dialog.setFilenameFilter(new PatternFilenameFilter(".*\\.map$"));
+                dialog.setVisible(true);
+
+                String directory = dialog.getDirectory();
+                String file = dialog.getFile();
+
+                //selected a file
+                if (file != null) {
+                    Logger.info("Loaded "+directory+file);
+                    GameData.startMatch(List.of(new MatchPlayer(User.getUser(5)))).setCurrentMinigame(new MapEditor(directory+file));
+                }
+
+                dialog.dispose();
+            });
+            if(GameData.getCurrentMinigame() instanceof MapEditor) {
+                b.addItem("File", Input.Keys.S, "Save", Debuggers::saveMap);
+                b.addItem("Edit", Input.Keys.C, "Copy", () -> {
+                    JsonObject data = selected.get().write();
+                    Gdx.app.getClipboard().setContents(data.toString());
+                }, selected.get() != null);
+                b.addItem("Edit", Input.Keys.X, "Cut", () -> {
+                    JsonObject data = selected.get().write();
+                    Gdx.app.getClipboard().setContents(data.toString());
+                    if(selected.get() instanceof SelectionGroup group) {
+                        for (AbstractObject abstractObject : group.selected) {
+                            abstractObject.dispose();
+                        }
+                    }
+                    selected.get().dispose();
+                    UndoRedoHistory.onEdited();
+                }, selected.get() != null);
+                b.addItem("Edit", Input.Keys.V, "Paste", () -> {
+                    try {
+                        JsonObject data = GsonUtil.parse(Gdx.app.getClipboard().getContents());
+                        data.addProperty("uuid", UUID.randomUUID().toString());
+                        selected.set(LevelLoader.createObject(data, GameData.getLevelOrThrow()));
+                        UndoRedoHistory.onEdited();
+                    } catch (Exception e) {
+                        Logger.error("Error pasting object", e);
+                    }
+                });
+            }
+        });
+    }
 
     static void renderObjectEditor() {
         popouts.ensureSafety();
@@ -145,31 +210,6 @@ public class ObjectEditor {
                 renderObjectSelector();
             }
 
-            if (Gdx.input.isKeyJustPressed(Input.Keys.C) && Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) && selected.get() != null) {
-                JsonObject data = selected.get().write();
-                Gdx.app.getClipboard().setContents(data.toString());
-            }
-            if (Gdx.input.isKeyJustPressed(Input.Keys.X) && Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) && selected.get() != null) {
-                JsonObject data = selected.get().write();
-                Gdx.app.getClipboard().setContents(data.toString());
-                if(selected.get() instanceof SelectionGroup group) {
-                    for (AbstractObject abstractObject : group.selected) {
-                        abstractObject.dispose();
-                    }
-                }
-                selected.get().dispose();
-                UndoRedoHistory.onEdited();
-            }
-            if (Gdx.input.isKeyJustPressed(Input.Keys.V) && Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)) {
-                try {
-                    JsonObject data = GsonUtil.parse(Gdx.app.getClipboard().getContents());
-                    data.addProperty("uuid", UUID.randomUUID().toString());
-                    selected.set(LevelLoader.createObject(data, GameData.level));
-                    UndoRedoHistory.onEdited();
-                } catch (Exception e) {
-                    Logger.error("Error pasting object", e);
-                }
-            }
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.DEL) && selected.get() != null) {
             if(selected.get() instanceof SelectionGroup group) {
@@ -231,12 +271,25 @@ public class ObjectEditor {
                     }
                 }
             });
+
+            ImGui.separatorText("Default Lights");
+            if (ImGui.button("Add point light")) {
+                select(GameData.getLevelOrThrow().getObjectByUUID(GameData.getLevelOrThrow().addLight((rayHandler -> new PointLight(rayHandler, 128))).uuid()));
+            }
+
+            if (ImGui.button("Add cone light")) {
+                select(GameData.getLevelOrThrow().getObjectByUUID(GameData.getLevelOrThrow().addLight((rayHandler -> new ConeLight(rayHandler, 128, Color.RED, 5, 0, 0, 0, 45))).uuid()));
+            }
+
+            if (ImGui.button("Add directional light")) {
+                select(GameData.getLevelOrThrow().getObjectByUUID(GameData.getLevelOrThrow().addLight((rayHandler -> new DirectionalLight(rayHandler, 128, Color.RED, 30))).uuid()));
+            }
         }
     }
 
     static void renderObjectSelector() {
         if(GameData.level == null) return;
-        if (ImGui.button("Add object")) createObjectData = "";
+        if (ImGui.button("Add objects/lights")) createObjectData = "";
 
         ImGui.beginChild("Left Panel", new ImVec2(300, 0), ImGuiChildFlags.Border | ImGuiChildFlags.ResizeX);
         ImGui.separatorText("All Objects");
@@ -322,7 +375,7 @@ public class ObjectEditor {
             onEdited();
         }
 
-        ImGui.separatorText("Java variables");
+        ImGui.separatorText("Properties");
         addVariables(object, object.getClass(), (holder) -> {
             try {
                 holder.a().set(holder.b(), holder.c());
@@ -392,6 +445,90 @@ public class ObjectEditor {
             }
         }
         return false;
+    }
+
+    public static class MapScreenshotter extends TemporaryDevObject {
+        private boolean takePhoto = false;
+        private int width = 10;
+        private int height = 10;
+        @NoDebugOption
+        private float screenshotEffectFrames = 0;
+
+        public MapScreenshotter(JsonObject data) {
+            this(data.get("width").getAsInt(), data.get("height").getAsInt());
+        }
+
+        public MapScreenshotter(int width, int height) {
+            super();
+            this.width = width;
+            this.height = height;
+        }
+
+        @Override
+        public void render(MatchView matchView) {
+            super.render(matchView);
+            Vector2 aligned = new Vector2(Math.round(this.getPos().x), Math.round(this.getPos().y));
+            GameData.spriteBatch.draw(ImageUtil.get("camera"), aligned.x-0.5f, aligned.y-0.5f, 1, 1);
+            GameData.spriteBatch.end();
+
+            if(screenshotEffectFrames > 0) {
+                GameData.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+                GameData.shapeRenderer.setColor(Color.WHITE);
+                screenshotEffectFrames-=Gdx.graphics.getDeltaTime();
+            } else {
+                GameData.shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+                GameData.shapeRenderer.setColor(Color.YELLOW);
+            }
+            GameData.shapeRenderer.rect(aligned.x-width/2f, aligned.y-height/2f, width, height);
+            GameData.shapeRenderer.end();
+            if(takePhoto) {
+                takePhoto = false;
+                ToRun.run(() -> {
+                    if(GameData.getCurrentMinigame() == null) return;
+                    boolean old = debugOptions.get("renderDevObjects").object;
+                    debugOptions.get("renderDevObjects").object = false;
+                    MatchView tempView = new MatchView(width, height);
+                    tempView.setCenter(false);
+                    tempView.gameViewport.update(width*16, height*16, false);
+                    tempView.gameCamera.position.x = aligned.x;
+                    tempView.gameCamera.position.y = aligned.y;
+                    tempView.gameCamera.update();
+                    tempView.fbo.dispose();
+                    tempView.fbo = new FrameBuffer(Pixmap.Format.RGBA8888, width*16, height*16, false);
+                    Pixmap pixmap = RenderUtil.renderToPixmap(tempView.render(), width*8, height*8);
+                    tempView.dispose();
+                    PixmapIO.writePNG(Gdx.files.absolute(PathUtil.codingDir(PathUtil.texture("ui/minigame_selector/"+GameData.getCurrentMinigame().getMapName()+".png"))), pixmap, Deflater.DEFAULT_COMPRESSION, false);
+                    pixmap.dispose();
+                    screenshotEffectFrames = 0.8f;
+                    debugOptions.get("renderDevObjects").object = old;
+                });
+            }
+            GameData.spriteBatch.begin();
+        }
+
+        @Override
+        public void writeAdditional(JsonObject object) {
+            super.writeAdditional(object);
+            JsonObject data = new JsonObject();
+            data.addProperty("width", width);
+            data.addProperty("height", height);
+            object.add("camera", data);
+        }
+
+        @Override
+        public String toString() {
+            return "Screenshotter";
+        }
+
+        @Override
+        public boolean shouldSave() {
+            return true;
+        }
+
+        @Override
+        public boolean keep() {
+            return false;
+        }
     }
 
     protected static class SelectionGroup extends TemporaryDevObject {

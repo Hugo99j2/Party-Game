@@ -58,7 +58,7 @@ public class ImageUtil {
             int realHash = Arrays.hashCode(Files.readAllBytes(Path.of(PathUtil.codingDir(PathUtil.generated("atlases/main.png")))));
             int lastHash = GsonUtil.parse(PathUtil.get(PathUtil.generated("image_bounds.json"), false)).get("version").getAsInt();
             if(realHash == lastHash) mustRecalculate = false;
-        } catch (Exception e) {}
+        } catch (Exception ignored) {}
 
         if(!mustRecalculate) {
             Logger.info("No image bounds changes.");
@@ -99,7 +99,7 @@ public class ImageUtil {
             GameData.spriteBatch.flush();
 
             Pixmap pixmap = Pixmap.createFromFrameBuffer(0, 0, maxSize, maxSize);
-            PixmapIO.writePNG(Gdx.files.local("gen/output_"+ file +".png"), pixmap, Deflater.DEFAULT_COMPRESSION, true);
+            //PixmapIO.writePNG(Gdx.files.local("gen/output_"+ file +".png"), pixmap, Deflater.DEFAULT_COMPRESSION, true);
 
             boolean foundPixel = false;
             int minX = 10000, minY = 100000, maxX = -1, maxY = -1;

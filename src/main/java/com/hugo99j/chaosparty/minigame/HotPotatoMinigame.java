@@ -6,8 +6,6 @@ import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.daniel99j.dungeongame.sounds.SoundInstance;
 import com.daniel99j.dungeongame.sounds.SoundManager;
 import com.hugo99j.chaosparty.ui.renderable.RenderState;
-import com.hugo99j.chaosparty.ui.screenss.CombinedScreenSS;
-import com.hugo99j.chaosparty.ui.screenss.ScreenSSBuilder;
 import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.bot.BotController;
 import com.hugo99j.chaosparty.bot.HotPotatoBot;
@@ -31,18 +29,6 @@ public class HotPotatoMinigame extends AbstractMinigame {
     private static final int TIME = 20;
 
     private Timer timer;
-    private final CombinedScreenSS ss = ScreenSSBuilder.create()
-        .set("xSize", "1vw")
-        .set("ySize", "1vh")
-        .set("x", 0)
-        .set("y", 0)
-        .newChild("timer")
-        .set("x", "30")
-        .set("y", "45")
-        .set("xSize", "100")
-        .set("ySize", "32")
-        .finishChild()
-        .build();
     private SoundInstance music;
     private ParticleEffect hotEffect;
     private ParticleEffect hotScreenEffect;

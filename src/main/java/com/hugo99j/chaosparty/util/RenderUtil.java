@@ -5,10 +5,12 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Window;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.utils.ScreenUtils;
 import com.daniel99j.djutil.MiscUtils;
-import com.hugo99j.chaosparty.ui.screenss.ScreenSS;
-import com.hugo99j.chaosparty.ui.screenss.ScreenSSBuilder;
 import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.mixin.WindowAccessor;
 import com.hugo99j.chaosparty.ui.debugger.Debuggers;
@@ -96,7 +98,7 @@ public class RenderUtil {
     }
 
     public static void takeScreenshot() {
-        String name = "Screenshot on "+DateTimeFormatter.ofPattern("dd MMM uuuu 'at' HH:mm:ss").format(LocalDateTime.now())+".png";
+        String name = "Screenshot on "+DateTimeFormatter.ofPattern("dd MMM uuuu 'at' HH mm ss").format(LocalDateTime.now())+".png";
         Pixmap pixmap = Pixmap.createFromFrameBuffer(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         PixmapIO.writePNG(Gdx.files.local(name), pixmap, Deflater.DEFAULT_COMPRESSION, true);
         pixmap.dispose();
@@ -209,4 +211,27 @@ public class RenderUtil {
     }
 
     public static record TextData(GlyphLayout layout, float offsetX, float offsetY, float scale, float width, float height) {}
+
+    public static Pixmap renderToPixmap(TextureRegion region) {
+        return renderToPixmap(region, region.getRegionWidth(), region.getRegionHeight());
+    }
+
+    public static Pixmap renderToPixmap(TextureRegion region, int width, int height) {
+        FrameBuffer fbo = new FrameBuffer(Pixmap.Format.RGBA8888, width, height, false);
+        Matrix4 projection = new Matrix4().setToOrtho2D(0, 0, width, height);
+        Matrix4 old = GameData.spriteBatch.getProjectionMatrix();
+        GameData.spriteBatch.setProjectionMatrix(projection);
+
+        fbo.begin();
+        ScreenUtils.clear(Color.CLEAR);
+
+        GameData.spriteBatch.begin();
+        GameData.spriteBatch.draw(region, 0, 0, width, height);
+        GameData.spriteBatch.end();
+        GameData.spriteBatch.setProjectionMatrix(old);
+
+        Pixmap pixmap = Pixmap.createFromFrameBuffer(0, 0, width, height);
+        fbo.end();
+        return pixmap;
+    }
 }

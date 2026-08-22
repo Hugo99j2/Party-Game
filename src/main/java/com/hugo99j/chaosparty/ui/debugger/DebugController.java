@@ -3,11 +3,11 @@ package com.hugo99j.chaosparty.ui.debugger;
 import com.badlogic.gdx.controllers.desktop.support.JamepadController;
 import com.badlogic.gdx.math.Vector2;
 import com.hugo99j.chaosparty.util.ControllerInput;
+import com.hugo99j.chaosparty.util.ControllerUtil;
 import com.hugo99j.chaosparty.util.DummyController;
 import com.studiohartman.jamepad.ControllerIndex;
 import imgui.ImGui;
 import imgui.ImVec2;
-import imgui.flag.ImGuiSliderFlags;
 import imgui.type.ImInt;
 
 import java.util.ArrayList;
@@ -221,6 +221,7 @@ public class DebugController {
 
     public static void tick() {
         currentlyPressedThisTick.clear();
+        if(DebugController.INSTANCE instanceof ControllerUtil u) u.onTick();
     }
 
     private sealed interface Mode permits RealModeInstance, NormalModeInstance {
@@ -241,6 +242,11 @@ public class DebugController {
         @Override
         public float getAxis(int axisCode) {
             return overrideModeValues.getOrDefault(axisCode, 0f);
+        }
+
+        @Override
+        public boolean isConnected() {
+            return true;
         }
     }
 

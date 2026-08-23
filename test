@@ -1,0 +1,36 @@
+        if(!GameData.DEBUGGING || Debuggers.isEnabled("lights")) {
+            GameData.spriteBatch.end();
+
+            if(lightsFramebuffer.getWidth() != matchView.fbo.getWidth() || lightsFramebuffer.getHeight() != matchView.fbo.getHeight()) {
+                lightsFramebuffer.dispose();
+                lightsFramebuffer = new FrameBuffer(Pixmap.Format.RGBA8888, matchView.fbo.getWidth(), matchView.fbo.getHeight(), false);
+            }
+//                GameConstants.gameCamera.updateUtil();
+//                GameConstants.gameViewport.apply();
+            //GameData.getLevelOrThrow().rayHandler.useDefaultViewport(matchView.gameViewport);
+            int[] previousState1 = ScreenFboUtils.retrieveFboStatus();
+            lightsFramebuffer.begin();
+            this.rayHandler.setCombinedMatrix(matchView.gameCamera);
+            this.rayHandler.useCustomViewport(matchView.gameViewport.getScreenX(), matchView.gameViewport.getScreenY(), matchView.gameViewport.getScreenWidth(), matchView.gameViewport.getScreenHeight());
+
+            matchView.gameViewport.apply();
+            rayHandler.update(); //unfortunately culling is done here, so I can't update it once
+            int[] previousState2 = ScreenFboUtils.retrieveFboStatus();
+            rayHandler.prepareRender();
+            ScreenFboUtils.restoreFboStatus(previousState2);
+            ScreenUtils.clear(Color.CLEAR);
+            rayHandler.renderOnly();
+            GameData.spriteBatch.begin();
+            GameData.spriteBatch.draw(ImageUtil.get("oil_drum"), 0, 0, 5, 5);
+            GameData.spriteBatch.end();
+            lightsFramebuffer.end();
+            ScreenFboUtils.restoreFboStatus(previousState1);
+            GameData.uiViewport.apply();
+            GameData.spriteBatch.setProjectionMatrix(GameData.uiCamera.combined);
+            GameData.spriteBatch.begin();
+            GameData.spriteBatch.draw(ImageUtil.get("brick"), 0, 0, GameData.width, GameData.height);
+            GameData.spriteBatch.draw(lightsFramebuffer.getColorBufferTexture(), 0, GameData.height, GameData.width, -GameData.height);
+            GameData.spriteBatch.end();
+            GameData.spriteBatch.setProjectionMatrix(matchView.gameCamera.combined);
+            GameData.spriteBatch.begin();
+        }

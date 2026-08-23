@@ -10,9 +10,7 @@ import com.google.gson.JsonObject;
 import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.match.MatchView;
 import com.hugo99j.chaosparty.minigame.HotPotatoMinigame;
-import com.hugo99j.chaosparty.util.ImageUtil;
-import com.hugo99j.chaosparty.util.PathUtil;
-import com.hugo99j.chaosparty.util.RenderLayer;
+import com.hugo99j.chaosparty.util.*;
 
 import static com.hugo99j.chaosparty.GameData.px;
 
@@ -72,6 +70,7 @@ public class LiquidBarrelObject extends AbstractObject {
                     matchView.setCamerashakeTime(1);
                 }
             }
+            ((ControllerUtil) player.getMatchPlayer().controller).vibrate(VibrationAmount.of(new float[]{0.0f,1.0f,0.30859274f,1.0f,0.3899422f,0.0f}, new float[]{0.0f,1.0f,0.19673721f,0.9867257f,0.37977353f,0.10176991f,0.40519524f,0.0f}));
         }
         this.dispose();
     }

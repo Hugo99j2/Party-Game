@@ -5,22 +5,21 @@ import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.Main;
 import com.hugo99j.chaosparty.minigame.MapEditor;
 import com.hugo99j.chaosparty.ui.debugger.DebugOptions;
+import com.hugo99j.chaosparty.util.Logger;
 
 import javax.swing.*;
+import java.util.Collections;
 
 /** Launches the desktop (LWJGL3) application. */
 public class Lwjgl3Launcher {
-    public void alsoNotMain(String[] args) {
+    public static boolean finishedBoot = false;
+
+    public static void bootGame(String[] args) {
         if (StartupHelper.startNewJvmIfRequired()) return; // This handles macOS support and helps on Windows.
         Lwjgl3Application a = createApplication();
-        //FabricLoaderImpl.INSTANCE.prepareModInit(FabricLoader.getInstance().getGameDir(), a);
     }
 
-    private Lwjgl3Application createApplication() {
-        return new Lwjgl3Application(new Main(), getDefaultConfiguration());
-    }
-
-    private Lwjgl3ApplicationConfiguration getDefaultConfiguration() {
+    private static Lwjgl3Application createApplication() {
         Lwjgl3ApplicationConfiguration configuration = new Lwjgl3ApplicationConfiguration();
         configuration.setTitle("Chaos Party");
         //// Vsync limits the frames per second to what your hardware can display, and helps eliminate
@@ -76,12 +75,16 @@ public class Lwjgl3Launcher {
         //// are not intended for games that use GL30 (which is compatibility with OpenGL ES 3.0).
         //// Know that it might not work well in some cases.
 //        configuration.setOpenGLEmulation(Lwjgl3ApplicationConfiguration.GLEmulation.ANGLE_GLES20, 0, 0);
-
-        return configuration;
+        //try {
+            return new Lwjgl3Application(new Main(), configuration);
+//        } catch (Exception e) {
+//            if(finishedBoot) {
+//                Logger.error("#### GAME CRASH ####");
+//                Logger.error("Cause: "+e);
+//            } else {
+//                throw e;
+//            }
+//            return null;
+//        }
     }
-
-//    @Override
-//    public void onInitializeClient() {
-//
-//    }
 }

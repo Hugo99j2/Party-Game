@@ -50,6 +50,7 @@ public class ObjectEditor {
     private static boolean preventMoving = false;
     private static Vector2 holdingOntoPos = null;
     private static boolean justChangedSelection = false;
+    private static String search = "";
 
     static {
         MenuBar.registerBuilder((b) -> {
@@ -104,8 +105,9 @@ public class ObjectEditor {
         popouts.ensureSafety();
 
         for (AbstractObject popout : new ArrayList<>(popouts)) {
-            ImGui.begin("Object: "+popout+" ("+popout.getEntityId()+")");
-            renderEditingPane(popout, true);
+            if(ImGui.begin("Object: "+popout+" ("+popout.getEntityId()+")")) {
+                renderEditingPane(popout, true);
+            }
             ImGui.end();
         }
 
@@ -115,110 +117,108 @@ public class ObjectEditor {
             ImGui.setNextWindowFocus();
         }
         justChangedSelection = false;
-        ImGui.begin("Objects");
+        if(ImGui.begin("Objects")) {
+            if (GameData.level != null) {
+                if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
+                    int id = advancedPickColour >> 8;
+                    boolean found = false;
+                    for (AbstractObject allObject : GameData.getLevelOrThrow().getAllObjects()) {
+                        if (allObject.getEntityId() == id / (isEnabled("showAdvancedObjectPicking") ? 10000 : 1)) {
+                            if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)) {
+                                Logger.info("Added " + allObject + " (" + id + ") to selection");
 
-        boolean imGui = ImGui.isWindowHovered(ImGuiHoveredFlags.AnyWindow | ImGuiHoveredFlags.ChildWindows) || ImGui.isWindowFocused(ImGuiFocusedFlags.AnyWindow | ImGuiFocusedFlags.ChildWindows) || ImGui.getIO().getWantCaptureKeyboard() || ImGui.getIO().getWantCaptureMouse();
-
-        if(GameData.level != null) {
-            if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && !imGui) {
-                int id = advancedPickColour >> 8;
-                boolean found = false;
-                for (AbstractObject allObject : GameData.getLevelOrThrow().getAllObjects()) {
-                    if(allObject.getEntityId() == id/(isEnabled("showAdvancedObjectPicking") ? 10000 : 1)) {
-                        if(Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)) {
-                            Logger.info("Added " + allObject + " (" + id + ") to selection");
-
-                            if(selected.get() instanceof SelectionGroup group) {
-                                if(group.selected.contains(allObject)) {
-                                    group.selected.remove(allObject);
-                                } else group.selected.add(allObject);
-                                group.update();
-                            } else {
-                                SelectionGroup group = new SelectionGroup();
-                                group.selected.add(allObject);
-                                group.selected.add(selected.get());
-                                GameData.getLevelOrThrow().addObject(group);
-                                //group.updateUtil(); //it auto updates now
-                                selected.set(group);
-                            }
-                            if(selected.get() == null) {
-                                preventMoving = true;
-                                holdingOntoPos = null;
-                                startObjectPos = null;
-                                selected.set(null);
-                            } else {
-                                preventMoving = true;
-                                holdingOntoPos = null;
-                                startObjectPos = selected.get().getPos().cpy();
-                                justChangedSelection = true;
-                            }
-                        } else {
-                            Logger.info("Clicked " + allObject + " (" + id + ")");
-                            if (allObject != selected.get()) {
-                                if(selected.get() instanceof SelectionGroup g && g.selected.contains(allObject)) {
+                                if (selected.get() instanceof SelectionGroup group) {
+                                    if (group.selected.contains(allObject)) {
+                                        group.selected.remove(allObject);
+                                    } else group.selected.add(allObject);
+                                    group.update();
+                                } else {
+                                    SelectionGroup group = new SelectionGroup();
+                                    group.selected.add(allObject);
+                                    group.selected.add(selected.get());
+                                    GameData.getLevelOrThrow().addObject(group);
+                                    //group.updateUtil(); //it auto updates now
+                                    selected.set(group);
+                                }
+                                if (selected.get() == null) {
+                                    preventMoving = true;
+                                    holdingOntoPos = null;
+                                    startObjectPos = null;
+                                    selected.set(null);
                                 } else {
                                     preventMoving = true;
                                     holdingOntoPos = null;
-                                    startObjectPos = allObject.getPos().cpy();
+                                    startObjectPos = selected.get().getPos().cpy();
                                     justChangedSelection = true;
-                                    selected.set(allObject);
+                                }
+                            } else {
+                                Logger.info("Clicked " + allObject + " (" + id + ")");
+                                if (allObject != selected.get()) {
+                                    if (selected.get() instanceof SelectionGroup g && g.selected.contains(allObject)) {
+                                    } else {
+                                        preventMoving = true;
+                                        holdingOntoPos = null;
+                                        startObjectPos = allObject.getPos().cpy();
+                                        justChangedSelection = true;
+                                        selected.set(allObject);
+                                    }
                                 }
                             }
+                            found = true;
+                            break;
                         }
-                        found = true;
-                        break;
+                    }
+                    if (!found) {
+                        Logger.info("No object selected");
+                        preventMoving = true;
+                        holdingOntoPos = null;
+                        startObjectPos = null;
+                        selected.set(null);
                     }
                 }
-                if(!found) {
-                    Logger.info("No object selected");
-                    preventMoving = true;
+                if (!Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
+                    if (holdingOntoPos != null && !selected.get().getPos().equals(startObjectPos)) onEdited();
+                    preventMoving = false;
                     holdingOntoPos = null;
                     startObjectPos = null;
-                    selected.set(null);
                 }
-            }
-            if(!Gdx.input.isButtonPressed(Input.Buttons.LEFT) || imGui) {
-                if(holdingOntoPos != null && !selected.get().getPos().equals(startObjectPos)) onEdited();
-                preventMoving = false;
-                holdingOntoPos = null;
-                startObjectPos = null;
-            }
 
-            if(!preventMoving && Gdx.input.isButtonPressed(Input.Buttons.LEFT) && selected.get() != null && !imGui) {
-                Vector3 screenCoords = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
-                Vector3 worldCoords = GameData.getCurrentMatch().getMatchViews().getFirst().gameViewport.unproject(screenCoords);
-                if(holdingOntoPos == null) {
-                    holdingOntoPos = selected.get().getPos().sub(worldCoords.x, worldCoords.y);
+                if (!preventMoving && Gdx.input.isButtonPressed(Input.Buttons.LEFT) && selected.get() != null) {
+                    Vector3 screenCoords = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
+                    Vector3 worldCoords = GameData.getCurrentMatch().getMatchViews().getFirst().gameViewport.unproject(screenCoords);
+                    if (holdingOntoPos == null) {
+                        holdingOntoPos = selected.get().getPos().sub(worldCoords.x, worldCoords.y);
+                    }
+                    selected.get().setPos(new Vector2(worldCoords.x, worldCoords.y).add(holdingOntoPos));
+
+                    if (isEnabled("alignPixel") || selected.get() instanceof DebugOptions.Ruler) {
+                        float x = selected.get().getPos().x;
+                        float snappedX = Math.round(x * 16f) / 16f;
+                        selected.get().setX(snappedX);
+
+                        float y = selected.get().getPos().y;
+                        float snappedY = Math.round(y * 16f) / 16f;
+                        selected.get().setY(snappedY);
+                    }
                 }
-                selected.get().setPos(new Vector2(worldCoords.x, worldCoords.y).add(holdingOntoPos));
 
-                if (isEnabled("alignPixel") || selected.get() instanceof DebugOptions.Ruler) {
-                    float x = selected.get().getPos().x;
-                    float snappedX = Math.round(x * 16f) / 16f;
-                    selected.get().setX(snappedX);
-
-                    float y = selected.get().getPos().y;
-                    float snappedY = Math.round(y * 16f) / 16f;
-                    selected.get().setY(snappedY);
+                if (createObjectData != null) {
+                    renderObjectCreator();
+                } else {
+                    //hoveredObject = renderObjectSelector();
+                    renderObjectSelector();
                 }
-            }
 
-            if (createObjectData != null) {
-                renderObjectCreator();
-            } else {
-                //hoveredObject = renderObjectSelector();
-                renderObjectSelector();
             }
-
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.DEL) && selected.get() != null) {
-            if(selected.get() instanceof SelectionGroup group) {
-                for (AbstractObject abstractObject : group.selected) {
-                    abstractObject.dispose();
+            if (Gdx.input.isKeyJustPressed(Input.Keys.DEL) && selected.get() != null) {
+                if (selected.get() instanceof SelectionGroup group) {
+                    for (AbstractObject abstractObject : group.selected) {
+                        abstractObject.dispose();
+                    }
                 }
+                selected.get().dispose();
+                UndoRedoHistory.onEdited();
             }
-            selected.get().dispose();
-            UndoRedoHistory.onEdited();
         }
         ImGui.end();
 
@@ -294,9 +294,15 @@ public class ObjectEditor {
         ImGui.beginChild("Left Panel", new ImVec2(300, 0), ImGuiChildFlags.Border | ImGuiChildFlags.ResizeX);
         ImGui.separatorText("All Objects");
 
-        UUID hoveredObject = null;
+        ImString imSearch = new ImString(search, 32);
+        ImGui.inputText("Q", imSearch);
+        search = imSearch.get();
+
         if (ImGui.beginTable("Object Selector", 1, ImGuiTableFlags.RowBg)) {
             for (AbstractObject allObject : GameData.getLevelOrThrow().getAllObjects()) {
+                if(!search.isBlank() && !allObject.toString().toLowerCase().contains(search.toLowerCase()) && !String.valueOf(allObject.getEntityId()).contains(search) && !allObject.getType().id().contains(search.toLowerCase())) {
+                    continue;
+                }
                 ImGui.tableNextRow();
                 ImGui.tableNextColumn();
                 ImGui.pushID(allObject.getEntityId());
@@ -306,7 +312,6 @@ public class ObjectEditor {
                     flags |= ImGuiTreeNodeFlags.Selected;
                 if (ImGui.selectable(allObject + " (" + allObject.getEntityId() + ")", isSelected, flags))
                     selected.set(allObject);
-                if (ImGui.isItemHovered()) hoveredObject = allObject.getUUID();
                 if(justChangedSelection && allObject.equals(selected.get())) {
                     ImGui.setScrollHereY();
                 }
@@ -357,14 +362,15 @@ public class ObjectEditor {
         }
         if (ImGui.isItemActive()) changing = true;
 
-        if (ImGui.button("TP to player")) {
+        Vector3 camPos = GameData.getCurrentMatch().getMatchViews().getFirst().gameCamera.position;
+        if (ImGui.button("Teleport to here")) {
+            object.setPos(new Vector2(camPos.x, camPos.y));
             onEdited();
-            object.setPos(GameData.getCurrentMatch().getPlayers().getFirst().getPlayerObject().getPos());
         }
         ImGui.sameLine();
-        if (ImGui.button("TP player to this")) {
-            GameData.getCurrentMatch().getPlayers().getFirst().getPlayerObject().setPos(object.getPos());
-            onEdited();
+        if (ImGui.button("Center view")) {
+            camPos.x = object.getPos().x;
+            camPos.y = object.getPos().y;
         }
 
         if (oldPos == null && changing) {

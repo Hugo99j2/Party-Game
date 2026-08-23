@@ -1,12 +1,14 @@
 package com.hugo99j.chaosparty.mixin;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.desktop.support.JamepadController;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.daniel99j.djutil.ValueHolder;
 import com.hugo99j.chaosparty.GameData;
-import com.hugo99j.chaosparty.util.ControllerInput;
-import com.hugo99j.chaosparty.util.ControllerUtil;
-import com.hugo99j.chaosparty.util.RenderUtil;
+import com.hugo99j.chaosparty.util.*;
+import com.studiohartman.jamepad.ControllerIndex;
+import com.studiohartman.jamepad.ControllerUnpluggedException;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -16,17 +18,32 @@ import java.util.*;
 @SuppressWarnings("AddedMixinMembersNamePattern")
 @Mixin(JamepadController.class)
 public abstract class ControllerUtilMixin implements ControllerUtil {
-    @Shadow
-    public abstract void startVibration(int duration, float strength);
 
+    @Shadow
+    private ControllerIndex controllerIndex;
+    @Shadow
+    private long vibrationEndMs;
+
+    @Shadow
+    public abstract void setDisconnected();
+
+    @Shadow
+    private Boolean canVibrate;
     @Unique
     private EnumMap<ControllerInput, ValueHolder<Float>> wasPressedValues;
     @Unique
     private final List<ControllerInput> happenedThisTick = new ArrayList<>();
     @Unique
-    float lastUpdate;
+    private float lastUpdate;
+    @Unique
+    private final List<VibrationInstance> vibrationSuppliers = new ArrayList<>();
     @Unique
     private static final float NOT_PRESSED = Float.MIN_VALUE;
+    @Unique
+    private final float[] previousVibration = {0f, 0f};
+    @Unique
+    //This fixes the controller queueing vibrate updates!
+    private float controllerVibrateCooldown = 0;
 
     @Override
     public float getValue(ControllerInput input) {
@@ -89,10 +106,73 @@ public abstract class ControllerUtilMixin implements ControllerUtil {
 
             if(actuallyPressed && !oldValue) happenedThisTick.add(value);
         }
+
+        controllerVibrateCooldown += Gdx.graphics.getDeltaTime();
+
+        if(controllerVibrateCooldown > GameData.VIBRATE_INTERVAL) {
+            controllerVibrateCooldown = 0;
+            float leftMax = 0;
+            float rightMax = 0;
+            List<VibrationInstance> toRemove = new ArrayList<>();
+            for (VibrationInstance v : vibrationSuppliers) {
+                float time = GameData.time - v.startTime;
+                float left = v.vibrationSupplier.getIntense(time);
+                float right = v.vibrationSupplier.getFast(time);
+                if (left > leftMax) leftMax = left;
+                if (right > rightMax) rightMax = right;
+                if (left == -1 || right == -1 || v.maxTime + v.startTime < GameData.time) {
+                    toRemove.add(v);
+                }
+            }
+            vibrationSuppliers.removeAll(toRemove);
+
+            if (leftMax > 1) {
+                Logger.error("Vibration was set too large: " + leftMax);
+                leftMax = 1;
+            }
+            if (rightMax > 1) {
+                Logger.error("Vibration was set too large: " + rightMax);
+                rightMax = 1;
+            }
+
+            if (leftMax != previousVibration[0] || rightMax != previousVibration[1]) {
+                try {
+                    if (controllerIndex.doVibration(leftMax, rightMax, 100000)) {
+                        vibrationEndMs = TimeUtils.millis() + 100000;
+                        canVibrate = true;
+                    }
+                } catch (ControllerUnpluggedException | NullPointerException e) {
+                    setDisconnected();
+                }
+            }
+
+            previousVibration[0] = leftMax;
+            previousVibration[1] = rightMax;
+        }
     }
 
     @Override
-    public void vibrate(int time, float intensity) {
-        this.startVibration(time, intensity);
+    public void vibrate(VibrationAmount calculator) {
+        vibrate(calculator, 999999999);
+    }
+
+    @Override
+    public void vibrate(VibrationAmount calculator, float maxTime) {
+        this.vibrationSuppliers.add(new VibrationInstance(GameData.time, calculator, maxTime));
+
+    }
+
+    @Override
+    public void vibrate(float intensity, float maxTime) {
+        vibrate(VibrationAmount.of(intensity), maxTime);
+    }
+
+    @Override
+    public float[] getCurrentVibration() {
+        return previousVibration;
+    }
+
+    private record VibrationInstance(float startTime, VibrationAmount vibrationSupplier, float maxTime) {
+
     }
 }

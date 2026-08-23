@@ -10,6 +10,7 @@ import com.hugo99j.chaosparty.entity.Player;
 import com.hugo99j.chaosparty.entity.Potato;
 import com.hugo99j.chaosparty.entity.Sheep;
 import com.hugo99j.chaosparty.minigame.HotPotatoMinigame;
+import com.hugo99j.chaosparty.ui.debugger.Debuggers;
 import com.hugo99j.chaosparty.util.Logger;
 import net.fabricmc.loader.impl.lib.sat4j.core.Vec;
 import org.jetbrains.annotations.Nullable;
@@ -81,7 +82,7 @@ public class SheepHerderBot extends BotController {
 
     @Override
     protected void addDebugInfo(List<String> info) {
-        info.add("Target: " + target.getEntityId());
+        info.add("Target: " + Debuggers.devName(target));
         info.add("Goal: " + goal);
         info.add("State: " + mode);
     }

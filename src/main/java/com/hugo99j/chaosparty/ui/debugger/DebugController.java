@@ -2,6 +2,7 @@ package com.hugo99j.chaosparty.ui.debugger;
 
 import com.badlogic.gdx.controllers.desktop.support.JamepadController;
 import com.badlogic.gdx.math.Vector2;
+import com.daniel99j.djutil.NumberUtils;
 import com.hugo99j.chaosparty.util.ControllerInput;
 import com.hugo99j.chaosparty.util.ControllerUtil;
 import com.hugo99j.chaosparty.util.DummyController;
@@ -33,143 +34,177 @@ public class DebugController {
         currentlyPressed.clear();
         currentValues.clear();
         overrideModePressed.clear();
-        ImGui.begin("Debug Controller");
-        ImInt selected = new ImInt(INSTANCE == null ? 0 : INSTANCE instanceof NormalModeInstance ? 1 : 2);
-        ImGui.listBox("Enabled", selected, new String[]{"Off", "Dummy", "Real"});
-        if(selected.get() == 0 && INSTANCE != null) INSTANCE = null;
-        if(selected.get() == 1 && !(INSTANCE instanceof NormalModeInstance)) INSTANCE = new NormalModeInstance();
-        if(selected.get() == 2 && !(INSTANCE instanceof RealModeInstance)) INSTANCE = new RealModeInstance();
+        if(ImGui.begin("Debug Controller")) {
+            ImInt selected = new ImInt(INSTANCE == null ? 0 : INSTANCE instanceof NormalModeInstance ? 1 : 2);
+            ImGui.listBox("Enabled", selected, new String[]{"Off", "Dummy", "Real"});
+            if (selected.get() == 0 && INSTANCE != null) INSTANCE = null;
+            if (selected.get() == 1 && !(INSTANCE instanceof NormalModeInstance)) INSTANCE = new NormalModeInstance();
+            if (selected.get() == 2 && !(INSTANCE instanceof RealModeInstance)) INSTANCE = new RealModeInstance();
 
-        switch (INSTANCE) {
-            case null -> ImGui.text("Not enabled");
-            case RealModeInstance realModeInstance -> {
-                ImGui.pushID("LT");
-                float[] lt = new float[]{0.0f};
-                ImGui.vSliderFloat("", new ImVec2(20, 40), lt, 0, 1, "LT");
-                overrideModeValues.put(5, lt[0]);
-                ImGui.popID();
-                ImGui.sameLine();
-                ImGui.text("                   ");
-                ImGui.sameLine();
-                float[] rt = new float[]{0.0f};
-                ImGui.pushID("RT");
-                ImGui.vSliderFloat("", new ImVec2(20, 40), rt, 0, 1, "RT");
-                overrideModeValues.put(6, rt[0]);
-                ImGui.popID();
+            switch (INSTANCE) {
+                case null -> ImGui.text("Not enabled");
+                case RealModeInstance realModeInstance -> {
+                    ImGui.pushID("LT");
+                    float[] lt = new float[]{0.0f};
+                    ImGui.vSliderFloat("", new ImVec2(20, 40), lt, 0, 1, "LT");
+                    overrideModeValues.put(5, lt[0]);
+                    ImGui.popID();
+                    ImGui.sameLine();
+                    ImGui.text("                   ");
+                    ImGui.sameLine();
+                    float[] rt = new float[]{0.0f};
+                    ImGui.pushID("RT");
+                    ImGui.vSliderFloat("", new ImVec2(20, 40), rt, 0, 1, "RT");
+                    overrideModeValues.put(6, rt[0]);
+                    ImGui.popID();
 
-                if(ImGui.button("   LB   ")) {
-                    overrideModePressed.add(realModeInstance.getMapping().buttonL1);
-                }
-                ImGui.sameLine();
-                ImGui.text("       ");
-                ImGui.sameLine();
-                if(ImGui.button("   RB   ")) {
-                    overrideModePressed.add(realModeInstance.getMapping().buttonR1);
-                }
-                //Text instead of indents because they dont work on sameLine
-                ImGui.indent();
-                ImGui.indent();
-                ImGui.indent();
-                ImGui.indent();
-                ImGui.indent();
-                ImGui.indent();
-                ImGui.text(" ");
-                ImGui.sameLine();
-                float firstPoint = ImGui.getCursorPosY();
-                if(ImGui.button("Y")) overrideModePressed.add(realModeInstance.getMapping().buttonY);
-                float secondPoint = ImGui.getCursorPosY();
-                if(ImGui.button("X")) overrideModePressed.add(realModeInstance.getMapping().buttonX);
-                ImGui.sameLine();
-                ImGui.text("");
-                ImGui.sameLine();
-                if(ImGui.button("B")) overrideModePressed.add(realModeInstance.getMapping().buttonB);
-                ImGui.text(" ");
-                ImGui.sameLine();
-                if(ImGui.button("A")) overrideModePressed.add(realModeInstance.getMapping().buttonA);
-                ImGui.unindent();
-                ImGui.unindent();
-                ImGui.unindent();
-                ImGui.unindent();
-                ImGui.unindent();
-                ImGui.unindent();
-                float change = secondPoint-firstPoint;
-                ImGui.setCursorPosY(ImGui.getCursorPosY()-change*3);
-                selector2Axis("Left stick", (b) -> {
-                    overrideModeValues.put(realModeInstance.getMapping().axisLeftX, -1+2*b.x);
-                    overrideModeValues.put(realModeInstance.getMapping().axisLeftY, -1+2*b.y);
+                    if (ImGui.button("   LB   ")) {
+                        overrideModePressed.add(realModeInstance.getMapping().buttonL1);
+                    }
+                    ImGui.sameLine();
+                    ImGui.text("       ");
+                    ImGui.sameLine();
+                    if (ImGui.button("   RB   ")) {
+                        overrideModePressed.add(realModeInstance.getMapping().buttonR1);
+                    }
+                    //Text instead of indents because they dont work on sameLine
+                    ImGui.indent();
+                    ImGui.indent();
+                    ImGui.indent();
+                    ImGui.indent();
+                    ImGui.indent();
+                    ImGui.indent();
+                    ImGui.text(" ");
+                    ImGui.sameLine();
+                    float firstPoint = ImGui.getCursorPosY();
+                    if (ImGui.button("Y")) overrideModePressed.add(realModeInstance.getMapping().buttonY);
+                    float secondPoint = ImGui.getCursorPosY();
+                    if (ImGui.button("X")) overrideModePressed.add(realModeInstance.getMapping().buttonX);
+                    ImGui.sameLine();
+                    ImGui.text("");
+                    ImGui.sameLine();
+                    if (ImGui.button("B")) overrideModePressed.add(realModeInstance.getMapping().buttonB);
+                    ImGui.text(" ");
+                    ImGui.sameLine();
+                    if (ImGui.button("A")) overrideModePressed.add(realModeInstance.getMapping().buttonA);
+                    ImGui.unindent();
+                    ImGui.unindent();
+                    ImGui.unindent();
+                    ImGui.unindent();
+                    ImGui.unindent();
+                    ImGui.unindent();
+                    float change = secondPoint - firstPoint;
+                    ImGui.setCursorPosY(ImGui.getCursorPosY() - change * 3);
+                    selector2Axis("Left stick", (b) -> {
+                        overrideModeValues.put(realModeInstance.getMapping().axisLeftX, -1 + 2 * b.x);
+                        overrideModeValues.put(realModeInstance.getMapping().axisLeftY, -1 + 2 * b.y);
                     }, true);
 
-                ImGui.newLine();
-                ImGui.text("       ");
-                ImGui.sameLine();
-                if(ImGui.button("O")) overrideModePressed.add(realModeInstance.getMapping().buttonBack);
-                ImGui.sameLine();
-                if(ImGui.button("+")) overrideModePressed.add(-10);
-                ImGui.sameLine();
-                if(ImGui.button("=")) overrideModePressed.add(realModeInstance.getMapping().buttonStart);
-                ImGui.newLine();
-                ImGui.newLine();
-                ImGui.setCursorPosY(ImGui.getCursorPosY()-change);
-
-                ImGui.indent();
-                ImGui.text(" ");
-                ImGui.sameLine();
-                if(ImGui.button("^")) overrideModePressed.add(realModeInstance.getMapping().buttonDpadUp);
-                if(ImGui.button("<")) overrideModePressed.add(realModeInstance.getMapping().buttonDpadLeft);
-                ImGui.sameLine();
-                ImGui.text("");
-                ImGui.sameLine();
-                if(ImGui.button(">")) overrideModePressed.add(realModeInstance.getMapping().buttonDpadRight);
-                ImGui.text(" ");
-                ImGui.sameLine();
-                if(ImGui.button("V")) overrideModePressed.add(realModeInstance.getMapping().buttonDpadDown);
-                ImGui.unindent();
-
-                ImGui.indent();
-                ImGui.indent();
-                ImGui.indent();
-                ImGui.indent();
-                ImGui.indent();
-                ImGui.setCursorPosY(ImGui.getCursorPosY()-change*2);
-                selector2Axis("Right stick", (b) -> {
-                    overrideModeValues.put(realModeInstance.getMapping().axisRightX, -1+2*b.x);
-                    overrideModeValues.put(realModeInstance.getMapping().axisRightY, -1+2*b.y);
-                }, false);
-                ImGui.unindent();
-                ImGui.unindent();
-                ImGui.unindent();
-                ImGui.unindent();
-                ImGui.unindent();
-            }
-            case NormalModeInstance normalModeInstance -> {
-                if (ImGui.checkbox("Execute inputs", executeNow)) {
-                    executeNow = !executeNow;
-                }
-                for (ControllerInput value : ControllerInput.values()) {
-                    ImGui.text(value.toString());
+                    ImGui.newLine();
+                    ImGui.text("       ");
                     ImGui.sameLine();
-                    ImGui.pushID("Press" + value);
-                    if (ImGui.button("Press")) {
-                        scheduled.add(() -> {
-                            currentlyPressed.add(value);
-                            currentlyPressedThisTick.add(value);
-                        });
-                    }
-                    ImGui.popID();
+                    if (ImGui.button("O")) overrideModePressed.add(realModeInstance.getMapping().buttonBack);
                     ImGui.sameLine();
-                    float[] f = {0.0f};
-                    ImGui.pushID("Value" + value);
-                    if (ImGui.sliderFloat("Value", f, -1, 1)) {
-                        scheduled.add(() -> currentValues.put(value, f[0]));
+                    if (ImGui.button("+")) overrideModePressed.add(-10);
+                    ImGui.sameLine();
+                    if (ImGui.button("=")) overrideModePressed.add(realModeInstance.getMapping().buttonStart);
+                    ImGui.newLine();
+                    ImGui.newLine();
+                    ImGui.setCursorPosY(ImGui.getCursorPosY() - change);
+
+                    ImGui.indent();
+                    ImGui.text(" ");
+                    ImGui.sameLine();
+                    if (ImGui.button("^")) overrideModePressed.add(realModeInstance.getMapping().buttonDpadUp);
+                    if (ImGui.button("<")) overrideModePressed.add(realModeInstance.getMapping().buttonDpadLeft);
+                    ImGui.sameLine();
+                    ImGui.text("");
+                    ImGui.sameLine();
+                    if (ImGui.button(">")) overrideModePressed.add(realModeInstance.getMapping().buttonDpadRight);
+                    ImGui.text(" ");
+                    ImGui.sameLine();
+                    if (ImGui.button("V")) overrideModePressed.add(realModeInstance.getMapping().buttonDpadDown);
+                    ImGui.unindent();
+
+                    ImGui.indent();
+                    ImGui.indent();
+                    ImGui.indent();
+                    ImGui.indent();
+                    ImGui.indent();
+                    ImGui.setCursorPosY(ImGui.getCursorPosY() - change * 2);
+                    selector2Axis("Right stick", (b) -> {
+                        overrideModeValues.put(realModeInstance.getMapping().axisRightX, -1 + 2 * b.x);
+                        overrideModeValues.put(realModeInstance.getMapping().axisRightY, -1 + 2 * b.y);
+                    }, false);
+                    ImGui.unindent();
+                    ImGui.unindent();
+                    ImGui.unindent();
+                    ImGui.unindent();
+                    ImGui.unindent();
+
+                    ImGui.newLine();
+                    ImGui.newLine();
+                    ImGui.indent();
+                    float currentLeft = ((ControllerUtil) (Object) realModeInstance).getCurrentVibration()[0];
+                    if (currentLeft > 0) {
+                        ImVec2 oldPos = ImGui.getCursorPos();
+                        ImGui.setCursorPosX(oldPos.x + NumberUtils.getRandomFloat(-currentLeft * 4, currentLeft * 4));
+                        ImGui.setCursorPosY(oldPos.y + NumberUtils.getRandomFloat(-currentLeft * 4, currentLeft * 4));
+                        ImGui.text("Intense Vibration");
+                        ImGui.setCursorPosX(oldPos.x);
+                        ImGui.setCursorPosY(oldPos.y);
+                        ImGui.text("");
+                    } else {
+                        ImGui.text("Intense Vibration");
                     }
-                    ImGui.popID();
+
+                    float currentRight = ((ControllerUtil) (Object) realModeInstance).getCurrentVibration()[1];
+                    if (currentRight > 0) {
+                        ImVec2 oldPos = ImGui.getCursorPos();
+                        ImGui.setCursorPosX(oldPos.x + NumberUtils.getRandomFloat(-currentRight * 4, currentRight * 4));
+                        ImGui.setCursorPosY(oldPos.y + NumberUtils.getRandomFloat(-currentRight * 4, currentRight * 4));
+                        ImGui.text("Fast Vibration");
+                        ImGui.setCursorPosX(oldPos.x);
+                        ImGui.setCursorPosY(oldPos.y);
+                        ImGui.text("");
+                    } else {
+                        ImGui.text("Fast Vibration");
+                    }
+                    ImGui.unindent();
+
+                    ImGui.text("Intense at " + currentLeft);
+                    ImGui.text("Fast at " + currentRight);
                 }
-                if (executeNow) {
-                    scheduled.forEach(Runnable::run);
-                    scheduled.clear();
+                case NormalModeInstance normalModeInstance -> {
+                    if (ImGui.checkbox("Execute inputs", executeNow)) {
+                        executeNow = !executeNow;
+                    }
+                    for (ControllerInput value : ControllerInput.values()) {
+                        ImGui.text(value.toString());
+                        ImGui.sameLine();
+                        ImGui.pushID("Press" + value);
+                        if (ImGui.button("Press")) {
+                            scheduled.add(() -> {
+                                currentlyPressed.add(value);
+                                currentlyPressedThisTick.add(value);
+                            });
+                        }
+                        ImGui.popID();
+                        ImGui.sameLine();
+                        float[] f = {0.0f};
+                        ImGui.pushID("Value" + value);
+                        if (ImGui.sliderFloat("Value", f, -1, 1)) {
+                            scheduled.add(() -> currentValues.put(value, f[0]));
+                        }
+                        ImGui.popID();
+                    }
+                    if (executeNow) {
+                        scheduled.forEach(Runnable::run);
+                        scheduled.clear();
+                    }
                 }
-            }
-            default -> {
+                default -> {
+                }
             }
         }
         ImGui.end();

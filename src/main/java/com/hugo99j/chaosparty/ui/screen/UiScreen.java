@@ -9,16 +9,16 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector4;
 import com.daniel99j.djutil.ValueHolder;
 import com.daniel99j.djutil.maths.MathsContext;
+import com.daniel99j.dungeongame.sounds.SoundFile;
+import com.daniel99j.dungeongame.sounds.SoundInstance;
 import com.daniel99j.dungeongame.sounds.SoundManager;
-import com.hugo99j.chaosparty.util.ControllerInput;
-import com.hugo99j.chaosparty.util.ControllerUtil;
+import com.hugo99j.chaosparty.util.*;
 import com.hugo99j.chaosparty.ui.renderable.ClickType;
 import com.hugo99j.chaosparty.ui.renderable.CursorType;
 import com.hugo99j.chaosparty.ui.renderable.RenderState;
 import com.hugo99j.chaosparty.ui.renderable.UiElement;
 import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.ui.debugger.Debuggers;
-import com.hugo99j.chaosparty.util.RenderUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -78,6 +78,31 @@ public class UiScreen implements Screen {
             if(uiElement == controllerSelected) uiElement.render(new RenderState(state.left(), state.leftJust(), state.middle(), state.middleJust(), state.right(), state.rightJust(), (int) controllerSelected.getCenter().x, (int) controllerSelected.getCenter().y, state.time()));
             else uiElement.render(state);
         }
+
+        if(ControllerUtil.getCurrent().wasJustPressed(ControllerInput.LEFT_STICK_BUTTON)) {
+            ControllerUtil.getCurrent().vibrate(VibrationAmount.of((t) -> {
+                if(t <= 6.3f) return (float) (0.5f+Math.sin(t-1.6f)/2f);
+                return 0f;
+            }, (t) -> 0f), 6.3f);
+        }
+        if(ControllerUtil.getCurrent().wasJustPressed(ControllerInput.RIGHT_STICK_BUTTON)) {
+            ControllerUtil.getCurrent().vibrate(VibrationAmount.of((t) -> 0f, (t) -> {
+                if(t <= 6.3f) return (float) (0.5f+Math.sin(t-1.6f)/2f);
+                return 0f;
+            }), 6.3f);
+        }
+        if(ControllerUtil.getCurrent().wasJustPressed(ControllerInput.X)) {
+            ControllerUtil.getCurrent().vibrate(VibrationAmount.of((t) -> {
+                if(t <= 6.3f) return (float) (0.5f+Math.sin(t-1.6f)/2f);
+                return 0f;
+            }, (t) -> {
+                if(t > 7f) return (float) (0.5f+Math.sin(t-1.6f-5f)/2f);
+                return 0f;
+            }), 13.3f);
+        }
+        if(ControllerUtil.getCurrent().wasJustPressed(ControllerInput.B)) {
+            ControllerUtil.getCurrent().vibrate(VibrationAmount.of(new float[]{0.0f,1.0f,2.0f,1.0f,2.0f,0.0f}, new float[]{0.0f,1.0f,2.0f,1.0f,2.0f,0.0f}));
+        }
     }
 
     protected void controllerStick(Vector2 change) {
@@ -114,7 +139,8 @@ public class UiScreen implements Screen {
                     if(pos.x >= aabb.x && pos.y >= aabb.y && pos.x <= aabb.z && pos.y <= aabb.w) {
                         controllerSelected = selectors.get(aabb);
                         controllerSelected.onControllerSelect();
-                        ControllerUtil.getCurrent().vibrate(100, 1);
+                        ControllerUtil.getCurrent().vibrate(0.1f, 0.1f);
+
                         SoundManager.getSound("select").play(1);
                         return;
                     }

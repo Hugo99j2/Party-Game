@@ -132,12 +132,27 @@ public class DummyController implements Controller, ControllerUtil {
     }
 
     @Override
-    public boolean isPressed(ControllerInput input) {
-        return false;
+    public void vibrate(VibrationAmount calculator) {
+
     }
 
     @Override
-    public void vibrate(int time, float intensity) {
+    public void vibrate(VibrationAmount calculator, float maxTime) {
 
+    }
+
+    @Override
+    public void vibrate(float intensity, float maxTime) {
+
+    }
+
+    @Override
+    public float[] getCurrentVibration() {
+        return new float[]{0f, 0f};
+    }
+
+    @Override
+    public boolean isPressed(ControllerInput input) {
+        return false;
     }
 }

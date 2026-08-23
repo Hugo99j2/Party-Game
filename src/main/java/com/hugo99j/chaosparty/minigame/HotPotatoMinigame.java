@@ -14,12 +14,8 @@ import com.hugo99j.chaosparty.entity.Player;
 import com.hugo99j.chaosparty.entity.Potato;
 import com.hugo99j.chaosparty.match.MatchPlayer;
 import com.hugo99j.chaosparty.match.MatchView;
-import com.hugo99j.chaosparty.util.ControllerInput;
-import com.hugo99j.chaosparty.util.ControllerUtil;
+import com.hugo99j.chaosparty.util.*;
 import com.hugo99j.chaosparty.ui.element.Timer;
-import com.hugo99j.chaosparty.util.Logger;
-import com.hugo99j.chaosparty.util.PathUtil;
-import com.hugo99j.chaosparty.util.ToRun;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -47,22 +43,22 @@ public class HotPotatoMinigame extends AbstractMinigame {
         timer = new Timer("timer", TIME, 2, false) {
             @Override
             public float getX() {
-                return 0;
+                return 40;
             }
 
             @Override
             public float getY() {
-                return 0;
+                return 20;
             }
 
             @Override
             public float getWidth() {
-                return 0;
+                return 120;
             }
 
             @Override
             public float getHeight() {
-                return 0;
+                return 120;
             }
         };
         music = SoundManager.getSound("potato_music").playSingle(1);
@@ -89,6 +85,27 @@ public class HotPotatoMinigame extends AbstractMinigame {
         potatoPassThreshold--;
         hotCollisionCooldown = false;
         this.defaultPlayerMovements();
+        for (MatchPlayer player : GameData.getCurrentMatch().getPlayers()) {
+            if(player.getPlayerObject().isNoClip()) {
+                int change = 0;
+                if(((ControllerUtil) player.controller).wasJustPressedThisTick(ControllerInput.RIGHT_BUMPER)) change += 1;
+                if(((ControllerUtil) player.controller).wasJustPressedThisTick(ControllerInput.LEFT_BUMPER)) change -= 1;
+                if(change != 0) {
+                    List<MatchPlayer> notDead = new ArrayList<>();
+                    MatchPlayer current = null;
+                    float closest = 100000;
+                    for (MatchPlayer matchPlayer : GameData.getCurrentMatch().getPlayers()) {
+                        if(matchPlayer.getPlayerObject().isNoClip()) continue;
+                        notDead.add(matchPlayer);
+                        if(matchPlayer.getPlayerObject().getPos().dst(player.getPlayerObject().getPos()) < closest) {
+                            closest = matchPlayer.getPlayerObject().getPos().dst(player.getPlayerObject().getPos());
+                            current = matchPlayer;
+                        }
+                    }
+                    player.getPlayerObject().setPos((change == 1 ? Looper.nextValue(notDead, current) : Looper.previousValue(notDead, current)).getPlayerObject().getPos());
+                }
+            }
+        }
         hotEffect.setPosition(hotPlayer.getPlayerObject().getPos().x+0.3f, hotPlayer.getPlayerObject().getPos().y+1);
 
         if(((ControllerUtil) hotPlayer.controller).wasJustPressedThisTick(ControllerInput.RIGHT_BUMPER)) {
@@ -106,6 +123,7 @@ public class HotPotatoMinigame extends AbstractMinigame {
                 if(!player.getPlayerObject().isNoClip()) GameData.getCurrentMatch().getCurrentMinigame().addScore(player, 1);
             }
             SoundManager.getSound("flame_explode").playSingle(1);
+            ((ControllerUtil) getHotPlayer().controller).vibrate(VibrationAmount.of(new float[]{0.0848817f,0.2079646f,0.46620733f,0.048672568f,0.9848102f,0.0f}, new float[]{0.0f,0.013274336f,0.19673721f,0.22123894f,0.35943615f,0.0f}));
             var boom = new ParticleEffect();
             boom.load(Gdx.files.internal(PathUtil.asset("particles/boom.p")), GameData.atlas);
             boom.setEmittersCleanUpBlendFunction(false);
@@ -193,6 +211,7 @@ public class HotPotatoMinigame extends AbstractMinigame {
             }
         }
         SoundManager.getSound("flame").playSingle(1);
+        ((ControllerUtil) hotPlayer.controller).vibrate(VibrationAmount.of(new float[]{0.11030341f,1.0f,0.16114683f,0.06637168f,0.3035084f,0.057522126f,0.35943615f,0.0f}, new float[]{0.12555644f,0.32743362f,0.24758063f,0.0f}));
         return true;
     }
 

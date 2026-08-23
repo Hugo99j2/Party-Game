@@ -10,7 +10,10 @@ public interface ControllerUtil {
     boolean wasJustPressedThisTick(ControllerInput input);
     void onTick();
     void updateUtil();
-    void vibrate(int time, float intensity);
+    void vibrate(VibrationAmount calculator);
+    void vibrate(VibrationAmount calculator, float maxTime);
+    void vibrate(float intensity, float maxTime);
+    float[] getCurrentVibration();
 
     float DEAD_ZONE = 0.25f;
 

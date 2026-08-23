@@ -47,7 +47,7 @@ public abstract class Timer extends UiElement {
             String n = String.valueOf(seconds % 60);
             s += n.length() == 2 || display == 1 ? n : "0"+n;
         }
-        //RenderUtil.renderText(s, this.getStyle());
+        RenderUtil.renderText(s, this.getX(), this.getY(), this.getWidth(), this.getHeight());
     }
 
     public int getSeconds() {

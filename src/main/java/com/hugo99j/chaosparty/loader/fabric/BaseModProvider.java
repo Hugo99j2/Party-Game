@@ -266,7 +266,7 @@ public final class BaseModProvider implements GameProvider {
         this.arguments = new Arguments();
         arguments.parse(args);
 
-        entryClass = "com.hugo99j.chaosparty.Launcher";
+        entryClass = "com.hugo99j.chaosparty.loader.Lwjgl3Launcher";
         version = "1.0.0";
 
         classPath = new ArrayList<>();
@@ -324,7 +324,7 @@ public final class BaseModProvider implements GameProvider {
         MethodHandle invoker;
         try {
             Class<?> target = loader.loadClass(targetName);
-            invoker = MethodHandles.lookup().findStatic(target, "notMain", MethodType.methodType(void.class, String[].class));
+            invoker = MethodHandles.lookup().findStatic(target, "bootGame", MethodType.methodType(void.class, String[].class));
         } catch(ClassNotFoundException | NoSuchMethodException | IllegalAccessException e) {
             throw new RuntimeException("Failed to find entry point", e);
         }

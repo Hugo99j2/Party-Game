@@ -9,9 +9,11 @@
     "ControllerUtilMixin",
     "ExtendViewportMixin",
     "FontMixin",
+    "InputPreventerMixin",
+    "InputPreventerMixin2",
     "MonitorFixMixin",
     "ResizeSpeederUpperMixin",
-    "ShapeRendererLineWidth",
+    "ShapeRendererMixin",
     "SpriteBatchMixin",
     "WindowAccessor",
     "WindowFixMixin"

@@ -30,6 +30,7 @@ public class SpriteObject extends AbstractObject implements DontCollideTogether 
     private Color tint;
     @RequiresRefresh
     private boolean animated = false;
+    @RequiresRefresh
     private boolean blocksLight = false;
 
     public SpriteObject(String sprite, int width, int height, boolean flipX, boolean flipY, int rotation, float scale, boolean hasHitbox, Color tint, boolean textureHitbox, boolean animated, boolean blocksLight) {
@@ -63,7 +64,7 @@ public class SpriteObject extends AbstractObject implements DontCollideTogether 
             } else settings = PhysicsSettings.immovable(this.width*this.size.x, this.height*this.size.y, 0, 0);
 
             settings = settings.group(CollisionCategories.PATHFIND_BLOCKING);
-            if(blocksLight) settings.group(CollisionCategories.LIGHT_BLOCKING);
+            if(blocksLight) settings = settings.group(CollisionCategories.LIGHT_BLOCKING);
         }
         return settings;
     }

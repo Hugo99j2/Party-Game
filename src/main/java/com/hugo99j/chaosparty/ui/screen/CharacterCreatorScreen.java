@@ -141,11 +141,11 @@ public class CharacterCreatorScreen extends UiScreen {
 
                     user.setWearing(costumePart, newClothing);
                     //slide new from left onto center
-                    slidingClothes.add(new SlidingClothes(newClothing, GameData.time, 0.7f, true, playerElement.getX()-100, playerElement.getX(), Interpolation.pow4, 0.5f, 1f));
+                    slidingClothes.add(new SlidingClothes(newClothing, GameData.time, 0.4f, true, playerElement.getX()-100, playerElement.getX(), Interpolation.pow4, 0.5f, 1f));
                     //slide center to right
-                    slidingClothes.add(new SlidingClothes(oldClothing, GameData.time, 0.7f, true, playerElement.getX(), playerElement.getX()+100, Interpolation.pow4, 1f, 0.5f));
+                    slidingClothes.add(new SlidingClothes(oldClothing, GameData.time, 0.4f, true, playerElement.getX(), playerElement.getX()+100, Interpolation.pow4, 1f, 0.5f));
                     //fade put old selector on left
-                    futureSlidingClothes.add(new FutureSlidingClothes(new SlidingClothes(previousClothingOption, GameData.time+0.3f, 0.2f, true, playerElement.getX()-100, playerElement.getX()-100, Interpolation.linear, 0f, 0.5f), GameData.time+0.3f));
+                    futureSlidingClothes.add(new FutureSlidingClothes(new SlidingClothes(previousClothingOption, GameData.time+0.2f, 0.2f, true, playerElement.getX()-100, playerElement.getX()-100, Interpolation.linear, 0f, 0.5f), GameData.time+0.2f));
                     //fade in new selector on right
                     slidingClothes.add(new SlidingClothes(nextClothingOption, GameData.time, 0.2f, true, playerElement.getX()+100, playerElement.getX()+100, Interpolation.linear, 0.5f, 0));
                 }),
@@ -159,13 +159,13 @@ public class CharacterCreatorScreen extends UiScreen {
 
                     user.setWearing(costumePart, newClothing);
                     //slide new from right onto center
-                    slidingClothes.add(new SlidingClothes(newClothing, GameData.time, 0.7f, true, playerElement.getX()+100, playerElement.getX(), Interpolation.pow4, 0.5f, 1f));
+                    slidingClothes.add(new SlidingClothes(newClothing, GameData.time, 0.4f, true, playerElement.getX()+100, playerElement.getX(), Interpolation.pow4, 0.5f, 1f));
                     //slide center to left
-                    slidingClothes.add(new SlidingClothes(oldClothing, GameData.time, 0.7f, true, playerElement.getX(), playerElement.getX()-100, Interpolation.pow4, 1f, 0.5f));
+                    slidingClothes.add(new SlidingClothes(oldClothing, GameData.time, 0.4f, true, playerElement.getX(), playerElement.getX()-100, Interpolation.pow4, 1f, 0.5f));
                     //fade put old selector on left
                     slidingClothes.add(new SlidingClothes(previousClothingOption, GameData.time, 0.2f, true, playerElement.getX()-100, playerElement.getX()-100, Interpolation.linear, 0.5f, 0));
                     //fade in new selector on right
-                    futureSlidingClothes.add(new FutureSlidingClothes(new SlidingClothes(nextClothingOption, GameData.time+0.3f, 0.2f, true, playerElement.getX()+100, playerElement.getX()+100, Interpolation.linear, 0, 0.5f), GameData.time+0.3f));
+                    futureSlidingClothes.add(new FutureSlidingClothes(new SlidingClothes(nextClothingOption, GameData.time+0.2f, 0.2f, true, playerElement.getX()+100, playerElement.getX()+100, Interpolation.linear, 0, 0.5f), GameData.time+0.2f));
                 }),
                 new GenericValuesHolder<Vector2, Runnable, Object, Object, Object>(new Vector2(0, -1), () -> {
                     costumePart = Looper.nextValue(costumePart);

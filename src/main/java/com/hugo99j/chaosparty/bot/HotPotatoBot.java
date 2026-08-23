@@ -9,9 +9,11 @@ import com.hugo99j.chaosparty.entity.LiquidBarrelObject;
 import com.hugo99j.chaosparty.entity.Player;
 import com.hugo99j.chaosparty.entity.Potato;
 import com.hugo99j.chaosparty.minigame.HotPotatoMinigame;
+import com.hugo99j.chaosparty.ui.debugger.Debuggers;
 import com.hugo99j.chaosparty.util.Logger;
 import net.fabricmc.loader.impl.util.log.Log;
 
+import java.util.List;
 import java.util.function.ToDoubleFunction;
 
 public class HotPotatoBot extends BotController {
@@ -21,6 +23,7 @@ public class HotPotatoBot extends BotController {
         Vector2 hotPos = ((HotPotatoMinigame) GameData.getCurrentMinigame()).getHotPlayer().getPlayerObject().getPos();
         return Math.max(0, 20-new Vector2(pos.getX(), pos.getY()).dst(hotPos));
     };
+    private Player targetedPlayer;
 
     public HotPotatoBot(Player player) {
         super(player);
@@ -38,12 +41,12 @@ public class HotPotatoBot extends BotController {
                     if (target.isNoClip()) continue; //skip dead players
                     if (!this.getPlayer().getLevel().raycast(this.getPlayer().getPos(), target.getPos(), (e) -> {
                         //Skip players or explosive barrels
-                        Logger.info(e);
                         if (e instanceof Player || (e instanceof LiquidBarrelObject liquidBarrelObject && liquidBarrelObject.isExplosive())) {
                             return false;
                         }
                         return true;
                     })) {
+                        targetedPlayer = target;
                         //Just tag them if too close!
                         if (this.getPlayer().getPos().dst(target.getPos()) < 1) {
                             this.getPlayer().moveTowardTarget(target.getPos(), this.getSpeed());
@@ -65,12 +68,14 @@ public class HotPotatoBot extends BotController {
                     for (Player target : GameData.getLevelOrThrow().getObjectsInRadius(this.getPlayer().getPos(), 45, Player.class, true, true, this.getPlayer())) {
                         if (target.isNoClip()) continue; //skip dead players
                         this.setTarget(target.getPos());
+                        targetedPlayer = target;
                         break;
                     }
                 }
             }
             potatoCooldown--;
             if (!isHot) {
+                targetedPlayer = null;
                 this.setWalkCost(DISLIKE_HOT_PLAYER);
                 potatoCooldown = (int) ((0.5f * GameData.TICKS_PER_SECOND) * NumberUtils.getRandomFloat(1.0f, 1.7f));
 
@@ -91,5 +96,12 @@ public class HotPotatoBot extends BotController {
     @Override
     public float getMaxDistance() {
         return 3;
+    }
+
+    @Override
+    protected void addDebugInfo(List<String> info) {
+        info.add("Target: " + Debuggers.devName(targetedPlayer));
+        info.add("Cooldown: " + potatoCooldown);
+        info.add("Hiding spot: " + hidingSpot);
     }
 }

@@ -37,8 +37,8 @@
       }
     },
     {
-      "x": 0.0,
-      "y": 0.0,
+      "x": -18.5,
+      "y": -10.25,
       "uuid": "f33e3a0e-d62f-49ca-87dc-491f40578537",
       "type": "tileset",
       "custom_data": {
@@ -57,8 +57,8 @@
       }
     },
     {
-      "x": 11.805898,
-      "y": 4.3260384,
+      "x": 21.6875,
+      "y": 1.4375,
       "uuid": "59ea322d-3b4d-46bc-aafe-0495230a07f2",
       "type": "temp_dev_object",
       "custom_data": {
@@ -69,5 +69,21 @@
       }
     }
   ],
-  "lights": []
+  "lights": [
+    {
+      "uuid": "e359a1c8-bda0-49ba-8f7b-4bc286e1fe2a",
+      "lightClass": "class box2dLight.PointLight",
+      "colour": "ff0000bf",
+      "direction": 0.0,
+      "distance": 15.0,
+      "xray": false,
+      "static": false,
+      "active": true,
+      "soft": true,
+      "softShadowLength": 1.5,
+      "rays": 128,
+      "x": 0.3125,
+      "y": 2.125
+    }
+  ]
 }

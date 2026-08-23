@@ -63,7 +63,7 @@ public class SoundFile implements Disposable {
         return i;
     }
 
-    protected Sound getActualAudio() {
+    public Sound getActualAudio() {
         return actualAudio;
     }
 

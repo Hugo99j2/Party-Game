@@ -6,7 +6,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
@@ -29,6 +32,7 @@ import com.hugo99j.chaosparty.match.MatchView;
 import com.hugo99j.chaosparty.minigame.MapEditor;
 import com.hugo99j.chaosparty.ui.debugger.Debuggers;
 import com.hugo99j.chaosparty.ui.debugger.LightEditor;
+import com.hugo99j.chaosparty.util.ImageUtil;
 import com.hugo99j.chaosparty.util.Logger;
 import com.hugo99j.chaosparty.util.RenderUtil;
 import com.hugo99j.chaosparty.util.ScreenFboUtils;
@@ -131,6 +135,22 @@ public class Level implements Disposable {
             if(Debuggers.isEnabled("showAdvancedObjectPicking")) return; //Don't render actual objects over the top!
             ScreenUtils.clear(Color.BLACK); //Hide picking rendering so transparent objects don't break
         }
+        GameData.spriteBatch.end();
+
+        if(!GameData.DEBUGGING || Debuggers.isEnabled("lights")) {
+            ScreenUtils.clear(Color.RED);
+            this.rayHandler.setCombinedMatrix(matchView.gameCamera);
+            this.rayHandler.useCustomViewport(matchView.gameViewport.getScreenX(), matchView.gameViewport.getScreenY(), 1, matchView.gameViewport.getScreenHeight()/10);
+            rayHandler.update(); //unfortunately culling is done here, so I can't update it once
+            int[] previousState = ScreenFboUtils.retrieveFboStatus();
+            rayHandler.prepareRender();
+            ScreenFboUtils.restoreFboStatus(previousState);
+            rayHandler.renderOnly();
+        }
+        Texture lights = new Texture(matchView.fbo.getColorBufferTexture().getTextureData());
+        ScreenUtils.clear(Color.CLEAR);
+
+        GameData.spriteBatch.begin();
 
         ArrayList<AbstractObject> objects = getAllObjects();
         objects.sort((one, two) -> {
@@ -153,18 +173,8 @@ public class Level implements Disposable {
         GameData.spriteBatch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
         if(!GameData.DEBUGGING || Debuggers.isEnabled("lights")) {
-            GameData.spriteBatch.end();
-//                GameConstants.gameCamera.updateUtil();
-//                GameConstants.gameViewport.apply();
-            //GameData.getLevelOrThrow().rayHandler.useDefaultViewport(matchView.gameViewport);
-            GameData.getLevelOrThrow().rayHandler.setCombinedMatrix(matchView.gameCamera);
-            GameData.getLevelOrThrow().rayHandler.useCustomViewport(matchView.gameViewport.getScreenX(), matchView.gameViewport.getScreenY(), matchView.gameViewport.getScreenWidth(), matchView.gameViewport.getScreenHeight());
-            rayHandler.update(); //unfortunately culling is done here, so I can't updateUtil once
-            int[] previousState = ScreenFboUtils.retrieveFboStatus();
-            rayHandler.prepareRender();
-            ScreenFboUtils.restoreFboStatus(previousState);
-            rayHandler.renderOnly();
-            GameData.spriteBatch.begin();
+            GameData.spriteBatch.draw(lights, 0, GameData.height, GameData.width, -GameData.height);
+            lights.dispose();
         }
 
         if(GameData.DEBUGGING && Debuggers.isEnabled("validPathfindingSpotRenderer")) {
@@ -396,7 +406,7 @@ public class Level implements Disposable {
             Debuggers.customLevelRenderers.put((v) -> {
                 GameData.shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
                 GameData.shapeRenderer.setColor(Color.BLUE);
-                GameData.shapeRenderer.circle(pos.x, pos.y, radius, (int) (40*radius));
+                GameData.shapeRenderer.circle(pos.x, pos.y, radius, Math.min((int) (40*radius),  500));
                 GameData.shapeRenderer.end();
             }, new ValueHolder<>(GameData.TICKS_PER_SECOND));
         }

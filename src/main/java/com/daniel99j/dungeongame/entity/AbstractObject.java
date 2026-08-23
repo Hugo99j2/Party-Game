@@ -15,6 +15,7 @@ import com.hugo99j.chaosparty.util.NoDebugOption;
 import com.daniel99j.dungeongame.level.Level;
 import com.google.gson.JsonObject;
 import com.hugo99j.chaosparty.util.NonEditable;
+import com.hugo99j.chaosparty.util.RenderUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -90,6 +91,9 @@ public abstract class AbstractObject implements Disposable {
             if(shouldPulse) {
                 Debuggers.disableChangingColour = false;
                 GameData.spriteBatch.setColor(old);
+            }
+            if(GameData.DEBUGGING && Debuggers.isEnabled("objectNames")) {
+                RenderUtil.renderText(Debuggers.devName(this), this.getPos().x, this.getPos().y, 1, 1);
             }
         }
     };

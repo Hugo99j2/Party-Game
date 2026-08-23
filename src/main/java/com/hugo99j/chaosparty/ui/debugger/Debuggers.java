@@ -14,6 +14,7 @@ import com.badlogic.gdx.math.Vector4;
 import com.badlogic.gdx.physics.box2d.*;
 import com.daniel99j.djutil.GenericValuesHolder;
 import com.daniel99j.djutil.MiscUtils;
+import com.daniel99j.djutil.NumberUtils;
 import com.daniel99j.djutil.ValueHolder;
 import com.daniel99j.djutil.pathfinder.PathfindDebugPos;
 import com.google.common.io.PatternFilenameFilter;
@@ -37,6 +38,7 @@ import com.hugo99j.chaosparty.match.User;
 import com.hugo99j.chaosparty.minigame.MapEditor;
 import com.hugo99j.chaosparty.util.*;
 import imgui.*;
+import imgui.extension.implot.ImPlot;
 import imgui.flag.*;
 import imgui.gl3.ImGuiImplGl3;
 import imgui.glfw.ImGuiImplGlfw;
@@ -98,7 +100,6 @@ public class Debuggers {
             option("noclip", false);
             option("tick", true);
             option("staticLightUpdates", false);
-            option("showBetweenBoxes", true);
             option("disablePathfinding", false);
             option("invulnerable", false);
 
@@ -113,6 +114,8 @@ public class Debuggers {
             option("validPathfindingSpotRenderer", false);
             option("botDebug", true);
             option("renderDevObjects", true);
+            option("showBetweenBoxes", true);
+            option("objectNames", false);
 
             category("Minigame");
             option("forceSingleView", false);
@@ -130,8 +133,7 @@ public class Debuggers {
             option("highlightSelected", true);
 
             category("UI");
-            option("screenSSDebugger", false);
-            option("ignoreInvalidSS", false);
+            option("renderUiDebugger", false);
 
             category("Misc");
             option("showing", false);
@@ -199,6 +201,7 @@ public class Debuggers {
             imGuiGl3 = new ImGuiImplGl3();
             long windowHandle = ((Lwjgl3Graphics) Gdx.graphics).getWindow().getWindowHandle();
             ImGui.createContext();
+            ImPlot.createContext();
             ImGuiIO io = ImGui.getIO();
             io.getFonts().addFontDefault();
             io.getFonts().build();
@@ -250,12 +253,6 @@ public class Debuggers {
                 }
             }
 
-
-            if (tmpProcessor != null) { // Restore the input processor after ImGui caught all inputs, see #end()
-                Gdx.input.setInputProcessor(tmpProcessor);
-                tmpProcessor = null;
-            }
-
             imGuiGl3.newFrame();
             imGuiGlfw.newFrame();
             ImGui.newFrame();
@@ -268,28 +265,31 @@ public class Debuggers {
             ImGui.dockSpaceOverViewport(0, ImGui.getMainViewport(), ImGuiDockNodeFlags.PassthruCentralNode);
 
             if(!isFullScreenOrMaximised && !forceShow) {
-                ImGui.begin("Are you sure?");
-                if(ImGui.button("Force show UI")) forceShow = true;
+                if(ImGui.begin("Are you sure?")) {
+                    if (ImGui.button("Force show UI")) forceShow = true;
+                }
                 ImGui.end();
             } else {
                 MenuBar.render();
 
-                ImGui.begin("Logger");
-                for (String s : logger) {
-                    if (s.startsWith("<error>")) {
-                        ImGui.textColored(0xff0000ff, s.replace("<error>", ""));
-                    } else ImGui.text(s);
+                if(ImGui.begin("Logger")) {
+                    for (String s : logger) {
+                        if (s.startsWith("<error>")) {
+                            ImGui.textColored(0xff0000ff, s.replace("<error>", ""));
+                        } else ImGui.text(s);
 
-                    if (!ImGui.isWindowHovered()) ImGui.setScrollY(10000);
+                        if (!ImGui.isWindowHovered()) ImGui.setScrollY(10000);
+                    }
                 }
                 ImGui.end();
 
                 DebugOptions.render();
 
-                ImGui.begin("Effects");
-                for (String allEffect : EffectType.getNameToEffect().keySet()) {
-                    if(ImGui.button("Apply "+allEffect)) {
-                        GameData.getCurrentMatch().getMatchViews().getFirst().addEffect(EffectType.getEffectType(allEffect), 15);
+                if(ImGui.begin("Effects")) {
+                    for (String allEffect : EffectType.getNameToEffect().keySet()) {
+                        if (ImGui.button("Apply " + allEffect)) {
+                            GameData.getCurrentMatch().getMatchViews().getFirst().addEffect(EffectType.getEffectType(allEffect), 15);
+                        }
                     }
                 }
                 ImGui.end();
@@ -305,39 +305,42 @@ public class Debuggers {
 
                 DebugController.render();
 
-                ImGui.begin("Sounds");
-                if (ImGui.button("Play Sound")) {
-                    try {
-                        SoundManager.getSound(audioNames.get(selectedSound)).playSingle(1);
-                    } catch (Exception e) {
-                        Logger.error("Error playing sound", e);
+                if(ImGui.begin("Sounds")) {
+                    if (ImGui.button("Play Sound")) {
+                        try {
+                            SoundManager.getSound(audioNames.get(selectedSound)).playSingle(1);
+                        } catch (Exception e) {
+                            Logger.error("Error playing sound", e);
+                        }
                     }
-                }
-                ImGui.sameLine();
-                ImInt newSound = new ImInt(selectedSound);
-                if(ImGui.combo("Sound", newSound, audioNames.toArray(new String[0]))) {
-                    selectedSound = newSound.get();
-                }
+                    ImGui.sameLine();
+                    ImInt newSound = new ImInt(selectedSound);
+                    if (ImGui.combo("Sound", newSound, audioNames.toArray(new String[0]))) {
+                        selectedSound = newSound.get();
+                    }
 
-                ImGui.separatorText("Active Sounds");
-                int j = 0;
-                for (SoundInstance activeSound : SoundManager.getActiveSounds()) {
-                    if(ImGui.collapsingHeader("'"+activeSound.getName()+"' ("+j+")")) {
-                        ImGui.text("Time for "+j+": "+activeSound.getCurrentTime()+"/"+activeSound.getDuration());
-                        if(ImGui.button("Cancel "+j)) ToRun.run(activeSound::cancel);
-                        if(ImGui.button("Pause "+j)) activeSound.pause();
-                        if(ImGui.button("Play "+j)) activeSound.play();
-                        slider("Pitch "+j, activeSound.getPitch(), activeSound::setPitch, 0, 2, "%.3f");
-                        slider("Volume "+j, activeSound.getVolume(), activeSound::setVolume, 0, 1, "%.3f");
-                        slider("Pan "+j, activeSound.getPan(), activeSound::setPan, -1, 1, "%.3f");
+                    ImGui.separatorText("Active Sounds");
+                    int j = 0;
+                    for (SoundInstance activeSound : SoundManager.getActiveSounds()) {
+                        if (ImGui.collapsingHeader("'" + activeSound.getName() + "' (" + j + ")")) {
+                            ImGui.text("Time for " + j + ": " + activeSound.getCurrentTime() + "/" + activeSound.getDuration());
+                            if (ImGui.button("Cancel " + j)) ToRun.run(activeSound::cancel);
+                            if (ImGui.button("Pause " + j)) activeSound.pause();
+                            if (ImGui.button("Play " + j)) activeSound.play();
+                            slider("Pitch " + j, activeSound.getPitch(), activeSound::setPitch, 0, 2, "%.3f");
+                            slider("Volume " + j, activeSound.getVolume(), activeSound::setVolume, 0, 1, "%.3f");
+                            slider("Pan " + j, activeSound.getPan(), activeSound::setPan, -1, 1, "%.3f");
+                        }
+                        j++;
                     }
-                    j++;
                 }
                 ImGui.end();
 
                 renderObjectEditor();
 
                 UiViewer.render();
+
+                ControllerVibratorEditor.render();
                 //DEBUGGERS
 
                 // incase imgui changes the gameViewport
@@ -377,10 +380,16 @@ public class Debuggers {
 
             // If ImGui wants to capture the input, disable libGDX's input processor
             if (ImGui.getIO().getWantCaptureKeyboard() || ImGui.getIO().getWantCaptureMouse()) {
-                tmpProcessor = Gdx.input.getInputProcessor();
-                Gdx.input.setInputProcessor(null);
+                if(tmpProcessor == null) {
+                    tmpProcessor = Gdx.input.getInputProcessor();
+                    Gdx.input.setInputProcessor(null);
+                    ((InputPreventer) Gdx.input).setPrevent(true);
+                }
+            } else if (tmpProcessor != null) {
+                Gdx.input.setInputProcessor(tmpProcessor);
+                tmpProcessor = null;
+                ((InputPreventer) Gdx.input).setPrevent(false);
             }
-            //END
 
             if (ImGui.isWindowHovered(ImGuiHoveredFlags.AnyWindow) || ImGui.isWindowFocused(ImGuiFocusedFlags.AnyWindow) || (GameData.getCurrentMinigame() instanceof MapEditor)) {
                 ImGui.getStyle().setAlpha(1.0f);
@@ -492,6 +501,7 @@ public class Debuggers {
             imGuiGlfw.shutdown();
             imGuiGlfw = null;
             ImGui.destroyContext();
+            ImPlot.destroyContext();
         }
     }
 
@@ -657,5 +667,56 @@ public class Debuggers {
 
     private static <A, B> void setMapValue(HashMap<A, B> current, A key, B v) {
         current.put(key, v);
+    }
+
+    public static String devName(AbstractObject o) {
+        if(o == null) return "None";
+        return devName(o.getEntityId());
+    }
+
+    public static String devName(Object o) {
+        return devName(o.hashCode());
+    }
+
+    private static final String[] parts = {
+        "Bee",
+        "Fart",
+        "Explode",
+        "Rumbler",
+        "Gobbler",
+        "Troll",
+        "Excellent",
+        "Archer",
+        "Snot",
+        "Milo",
+        "Yuzu",
+        "Feast",
+        "Bread",
+        "Parts",
+        "Robot",
+        "Metal",
+        "Plastic",
+        "Glass",
+        "Plant",
+        "Gold",
+        "Shouter",
+        "Treat",
+        "Elf",
+        "Santa",
+        "Greed",
+        "Balanced",
+        "Heavy",
+        "Light",
+        "Interesting",
+        "Bored",
+        "Broken",
+        "Panda",
+        "Cow",
+        "Sheep",
+        "Pig"
+    };
+    public static String devName(int hash) {
+        Random random = new Random(hash);
+        return parts[random.nextInt(parts.length-1)] + parts[random.nextInt(parts.length-1)];
     }
 }

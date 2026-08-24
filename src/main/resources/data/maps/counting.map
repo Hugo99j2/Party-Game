@@ -1,8 +1,8 @@
 {
   "objects": [
     {
-      "x": 4.0,
-      "y": -0.125,
+      "x": 1.0,
+      "y": 16.25,
       "uuid": "95c65e57-3604-4f58-b5ee-e87ea150dbaa",
       "type": "player_spawn_point",
       "custom_data": {
@@ -10,8 +10,8 @@
       }
     },
     {
-      "x": 11.4375,
-      "y": -0.125,
+      "x": 38.0,
+      "y": 13.1875,
       "uuid": "c7c846a8-08ee-4050-aa5c-4ef863d9885e",
       "type": "player_spawn_point",
       "custom_data": {
@@ -19,8 +19,8 @@
       }
     },
     {
-      "x": 18.625,
-      "y": -0.125,
+      "x": 1.0,
+      "y": 4.4375,
       "uuid": "8980418e-2e27-4587-84ba-ae75dd3ebaf9",
       "type": "player_spawn_point",
       "custom_data": {
@@ -28,8 +28,8 @@
       }
     },
     {
-      "x": 25.4375,
-      "y": 0.0,
+      "x": 38.0,
+      "y": 6.5,
       "uuid": "65874d13-c3d4-4bf7-9f9a-fb8ead78060d",
       "type": "player_spawn_point",
       "custom_data": {
@@ -37,35 +37,325 @@
       }
     },
     {
-      "x": 3.125,
-      "y": -1.125,
+      "x": 0.0,
+      "y": 0.0,
       "uuid": "f33e3a0e-d62f-49ca-87dc-491f40578537",
       "type": "tileset",
       "custom_data": {
-        "width": 34,
-        "height": 20,
+        "width": 40,
+        "height": 22,
         "sprite": "tilesets/road",
         "flipX": false,
         "flipY": false,
         "hasHitbox": false,
         "rotation": 0,
         "scale": 1.0,
-        "tint": "0d24d3ff",
+        "tint": "313131ff",
         "textureHitbox": false,
         "animated": false,
         "blocks_light": false
       }
     },
     {
-      "x": 21.6875,
-      "y": 1.4375,
+      "x": 20.125,
+      "y": 11.4375,
       "uuid": "59ea322d-3b4d-46bc-aafe-0495230a07f2",
       "type": "temp_dev_object",
       "custom_data": {
         "camera": {
-          "width": 10,
-          "height": 10
+          "width": 40,
+          "height": 22
         }
+      }
+    },
+    {
+      "x": 1.0,
+      "y": 1.0,
+      "uuid": "d3781fcc-db10-40cb-a59b-bc2096a22959",
+      "type": "tileset",
+      "custom_data": {
+        "width": 1,
+        "height": 9,
+        "sprite": "seat_silhouette",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": false,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": false,
+        "animated": false,
+        "blocks_light": true
+      }
+    },
+    {
+      "x": 4.0,
+      "y": 2.0,
+      "uuid": "164780d0-de01-4529-af21-c876e4fbd316",
+      "type": "tileset",
+      "custom_data": {
+        "width": 32,
+        "height": 20,
+        "sprite": "tilesets/planks",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": false,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": false,
+        "animated": false,
+        "blocks_light": true
+      }
+    },
+    {
+      "x": 1.0,
+      "y": 12.0,
+      "uuid": "09058168-a4da-4afe-9a38-9e77912413fd",
+      "type": "tileset",
+      "custom_data": {
+        "width": 1,
+        "height": 9,
+        "sprite": "seat_silhouette",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": false,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": false,
+        "animated": false,
+        "blocks_light": true
+      }
+    },
+    {
+      "x": 38.0,
+      "y": 0.5,
+      "uuid": "69bc4886-c4e2-43ff-a9a9-cc94b78a180f",
+      "type": "tileset",
+      "custom_data": {
+        "width": 1,
+        "height": 9,
+        "sprite": "seat_silhouette",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": false,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": false,
+        "animated": false,
+        "blocks_light": true
+      }
+    },
+    {
+      "x": 38.0,
+      "y": 11.5,
+      "uuid": "161c0adc-70e6-4a22-a5c1-dc9fa15454ef",
+      "type": "tileset",
+      "custom_data": {
+        "width": 1,
+        "height": 9,
+        "sprite": "seat_silhouette",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": false,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": false,
+        "animated": false,
+        "blocks_light": true
+      }
+    },
+    {
+      "x": 14.3125,
+      "y": 17.625,
+      "uuid": "75784c39-92d7-417c-af27-fafd3463bea0",
+      "type": "clown",
+      "custom_data": {}
+    },
+    {
+      "x": 19.75,
+      "y": 8.5625,
+      "uuid": "79862c3a-9d3d-46cc-aa0b-753e0ed5dfd1",
+      "type": "clown",
+      "custom_data": {}
+    },
+    {
+      "x": 7.6875,
+      "y": 5.75,
+      "uuid": "f602aa70-72a8-4ecf-890d-283797317bc5",
+      "type": "clown",
+      "custom_data": {}
+    },
+    {
+      "x": 15.375,
+      "y": 6.5625,
+      "uuid": "515b0e7b-8523-4445-88cb-c19754946b5a",
+      "type": "clown",
+      "custom_data": {}
+    },
+    {
+      "x": 8.0625,
+      "y": 17.5,
+      "uuid": "0163d6e7-7dd3-429d-9f6c-cb153d586df6",
+      "type": "clown",
+      "custom_data": {}
+    },
+    {
+      "x": 20.0625,
+      "y": 17.25,
+      "uuid": "e603309f-fa9e-4936-b232-7d2d18894055",
+      "type": "clown",
+      "custom_data": {}
+    },
+    {
+      "x": 29.4375,
+      "y": 5.5,
+      "uuid": "f8f264d4-a5f6-40f5-8a88-f4b4f99d26b7",
+      "type": "clown",
+      "custom_data": {}
+    },
+    {
+      "x": 30.8125,
+      "y": 15.625,
+      "uuid": "612d2232-2d16-4068-9048-c29d0e0f591d",
+      "type": "clown",
+      "custom_data": {}
+    },
+    {
+      "x": 26.6875,
+      "y": 10.1875,
+      "uuid": "16f05f58-63eb-4a71-9bb8-f0ef6ea02e0b",
+      "type": "clown",
+      "custom_data": {}
+    },
+    {
+      "x": 10.3125,
+      "y": 13.1875,
+      "uuid": "3463c6cb-5fd2-4636-8758-cf1b637a119b",
+      "type": "clown",
+      "custom_data": {}
+    },
+    {
+      "x": 33.0,
+      "y": 12.0,
+      "uuid": "c19a8df6-44f0-4c6f-8498-0e130c3513ad",
+      "type": "tileset",
+      "custom_data": {
+        "width": 3,
+        "height": 10,
+        "sprite": "tilesets/curtain",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": false,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": false,
+        "animated": false,
+        "blocks_light": true
+      }
+    },
+    {
+      "x": 4.0,
+      "y": 12.0,
+      "uuid": "2026aec9-81c3-4453-ad2d-9372e8459985",
+      "type": "tileset",
+      "custom_data": {
+        "width": 3,
+        "height": 10,
+        "sprite": "tilesets/curtain",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": false,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": false,
+        "animated": false,
+        "blocks_light": true
+      }
+    },
+    {
+      "x": 4.0,
+      "y": 11.0,
+      "uuid": "b1d4e580-c3d7-4798-a430-9c72748e048d",
+      "type": "tileset",
+      "custom_data": {
+        "width": 3,
+        "height": 1,
+        "sprite": "tilesets/curtain_botom",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": false,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": false,
+        "animated": false,
+        "blocks_light": true
+      }
+    },
+    {
+      "x": 33.0,
+      "y": 11.0,
+      "uuid": "85efb4dc-0266-403d-bec6-3f682dd2c877",
+      "type": "tileset",
+      "custom_data": {
+        "width": 3,
+        "height": 1,
+        "sprite": "tilesets/curtain_botom",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": false,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": false,
+        "animated": false,
+        "blocks_light": true
+      }
+    },
+    {
+      "x": 7.0,
+      "y": 20.0,
+      "uuid": "b3dae792-0668-42ab-9bf7-e49aa7a6dabb",
+      "type": "tileset",
+      "custom_data": {
+        "width": 26,
+        "height": 2,
+        "sprite": "tilesets/curtain",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": false,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": false,
+        "animated": false,
+        "blocks_light": true
+      }
+    },
+    {
+      "x": 7.0,
+      "y": 19.0,
+      "uuid": "aefe735c-d79a-457c-9bb6-444e772cb4ba",
+      "type": "tileset",
+      "custom_data": {
+        "width": 26,
+        "height": 1,
+        "sprite": "tilesets/curtain_botom",
+        "flipX": false,
+        "flipY": false,
+        "hasHitbox": false,
+        "rotation": 0,
+        "scale": 1.0,
+        "tint": "ffffffff",
+        "textureHitbox": false,
+        "animated": false,
+        "blocks_light": true
       }
     }
   ],
@@ -73,7 +363,7 @@
     {
       "uuid": "e359a1c8-bda0-49ba-8f7b-4bc286e1fe2a",
       "lightClass": "class box2dLight.PointLight",
-      "colour": "ffffffbf",
+      "colour": "ff0000bf",
       "direction": 0.0,
       "distance": 7.067,
       "xray": false,
@@ -82,8 +372,8 @@
       "soft": true,
       "softShadowLength": 1.5,
       "rays": 128,
-      "x": 20.8125,
-      "y": 8.5
+      "x": -7.0,
+      "y": 12.125
     }
   ]
 }

@@ -49,7 +49,7 @@ public class GameData {
     private static Match currentMatch;
 
     //Settings
-    public static float VIBRATE_INTERVAL = 0.02f;
+    public static float VIBRATE_INTERVAL = 0.1f;
 
     public static Match getCurrentMatch() {
         return currentMatch;

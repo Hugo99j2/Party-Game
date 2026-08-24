@@ -55,7 +55,8 @@ public class HotPotatoBot extends BotController {
                             potato.setX(this.getPlayer().getPos().x);
                             potato.setY(this.getPlayer().getPos().y);
                             GameData.getLevelOrThrow().addObject(potato);
-                            potato.moveTowardTarget(target.getPos(), 7000, NumberUtils.getRandomFloat(-10, 10));
+                            float accuracy = 10;
+                            potato.moveTowardTarget(target.getPos(), 7000, NumberUtils.getRandomFloat(-accuracy, accuracy));
                             tried = true;
                             break;
                         }

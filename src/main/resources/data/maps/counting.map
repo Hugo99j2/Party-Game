@@ -37,8 +37,8 @@
       }
     },
     {
-      "x": -18.5,
-      "y": -10.25,
+      "x": 3.125,
+      "y": -1.125,
       "uuid": "f33e3a0e-d62f-49ca-87dc-491f40578537",
       "type": "tileset",
       "custom_data": {
@@ -50,7 +50,7 @@
         "hasHitbox": false,
         "rotation": 0,
         "scale": 1.0,
-        "tint": "ffffffff",
+        "tint": "0d24d3ff",
         "textureHitbox": false,
         "animated": false,
         "blocks_light": false
@@ -73,17 +73,17 @@
     {
       "uuid": "e359a1c8-bda0-49ba-8f7b-4bc286e1fe2a",
       "lightClass": "class box2dLight.PointLight",
-      "colour": "ff0000bf",
+      "colour": "ffffffbf",
       "direction": 0.0,
-      "distance": 15.0,
+      "distance": 7.067,
       "xray": false,
       "static": false,
       "active": true,
       "soft": true,
       "softShadowLength": 1.5,
       "rays": 128,
-      "x": 0.3125,
-      "y": 2.125
+      "x": 20.8125,
+      "y": 8.5
     }
   ]
 }

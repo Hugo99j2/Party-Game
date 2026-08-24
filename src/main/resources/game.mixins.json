@@ -13,6 +13,8 @@
     "InputPreventerMixin2",
     "MonitorFixMixin",
     "ResizeSpeederUpperMixin",
+    "ShadowShaderPixeliserMixin",
+    "ShadowShaderPixeliserMixin2",
     "ShapeRendererMixin",
     "SpriteBatchMixin",
     "WindowAccessor",

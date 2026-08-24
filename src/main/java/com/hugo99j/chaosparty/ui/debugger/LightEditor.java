@@ -128,6 +128,7 @@ public class LightEditor {
 
         @Override
         public void render(MatchView matchView) {
+            GameData.spriteBatch.draw(ImageUtil.get("bricks"), this.getPos().x, this.getPos().y, 1, 1);
             GameData.spriteBatch.draw(ImageUtil.get("lightbulb"), this.getPos().x-0.5f, this.getPos().y-0.5f, 1, 1);
             isAllowedToChange = true;
         }

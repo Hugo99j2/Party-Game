@@ -3,10 +3,7 @@ package com.daniel99j.dungeongame.level;
 import box2dLight.Light;
 import box2dLight.RayHandler;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
@@ -52,6 +49,7 @@ public class Level implements Disposable {
     private final List<Runnable> collisions = new ArrayList<>();
     //begin at 1 so when picking black no object is selected
     private int nextEntityId = 1;
+    public static OrthographicCamera lightCamera;
 
     public Level() {
         this.box2dWorld = new World(new Vector2(0, 0), true);
@@ -137,18 +135,31 @@ public class Level implements Disposable {
         }
         GameData.spriteBatch.end();
 
-        if(!GameData.DEBUGGING || Debuggers.isEnabled("lights")) {
-            ScreenUtils.clear(Color.RED);
-            this.rayHandler.setCombinedMatrix(matchView.gameCamera);
-            this.rayHandler.useCustomViewport(matchView.gameViewport.getScreenX(), matchView.gameViewport.getScreenY(), 1, matchView.gameViewport.getScreenHeight()/10);
-            rayHandler.update(); //unfortunately culling is done here, so I can't update it once
-            int[] previousState = ScreenFboUtils.retrieveFboStatus();
-            rayHandler.prepareRender();
-            ScreenFboUtils.restoreFboStatus(previousState);
-            rayHandler.renderOnly();
-        }
-        Texture lights = new Texture(matchView.fbo.getColorBufferTexture().getTextureData());
-        ScreenUtils.clear(Color.CLEAR);
+        TextureRegion lightsBuffer = null;
+//        if(!GameData.DEBUGGING || Debuggers.isEnabled("lights")) {
+////            Gdx.gl.glClear(
+////                GL20.GL_COLOR_BUFFER_BIT |
+////                    GL20.GL_DEPTH_BUFFER_BIT
+////            );
+//            ScreenUtils.clear(new Color(0, 0, 0, 1));
+//            this.rayHandler.setCombinedMatrix(matchView.gameCamera);
+//            this.rayHandler.useCustomViewport(matchView.gameViewport.getScreenX(), matchView.gameViewport.getScreenY(), matchView.gameViewport.getScreenWidth(), matchView.gameViewport.getScreenHeight());
+//            rayHandler.update(); //unfortunately culling is done here, so I can't update it once
+//            int[] previousState = ScreenFboUtils.retrieveFboStatus();
+//            rayHandler.prepareRender();
+//            ScreenFboUtils.restoreFboStatus(previousState);
+//            rayHandler.renderOnly();
+////            matchView.fbo.end();
+////            lightsBuffer = new TextureRegion(matchView.fbo.getColorBufferTexture());
+////            matchView.fbo.begin();
+//        }
+        //matchView.fbo.
+//        Gdx.gl.glClear(
+//            GL20.GL_COLOR_BUFFER_BIT |
+//                GL20.GL_DEPTH_BUFFER_BIT
+//        );
+//        ScreenUtils.clear(Color.CLEAR);
+
 
         GameData.spriteBatch.begin();
 
@@ -173,8 +184,28 @@ public class Level implements Disposable {
         GameData.spriteBatch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
         if(!GameData.DEBUGGING || Debuggers.isEnabled("lights")) {
-            GameData.spriteBatch.draw(lights, 0, GameData.height, GameData.width, -GameData.height);
-            lights.dispose();
+//            RenderUtil.enableBlending();
+//            GameData.spriteBatch.setProjectionMatrix(GameData.uiCamera.combined);
+//            GameData.spriteBatch.draw(lightsBuffer, 0, GameData.height, GameData.width, -GameData.height);
+//            GameData.spriteBatch.setProjectionMatrix(matchView.gameCamera.combined);
+        }
+
+        if(!GameData.DEBUGGING || Debuggers.isEnabled("lights")) {
+            RenderUtil.enableBlending();
+            this.rayHandler.setCombinedMatrix(matchView.gameCamera);
+            this.rayHandler.useCustomViewport(matchView.gameViewport.getScreenX(), matchView.gameViewport.getScreenY(), matchView.gameViewport.getScreenWidth(), matchView.gameViewport.getScreenHeight());
+            rayHandler.update(); //unfortunately culling is done here, so I can't update it once
+            int[] previousState = ScreenFboUtils.retrieveFboStatus();
+            rayHandler.prepareRender();
+            ScreenFboUtils.restoreFboStatus(previousState);
+            RenderUtil.enableBlending();
+            lightCamera = matchView.gameCamera;
+            rayHandler.renderOnly();
+            lightCamera = null;
+            RenderUtil.enableBlending();
+//            matchView.fbo.end();
+//            lightsBuffer = new TextureRegion(matchView.fbo.getColorBufferTexture());
+//            matchView.fbo.begin();
         }
 
         if(GameData.DEBUGGING && Debuggers.isEnabled("validPathfindingSpotRenderer")) {

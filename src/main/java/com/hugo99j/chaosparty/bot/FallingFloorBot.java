@@ -14,6 +14,7 @@ public class FallingFloorBot extends BotController {
 
     public FallingFloorBot(Player player) {
         super(player);
+        this.getPathfinder().setMaxDistance(1);
     }
 
     @Override
@@ -26,15 +27,10 @@ public class FallingFloorBot extends BotController {
             Collections.shuffle(o);
             for (FallingFloorObject objectsInRadius : o) {
                 if(objectsInRadius.getColour().equals(realValid)) {
-                    setTarget(objectsInRadius.getPos().add(1, 1));
+                    this.getPathfinder().setTarget(objectsInRadius.getPos().add(1, 1));
                     break;
                 }
             }
         }
-    }
-
-    @Override
-    public float getMaxDistance() {
-        return 1;
     }
 }

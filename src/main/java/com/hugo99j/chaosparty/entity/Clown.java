@@ -9,6 +9,8 @@ import com.google.gson.JsonObject;
 import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.match.MatchView;
 import com.hugo99j.chaosparty.minigame.CountingMinigame;
+import com.hugo99j.chaosparty.minigame.counting.Activity;
+import com.hugo99j.chaosparty.minigame.counting.WalkAroundActivity;
 import com.hugo99j.chaosparty.util.ImageUtil;
 import com.hugo99j.chaosparty.util.RenderLayer;
 
@@ -16,31 +18,21 @@ import static com.hugo99j.chaosparty.GameData.getCurrentMinigame;
 import static com.hugo99j.chaosparty.GameData.px;
 
 public class Clown extends AbstractObject {
-    private int sheepTime = 0;
-    private Vector2 move = Vector2.Zero;
+    private Activity activity;
 
     @Override
     public void onAdd(boolean fromLoad) {
         super.onAdd(fromLoad);
         if(NumberUtils.getRandomInt(1, 3) == 1 && getCurrentMinigame() instanceof CountingMinigame) this.dispose();
+        else {
+            this.activity = new WalkAroundActivity(this);
+        }
     }
 
     @Override
     public void tick() {
-        sheepTime -= 1;
-        if(sheepTime <= 0) {
-            sheepTime = NumberUtils.getRandomInt(40, 100);
-            if (NumberUtils.getRandomInt(1, 2) == 1) {
-                move = new Vector2(NumberUtils.getRandomFloat(-1, 1), 0);
-            } else move = Vector2.Zero.cpy();
-            move.nor();
-        }
-
-        float speed = 20;
-        float actualSpeed = Math.max(speed-this.getVelocity().len(), 0);
-        if (move.len() > 0) this.getPhysics().applyForceToCenter(new Vector2(move.x * actualSpeed, move.y * actualSpeed), true);
-
         super.tick();
+        this.activity.tick();
     }
 
     @Override

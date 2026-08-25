@@ -27,6 +27,7 @@ public class HotPotatoBot extends BotController {
 
     public HotPotatoBot(Player player) {
         super(player);
+        this.getPathfinder().setMaxDistance(3);
     }
 
     @Override
@@ -49,7 +50,7 @@ public class HotPotatoBot extends BotController {
                         targetedPlayer = target;
                         //Just tag them if too close!
                         if (this.getPlayer().getPos().dst(target.getPos()) < 1) {
-                            this.getPlayer().moveTowardTarget(target.getPos(), this.getSpeed());
+                            this.getPlayer().moveTowardTarget(target.getPos(), this.getPathfinder().getSpeed());
                         } else {
                             Potato potato = new Potato();
                             potato.setX(this.getPlayer().getPos().x);
@@ -68,7 +69,7 @@ public class HotPotatoBot extends BotController {
                     //move toward other players
                     for (Player target : GameData.getLevelOrThrow().getObjectsInRadius(this.getPlayer().getPos(), 45, Player.class, true, true, this.getPlayer())) {
                         if (target.isNoClip()) continue; //skip dead players
-                        this.setTarget(target.getPos());
+                        this.getPathfinder().setTarget(target.getPos());
                         targetedPlayer = target;
                         break;
                     }
@@ -77,26 +78,21 @@ public class HotPotatoBot extends BotController {
             potatoCooldown--;
             if (!isHot) {
                 targetedPlayer = null;
-                this.setWalkCost(DISLIKE_HOT_PLAYER);
+                this.getPathfinder().setWalkCost(DISLIKE_HOT_PLAYER);
                 potatoCooldown = (int) ((0.5f * GameData.TICKS_PER_SECOND) * NumberUtils.getRandomFloat(1.0f, 1.7f));
 
                 // || this.hidingSpot.dst(hp.getHotPlayer().getPlayerObject().getPos()) < 15
-                if (this.getPathfinder().wasLastInvalid() || (this.getPlayer().getPos().dst(hidingSpot) < 2)) {
+                if (this.getPathfinder().getPathfinder().wasLastInvalid() || (this.getPlayer().getPos().dst(hidingSpot) < 2)) {
                     hidingSpot = getPlayer().getPos();
                     while (hidingSpot.dst(this.getPlayer().getPos()) < 10) {
                         hidingSpot = new Vector2(NumberUtils.getRandomInt(0, 62),  NumberUtils.getRandomInt(0, 32));
                     }
                 }
-                this.setTarget(hidingSpot);
+                this.getPathfinder().setTarget(hidingSpot);
             } else {
-                this.setWalkCost(null);
+                this.getPathfinder().setWalkCost(null);
             }
         }
-    }
-
-    @Override
-    public float getMaxDistance() {
-        return 3;
     }
 
     @Override

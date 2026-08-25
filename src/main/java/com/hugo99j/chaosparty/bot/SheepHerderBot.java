@@ -37,6 +37,8 @@ public class SheepHerderBot extends BotController {
         } else if(id == 3) {
             goal = new Vector2(30, 2);
         } else throw new IllegalArgumentException("Invalid id: " + id);
+        this.getPathfinder().setMaxDistance(1);
+        this.getPathfinder().setAllowsShortPaths(true);
     }
 
     @Override
@@ -52,18 +54,26 @@ public class SheepHerderBot extends BotController {
                 }
             }
         }
-        if(mode == Mode.GOING_TO_TARGET && this.getPlayer().getPos().dst(this.getTarget()) < 0.5f) {
+        if(mode == Mode.GOING_TO_TARGET && this.getPlayer().getPos().dst(this.getPathfinder().getTarget()) < 0.5f) {
             mode = Mode.GRABBING_TARGET;
         }
         if(mode == Mode.GRABBING_TARGET) {
-            this.getPlayer().moveTowardTarget(target.getPos().add(0.5f, 0.5f), this.getSpeed());
+            this.getPlayer().moveTowardTarget(target.getPos().add(0.5f, 0.5f), this.getPathfinder().getSpeed());
         }
         if(mode == Mode.PUSHING_TARGET) {
-            this.getPlayer().moveTowardTarget(goal, this.getSpeed());
+            this.getPlayer().moveTowardTarget(goal, this.getPathfinder().getSpeed());
             if(this.getPlayer().getPos().dst(target.getPos()) > 2) {
                 mode = Mode.NEEDS_TARGET;
             }
         }
+
+        if(mode == Mode.GOING_TO_TARGET) {
+            Vector2 change = goal.cpy().sub(16, 8);
+            change.x = Math.clamp(change.x, -1, 1);
+            change.y = Math.clamp(change.y, -1, 1);
+            this.getPathfinder().setTarget(target.getPos().cpy().sub(change.scl(1)));
+        }
+        this.getPathfinder().setTarget(null);
     }
 
     public void onSheepHit(Sheep sheep) {
@@ -76,31 +86,10 @@ public class SheepHerderBot extends BotController {
     }
 
     @Override
-    public boolean allowsShortPaths() {
-        return true;
-    }
-
-    @Override
     protected void addDebugInfo(List<String> info) {
         info.add("Target: " + Debuggers.devName(target));
         info.add("Goal: " + goal);
         info.add("State: " + mode);
-    }
-
-    @Override
-    public float getMaxDistance() {
-        return 1;
-    }
-
-    @Override
-    public @Nullable Vector2 getTarget() {
-        if(mode == Mode.GOING_TO_TARGET) {
-            Vector2 change = goal.cpy().sub(16, 8);
-            change.x = Math.clamp(change.x, -1, 1);
-            change.y = Math.clamp(change.y, -1, 1);
-            return target.getPos().cpy().sub(change.scl(1));
-        }
-        return null;
     }
 
     public enum Mode {
@@ -108,11 +97,6 @@ public class SheepHerderBot extends BotController {
         GOING_TO_TARGET,
         GRABBING_TARGET,
         PUSHING_TARGET
-    }
-
-    @Override
-    protected Predicate<PathfindPos> createWalkPredicate() {
-        return super.createWalkPredicate();
     }
 
     public Mode getMode() {

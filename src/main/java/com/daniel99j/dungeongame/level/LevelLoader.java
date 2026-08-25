@@ -121,7 +121,7 @@ public class LevelLoader {
 
         JsonArray lights = new JsonArray();
         for (LevelLight<?> levelLight : level.getLights()) {
-            lights.add(levelLight.write());
+            if(!levelLight.isDisposed()) lights.add(levelLight.write());
         }
 
         out.add("lights", lights);

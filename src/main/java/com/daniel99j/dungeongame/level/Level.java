@@ -223,7 +223,7 @@ public class Level implements Disposable {
                 for (int x = posX - size; x < posX + size; x++) {
                     for (int y = posY - size; y < posY + size; y++) {
                         PathfindPos pathfindDebugPos = new PathfindPos(x, y);
-                        boolean valid = bot.getPathfinder().getOptions().getWalkablePredicate().test(pathfindDebugPos);
+                        boolean valid = bot.getPathfinder().getPathfinder().getOptions().getWalkablePredicate().test(pathfindDebugPos);
                         GameData.shapeRenderer.setColor((valid ? Color.GREEN : Color.RED).cpy().mul(1, 1, 1, 0.7f));
                         GameData.shapeRenderer.rect(pathfindDebugPos.getX(), pathfindDebugPos.getY(), 1, 1);
                     }
@@ -240,7 +240,7 @@ public class Level implements Disposable {
                 List<Integer> complete = new ArrayList<>();
                 AbstractObject object = this.getObjectByUUID(hash);
                 if(object instanceof Player player && player.getBot() != null) {
-                    complete = player.getBot().getCompleted();
+                    complete = player.getBot().getPathfinder().getCompleted();
                 }
 
                 ShapeRenderer.ShapeType lastType = null;
@@ -414,9 +414,9 @@ public class Level implements Disposable {
     }
 
     public void removeLight(LevelLight<?> light) {
+        this.lights.remove(light);
         if(light == null || light.isDisposed()) return;
         light.dispose();
-        this.lights.remove(light);
         LightEditor.onRemoved(light, this);
     }
 
@@ -480,7 +480,7 @@ public class Level implements Disposable {
     public boolean raycast(Vector2 start, Vector2 end, Function<AbstractObject, Boolean> canHit) {
         ValueHolder<Boolean> wasBlocked = new ValueHolder<>(false);
         this.box2dWorld.rayCast((fixture, point, normal, fraction) -> {
-            if(!canHit.apply((AbstractObject) fixture.getBody().getUserData())) return 0;
+            if(!canHit.apply((AbstractObject) fixture.getBody().getUserData())) return -1;
             wasBlocked.object = true;
             return 1;
         }, start, end);

@@ -2,25 +2,17 @@ package com.hugo99j.chaosparty.ui.debugger;
 
 import box2dLight.ConeLight;
 import box2dLight.DirectionalLight;
-import box2dLight.PointLight;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
-import com.daniel99j.dungeongame.entity.AbstractObject;
-import com.daniel99j.dungeongame.level.Level;
-import com.daniel99j.dungeongame.level.LevelLight;
-import com.daniel99j.dungeongame.level.LevelLoader;
+import com.hugo99j.chaosparty.entity.AbstractObject;
+import com.hugo99j.chaosparty.level.Level;
+import com.hugo99j.chaosparty.level.LevelLight;
+import com.hugo99j.chaosparty.level.LevelLoader;
 import com.google.gson.JsonObject;
 import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.entity.TemporaryDevObject;
 import com.hugo99j.chaosparty.match.MatchView;
 import com.hugo99j.chaosparty.util.ImageUtil;
 import imgui.ImGui;
-import imgui.ImVec2;
-import imgui.ImVec4;
-import imgui.flag.*;
-
-import java.util.ArrayList;
-import java.util.UUID;
 
 import static com.hugo99j.chaosparty.ui.debugger.Debuggers.*;
 
@@ -128,7 +120,6 @@ public class LightEditor {
 
         @Override
         public void render(MatchView matchView) {
-            GameData.spriteBatch.draw(ImageUtil.get("bricks"), this.getPos().x, this.getPos().y, 1, 1);
             GameData.spriteBatch.draw(ImageUtil.get("lightbulb"), this.getPos().x-0.5f, this.getPos().y-0.5f, 1, 1);
             isAllowedToChange = true;
         }

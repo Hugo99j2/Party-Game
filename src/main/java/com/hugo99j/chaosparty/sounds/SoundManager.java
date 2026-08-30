@@ -1,7 +1,6 @@
-package com.daniel99j.dungeongame.sounds;
+package com.hugo99j.chaosparty.sounds;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 

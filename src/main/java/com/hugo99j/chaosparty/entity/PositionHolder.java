@@ -1,4 +1,4 @@
-package com.daniel99j.dungeongame.entity;
+package com.hugo99j.chaosparty.entity;
 
 import com.badlogic.gdx.math.Vector2;
 

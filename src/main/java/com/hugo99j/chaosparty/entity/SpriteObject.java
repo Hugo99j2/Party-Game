@@ -3,10 +3,6 @@ package com.hugo99j.chaosparty.entity;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
-import com.daniel99j.dungeongame.entity.AbstractObject;
-import com.daniel99j.dungeongame.entity.CollisionCategories;
-import com.daniel99j.dungeongame.entity.ObjectType;
-import com.daniel99j.dungeongame.entity.PhysicsSettings;
 import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.match.MatchView;
 import com.hugo99j.chaosparty.util.Animator;
@@ -51,7 +47,7 @@ public class SpriteObject extends AbstractObject implements DontCollideTogether 
 
     private TextureAtlas.AtlasRegion getCurrentSprite() {
         if(animated) {
-            return Animator.get(sprite, this);
+            return Animator.get(sprite, this, 0);
         } else return ImageUtil.get(sprite);
     };
 
@@ -108,7 +104,7 @@ public class SpriteObject extends AbstractObject implements DontCollideTogether 
     }
 
     @Override
-    public float getLayer() {
+    public RenderLayer getDefaultLayer() {
         return RenderLayer.TILESETS;
     }
 

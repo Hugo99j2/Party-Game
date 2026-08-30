@@ -8,15 +8,14 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.PixmapIO;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.daniel99j.dungeongame.entity.AbstractObject;
-import com.daniel99j.dungeongame.level.Level;
-import com.daniel99j.dungeongame.level.LevelLoader;
+import com.daniel99j.djutil.GenericValuesHolder;
+import com.daniel99j.djutil.MiscUtils;
+import com.hugo99j.chaosparty.entity.AbstractObject;
+import com.hugo99j.chaosparty.level.LevelLoader;
 import com.google.common.io.PatternFilenameFilter;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -28,15 +27,21 @@ import com.hugo99j.chaosparty.match.MatchView;
 import com.hugo99j.chaosparty.match.User;
 import com.hugo99j.chaosparty.minigame.MapEditor;
 import com.hugo99j.chaosparty.util.*;
+import com.llamalad7.mixinextras.lib.apache.commons.ArrayUtils;
 import imgui.ImGui;
 import imgui.ImVec2;
-import imgui.ImVec4;
 import imgui.flag.*;
+import imgui.type.ImDouble;
+import imgui.type.ImFloat;
+import imgui.type.ImInt;
 import imgui.type.ImString;
 
 import java.awt.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.*;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.zip.Deflater;
 
 import static com.hugo99j.chaosparty.ui.debugger.Debuggers.*;
@@ -381,6 +386,8 @@ public class ObjectEditor {
             onEdited();
         }
 
+        ImGui.text("Render Layer: "+object.getLayer());
+
         ImGui.separatorText("Properties");
         addVariables(object, object.getClass(), (holder) -> {
             try {
@@ -452,6 +459,187 @@ public class ObjectEditor {
         }
         return false;
     }
+
+    private static void addVariables(AbstractObject selectedObject, Class<?> clazz, Consumer<GenericValuesHolder<Field, AbstractObject, Object, ?, ?>> setter) {
+        if(selectedObject instanceof LightEditor.SelectedLightObject selectedLight) {
+            LightEditor.render(selectedLight);
+            return;
+        }
+        if(selectedObject instanceof SelectionGroup group) {
+            group.selected.ensureSafety();
+            boolean allMatch = true;
+            for (AbstractObject abstractObject : group.selected) {
+                if(abstractObject.getClass() != group.selected.getFirst().getClass()) {
+                    allMatch = false;
+                    break;
+                }
+            }
+            if(allMatch) {
+                addVariables(group.selected.getFirst(), group.selected.getFirst().getClass(), (holder) -> {
+                    for (AbstractObject abstractObject : group.selected) {
+                        try {
+                            holder.a().set(abstractObject, holder.c());
+                        } catch (IllegalAccessException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                });
+                return;
+            }
+        }
+        for (Field declaredField : clazz.getDeclaredFields()) {
+            if(declaredField.getAnnotation(NoDebugOption.class) != null || Modifier.isStatic(declaredField.getModifiers()) || Modifier.isFinal(declaredField.getModifiers())) continue;
+            declaredField.setAccessible(true);
+            if(declaredField.getAnnotation(RequiresRefresh.class) != null) {
+                ImGui.textColored(255, 0, 0, 255, "R");
+                ImGui.setItemTooltip("Requires refresh");
+                ImGui.sameLine();
+            }
+            if(declaredField.getAnnotation(NonEditable.class) != null) {
+                ImGui.beginDisabled();
+            }
+            try {
+                addVariable(declaredField, declaredField.getName(), declaredField.getType(), declaredField.get(selectedObject), (t) -> {
+                    try {
+                        setter.accept(new GenericValuesHolder<>(declaredField, selectedObject, t));
+                    } catch (Exception e) {
+                        Logger.error("Error setting variable", e);
+                    }
+                });
+            } catch (Exception e) {
+                Logger.error("Error adding variable", e);
+                ImGui.text("Error adding variable: " + e.getMessage());
+            }
+            if(declaredField.getAnnotation(NonEditable.class) != null) {
+                ImGui.endDisabled();
+            }
+        }
+
+        if(clazz.getSuperclass() != null) addVariables(selectedObject, clazz.getSuperclass(), setter);
+    }
+
+    private static <T> void addVariable(Field declaredField, String name, Class<?> clazz, T current, Consumer<T> setter) {
+        //noinspection unchecked
+        addVariable2(declaredField, name, (Class<T>) clazz, current, setter);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T> void addVariable2(Field declaredField, String name, Class<T> clazz, T current, Consumer<T> setter) {
+        NullOrNotDebugOption nullOrNotDebugOption = declaredField.getAnnotation(NullOrNotDebugOption.class);
+        if(nullOrNotDebugOption != null) {
+            ImGui.pushID("Toggle Disabled for "+name);
+            if(ImGui.checkbox("", current != null)) {
+                if(current == null) {
+                    try {
+                        Class<?> source = Class.forName(MiscUtils.getTextBetween(nullOrNotDebugOption.constructor(), "", "::"));
+                        setter.accept((T) source.getMethod(MiscUtils.replaceTextBetween(nullOrNotDebugOption.constructor(), "", "::", "")).invoke(null));
+                    } catch (Exception e) {
+                        Logger.error("Error creating value", e);
+                    }
+                } else setter.accept(null);
+            }
+            ImGui.sameLine();
+            ImGui.popID();
+            //ImGui.sameLine();
+        }
+        if(current == null) {
+            ImGui.text(name + " (null)");
+            return;
+        }
+        Class<?> type = MiscUtils.getClassNonPrimitive(clazz);
+        if(type.equals(Integer.class)) {
+            ImInt check = new ImInt((Integer) current);
+            if(ImGui.inputInt(name, check)) {
+                setter.accept((T) (Object) check.get());
+                onEdited();
+            }
+        } else if(type.equals(Float.class)) {
+            ImFloat check = new ImFloat((Float) current);
+            if(ImGui.inputFloat(name, check)) {
+                setter.accept((T) (Object) check.get());
+                onEdited();
+            }
+        } else if(type.equals(Double.class)) {
+            ImDouble check = new ImDouble((Double) current);
+            if(ImGui.inputDouble(name, check)) {
+                setter.accept((T) (Object) check.get());
+                onEdited();
+            }
+        } else if(type.equals(String.class)) {
+            ImString check = new ImString((String) current, ((String) current).length()+10000);
+            if(ImGui.inputText(name, check, ImGuiInputTextFlags.EnterReturnsTrue)) {
+                setter.accept((T) check.get());
+                onEdited();
+            }
+        } else if(type.equals(UUID.class)) {
+            ImString check = new ImString(current.toString());
+            if(ImGui.inputText(name, check, ImGuiInputTextFlags.EnterReturnsTrue)) {
+                setter.accept((T) UUID.fromString(check.get()));
+                onEdited();
+            }
+        } else if(type.equals(Boolean.class)) {
+            if(ImGui.checkbox(name, (Boolean) current)) {
+                setter.accept((T) ((Boolean) !((Boolean) current)));
+                onEdited();
+            }
+        } else if(type.equals(Vector2.class)) {
+            float[] check = {((Vector2) current).x, ((Vector2) current).y};
+            if(ImGui.inputFloat2(name, check)) {
+                setter.accept((T) new Vector2(check[0], check[1]));
+                onEdited();
+            }
+        } else if(type.equals(Color.class)) {
+            float[] check = {((Color) current).r, ((Color) current).g, ((Color) current).b, ((Color) current).a};
+            if(ImGui.colorEdit4(name, check)) {
+                setter.accept((T) new Color(check[0], check[1], check[2], check[3]));
+            }
+        } else if(type.equals(Map.class)) {
+            int flags = ImGuiTableFlags.Borders | ImGuiTableFlags.RowBg;
+            if(ImGui.collapsingHeader(name)) {
+                ImGui.indent();
+                if (ImGui.beginTable(name, 1, flags)) {
+                    ((Map<?, ?>) current).forEach((key, value) -> {
+                        ImGui.tableNextRow();
+                        ImGui.tableNextColumn();
+                        addVariable(declaredField, key.toString(), value.getClass(), value, (v) -> {
+                            setMapValue(current, key, v);
+                        });
+                    });
+                    ImGui.endTable();
+                }
+                ImGui.unindent();
+            }
+        } else if(type.equals(RenderLayerOverride.class)) {
+            ImGui.text(name);
+            ImGui.indent();
+            RenderLayer[] layers = RenderLayer.getAll();
+            List<String> layerNamesList = new ArrayList<>();
+            for (RenderLayer layer : layers) {
+                layerNamesList.add(layer.getName());
+            }
+            String[] layerNames = layerNamesList.toArray(new String[0]);
+            ImInt selected = new ImInt(layerNamesList.indexOf(((RenderLayerOverride) current).getSource().getName()));
+            if(ImGui.combo("Source", selected, layerNames)) {
+                setter.accept((T) new RenderLayerOverride(layers[selected.get()], ((RenderLayerOverride) current).getOffset()));
+            }
+            slider("Offset", ((RenderLayerOverride) current).getOffset(), (f) -> {
+                setter.accept((T) new RenderLayerOverride(((RenderLayerOverride) current).getSource(), f));
+            }, -0.5f, 0.5f, "%.3f");
+            ImGui.unindent();
+        } else {
+            ImGui.text("Unsupported type: " + clazz + " (name: " + name + "value: " + current + ")");
+        }
+    }
+
+    private static <A, B> void setMapValue(Object current, A key, B v) {
+        //noinspection unchecked
+        setMapValue((HashMap<A, B>) current, key, v);
+    }
+
+    private static <A, B> void setMapValue(HashMap<A, B> current, A key, B v) {
+        current.put(key, v);
+    }
+
 
     public static class MapScreenshotter extends TemporaryDevObject {
         private boolean takePhoto = false;

@@ -1,6 +1,5 @@
 package com.hugo99j.chaosparty.entity;
 
-import com.daniel99j.dungeongame.entity.*;
 import com.google.gson.JsonObject;
 
 import java.util.HashMap;
@@ -22,6 +21,7 @@ public class ObjectTypes {
     public static final ObjectType<FallingFloorObject> FALLING_FLOOR = registerObjectType("falling_floor", FallingFloorObject::read, FallingFloorObject::createDefault);
     public static final ObjectType<TemporaryDevObject> TEMP_DEV_OBJECT = registerObjectType("temp_dev_object", TemporaryDevObject::read, TemporaryDevObject::createDefault);
     public static final ObjectType<Clown> CLOWN = registerObjectType("clown", Clown::read, Clown::createDefault);
+    public static final ObjectType<DummyPlayer> DUMMY_PLAYER = registerObjectType("dummy", DummyPlayer::read, DummyPlayer::createDefault);
 
 
     private static <T extends AbstractObject> ObjectType<T> registerObjectType(String id, Function<JsonObject, T> reader, Supplier<T> defaultConstructor) {

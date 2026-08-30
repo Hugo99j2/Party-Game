@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Contact;
-import com.daniel99j.dungeongame.entity.*;
 import com.google.gson.JsonObject;
 import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.match.MatchView;
@@ -23,16 +22,9 @@ public class Potato extends AbstractObject {
     @Override
     public void onAdd(boolean fromLoad) {
         super.onAdd(fromLoad);
-        hotEffect = new ParticleEffect();
-        hotEffect.load(Gdx.files.internal(PathUtil.asset("particles/flame.p")), GameData.atlas);
-        hotEffect.setEmittersCleanUpBlendFunction(false);
-        hotEffect.scaleEffect(0.01f);
+        hotEffect = this.getLevel().addParticle("flame", this.getPos().add(0.1f, 0.4f));
         hotEffect.setDuration(1000000);
-        hotEffect.start();
-        GameData.getLevelOrThrow().particles.add(hotEffect);
         this.getPhysics().setLinearDamping(2);
-        hotEffect.setPosition(this.getPos().x+0.1f, this.getPos().y+0.4f);
-        //this.getPhysics().getFixtureList().get(0).
     }
 
     @Override
@@ -91,8 +83,8 @@ public class Potato extends AbstractObject {
     }
 
     @Override
-    public float getLayer() {
-        return RenderLayer.NPC;
+    public RenderLayer getDefaultLayer() {
+        return RenderLayer.COLLECTABLES;
     }
 
     @Override

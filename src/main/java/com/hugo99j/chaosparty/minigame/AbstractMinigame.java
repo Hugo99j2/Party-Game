@@ -2,7 +2,7 @@ package com.hugo99j.chaosparty.minigame;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
-import com.daniel99j.dungeongame.level.LevelLoader;
+import com.hugo99j.chaosparty.level.LevelLoader;
 import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.bot.BotController;
 import com.hugo99j.chaosparty.entity.Player;

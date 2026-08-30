@@ -1,8 +1,11 @@
 
 package com.hugo99j.chaosparty.bot;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.daniel99j.djutil.NumberUtils;
+import com.daniel99j.djutil.ValueHolder;
 import com.daniel99j.djutil.pathfinder.PathfindPos;
 import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.entity.LiquidBarrelObject;
@@ -37,15 +40,42 @@ public class SheepHerderBot extends BotController {
         } else if(id == 3) {
             goal = new Vector2(30, 2);
         } else throw new IllegalArgumentException("Invalid id: " + id);
-        this.getPathfinder().setMaxDistance(1);
+        this.getPathfinder().setMaxDistance(0);
         this.getPathfinder().setAllowsShortPaths(true);
+        this.getPathfinder().setStuckPrevention(true);
     }
 
     @Override
     public void tick() {
+        if(mode == Mode.GOING_TO_TARGET) {
+            Vector2 sheepPos = target.getPos().cpy().add(0.5f, 0.5f);
+            Vector2 goalPos = goal.cpy();
+            Vector2 toGoal = goalPos.cpy().sub(sheepPos).nor();
+            float pushDistance = 1.0f;
+            Vector2 edited = sheepPos.cpy().sub(toGoal.scl(pushDistance));
+
+            this.getPathfinder().setTarget(edited);
+
+            this.getPathfinder().setTarget(edited);
+
+            Debuggers.customLevelRenderers.put((v) -> {
+                GameData.shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+                GameData.shapeRenderer.setColor(Color.PINK);
+                GameData.shapeRenderer.line(this.getPlayer().getPos().x, this.getPlayer().getPos().y, edited.x, edited.y);
+                GameData.shapeRenderer.end();
+            }, new ValueHolder<>(1));
+        } else this.getPathfinder().setTarget(null);
+
+        Debuggers.customLevelRenderers.put((v) -> {
+            GameData.shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+            GameData.shapeRenderer.setColor(Color.LIME);
+            GameData.shapeRenderer.line(this.getPlayer().getPos().x, this.getPlayer().getPos().y, this.goal.x, this.goal.y);
+            GameData.shapeRenderer.end();
+        }, new ValueHolder<>(1));
+
         super.tick();
         tickSinceContact++;
-        if(mode == Mode.NEEDS_TARGET || (mode == Mode.PUSHING_TARGET && target == null || target.getPos().dst(goal) < 5 || tickSinceContact >= 5)) {
+        if(mode == Mode.NEEDS_TARGET || (mode == Mode.PUSHING_TARGET && target == null || target.getPos().dst(goal) < 4 || tickSinceContact >= 10)) {
             for (Sheep objectsInRadius : this.getPlayer().getLevel().getObjectsInRadius(this.getPlayer().getPos(), 30, Sheep.class, true, true, null)) {
                 if (objectsInRadius.getPos().dst(goal) > 5) {
                     target = objectsInRadius;
@@ -54,7 +84,7 @@ public class SheepHerderBot extends BotController {
                 }
             }
         }
-        if(mode == Mode.GOING_TO_TARGET && this.getPlayer().getPos().dst(this.getPathfinder().getTarget()) < 0.5f) {
+        if(mode == Mode.GOING_TO_TARGET && this.getPathfinder().getTarget() != null && this.getPlayer().getPos().add(0.5f, 0.5f).dst(this.getPathfinder().getTarget().add(0.5f, 0.5f)) < 1.5f) {
             mode = Mode.GRABBING_TARGET;
         }
         if(mode == Mode.GRABBING_TARGET) {
@@ -66,14 +96,6 @@ public class SheepHerderBot extends BotController {
                 mode = Mode.NEEDS_TARGET;
             }
         }
-
-        if(mode == Mode.GOING_TO_TARGET) {
-            Vector2 change = goal.cpy().sub(16, 8);
-            change.x = Math.clamp(change.x, -1, 1);
-            change.y = Math.clamp(change.y, -1, 1);
-            this.getPathfinder().setTarget(target.getPos().cpy().sub(change.scl(1)));
-        }
-        this.getPathfinder().setTarget(null);
     }
 
     public void onSheepHit(Sheep sheep) {

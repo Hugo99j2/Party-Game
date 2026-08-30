@@ -1,7 +1,7 @@
 package com.hugo99j.chaosparty.minigame;
 
-import com.daniel99j.dungeongame.sounds.SoundInstance;
-import com.daniel99j.dungeongame.sounds.SoundManager;
+import com.hugo99j.chaosparty.sounds.SoundInstance;
+import com.hugo99j.chaosparty.sounds.SoundManager;
 import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.match.MatchPlayer;
 import com.hugo99j.chaosparty.match.MatchView;
@@ -54,7 +54,12 @@ public class CountingMinigame extends AbstractMinigame {
 
     @Override
     public void setupViews(List<MatchView> matchViews) {
-        matchViews.add(new MatchView(32, 18));
+        matchViews.add(new MatchView(40, 22));
         ((ScreenCenterer) matchViews.getFirst().gameViewport).party_Game$setCenter(true);
+    }
+
+    @Override
+    public float getPlayerSpeed(MatchPlayer player) {
+        return 100;
     }
 }

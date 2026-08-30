@@ -1,15 +1,18 @@
 package com.hugo99j.chaosparty.util;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector4;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.QueryCallback;
+import com.daniel99j.djutil.NumberUtils;
+import com.daniel99j.djutil.ValueHolder;
 import com.daniel99j.djutil.pathfinder.CachedPathfinder;
 import com.daniel99j.djutil.pathfinder.PathfindPos;
-import com.daniel99j.dungeongame.entity.AbstractObject;
-import com.daniel99j.dungeongame.entity.CollisionCategories;
+import com.hugo99j.chaosparty.entity.AbstractObject;
+import com.hugo99j.chaosparty.entity.CollisionCategories;
 import com.hugo99j.chaosparty.GameData;
-import com.hugo99j.chaosparty.entity.Player;
 import com.hugo99j.chaosparty.ui.debugger.Debuggers;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,7 +32,10 @@ public class ObjectPathfinder {
     private ToDoubleFunction<PathfindPos> walkCost = null;
     private boolean allowsShortPaths = false;
     private float speed = 200;
-    private float maxDistance = 5;
+    private float maxDistance = 1;
+    private boolean stuckPrevention = false;
+    private int stuckTicks = 0;
+    private Vector2 lastPos = null;
 
     public ObjectPathfinder(AbstractObject object) {
         this.object = object;
@@ -47,6 +53,24 @@ public class ObjectPathfinder {
         }
         Vector2 target = getTarget();
         if(target != null) {
+            if(stuckPrevention) {
+                if(this.lastPos != null && this.getObject().getPos().dst(this.lastPos) < 0.01f) {
+                    this.stuckTicks++;
+                } else this.stuckTicks = 0;
+                this.lastPos = this.getObject().getPos();
+                if(this.stuckTicks > 40) {
+                    this.stuckTicks = 0;
+                    float speed = Math.max(this.getSpeed()-this.object.getVelocity().len(), 0);
+                    this.object.moveTowardTarget(new Vector2(this.getObject().getPos().x+NumberUtils.getRandomFloat(-1, 1), this.getObject().getPos().y+NumberUtils.getRandomFloat(-1, 1)), speed);
+                    if(Debuggers.isEnabled("pathfindingRender")) Debuggers.customLevelRenderers.put((v) -> {
+                        GameData.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+                        GameData.shapeRenderer.setColor(Color.PINK.cpy().mul(1, 1, 1, 0.6f));
+                        GameData.shapeRenderer.triangle(this.getObject().getPos().x, this.object.getPos().y, this.getObject().getPos().x+0.5f, this.getObject().getPos().y+1, this.getObject().getPos().x+1, this.getObject().getPos().y);
+                        GameData.shapeRenderer.end();
+                    }, new ValueHolder<>(40));
+                    return;
+                }
+            }
             PathfindPos cachedTarget = toPathfindPos(target);
             PathfindPos pos = toPathfindPos(this.object.getPos().add(0.5f, 0.5f));
             List<PathfindPos> nodes = pathfinder.findPath(oldPos == null ? pos : oldPos, cachedTarget, pos);
@@ -182,5 +206,9 @@ public class ObjectPathfinder {
             this.walkCost = walkCost;
             this.getPathfinder().setOptions(this.getPathfinder().getOptions().newBuilder().positionCostFunction(this.walkCost).build());
         }
+    }
+
+    public void setStuckPrevention(boolean stuckPrevention) {
+        this.stuckPrevention = stuckPrevention;
     }
 }

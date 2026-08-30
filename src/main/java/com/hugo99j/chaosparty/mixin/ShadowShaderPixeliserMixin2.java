@@ -1,20 +1,10 @@
 package com.hugo99j.chaosparty.mixin;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.daniel99j.dungeongame.level.Level;
-import com.hugo99j.chaosparty.GameData;
-import com.hugo99j.chaosparty.util.Logger;
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import com.llamalad7.mixinextras.sugar.Local;
+import com.hugo99j.chaosparty.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import shaders.ShadowShader;
 
 @Mixin(targets = "box2dLight.LightMap")
 public class ShadowShaderPixeliserMixin2 {

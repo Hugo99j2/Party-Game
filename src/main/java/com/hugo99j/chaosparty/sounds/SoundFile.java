@@ -1,4 +1,4 @@
-package com.daniel99j.dungeongame.sounds;
+package com.hugo99j.chaosparty.sounds;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;

@@ -1,14 +1,13 @@
 package com.hugo99j.chaosparty.ui.screen;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 import com.daniel99j.djutil.GenericValuesHolder;
 import com.daniel99j.djutil.NumberUtils;
 import com.daniel99j.djutil.maths.MathsContext;
-import com.daniel99j.dungeongame.sounds.SoundManager;
+import com.hugo99j.chaosparty.sounds.SoundManager;
 import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.match.User;
 import com.hugo99j.chaosparty.ui.element.TextInput;

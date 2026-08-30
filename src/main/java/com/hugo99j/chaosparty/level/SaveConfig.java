@@ -1,4 +1,4 @@
-package com.daniel99j.dungeongame.level;
+package com.hugo99j.chaosparty.level;
 
 public enum SaveConfig {
     ALWAYS,

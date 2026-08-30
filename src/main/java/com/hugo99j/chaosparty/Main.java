@@ -1,15 +1,16 @@
 package com.hugo99j.chaosparty;
 
 import com.badlogic.gdx.*;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Graphics;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.tools.texturepacker.TexturePacker;
+import com.badlogic.gdx.utils.Os;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.daniel99j.dungeongame.sounds.SoundManager;
+import com.badlogic.gdx.utils.SharedLibraryLoader;
+import com.hugo99j.chaosparty.sounds.SoundManager;
 import com.hugo99j.chaosparty.loader.Lwjgl3Launcher;
 import com.hugo99j.chaosparty.match.MatchView;
 import com.hugo99j.chaosparty.minigame.MapEditor;

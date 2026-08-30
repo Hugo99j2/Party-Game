@@ -1,8 +1,5 @@
 package com.hugo99j.chaosparty.entity;
 
-import com.daniel99j.dungeongame.entity.AbstractObject;
-import com.daniel99j.dungeongame.entity.ObjectType;
-import com.daniel99j.dungeongame.entity.PhysicsSettings;
 import com.google.gson.JsonObject;
 import com.hugo99j.chaosparty.match.MatchView;
 import com.hugo99j.chaosparty.ui.debugger.CopiedObjectSelection;
@@ -51,8 +48,8 @@ public class TemporaryDevObject extends AbstractObject {
     }
 
     @Override
-    public float getLayer() {
-        return RenderLayer.UI;
+    public RenderLayer getDefaultLayer() {
+        return RenderLayer.TOP;
     }
 
     @Override

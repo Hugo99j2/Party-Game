@@ -3,16 +3,9 @@ package com.hugo99j.chaosparty.entity;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.daniel99j.djutil.NumberUtils;
-import com.daniel99j.dungeongame.entity.AbstractObject;
-import com.daniel99j.dungeongame.entity.CollisionCategories;
-import com.daniel99j.dungeongame.entity.ObjectType;
-import com.daniel99j.dungeongame.entity.PhysicsSettings;
 import com.hugo99j.chaosparty.bot.SheepHerderBot;
 import com.hugo99j.chaosparty.match.MatchView;
-import com.hugo99j.chaosparty.util.ControllerInput;
-import com.hugo99j.chaosparty.util.ControllerUtil;
-import com.hugo99j.chaosparty.util.ImageUtil;
-import com.hugo99j.chaosparty.util.RenderLayer;
+import com.hugo99j.chaosparty.util.*;
 import com.google.gson.JsonObject;
 import com.hugo99j.chaosparty.GameData;
 
@@ -38,20 +31,9 @@ public class Sheep extends AbstractObject {
         if (move.len() > 0) this.getPhysics().applyForceToCenter(new Vector2(move.x * actualSpeed, move.y * actualSpeed), true);
 
         super.tick();
-    }
 
-    @Override
-    public void onCollision(Contact contact, AbstractObject object) {
-        if(object instanceof Player player) {
-            if(player.getBot() != null) {
-                if(((SheepHerderBot) player.getBot()).getMode() == SheepHerderBot.Mode.PUSHING_TARGET) {
-                    this.setVelocity(object.getVelocity());
-                }
-            } else {
-                if(((ControllerUtil) player.getMatchPlayer().controller).isPressed(ControllerInput.X)) {
-                    this.setVelocity(object.getVelocity());
-                }
-            }
+        if(this.getVelocity().len() < 0.1f && NumberUtils.getRandomInt(1, 500) == 1) {
+            this.getLevel().addParticle("grass", this.getPos().add(0.8f, 0.6f));
         }
     }
 
@@ -81,7 +63,7 @@ public class Sheep extends AbstractObject {
     }
 
     @Override
-    public float getLayer() {
+    public RenderLayer getDefaultLayer() {
         return RenderLayer.NPC;
     }
 

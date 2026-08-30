@@ -36,12 +36,6 @@ repositories {
 }
 
 dependencies {
-  implementation "com.badlogicgames.box2dlights:box2dlights:$box2dlightsVersion"
-  implementation "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
-  implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
-  implementation "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
-  compileOnly 'org.jetbrains:annotations:26.0.2'
-
   implementation "io.github.spair:imgui-java-binding:$imguiVersion"
   implementation "io.github.spair:imgui-java-lwjgl3:$imguiVersion"
   implementation "io.github.spair:imgui-java-natives-linux:$imguiVersion"
@@ -52,8 +46,6 @@ dependencies {
 
   //implementation "net.fabricmc:sponge-mixin:0.17.3+mixin.0.8.7"
 
-  implementation "com.daniel99j:djutil:1.7.5"
-
   implementation "com.badlogicgames.gdx-controllers:gdx-controllers-core:$gdxControllers"
   implementation "com.badlogicgames.gdx-controllers:gdx-controllers-desktop:$gdxControllers"
   implementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
@@ -61,20 +53,13 @@ dependencies {
   implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
   implementation "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
 
-  //implementation "org.spongepowered:mixin:0.8.7"
-  //annotationProcessor "org.spongepowered:mixin:0.8.7:processor"
-
   if(enableGraalNative == 'true') {
     implementation "io.github.berstanio:gdx-svmhelper-backend-lwjgl3:$graalHelperVersion"
     implementation "io.github.berstanio:gdx-svmhelper-extension-box2d:$graalHelperVersion"
   }
 
-
-//
-  //metajars implementation("net.fabricmc:fabric-loader:${project.fabricLoaderVersion}")
   metajars implementation("com.daniel99j:fabric-loader:${project.fabricLoaderVersion}")
   implementation "net.fabricmc:tiny-mappings-parser:${project.tinyMappingsParserVersion}"
-
   implementation("net.fabricmc:sponge-mixin:${mixinVersion}") {
     exclude(group: 'com.google.code.gson')
     exclude(group: 'com.google.guava')
@@ -86,38 +71,20 @@ dependencies {
   implementation "net.fabricmc:access-widener:${project.accessWidenerVersion}"
 
   implementation( "org.ow2.asm:asm:${project.asmVersion}")
-    implementation( "org.ow2.asm:asm-analysis:${project.asmVersion}")
-      implementation( "org.ow2.asm:asm-commons:${project.asmVersion}")
-        implementation( "org.ow2.asm:asm-tree:${project.asmVersion}")
-          implementation( "org.ow2.asm:asm-util:${project.asmVersion}")
+  implementation( "org.ow2.asm:asm-analysis:${project.asmVersion}")
+  implementation( "org.ow2.asm:asm-commons:${project.asmVersion}")
+  implementation( "org.ow2.asm:asm-tree:${project.asmVersion}")
+  implementation( "org.ow2.asm:asm-util:${project.asmVersion}")
 
-
-//
   implementation "com.badlogicgames.box2dlights:box2dlights:$box2dlightsVersion"
   implementation "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
   implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
   implementation "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
   compileOnly 'org.jetbrains:annotations:26.0.2'
 
-  implementation "io.github.spair:imgui-java-binding:$imguiVersion"
-  implementation "io.github.spair:imgui-java-lwjgl3:$imguiVersion"
-  implementation "io.github.spair:imgui-java-natives-linux:$imguiVersion"
-  implementation "io.github.spair:imgui-java-natives-macos:$imguiVersion"
-  implementation "io.github.spair:imgui-java-natives-windows:$imguiVersion"
-
   implementation "com.google.code.gson:gson:2.13.2"
 
-  implementation "net.fabricmc:sponge-mixin:$mixinVersion"
-  implementation "io.github.llamalad7:mixinextras-fabric:$mixinExtrasVersion"
-
-  implementation "com.daniel99j:djutil:1.7.5"
-
-  implementation "com.badlogicgames.gdx-controllers:gdx-controllers-core:$gdxControllers"
-  implementation "com.badlogicgames.gdx-controllers:gdx-controllers-desktop:$gdxControllers"
-  implementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
-  implementation "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
-  implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
-  implementation "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
+  implementation "com.daniel99j:djutil:1.7.7"
 
   file("libs/construo-2.1.0-no-asm.jar")
 }
@@ -199,8 +166,8 @@ import io.github.fourlastor.construo.Target
 import java.nio.file.Files
 
 construo {
-  name.set("Test")
-  humanName.set("Test")
+  name.set("Party Game")
+  humanName.set("Party Game")
 
   jarTask.set("jar")
 
@@ -245,7 +212,7 @@ construo {
       icon.set(project.file("src/main/resources/assets/textures/icon.png"))
       jdkUrl.set("https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.10%2B7/OpenJDK21U-jdk_x64_windows_hotspot_21.0.10_7.zip")
       // Uncomment the next line to show a console when the game runs, to print messages.
-      useConsole.set(true)
+      //useConsole.set(true)
     }
   }
 }

@@ -2,6 +2,7 @@ package com.hugo99j.chaosparty.util;
 
 import com.badlogic.gdx.controllers.Controller;
 import com.daniel99j.djutil.UsageLimited;
+import com.studiohartman.jamepad.ControllerButton;
 
 import java.util.function.Function;
 
@@ -90,6 +91,11 @@ public enum ControllerInput {
         c -> c.getButton(c.getMapping().buttonDpadLeft),
         -1),
 
+    GUIDE(
+        c -> c.getButton(ControllerButton.GUIDE.ordinal()) ? 1f : 0f,
+        c -> c.getButton(ControllerButton.GUIDE.ordinal()),
+        -1),
+
     MENU(
         c -> c.getButton(c.getMapping().buttonStart) ? 1f : 0f,
         c -> c.getButton(c.getMapping().buttonStart),
@@ -98,6 +104,11 @@ public enum ControllerInput {
     SCREEN(
         c -> c.getButton(c.getMapping().buttonBack) ? 1f : 0f,
         c -> c.getButton(c.getMapping().buttonBack),
+        -1),
+
+    SHARE(
+        c -> c.getButton(ControllerButton.BUTTON_MISC1.ordinal()) ? 1f : 0f,
+        c -> c.getButton(ControllerButton.BUTTON_MISC1.ordinal()),
         -1),
 
     LEFT_BUMPER(

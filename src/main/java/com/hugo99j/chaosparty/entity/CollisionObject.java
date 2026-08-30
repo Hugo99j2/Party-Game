@@ -1,19 +1,14 @@
 package com.hugo99j.chaosparty.entity;
 
 import com.daniel99j.djutil.ValueHolder;
-import com.daniel99j.dungeongame.entity.AbstractObject;
 import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.match.MatchView;
 import com.hugo99j.chaosparty.minigame.MapEditor;
 import com.hugo99j.chaosparty.util.ImageUtil;
 import com.hugo99j.chaosparty.util.RequiresRefresh;
-import com.daniel99j.dungeongame.entity.CollisionCategories;
-import com.daniel99j.dungeongame.entity.ObjectType;
-import com.daniel99j.dungeongame.entity.PhysicsSettings;
 import com.google.gson.JsonObject;
 import com.hugo99j.chaosparty.util.RenderLayer;
 
-import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -72,8 +67,8 @@ public class CollisionObject extends AbstractObject implements DontCollideTogeth
     }
 
     @Override
-    public float getLayer() {
-        return RenderLayer.NPC;
+    public RenderLayer getDefaultLayer() {
+        return RenderLayer.TOP;
     }
 
     @Override

@@ -3,15 +3,11 @@ package com.hugo99j.chaosparty.entity;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.daniel99j.djutil.NumberUtils;
-import com.daniel99j.dungeongame.entity.AbstractObject;
-import com.daniel99j.dungeongame.entity.ObjectType;
-import com.daniel99j.dungeongame.entity.PhysicsSettings;
 import com.google.gson.JsonObject;
 import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.match.MatchView;
 import com.hugo99j.chaosparty.util.ImageUtil;
 import com.hugo99j.chaosparty.util.RenderLayer;
-import org.checkerframework.checker.units.qual.C;
 
 import java.util.List;
 
@@ -54,8 +50,8 @@ public class FallingFloorObject extends AbstractObject {
     }
 
     @Override
-    public float getLayer() {
-        return RenderLayer.NPC;
+    public RenderLayer getDefaultLayer() {
+        return RenderLayer.DECORATIONS;
     }
 
     @Override

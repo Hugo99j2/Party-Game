@@ -7,6 +7,7 @@ import com.google.gson.JsonObject;
 import com.hugo99j.chaosparty.GameData;
 import org.checkerframework.checker.units.qual.A;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -18,12 +19,18 @@ public class Animator {
     private static final Map<String, Animation> animations = new HashMap<>();
 
     public static TextureAtlas.AtlasRegion get(String name) {
-        return get(name, "");
+        return get(name, null, 0);
     }
 
-    public static TextureAtlas.AtlasRegion get(String name, Object unique) {
+    public static TextureAtlas.AtlasRegion get(String name, @Nullable Object unique, float startTime) {
         float div = animations.containsKey(name) ? animations.get(name).frameTime() : 1;
-        return getFrame(name, (int) Math.floor(Math.abs(unique.hashCode())+Math.sin(unique.hashCode())+GameData.time/div));
+        int hash = unique == null ? 0 : unique.hashCode();
+        return getFrame(name, (int) Math.floor(Math.abs(hash)+Math.sin(hash)+(GameData.time-startTime)/div));
+    }
+
+    public static Animation getInfo(String name) {
+        getFrame(name, 0);
+        return animations.get(name);
     }
 
     public static TextureAtlas.AtlasRegion getFrame(String name, int frame) {
@@ -43,7 +50,8 @@ public class Animator {
                 } else data.get("frames").getAsJsonArray().forEach(sprite -> {
                     files.add(ImageUtil.get(sprite.getAsString()));
                 });
-                animations.put(name, new Animation(name, data.get("frame_time").getAsFloat(), files));
+                float frameTime = data.get("frame_time").getAsFloat();
+                animations.put(name, new Animation(name, frameTime, files, frameTime*files.size()));
             } catch (Exception e) {
                 return ImageUtil.get("missing");
             }

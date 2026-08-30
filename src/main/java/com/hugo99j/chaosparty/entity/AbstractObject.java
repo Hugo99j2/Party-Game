@@ -1,4 +1,4 @@
-package com.daniel99j.dungeongame.entity;
+package com.hugo99j.chaosparty.entity;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
@@ -11,11 +11,9 @@ import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.match.MatchView;
 import com.hugo99j.chaosparty.ui.debugger.Debuggers;
 import com.hugo99j.chaosparty.ui.debugger.ObjectEditor;
-import com.hugo99j.chaosparty.util.NoDebugOption;
-import com.daniel99j.dungeongame.level.Level;
+import com.hugo99j.chaosparty.util.*;
+import com.hugo99j.chaosparty.level.Level;
 import com.google.gson.JsonObject;
-import com.hugo99j.chaosparty.util.NonEditable;
-import com.hugo99j.chaosparty.util.RenderUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -33,6 +31,8 @@ public abstract class AbstractObject implements Disposable {
     private boolean removed = false;
     @NonEditable
     private int entityId;
+    @NullOrNotDebugOption(constructor = "com.hugo99j.chaosparty.util.RenderLayerOverride::createDefault")
+    private RenderLayerOverride overrideLayer = null;
 
     public AbstractObject() {
     }
@@ -163,6 +163,7 @@ public abstract class AbstractObject implements Disposable {
         object.addProperty("y", this.getPos().y);
         object.addProperty("uuid", this.getUUID().toString());
         object.addProperty("type", this.getType().id());
+        if(this.overrideLayer != null) object.add("override_layer", this.overrideLayer.write());
 
         JsonObject custom = new JsonObject();
         writeAdditional(custom);
@@ -175,11 +176,19 @@ public abstract class AbstractObject implements Disposable {
     public static void readBasic(AbstractObject this1, JsonObject data) {
         this1.setPos(new Vector2(data.get("x").getAsFloat(), data.get("y").getAsFloat()));
         this1.setUuid(UUID.fromString(data.get("uuid").getAsString()));
+        if(data.has("override_layer")) this1.overrideLayer = RenderLayerOverride.read(data.get("override_layer"));
     }
 
     public abstract ObjectType<?> getType();
 
-    public abstract float getLayer();
+    public abstract RenderLayer getDefaultLayer();
+
+    public float getLayer() {
+        if(this.overrideLayer != null) {
+            return this.overrideLayer.getLayer();
+        }
+        return this.getDefaultLayer().getLayer();
+    }
 
     public boolean shouldSave() {
         return true;

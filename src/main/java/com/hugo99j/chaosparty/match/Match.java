@@ -2,7 +2,7 @@ package com.hugo99j.chaosparty.match;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.daniel99j.dungeongame.entity.AbstractObject;
+import com.hugo99j.chaosparty.entity.AbstractObject;
 import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.effect.EffectShaderManager;
 import com.hugo99j.chaosparty.entity.Player;

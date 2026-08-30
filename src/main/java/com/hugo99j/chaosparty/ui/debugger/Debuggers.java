@@ -14,27 +14,23 @@ import com.badlogic.gdx.math.Vector4;
 import com.badlogic.gdx.physics.box2d.*;
 import com.daniel99j.djutil.GenericValuesHolder;
 import com.daniel99j.djutil.MiscUtils;
-import com.daniel99j.djutil.NumberUtils;
 import com.daniel99j.djutil.ValueHolder;
 import com.daniel99j.djutil.pathfinder.PathfindDebugPos;
-import com.google.common.io.PatternFilenameFilter;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.hugo99j.chaosparty.effect.EffectType;
 import com.hugo99j.chaosparty.util.NoDebugOption;
 import com.hugo99j.chaosparty.util.RequiresRefresh;
-import com.daniel99j.dungeongame.sounds.SoundInstance;
-import com.daniel99j.dungeongame.sounds.SoundManager;
+import com.hugo99j.chaosparty.sounds.SoundInstance;
+import com.hugo99j.chaosparty.sounds.SoundManager;
 import com.hugo99j.chaosparty.GameData;
-import com.daniel99j.dungeongame.entity.AbstractObject;
+import com.hugo99j.chaosparty.entity.AbstractObject;
 import com.hugo99j.chaosparty.entity.SpriteObject;
-import com.daniel99j.dungeongame.level.LevelLight;
-import com.daniel99j.dungeongame.level.LevelLoader;
+import com.hugo99j.chaosparty.level.LevelLight;
+import com.hugo99j.chaosparty.level.LevelLoader;
 import com.google.gson.JsonObject;
-import com.hugo99j.chaosparty.match.MatchPlayer;
 import com.hugo99j.chaosparty.match.MatchView;
-import com.hugo99j.chaosparty.match.User;
 import com.hugo99j.chaosparty.minigame.MapEditor;
 import com.hugo99j.chaosparty.util.*;
 import imgui.*;
@@ -48,7 +44,6 @@ import imgui.type.ImInt;
 import imgui.type.ImString;
 import org.lwjgl.opengl.GL30;
 
-import java.awt.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.nio.file.Files;
@@ -109,6 +104,7 @@ public class Debuggers {
             option("wireframe", false);
             option("pixelPerfect", false);
             option("pathfindingRender", false);
+            option("pathfindingCosts", false);
             option("markers", false);
             option("showAdvancedObjectPicking", false);
             option("validPathfindingSpotRenderer", false);
@@ -522,153 +518,6 @@ public class Debuggers {
         return debugOptions.get(option).object;
     }
 
-
-    static void addVariables(AbstractObject selectedObject, Class<?> clazz, Consumer<GenericValuesHolder<Field, AbstractObject, Object, ?, ?>> setter) {
-        if(selectedObject instanceof LightEditor.SelectedLightObject selectedLight) {
-            LightEditor.render(selectedLight);
-            return;
-        }
-        if(selectedObject instanceof SelectionGroup group) {
-            group.selected.ensureSafety();
-            boolean allMatch = true;
-            for (AbstractObject abstractObject : group.selected) {
-                if(abstractObject.getClass() != group.selected.get(0).getClass()) {
-                    allMatch = false;
-                    break;
-                }
-            }
-            if(allMatch) {
-                addVariables(group.selected.get(0), group.selected.get(0).getClass(), (holder) -> {
-                    for (AbstractObject abstractObject : group.selected) {
-                        try {
-                            holder.a().set(abstractObject, holder.c());
-                        } catch (IllegalAccessException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
-                });
-                return;
-            }
-        }
-        for (Field declaredField : clazz.getDeclaredFields()) {
-            if(declaredField.getAnnotation(NoDebugOption.class) != null || Modifier.isStatic(declaredField.getModifiers()) || Modifier.isFinal(declaredField.getModifiers())) continue;
-            declaredField.setAccessible(true);
-            if(declaredField.getAnnotation(RequiresRefresh.class) != null) {
-                ImGui.textColored(255, 0, 0, 255, "R");
-                ImGui.setItemTooltip("Requires refresh");
-                ImGui.sameLine();
-            }
-            if(declaredField.getAnnotation(NonEditable.class) != null) {
-                ImGui.beginDisabled();
-            }
-            try {
-                addVariable(declaredField.getName(), declaredField.getType(), declaredField.get(selectedObject), (t) -> {
-                    try {
-                        setter.accept(new GenericValuesHolder<>(declaredField, selectedObject, t));
-                    } catch (Exception e) {
-                        Logger.error("Error setting variable", e);
-                    }
-                });
-            } catch (Exception e) {
-                Logger.error("Error adding variable", e);
-                ImGui.text("Error adding variable: " + e.getMessage());
-            }
-            if(declaredField.getAnnotation(NonEditable.class) != null) {
-                ImGui.endDisabled();
-            }
-        }
-
-        if(clazz.getSuperclass() != null) addVariables(selectedObject, clazz.getSuperclass(), setter);
-    }
-
-    private static <T> void addVariable(String name, Class<?> clazz, T current, Consumer<T> setter) {
-        //noinspection unchecked
-        addVariable2(name, (Class<T>) clazz, current, setter);
-    }
-
-    @SuppressWarnings("unchecked")
-    private static <T> void addVariable2(String name, Class<T> clazz, T current, Consumer<T> setter) {
-        if(current == null) {
-            ImGui.text(name + " (null)");
-            return;
-        }
-        Class<?> type = MiscUtils.getClassNonPrimitive(clazz);
-        if(type.equals(Integer.class)) {
-            ImInt check = new ImInt((Integer) current);
-            if(ImGui.inputInt(name, check)) {
-                setter.accept((T) (Object) check.get());
-                onEdited();
-            }
-        } else if(type.equals(Float.class)) {
-            ImFloat check = new ImFloat((Float) current);
-            if(ImGui.inputFloat(name, check)) {
-                setter.accept((T) (Object) check.get());
-                onEdited();
-            }
-        } else if(type.equals(Double.class)) {
-            ImDouble check = new ImDouble((Double) current);
-            if(ImGui.inputDouble(name, check)) {
-                setter.accept((T) (Object) check.get());
-                onEdited();
-            }
-        } else if(type.equals(String.class)) {
-            ImString check = new ImString((String) current, ((String) current).length()+10000);
-            if(ImGui.inputText(name, check, ImGuiInputTextFlags.EnterReturnsTrue)) {
-                setter.accept((T) check.get());
-                onEdited();
-            }
-        } else if(type.equals(UUID.class)) {
-            ImString check = new ImString(current.toString());
-            if(ImGui.inputText(name, check, ImGuiInputTextFlags.EnterReturnsTrue)) {
-                setter.accept((T) UUID.fromString(check.get()));
-                onEdited();
-            }
-        } else if(type.equals(Boolean.class)) {
-            if(ImGui.checkbox(name, (Boolean) current)) {
-                setter.accept((T) ((Boolean) !((Boolean) current)));
-                onEdited();
-            }
-        } else if(type.equals(Vector2.class)) {
-            float[] check = {((Vector2) current).x, ((Vector2) current).y};
-            if(ImGui.inputFloat2(name, check)) {
-                setter.accept((T) new Vector2(check[0], check[1]));
-                onEdited();
-            }
-        } else if(type.equals(Color.class)) {
-            float[] check = {((Color) current).r, ((Color) current).g, ((Color) current).b, ((Color) current).a};
-            if(ImGui.colorEdit4(name, check)) {
-                setter.accept((T) new Color(check[0], check[1], check[2], check[3]));
-            }
-        } else if(type.equals(Map.class)) {
-            int flags = ImGuiTableFlags.Borders | ImGuiTableFlags.RowBg;
-            if(ImGui.collapsingHeader(name)) {
-                ImGui.indent();
-                if (ImGui.beginTable(name, 1, flags)) {
-                    ((Map<?, ?>) current).forEach((key, value) -> {
-                        ImGui.tableNextRow();
-                        ImGui.tableNextColumn();
-                        addVariable(key.toString(), value.getClass(), value, (v) -> {
-                            setMapValue(current, key, v);
-                        });
-                    });
-                    ImGui.endTable();
-                }
-                ImGui.unindent();
-            }
-        } else {
-            ImGui.text("Unsupported type: " + clazz + " (name: " + name + "value: " + current + ")");
-        }
-    }
-
-    private static <A, B> void setMapValue(Object current, A key, B v) {
-        //noinspection unchecked
-        setMapValue((HashMap<A, B>) current, key, v);
-    }
-
-    private static <A, B> void setMapValue(HashMap<A, B> current, A key, B v) {
-        current.put(key, v);
-    }
-
     public static String devName(AbstractObject o) {
         if(o == null) return "None";
         return devName(o.getEntityId());
@@ -713,7 +562,13 @@ public class Debuggers {
         "Panda",
         "Cow",
         "Sheep",
-        "Pig"
+        "Pig",
+        "Buzz",
+        "Control",
+        "Tango",
+        "Depth",
+        "Boots",
+        "Wool"
     };
     public static String devName(int hash) {
         Random random = new Random(hash);

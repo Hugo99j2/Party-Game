@@ -3,7 +3,6 @@ package com.hugo99j.chaosparty.entity;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Contact;
-import com.daniel99j.dungeongame.entity.*;
 import com.hugo99j.chaosparty.bot.BotController;
 import com.hugo99j.chaosparty.bot.SheepHerderBot;
 import com.hugo99j.chaosparty.match.MatchPlayer;
@@ -91,7 +90,7 @@ public class Player extends AbstractObject {
     }
 
     @Override
-    public float getLayer() {
+    public RenderLayer getDefaultLayer() {
         return RenderLayer.PLAYER;
     }
 

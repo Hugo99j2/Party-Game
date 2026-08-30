@@ -44,6 +44,8 @@ public abstract class ControllerUtilMixin implements ControllerUtil {
     @Unique
     //This fixes the controller queueing vibrate updates!
     private float controllerVibrateCooldown = 0;
+    @Unique
+    private float vibrateInterval;
 
     @Override
     public float getValue(ControllerInput input) {
@@ -79,6 +81,13 @@ public abstract class ControllerUtilMixin implements ControllerUtil {
             for (ControllerInput value : ControllerInput.values()) {
                 wasPressedValues.put(value, new ValueHolder<>(NOT_PRESSED));
             }
+
+            if(((JamepadController) (Object) this).getName().equals("Xbox Series Controller") && (((JamepadController) (Object) this).getMaxButtonIndex() == 15)) {
+                this.vibrateInterval = (1f/Gdx.graphics.getDisplayMode().refreshRate)*2f;
+                Logger.info("Decreasing vibrate rate to "+this.vibrateInterval+" as controller is 3rd gen");
+            } else {
+                this.vibrateInterval = (1f/Gdx.graphics.getDisplayMode().refreshRate);
+            }
         }
     }
 
@@ -109,7 +118,7 @@ public abstract class ControllerUtilMixin implements ControllerUtil {
 
         controllerVibrateCooldown += Gdx.graphics.getDeltaTime();
 
-        if(controllerVibrateCooldown > GameData.VIBRATE_INTERVAL) {
+        if(controllerVibrateCooldown > vibrateInterval) {
             controllerVibrateCooldown = 0;
             float leftMax = 0;
             float rightMax = 0;

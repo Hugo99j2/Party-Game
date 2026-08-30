@@ -4,8 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.daniel99j.djutil.NumberUtils;
-import com.daniel99j.dungeongame.entity.*;
-import com.daniel99j.dungeongame.sounds.SoundManager;
+import com.hugo99j.chaosparty.sounds.SoundManager;
 import com.google.gson.JsonObject;
 import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.match.MatchView;
@@ -108,7 +107,7 @@ public class LiquidBarrelObject extends AbstractObject {
     }
 
     @Override
-    public float getLayer() {
+    public RenderLayer getDefaultLayer() {
         return RenderLayer.DECORATIONS;
     }
 

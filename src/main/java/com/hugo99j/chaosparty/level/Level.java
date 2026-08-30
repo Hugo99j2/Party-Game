@@ -1,4 +1,4 @@
-package com.daniel99j.dungeongame.level;
+package com.hugo99j.chaosparty.level;
 
 import box2dLight.Light;
 import box2dLight.RayHandler;
@@ -6,7 +6,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
@@ -21,16 +20,17 @@ import com.daniel99j.djutil.pathfinder.PathfindDebugPos;
 import com.daniel99j.djutil.pathfinder.PathfindDebugType;
 import com.daniel99j.djutil.pathfinder.PathfindPos;
 import com.hugo99j.chaosparty.GameData;
-import com.daniel99j.dungeongame.entity.*;
 import com.hugo99j.chaosparty.bot.BotController;
+import com.hugo99j.chaosparty.entity.AbstractObject;
+import com.hugo99j.chaosparty.entity.CollisionCategories;
 import com.hugo99j.chaosparty.entity.Player;
 import com.hugo99j.chaosparty.match.MatchPlayer;
 import com.hugo99j.chaosparty.match.MatchView;
 import com.hugo99j.chaosparty.minigame.MapEditor;
 import com.hugo99j.chaosparty.ui.debugger.Debuggers;
 import com.hugo99j.chaosparty.ui.debugger.LightEditor;
-import com.hugo99j.chaosparty.util.ImageUtil;
 import com.hugo99j.chaosparty.util.Logger;
+import com.hugo99j.chaosparty.util.PathUtil;
 import com.hugo99j.chaosparty.util.RenderUtil;
 import com.hugo99j.chaosparty.util.ScreenFboUtils;
 import org.jetbrains.annotations.Nullable;
@@ -183,12 +183,7 @@ public class Level implements Disposable {
         }
         GameData.spriteBatch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
-        if(!GameData.DEBUGGING || Debuggers.isEnabled("lights")) {
-//            RenderUtil.enableBlending();
-//            GameData.spriteBatch.setProjectionMatrix(GameData.uiCamera.combined);
-//            GameData.spriteBatch.draw(lightsBuffer, 0, GameData.height, GameData.width, -GameData.height);
-//            GameData.spriteBatch.setProjectionMatrix(matchView.gameCamera.combined);
-        }
+        GameData.spriteBatch.flush();
 
         if(!GameData.DEBUGGING || Debuggers.isEnabled("lights")) {
             RenderUtil.enableBlending();
@@ -219,7 +214,7 @@ public class Level implements Disposable {
                 if(player.getPlayerObject().getBot() != null) bot = player.getPlayerObject().getBot();
             }
             if(bot != null) {
-                int size = 10;
+                int size = Math.max(matchView.worldHeight, matchView.worldWidth);
                 for (int x = posX - size; x < posX + size; x++) {
                     for (int y = posY - size; y < posY + size; y++) {
                         PathfindPos pathfindDebugPos = new PathfindPos(x, y);
@@ -312,13 +307,13 @@ public class Level implements Disposable {
                     }
                 }
                 GameData.shapeRenderer.end();
-                GameData.spriteBatch.begin();
-                for (PathfindDebugPos pathfindDebugPos : debuggers) {
-                    if(pathfindDebugPos.cost() > 0) {
-                        RenderUtil.renderTextWorld(String.valueOf(pathfindDebugPos.cost()), pathfindDebugPos.pos().getX()+0.5f, pathfindDebugPos.pos().getY()+0.5f, 2);
+                if(Debuggers.isEnabled("pathfindingCosts")) {
+                    GameData.spriteBatch.begin();
+                    for (PathfindDebugPos pathfindDebugPos : debuggers) {
+                        RenderUtil.renderText(String.valueOf(pathfindDebugPos.cost()), pathfindDebugPos.pos().getX() + 0.5f, pathfindDebugPos.pos().getY() + 0.5f, 1, 0.2f);
                     }
+                    GameData.spriteBatch.end();
                 }
-                GameData.spriteBatch.end();
             });
             GameData.spriteBatch.begin();
         }
@@ -499,6 +494,17 @@ public class Level implements Disposable {
 
     public List<AbstractObject> getObjectsBetween(Vector2 start, Vector2 end) {
         return this.getObjectsBetweenClass(start, end, AbstractObject.class, true);
+    }
+
+    public ParticleEffect addParticle(String name, Vector2 pos) {
+        ParticleEffect effect = new ParticleEffect();
+        effect.load(Gdx.files.internal(PathUtil.asset("particles/"+name+".p")), GameData.atlas);
+        effect.setEmittersCleanUpBlendFunction(false);
+        effect.scaleEffect(0.01f);
+        effect.start();
+        particles.add(effect);
+        effect.setPosition(pos.x, pos.y);
+        return effect;
     }
 
     public void stopEmitting(ParticleEffect particle) {

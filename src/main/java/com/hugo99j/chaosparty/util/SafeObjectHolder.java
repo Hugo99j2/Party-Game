@@ -1,9 +1,7 @@
 package com.hugo99j.chaosparty.util;
 
-import com.daniel99j.dungeongame.entity.AbstractObject;
+import com.hugo99j.chaosparty.entity.AbstractObject;
 import com.hugo99j.chaosparty.GameData;
-
-import java.util.ArrayList;
 
 public class SafeObjectHolder {
     private AbstractObject held;

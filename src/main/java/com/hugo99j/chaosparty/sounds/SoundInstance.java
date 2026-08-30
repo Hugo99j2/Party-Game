@@ -1,14 +1,12 @@
-package com.daniel99j.dungeongame.sounds;
+package com.hugo99j.chaosparty.sounds;
 
 import com.badlogic.gdx.backends.lwjgl3.audio.OpenALSound;
 import com.badlogic.gdx.math.Interpolation;
-import com.daniel99j.djutil.ValueHolder;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-import static org.lwjgl.openal.AL10.AL_SOURCE_STATE;
 import static org.lwjgl.openal.AL10.alGetSourcei;
 
 public class SoundInstance {

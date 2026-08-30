@@ -1,10 +1,10 @@
-package com.daniel99j.dungeongame.level;
+package com.hugo99j.chaosparty.level;
 
 import box2dLight.ConeLight;
 import box2dLight.DirectionalLight;
 import box2dLight.PointLight;
 import com.badlogic.gdx.graphics.Color;
-import com.daniel99j.dungeongame.entity.*;
+import com.hugo99j.chaosparty.entity.AbstractObject;
 import com.hugo99j.chaosparty.util.GsonUtil;
 import com.hugo99j.chaosparty.util.Logger;
 import com.hugo99j.chaosparty.util.PathUtil;

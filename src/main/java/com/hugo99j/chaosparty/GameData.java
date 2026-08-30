@@ -12,13 +12,13 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.daniel99j.djutil.pathfinder.PathfindDebugType;
 import com.daniel99j.djutil.pathfinder.PathfinderOptions;
-import com.daniel99j.dungeongame.entity.AbstractObject;
+import com.hugo99j.chaosparty.entity.AbstractObject;
 import com.hugo99j.chaosparty.match.Match;
 import com.hugo99j.chaosparty.match.MatchPlayer;
 import com.hugo99j.chaosparty.minigame.AbstractMinigame;
 import com.hugo99j.chaosparty.ui.debugger.Debuggers;
 import com.hugo99j.chaosparty.util.PathUtil;
-import com.daniel99j.dungeongame.level.Level;
+import com.hugo99j.chaosparty.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 import java.nio.file.Files;
@@ -47,9 +47,6 @@ public class GameData {
     private static final Map<Integer, Character> spaces = new HashMap<>();
 
     private static Match currentMatch;
-
-    //Settings
-    public static float VIBRATE_INTERVAL = 0.1f;
 
     public static Match getCurrentMatch() {
         return currentMatch;

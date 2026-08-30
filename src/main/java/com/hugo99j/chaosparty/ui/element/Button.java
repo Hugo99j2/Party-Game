@@ -2,7 +2,7 @@ package com.hugo99j.chaosparty.ui.element;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
-import com.daniel99j.dungeongame.sounds.SoundManager;
+import com.hugo99j.chaosparty.sounds.SoundManager;
 import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.util.NinePatchLoader;
 import com.hugo99j.chaosparty.ui.renderable.ClickType;

@@ -1,9 +1,8 @@
 package com.hugo99j.chaosparty.minigame;
 
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Align;
-import com.daniel99j.dungeongame.sounds.SoundInstance;
-import com.daniel99j.dungeongame.sounds.SoundManager;
+import com.hugo99j.chaosparty.sounds.SoundInstance;
+import com.hugo99j.chaosparty.sounds.SoundManager;
 import com.hugo99j.chaosparty.ui.renderable.RenderState;
 import com.hugo99j.chaosparty.bot.BotController;
 import com.hugo99j.chaosparty.bot.SheepHerderBot;
@@ -13,12 +12,16 @@ import com.hugo99j.chaosparty.entity.SpriteObject;
 import com.hugo99j.chaosparty.match.MatchPlayer;
 import com.hugo99j.chaosparty.match.MatchView;
 import com.hugo99j.chaosparty.ui.ScreenCenterer;
-import com.hugo99j.chaosparty.util.RenderUtil;
+import com.hugo99j.chaosparty.util.ControllerInput;
+import com.hugo99j.chaosparty.util.ControllerUtil;
 import com.hugo99j.chaosparty.util.ToRun;
 import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.ui.element.Timer;
+import com.hugo99j.chaosparty.util.VibrationAmount;
 
 import java.util.List;
+
+import static com.badlogic.gdx.utils.JsonValue.ValueType.object;
 
 public class HerdSheepMinigame extends AbstractMinigame {
     private Timer timer;
@@ -91,6 +94,26 @@ public class HerdSheepMinigame extends AbstractMinigame {
 
         if(timer.getSeconds() <= 0) {
             ToRun.run(() -> GameData.getCurrentMatch().finishCurrentMinigame());
+        }
+        for (MatchPlayer mp : this.getMatch().getPlayers()) {
+            Player player = mp.getPlayerObject();
+            assert player != null;
+            boolean push = false;
+            if (player.getBot() != null) {
+                if (((SheepHerderBot) player.getBot()).getMode() == SheepHerderBot.Mode.PUSHING_TARGET) {
+                    push = true;
+                }
+            } else {
+                if (((ControllerUtil) player.getMatchPlayer().controller).isPressed(ControllerInput.X)) {
+                    push = true;
+                }
+            }
+            if(push) {
+                for (Sheep sheep : player.getLevel().getObjectsInRadius(player.getPos().add(0.5f, 0.5f), 0.7f, Sheep.class, true, false, null)) {
+                    sheep.setVelocity(player.getVelocity());
+                    ((ControllerUtil) player.getMatchPlayer().controller).vibrate(VibrationAmount.of(new float[]{0.0f, 0.10619469f, 0.025592893f, 0.057522126f, 0.07222508f, 0.07522124f, 0.09328548f, 0.013274336f}, new float[]{0.0f, 0.0f, 0.040322524f, 0.0f}));
+                }
+            }
         }
     }
 

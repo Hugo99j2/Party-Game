@@ -3,7 +3,7 @@ package com.hugo99j.chaosparty.minigame;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
-import com.daniel99j.dungeongame.entity.AbstractObject;
+import com.hugo99j.chaosparty.entity.AbstractObject;
 import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.entity.PlayerSpawnPoint;
 import com.hugo99j.chaosparty.match.MatchView;

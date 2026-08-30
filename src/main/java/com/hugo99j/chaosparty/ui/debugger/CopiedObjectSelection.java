@@ -1,10 +1,9 @@
 package com.hugo99j.chaosparty.ui.debugger;
 
-import com.daniel99j.dungeongame.entity.AbstractObject;
-import com.daniel99j.dungeongame.level.LevelLoader;
+import com.hugo99j.chaosparty.entity.AbstractObject;
+import com.hugo99j.chaosparty.level.LevelLoader;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.entity.TemporaryDevObject;
 import com.hugo99j.chaosparty.util.ToRun;
 

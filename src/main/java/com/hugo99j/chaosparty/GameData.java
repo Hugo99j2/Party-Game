@@ -17,10 +17,9 @@ import com.hugo99j.chaosparty.entity.AbstractObject;
 import com.hugo99j.chaosparty.match.Match;
 import com.hugo99j.chaosparty.match.MatchPlayer;
 import com.hugo99j.chaosparty.minigame.AbstractMinigame;
+import com.hugo99j.chaosparty.sounds.SoundManager;
 import com.hugo99j.chaosparty.ui.debugger.Debuggers;
-import com.hugo99j.chaosparty.util.ImageUtil;
-import com.hugo99j.chaosparty.util.Logger;
-import com.hugo99j.chaosparty.util.PathUtil;
+import com.hugo99j.chaosparty.util.*;
 import com.hugo99j.chaosparty.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -61,6 +60,8 @@ public class GameData {
     public static void loadFiles() {
         PathUtil.clearCache();
         ImageUtil.clearCache();
+        NinePatchLoader.clearCache();
+        Animator.clearCache();
         boolean codingGame = Objects.equals(System.getenv("CODING_GAME"), "1");
 
         if(atlas != null) atlas.dispose();

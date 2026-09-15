@@ -40,9 +40,12 @@ public class Animator {
                 JsonObject data = GsonUtil.parse(PathUtil.get(PathUtil.texture(name + ".anim"), false));
                 List<TextureAtlas.AtlasRegion> files = new ArrayList<>();
                 if(data.has("sheet")) {
-                    int size = data.get("frames").getAsInt();
                     String bigFile = data.get("sheet").getAsString();
                     TextureAtlas.AtlasRegion bigFileTex = ImageUtil.get(bigFile);
+                    int size = data.get("frames").getAsInt();
+                    if(size == -1) {
+                        size = bigFileTex.originalHeight / bigFileTex.originalWidth;
+                    }
                     int pixelsPer = bigFileTex.packedHeight/size;
                     for (TextureRegion[] textureRegion : bigFileTex.split(bigFileTex.packedWidth, pixelsPer)) {
                         files.add(new TextureAtlas.AtlasRegion(textureRegion[0]));
@@ -59,5 +62,9 @@ public class Animator {
         Animation sprite = animations.get(name);
         int current = (frame + sprite.sprites().size()) % sprite.sprites().size();
         return sprite.sprites().get(current);
+    }
+
+    public static void clearCache() {
+        animations.clear();
     }
 }

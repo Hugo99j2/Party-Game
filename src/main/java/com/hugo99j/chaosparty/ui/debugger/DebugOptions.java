@@ -33,7 +33,7 @@ public class DebugOptions {
     private static int newMapEditorName = 0;
     protected static final List<String> newMapNames = new ArrayList<>();
     private static final ArrayList<Short> fpsCounter = new ArrayList<>();
-    private static int savedRevision = 0;
+    protected static int savedRevision = 0;
 
     protected static void render() {
         if(ImGui.begin("Options")) {
@@ -46,12 +46,7 @@ public class DebugOptions {
                     ObjectEditor.select(ruler);
                 }
                 if (ImGui.button("Save map")) {
-                    try {
-                        Files.write(Path.of(PathUtil.codingDir(PathUtil.data("maps/" + mapEditor.getMapName() + ".map"))), LevelLoader.saveLevel(GameData.getLevelOrThrow(), true).getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-                        savedRevision = UndoRedoHistory.getCurrentRevision();
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
+                    Debuggers.saveMap();
                 }
             }
 

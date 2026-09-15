@@ -7,6 +7,7 @@ import com.google.gson.JsonObject;
 import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.match.MatchView;
 import com.hugo99j.chaosparty.minigame.CountingMinigame;
+import com.hugo99j.chaosparty.minigame.MapEditor;
 import com.hugo99j.chaosparty.minigame.counting.*;
 import com.hugo99j.chaosparty.ui.debugger.Debuggers;
 import com.hugo99j.chaosparty.util.*;
@@ -25,7 +26,9 @@ public class Clown extends AbstractObject {
     public void onAdd(boolean fromLoad) {
         super.onAdd(fromLoad);
         if(NumberUtils.getRandomInt(1, 8) == 1 && getCurrentMinigame() instanceof CountingMinigame) this.dispose();
-        else {
+        else if(GameData.getCurrentMinigame() instanceof MapEditor) {
+            this.activity = new WalkAroundActivity(this);
+        } else {
             this.rerollActivity();
         }
     }
@@ -107,7 +110,7 @@ public class Clown extends AbstractObject {
     }
 
     public void rerollActivity() {
-        List<Function<Clown, Activity>> creators = List.of(JuggleActivity::new, WalkAroundActivity::new, PyramidActivity::new, ZiplineActivity::new, TurnIntoRabbitActivity::new);
+        List<Function<Clown, Activity>> creators = List.of(JuggleActivity::new, WalkAroundActivity::new, PyramidActivity::new, ZiplineActivity::new, TurnIntoRabbitActivity::new, HideActivity::new, FancyTrickActivity::new);
         this.activity = creators.get(NumberUtils.getRandomInt(0, creators.size()-1)).apply(this);
     }
 }

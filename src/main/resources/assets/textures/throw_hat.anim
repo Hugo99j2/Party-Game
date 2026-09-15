@@ -1,4 +1,5 @@
 {
-  "frame_time": 1,
-  "sheet": "throw_hat"
+  "frame_time": 0.1,
+  "sheet": "throw_hat",
+  "frames": -1
 }

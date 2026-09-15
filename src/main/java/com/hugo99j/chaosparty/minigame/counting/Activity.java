@@ -18,6 +18,7 @@ public abstract class Activity {
     public Activity(Clown clown) {
         this.pathfinder = new ObjectPathfinder(clown);
         this.clown = clown;
+        this.getPathfinder().setSpeed(150);
         this.getPathfinder().setTarget(this.getStartPos());
         this.getPathfinder().setAllowsShortPaths(true);
     }
@@ -47,11 +48,15 @@ public abstract class Activity {
 
     protected void tickDuring() {
         ticksPassed++;
-        this.getClown().setVelocity(Vector2.Zero);
+        if(resetVelocity()) this.getClown().setVelocity(Vector2.Zero);
     }
 
     public int getTicksPassed() {
         return ticksPassed;
+    }
+
+    protected boolean resetVelocity() {
+        return true;
     }
 
     protected abstract Vector2 getStartPos();

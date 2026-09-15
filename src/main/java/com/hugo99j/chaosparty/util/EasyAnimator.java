@@ -20,25 +20,29 @@ public class EasyAnimator {
         this.onComplete = onComplete;
     }
 
+    public void stop() {
+        this.name = null;
+        this.length = 0;
+        this.startTime = 0;
+        if(this.onComplete != null) {
+            Runnable onComplete = this.onComplete;
+            this.onComplete = null;
+            onComplete.run();
+        }
+    }
+
     public boolean isAnimating() {
-        return name != null;
+        return name != null && GameData.time-startTime <= length;
     }
 
     public void tick() {
-        if(GameData.time-startTime > length && isAnimating()) {
-            this.name = null;
-            this.length = 0;
-            this.startTime = 0;
-            if(this.onComplete != null) {
-                Runnable onComplete = this.onComplete;
-                this.onComplete = null;
-                onComplete.run();
-            }
+        if(GameData.time-startTime > length && name != null) {
+            stop();
         }
     }
 
     public TextureAtlas.AtlasRegion getCurrentFrame() {
-        if(!isAnimating() || GameData.time-startTime > length) return null;
+        if(!isAnimating()) return null;
         return Animator.get(name, null, startTime);
     }
 }

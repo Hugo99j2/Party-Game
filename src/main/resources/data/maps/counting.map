@@ -176,8 +176,8 @@
       "custom_data": {}
     },
     {
-      "x": 19.75,
-      "y": 8.5625,
+      "x": 20.625,
+      "y": 8.375,
       "uuid": "79862c3a-9d3d-46cc-aa0b-753e0ed5dfd1",
       "type": "clown",
       "custom_data": {}
@@ -190,8 +190,8 @@
       "custom_data": {}
     },
     {
-      "x": 15.375,
-      "y": 6.5625,
+      "x": 15.5,
+      "y": 6.5,
       "uuid": "515b0e7b-8523-4445-88cb-c19754946b5a",
       "type": "clown",
       "custom_data": {}
@@ -931,6 +931,97 @@
         "segments": 15.0,
         "texture": "zipline"
       }
+    },
+    {
+      "x": 23.75,
+      "y": 5.1875,
+      "uuid": "520173c2-9c7d-4e58-bb8e-9c35b54b11d7",
+      "type": "clown",
+      "custom_data": {}
+    },
+    {
+      "x": 13.9375,
+      "y": 11.125,
+      "uuid": "381b5b62-01a3-4edf-b6ac-a28ccd8f14ca",
+      "type": "clown",
+      "custom_data": {}
+    },
+    {
+      "x": 17.3125,
+      "y": 3.8125,
+      "uuid": "591f55fa-4daa-4c1f-98fe-9751d1963734",
+      "type": "clown",
+      "custom_data": {}
+    },
+    {
+      "x": 22.25,
+      "y": 12.75,
+      "uuid": "51a91382-b9b1-4784-9806-26743f88ec1b",
+      "type": "clown",
+      "custom_data": {}
+    },
+    {
+      "x": 17.3125,
+      "y": 3.8125,
+      "uuid": "89757c98-6ae5-42d4-af91-200ea1af487e",
+      "type": "clown",
+      "custom_data": {}
+    },
+    {
+      "x": 16.3125,
+      "y": 15.75,
+      "uuid": "2f873388-588e-49c0-9fb4-1f80910d3096",
+      "type": "clown",
+      "custom_data": {}
+    },
+    {
+      "x": 22.5,
+      "y": 5.875,
+      "uuid": "9d12a934-57d5-44a9-910c-433f24af1283",
+      "type": "clown",
+      "custom_data": {}
+    },
+    {
+      "x": 27.625,
+      "y": 7.75,
+      "uuid": "7e44cc95-6219-4ef0-bb0f-3a251d2628bd",
+      "type": "clown",
+      "custom_data": {}
+    },
+    {
+      "x": 29.25,
+      "y": 12.125,
+      "uuid": "315236e3-d360-467b-ba38-d860ed6dd468",
+      "type": "clown",
+      "custom_data": {}
+    },
+    {
+      "x": 9.875,
+      "y": 10.3125,
+      "uuid": "a06d9592-9164-4e44-b5c9-cdc228747dbb",
+      "type": "clown",
+      "custom_data": {}
+    },
+    {
+      "x": 20.9375,
+      "y": 15.5,
+      "uuid": "f8bc4379-6e6c-4a0a-8773-5af0f05f2875",
+      "type": "clown",
+      "custom_data": {}
+    },
+    {
+      "x": 24.3125,
+      "y": 7.0,
+      "uuid": "4b61d99a-d310-4f5e-a8f7-017029f545e2",
+      "type": "clown",
+      "custom_data": {}
+    },
+    {
+      "x": 12.1875,
+      "y": 4.625,
+      "uuid": "4f1b5950-b4f9-4ed2-a081-e696a1b452a7",
+      "type": "clown",
+      "custom_data": {}
     }
   ],
   "lights": [
@@ -949,6 +1040,21 @@
       "x": 20.4375,
       "y": 19.125,
       "coneDegree": 94.615
+    },
+    {
+      "uuid": "cbe11689-c161-4acc-b4c7-8cd35f73a1cb",
+      "lightClass": "class box2dLight.PointLight",
+      "colour": "ffb9b9bf",
+      "direction": 0.0,
+      "distance": 6.282,
+      "xray": false,
+      "static": false,
+      "active": false,
+      "soft": true,
+      "softShadowLength": 0.0,
+      "rays": 128,
+      "x": -4.8125,
+      "y": 24.3125
     }
   ]
 }

@@ -804,5 +804,10 @@ public class ObjectEditor {
             }
             isAllowedToChange = true;
         }
+
+        @Override
+        public boolean shouldRender(MatchView view) {
+            return true;
+        }
     }
 }

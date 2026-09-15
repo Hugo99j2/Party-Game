@@ -13,6 +13,7 @@ import com.hugo99j.chaosparty.entity.TemporaryDevObject;
 import com.hugo99j.chaosparty.match.MatchView;
 import com.hugo99j.chaosparty.util.ImageUtil;
 import imgui.ImGui;
+import imgui.type.ImString;
 
 import static com.hugo99j.chaosparty.ui.debugger.Debuggers.*;
 
@@ -66,6 +67,8 @@ public class LightEditor {
         slider("Softness", selectedLight.light().getSoftShadowLength(), selectedLight.light()::setSoftnessLength, 0, 5, "%.3f");
 
         slider("Distance", selectedLight.light().getDistance(), selectedLight.light()::setDistance, 0, 100, "%.3f");
+
+        ImGui.inputText("UUID", new ImString(selectedLight.uuid().toString()));
 
         if (selectedLight.light() instanceof ConeLight coneLight) {
             ImGui.separatorText("Cone Light");

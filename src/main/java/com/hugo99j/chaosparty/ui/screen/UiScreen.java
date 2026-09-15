@@ -76,31 +76,6 @@ public class UiScreen implements Screen {
             if(uiElement == controllerSelected) uiElement.render(new RenderState(state.left(), state.leftJust(), state.middle(), state.middleJust(), state.right(), state.rightJust(), (int) controllerSelected.getCenter().x, (int) controllerSelected.getCenter().y, state.time()));
             else uiElement.render(state);
         }
-
-        if(ControllerUtil.getCurrent().wasJustPressed(ControllerInput.LEFT_STICK_BUTTON)) {
-            ControllerUtil.getCurrent().vibrate(VibrationAmount.of((t) -> {
-                if(t <= 6.3f) return (float) (0.5f+Math.sin(t-1.6f)/2f);
-                return 0f;
-            }, (t) -> 0f), 6.3f);
-        }
-        if(ControllerUtil.getCurrent().wasJustPressed(ControllerInput.RIGHT_STICK_BUTTON)) {
-            ControllerUtil.getCurrent().vibrate(VibrationAmount.of((t) -> 0f, (t) -> {
-                if(t <= 6.3f) return (float) (0.5f+Math.sin(t-1.6f)/2f);
-                return 0f;
-            }), 6.3f);
-        }
-        if(ControllerUtil.getCurrent().wasJustPressed(ControllerInput.X)) {
-            ControllerUtil.getCurrent().vibrate(VibrationAmount.of((t) -> {
-                if(t <= 6.3f) return (float) (0.5f+Math.sin(t-1.6f)/2f);
-                return 0f;
-            }, (t) -> {
-                if(t > 7f) return (float) (0.5f+Math.sin(t-1.6f-5f)/2f);
-                return 0f;
-            }), 13.3f);
-        }
-        if(ControllerUtil.getCurrent().wasJustPressed(ControllerInput.B)) {
-            ControllerUtil.getCurrent().vibrate(VibrationAmount.of(new float[]{0.0f,1.0f,2.0f,1.0f,2.0f,0.0f}, new float[]{0.0f,1.0f,2.0f,1.0f,2.0f,0.0f}));
-        }
     }
 
     protected void controllerStick(Vector2 change) {

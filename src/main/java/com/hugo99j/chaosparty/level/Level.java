@@ -418,6 +418,10 @@ public class Level implements Disposable {
         LightEditor.onRemoved(light, this);
     }
 
+    public @Nullable LevelLight<?> getLightByUUID(UUID uuid) {
+        return this.getLights().stream().filter((object -> object.uuid().equals(uuid) && !object.isDisposed())).findFirst().orElse(null);
+    }
+
     public <T extends AbstractObject> List<T> getObjectsInRadius(Vector2 pos, float radius, Class<T> clazz, boolean physics, boolean sort, @Nullable T exclude) {
         List<T> objects = getObjectsBetweenClass(pos.cpy().sub(radius, radius), pos.cpy().add(radius, radius), clazz, physics);
         if(!physics) {

@@ -21,4 +21,8 @@ public class NinePatchLoader {
             throw new RuntimeException(e);
         }
     }
+
+    public static void clearCache() {
+        patches.clear();
+    }
 }

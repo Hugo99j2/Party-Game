@@ -406,8 +406,9 @@ public class Debuggers {
 
     protected static void saveMap() {
         try {
-            Files.write(Path.of(PathUtil.codingDir(PathUtil.data("maps/" + GameData.getCurrentMatch().getCurrentMinigame().getMapName() + ".map"))), LevelLoader.saveLevel(GameData.level, true).getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+            Files.write(Path.of(PathUtil.codingDir(PathUtil.data("maps/" + GameData.getCurrentMatch().getCurrentMinigame().getMapName() + ".map"))), LevelLoader.saveLevel(GameData.getLevelOrThrow(), true).getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
             Logger.info("Saved map");
+            DebugOptions.savedRevision = UndoRedoHistory.getCurrentRevision();
             PathUtil.clearCache();
         } catch (Exception e) {
             Logger.error("Failed to save map", e);

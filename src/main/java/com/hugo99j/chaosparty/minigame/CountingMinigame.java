@@ -1,5 +1,8 @@
 package com.hugo99j.chaosparty.minigame;
 
+import com.hugo99j.chaosparty.bot.BotController;
+import com.hugo99j.chaosparty.bot.CountingBot;
+import com.hugo99j.chaosparty.entity.Player;
 import com.hugo99j.chaosparty.sounds.SoundInstance;
 import com.hugo99j.chaosparty.sounds.SoundManager;
 import com.hugo99j.chaosparty.GameData;
@@ -61,5 +64,10 @@ public class CountingMinigame extends AbstractMinigame {
     @Override
     public float getPlayerSpeed(MatchPlayer player) {
         return 100;
+    }
+
+    @Override
+    public BotController createBotController(Player player) {
+        return new CountingBot(player);
     }
 }

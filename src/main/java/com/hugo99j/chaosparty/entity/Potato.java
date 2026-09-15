@@ -43,13 +43,7 @@ public class Potato extends AbstractObject {
     }
 
     private void goSplat(@Nullable Player player) {
-        var splat = new ParticleEffect();
-        splat.load(Gdx.files.internal(PathUtil.asset("particles/splat.p")), GameData.atlas);
-        splat.setEmittersCleanUpBlendFunction(false);
-        splat.scaleEffect(0.01f);
-        splat.start();
-        splat.setPosition(this.getPos().x+0.5f, this.getPos().y+0.5f);
-        GameData.getLevelOrThrow().particles.add(splat);
+        this.getLevel().addParticle("splat", this.getPos().add(0.5f, 0.5f));
         this.dispose();
         if(player != null && GameData.getCurrentMatch().getCurrentMinigame() instanceof HotPotatoMinigame potatoMinigame) {
             potatoMinigame.setHotPlayer(player.getMatchPlayer());

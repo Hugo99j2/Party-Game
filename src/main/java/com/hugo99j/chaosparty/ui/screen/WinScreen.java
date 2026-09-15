@@ -30,7 +30,6 @@ public class WinScreen extends UiScreen {
         //super(createSS());
         firework = new ParticleEffect();
         firework.load(Gdx.files.internal(PathUtil.asset("particles/w.p")), GameData.atlas);
-        firework.setEmittersCleanUpBlendFunction(false);
         firework.scaleEffect(1);
         firework.setDuration(1000000);
         firework.start();

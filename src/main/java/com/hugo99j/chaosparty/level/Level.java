@@ -5,6 +5,7 @@ import box2dLight.RayHandler;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
+import com.badlogic.gdx.graphics.g2d.ParticleEmitter;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -178,8 +179,10 @@ public class Level implements Disposable {
             if(particle.isComplete()) {
                 particles.remove(particle);
                 particle.dispose();
+                continue;
             }
-            particle.draw(GameData.spriteBatch, lastRenderedFrame == Gdx.graphics.getDeltaTime() ? 0 : Gdx.graphics.getDeltaTime());
+            if(lastRenderedFrame != Gdx.graphics.getDeltaTime()) particle.update(Gdx.graphics.getDeltaTime());
+            particle.draw(GameData.spriteBatch);
         }
         GameData.spriteBatch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
@@ -499,7 +502,6 @@ public class Level implements Disposable {
     public ParticleEffect addParticle(String name, Vector2 pos) {
         ParticleEffect effect = new ParticleEffect();
         effect.load(Gdx.files.internal(PathUtil.asset("particles/"+name+".p")), GameData.atlas);
-        effect.setEmittersCleanUpBlendFunction(false);
         effect.scaleEffect(0.01f);
         effect.start();
         particles.add(effect);

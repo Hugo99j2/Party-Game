@@ -1,18 +1,15 @@
 package com.hugo99j.chaosparty.entity;
 
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.daniel99j.djutil.NumberUtils;
 import com.google.gson.JsonObject;
 import com.hugo99j.chaosparty.GameData;
 import com.hugo99j.chaosparty.match.MatchView;
 import com.hugo99j.chaosparty.minigame.CountingMinigame;
-import com.hugo99j.chaosparty.minigame.counting.Activity;
-import com.hugo99j.chaosparty.minigame.counting.JuggleActivity;
-import com.hugo99j.chaosparty.minigame.counting.PyramidActivity;
-import com.hugo99j.chaosparty.minigame.counting.WalkAroundActivity;
+import com.hugo99j.chaosparty.minigame.counting.*;
 import com.hugo99j.chaosparty.ui.debugger.Debuggers;
 import com.hugo99j.chaosparty.util.*;
-import com.llamalad7.mixinextras.lib.apache.commons.ArrayUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +40,10 @@ public class Clown extends AbstractObject {
     @Override
     public void render(MatchView matchView) {
         Vector2 pos = this.getPos();
-        if(this.animator.isAnimating()) GameData.spriteBatch.draw(this.animator.getCurrentFrame(), pos.x, pos.y, 1, 1);
+        if(this.animator.isAnimating()) {
+            TextureAtlas.AtlasRegion r = this.animator.getCurrentFrame();
+            GameData.spriteBatch.draw(r, pos.x, pos.y, r.originalWidth/16f, r.originalHeight/16f);
+        }
         else GameData.spriteBatch.draw(ImageUtil.get("clown"), pos.x, pos.y, 1, 1);
         if(GameData.DEBUGGING && Debuggers.isEnabled("botDebug")) {
             String s = "Activity: "+this.activity.getClass().getName().replace("com.hugo99j.chaosparty.minigame.counting", "");
@@ -107,7 +107,7 @@ public class Clown extends AbstractObject {
     }
 
     public void rerollActivity() {
-        List<Function<Clown, Activity>> creators = List.of(JuggleActivity::new, WalkAroundActivity::new, PyramidActivity::new);
+        List<Function<Clown, Activity>> creators = List.of(JuggleActivity::new, WalkAroundActivity::new, PyramidActivity::new, ZiplineActivity::new, TurnIntoRabbitActivity::new);
         this.activity = creators.get(NumberUtils.getRandomInt(0, creators.size()-1)).apply(this);
     }
 }

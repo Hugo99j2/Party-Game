@@ -44,13 +44,7 @@ public class LiquidBarrelObject extends AbstractObject {
 
     private void explodeNow() {
         if(!explosive || this.isRemoved()) return;
-        var boom = new ParticleEffect();
-        boom.load(Gdx.files.internal(PathUtil.asset("particles/boom.p")), GameData.atlas);
-        boom.setEmittersCleanUpBlendFunction(false);
-        boom.scaleEffect(0.01f);
-        boom.start();
-        boom.setPosition(this.getPos().x+0.5f, this.getPos().y+0.5f);
-        GameData.getLevelOrThrow().particles.add(boom);
+        this.getLevel().addParticle("boom", this.getPos().add(0.5f, 0.5f));
         SoundManager.getSound("explode").playSingle(1);
         int delay = 0;
         for (LiquidBarrelObject objectsInRadius : this.getLevel().getObjectsInRadius(this.getPos().add(0.5f, 0.5f), 5, LiquidBarrelObject.class, true, false, this)) {

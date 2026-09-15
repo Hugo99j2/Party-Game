@@ -3,6 +3,8 @@ package com.hugo99j.chaosparty.minigame;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
+import com.badlogic.gdx.math.Vector2;
+import com.hugo99j.chaosparty.entity.TrackerFlame;
 import com.hugo99j.chaosparty.sounds.SoundInstance;
 import com.hugo99j.chaosparty.sounds.SoundManager;
 import com.hugo99j.chaosparty.ui.renderable.RenderState;
@@ -62,15 +64,11 @@ public class HotPotatoMinigame extends AbstractMinigame {
             }
         };
         music = SoundManager.getSound("potato_music").playSingle(1);
-        hotEffect = new ParticleEffect();
-        hotEffect.load(Gdx.files.internal(PathUtil.asset("particles/flame.p")), GameData.atlas);
-        hotEffect.setEmittersCleanUpBlendFunction(false);
-        hotEffect.scaleEffect(0.01f);
+        hotEffect = GameData.getLevelOrThrow().addParticle("flame", new Vector2(-1000, -1000));
         hotEffect.setDuration(1000000);
         hotEffect.start();
         hotScreenEffect = new ParticleEffect();
         hotScreenEffect.load(Gdx.files.internal(PathUtil.asset("particles/flame.p")), GameData.atlas);
-        hotScreenEffect.setEmittersCleanUpBlendFunction(false);
         hotScreenEffect.scaleEffect(1);
         hotScreenEffect.setDuration(1000000);
         hotScreenEffect.getEmitters().get(0).getSpawnWidth().setHigh(GameData.width);
@@ -102,7 +100,7 @@ public class HotPotatoMinigame extends AbstractMinigame {
                             current = matchPlayer;
                         }
                     }
-                    player.getPlayerObject().setPos((change == 1 ? Looper.nextValue(notDead, current) : Looper.previousValue(notDead, current)).getPlayerObject().getPos());
+                    player.getPlayerObject().setPos((change == 1 ? ListUtil.nextValue(notDead, current) : ListUtil.previousValue(notDead, current)).getPlayerObject().getPos());
                 }
             }
         }
@@ -115,6 +113,13 @@ public class HotPotatoMinigame extends AbstractMinigame {
             GameData.getLevelOrThrow().addObject(potato);
             potato.getPhysics().applyForceToCenter(((ControllerUtil) hotPlayer.controller).getValue(ControllerInput.RIGHT_STICK_RIGHT)*7000, ((ControllerUtil) hotPlayer.controller).getValue(ControllerInput.RIGHT_STICK_UP)*7000, true);
         }
+        if(((ControllerUtil) hotPlayer.controller).wasJustPressedThisTick(ControllerInput.RIGHT_STICK_BUTTON)) {
+            SoundManager.getSound("flame").play(0.5f, 2);
+            ((ControllerUtil) hotPlayer.controller).vibrate(VibrationAmount.of(new float[]{0.001955862f,0.42920354f,1.3824768f,0.0f}, new float[]{0.20120725f,0.088495575f,0.3219316f,0.0f,0.5839402f,0.057522126f,1.1929936f,0.07079646f,1.3757097f,0.0f}));
+            TrackerFlame tracker = new TrackerFlame();
+            tracker.setPos(hotPlayer.getPlayerObject().getPos());
+            GameData.getLevelOrThrow().addObject(tracker);
+        }
 
         if(timer.getSeconds() <= 0 || potatoPassThreshold > 300) {
             potatoPassThreshold = 0;
@@ -124,13 +129,7 @@ public class HotPotatoMinigame extends AbstractMinigame {
             }
             SoundManager.getSound("flame_explode").playSingle(1);
             ((ControllerUtil) getHotPlayer().controller).vibrate(VibrationAmount.of(new float[]{0.0848817f,0.2079646f,0.46620733f,0.048672568f,0.9848102f,0.0f}, new float[]{0.0f,0.013274336f,0.19673721f,0.22123894f,0.35943615f,0.0f}));
-            var boom = new ParticleEffect();
-            boom.load(Gdx.files.internal(PathUtil.asset("particles/boom.p")), GameData.atlas);
-            boom.setEmittersCleanUpBlendFunction(false);
-            boom.scaleEffect(0.01f);
-            boom.start();
-            boom.setPosition(getHotPlayer().getPlayerObject().getPos().x+0.5f, getHotPlayer().getPlayerObject().getPos().y+0.5f);
-            GameData.getLevelOrThrow().particles.add(boom);
+            GameData.getLevelOrThrow().addParticle("boom", getHotPlayer().getPlayerObject().getPos().add(0.5f, 0.5f));
             int matches = 0;
             ArrayList<MatchPlayer> players = new ArrayList<>(GameData.getCurrentMatch().getPlayers());
             Collections.shuffle(players);
@@ -196,7 +195,7 @@ public class HotPotatoMinigame extends AbstractMinigame {
     public boolean setHotPlayer(MatchPlayer hotPlayer) {
         if(this.hotPlayer == hotPlayer) return false;
         if(hotPlayer.getPlayerObject().isNoClip()) {
-            Logger.error("Shouldnt make dead player hot");
+            Logger.error("Shouldn't make dead player hot");
         }
         potatoPassThreshold += 50;
         for (MatchView matchView : GameData.getCurrentMatch().getMatchViews()) {

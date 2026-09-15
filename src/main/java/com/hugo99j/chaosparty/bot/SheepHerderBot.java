@@ -53,12 +53,9 @@ public class SheepHerderBot extends BotController {
             Vector2 toGoal = goalPos.cpy().sub(sheepPos).nor();
             float pushDistance = 1.0f;
             Vector2 edited = sheepPos.cpy().sub(toGoal.scl(pushDistance));
-
             this.getPathfinder().setTarget(edited);
 
-            this.getPathfinder().setTarget(edited);
-
-            Debuggers.customLevelRenderers.put((v) -> {
+            if(GameData.DEBUGGING && Debuggers.isEnabled("botDebug")) Debuggers.customLevelRenderers.put((v) -> {
                 GameData.shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
                 GameData.shapeRenderer.setColor(Color.PINK);
                 GameData.shapeRenderer.line(this.getPlayer().getPos().x, this.getPlayer().getPos().y, edited.x, edited.y);
@@ -66,7 +63,7 @@ public class SheepHerderBot extends BotController {
             }, new ValueHolder<>(1));
         } else this.getPathfinder().setTarget(null);
 
-        Debuggers.customLevelRenderers.put((v) -> {
+        if(GameData.DEBUGGING && Debuggers.isEnabled("botDebug")) Debuggers.customLevelRenderers.put((v) -> {
             GameData.shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
             GameData.shapeRenderer.setColor(Color.LIME);
             GameData.shapeRenderer.line(this.getPlayer().getPos().x, this.getPlayer().getPos().y, this.goal.x, this.goal.y);

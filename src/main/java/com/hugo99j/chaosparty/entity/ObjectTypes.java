@@ -22,6 +22,8 @@ public class ObjectTypes {
     public static final ObjectType<TemporaryDevObject> TEMP_DEV_OBJECT = registerObjectType("temp_dev_object", TemporaryDevObject::read, TemporaryDevObject::createDefault);
     public static final ObjectType<Clown> CLOWN = registerObjectType("clown", Clown::read, Clown::createDefault);
     public static final ObjectType<DummyPlayer> DUMMY_PLAYER = registerObjectType("dummy", DummyPlayer::read, DummyPlayer::createDefault);
+    public static final ObjectType<TrackerFlame> TRACKER_FLAME = registerObjectType("tracker_flame", TrackerFlame::read, TrackerFlame::createDefault);
+    public static final ObjectType<Zipline> ZIPLINE = registerObjectType("zipline", Zipline::read, Zipline::createDefault);
 
 
     private static <T extends AbstractObject> ObjectType<T> registerObjectType(String id, Function<JsonObject, T> reader, Supplier<T> defaultConstructor) {

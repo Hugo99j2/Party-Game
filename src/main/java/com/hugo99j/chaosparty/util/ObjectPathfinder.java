@@ -48,7 +48,7 @@ public class ObjectPathfinder {
 
     private void runPathfinding(boolean invalid) {
         if(GameData.DEBUGGING && Debuggers.isEnabled("disablePathfinding")) return;
-        if(Debuggers.isEnabled("pathfindingRender")) {
+        if(GameData.DEBUGGING && Debuggers.isEnabled("pathfindingRender")) {
             if(Debuggers.pathfindDebuggerTimers.getOrDefault(this.object.getUUID(), 99999) < 40) Debuggers.pathfindDebuggerTimers.put(this.object.getUUID(), 40);
         }
         Vector2 target = getTarget();
@@ -62,7 +62,7 @@ public class ObjectPathfinder {
                     this.stuckTicks = 0;
                     float speed = Math.max(this.getSpeed()-this.object.getVelocity().len(), 0);
                     this.object.moveTowardTarget(new Vector2(this.getObject().getPos().x+NumberUtils.getRandomFloat(-1, 1), this.getObject().getPos().y+NumberUtils.getRandomFloat(-1, 1)), speed);
-                    if(Debuggers.isEnabled("pathfindingRender")) Debuggers.customLevelRenderers.put((v) -> {
+                    if(GameData.DEBUGGING && Debuggers.isEnabled("botDebug")) Debuggers.customLevelRenderers.put((v) -> {
                         GameData.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
                         GameData.shapeRenderer.setColor(Color.PINK.cpy().mul(1, 1, 1, 0.6f));
                         GameData.shapeRenderer.triangle(this.getObject().getPos().x, this.object.getPos().y, this.getObject().getPos().x+0.5f, this.getObject().getPos().y+1, this.getObject().getPos().x+1, this.getObject().getPos().y);

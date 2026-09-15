@@ -1,6 +1,5 @@
 package com.hugo99j.chaosparty.util;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
@@ -11,12 +10,10 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.hugo99j.chaosparty.GameData;
-import net.fabricmc.loader.impl.util.log.Log;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
-import java.util.zip.Deflater;
 
 import static com.hugo99j.chaosparty.GameData.px;
 
@@ -36,7 +33,7 @@ public class ImageUtil {
         return cachedSprites.size();
     }
 
-    public static void clear() {
+    public static void clearCache() {
         cachedSprites.clear();
         cachedSpriteSizes.clear();
     }
@@ -52,20 +49,39 @@ public class ImageUtil {
         return cachedSpriteSizes.get(texture);
     }
 
-    public static boolean generateImageBounds() {
-        boolean mustRecalculate = true;
-        try {
-            int realHash = Arrays.hashCode(Files.readAllBytes(Path.of(PathUtil.codingDir(PathUtil.generated("atlases/main.png")))));
-            int lastHash = GsonUtil.parse(PathUtil.get(PathUtil.generated("image_bounds.json"), false)).get("version").getAsInt();
-            if(realHash == lastHash) mustRecalculate = false;
-        } catch (Exception ignored) {}
+    private static Integer getHash(List<String> exclude) {
+        StringBuilder longHash = new StringBuilder();
+        List<String> paths = PathUtil.getFilesIn("assets/textures/");
+        for (String full : paths) {
+            String path = full.replace("assets/textures/", "");
+            try {
+                if (path.endsWith(".png") && exclude.stream().noneMatch((e) -> path.equals(e) || (e.endsWith("/") && path.startsWith(e)))) longHash.append(Arrays.hashCode(Files.readAllBytes(Path.of(PathUtil.codingDir(PathUtil.texture(path)))))).append(" ");
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return longHash.toString().hashCode();
+    }
 
-        if(!mustRecalculate) {
-            Logger.info("No image bounds changes.");
-            return false;
+    public static void generateImageBounds() {
+        List<String> exclude = Arrays.stream(PathUtil.get(PathUtil.texture(".excluded_bounds"), false).split("\n")).toList();
+        boolean mustRecalculate = false;
+        try {
+            int old = GsonUtil.parse(PathUtil.get(PathUtil.codingDir(PathUtil.generated("image_bounds.json")), false)).get("version").getAsInt();
+            if(!getHash(exclude).equals(old)) {
+                mustRecalculate = true;
+            }
+        } catch (Exception e) {
+            Logger.error("Error checking bounds changes", e);
+            mustRecalculate = true;
         }
 
-        Logger.info("Generating image bounds");
+        if(!mustRecalculate) {
+            Logger.info("No image bounds changes");
+            return;
+        }
+
+        Logger.info("Regenerating image bounds");
         int maxSize = 128;
 
         JsonObject out = new JsonObject();
@@ -83,11 +99,16 @@ public class ImageUtil {
 
         List<String> paths = PathUtil.getFilesIn("assets/textures/");
         for (String fileFull : paths) {
-            String file = fileFull.replace(".png", "").replace("assets/textures/", "");
+            String fileWithPng = fileFull.replace("assets/textures/", "");
             if(!fileFull.endsWith(".png")) {
-                Logger.info(file +" was not an image, skipping");
+                Logger.info(fileWithPng +" was not an image, skipping");
                 continue;
             }
+            if(exclude.stream().anyMatch((e) -> fileWithPng.equals(e) || (e.endsWith("/") && fileWithPng.startsWith(e)))) {
+                Logger.info(fileWithPng +" was excluded");
+                continue;
+            }
+            String file = fileWithPng.replace(".png", "");
             TextureAtlas.AtlasRegion region = ImageUtil.get(file);
             if(region.originalHeight > maxSize || region.originalWidth > maxSize) {
                 Logger.info(file +" was too large, skipping");
@@ -137,7 +158,7 @@ public class ImageUtil {
 
         try {
             out.add("values", values);
-            out.addProperty("version", Arrays.hashCode(Files.readAllBytes(Path.of(PathUtil.codingDir(PathUtil.generated("atlases/main.png"))))));
+            out.addProperty("version", getHash(exclude));
 
             Path p = Path.of(PathUtil.codingDir("gen/image_bounds.json"));
             Files.writeString(p, GsonUtil.PARSER_COMPACT.toJson(out));
@@ -145,6 +166,5 @@ public class ImageUtil {
             throw new RuntimeException(e);
         }
         Logger.info("Bounds generation complete.");
-        return true;
     }
 }

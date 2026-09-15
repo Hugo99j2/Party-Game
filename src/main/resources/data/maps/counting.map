@@ -449,7 +449,7 @@
     },
     {
       "x": 1.0,
-      "y": 20.0625,
+      "y": 20.0,
       "uuid": "6b6cdc08-e37f-4852-af09-6fa0e7ef6de0",
       "type": "dummy",
       "custom_data": {
@@ -918,6 +918,18 @@
         "textureHitbox": false,
         "animated": false,
         "blocks_light": false
+      }
+    },
+    {
+      "x": 16.25,
+      "y": 11.125,
+      "uuid": "e1e2fc7a-8205-4424-a27e-44bf897abf00",
+      "type": "zipline",
+      "custom_data": {
+        "segment_y_offset": 0.125,
+        "segment_width": 1.0,
+        "segments": 15.0,
+        "texture": "zipline"
       }
     }
   ],

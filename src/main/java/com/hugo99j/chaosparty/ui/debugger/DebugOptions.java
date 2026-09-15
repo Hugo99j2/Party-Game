@@ -109,6 +109,7 @@ public class DebugOptions {
             ImGui.text("Cached sounds: " + SoundManager.size());
             ImGui.text("Revisions: " + UndoRedoHistory.size());
             ImGui.text("Current revision: " + UndoRedoHistory.getCurrentRevision());
+            if(ImGui.button("Reload assets")) GameData.loadFiles();
 
             if (GameData.getCurrentMatch() != null && GameData.getCurrentMatch().getMatchViews() != null && !GameData.getCurrentMatch().getMatchViews().isEmpty()) {
                 slider("zoom", GameData.getCurrentMatch().getMatchViews().getFirst().gameCamera.zoom, (e) -> {

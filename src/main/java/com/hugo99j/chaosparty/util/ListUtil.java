@@ -1,9 +1,10 @@
 package com.hugo99j.chaosparty.util;
 
-import java.util.ArrayList;
+import com.daniel99j.djutil.NumberUtils;
+
 import java.util.List;
 
-public class Looper {
+public class ListUtil {
     public static <T> T nextValue(List<T> list, T current) {
         int index = list.indexOf(current);
         if(index+1 >= list.size()) return list.getFirst();
@@ -26,5 +27,9 @@ public class Looper {
         int index = current.ordinal();
         if(index-1 < 0) return current.getDeclaringClass().getEnumConstants()[current.getDeclaringClass().getEnumConstants().length-1];
         return current.getDeclaringClass().getEnumConstants()[index-1];
+    }
+
+    public static <T> T randomOf(List<T> list) {
+        return list.get(NumberUtils.getRandomInt(0, list.size() - 1));
     }
 }

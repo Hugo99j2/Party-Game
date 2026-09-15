@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -22,7 +23,9 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class MatchView implements Disposable {
-    public FrameBuffer fbo = new FrameBuffer(Pixmap.Format.RGBA8888, GameData.width, GameData.height, false);
+    private FrameBuffer fbo1 = new FrameBuffer(Pixmap.Format.RGBA8888, GameData.width, GameData.height, false);
+    private FrameBuffer fbo2 = new FrameBuffer(Pixmap.Format.RGBA8888, GameData.width, GameData.height, false);
+    public FrameBuffer fbo = fbo1;
     public final OrthographicCamera gameCamera = new OrthographicCamera();
     public Viewport gameViewport;
     public int worldWidth, worldHeight;
@@ -77,7 +80,7 @@ public class MatchView implements Disposable {
             this.gameCamera.position.y = this.player.getPlayerObject().getPos().y;
         }
         fbo.begin();
-        ScreenUtils.clear(new Color(0x331111ff));
+        ScreenUtils.clear(Color.PINK);
 
         gameViewport.apply(center);
 
@@ -109,18 +112,58 @@ public class MatchView implements Disposable {
 
         gameCamera.position.set(oldCameraPos);
 
-        return new TextureRegion(fbo.getColorBufferTexture());
+        FrameBuffer source = fbo;
+        FrameBuffer destination = (source == fbo1) ? fbo2 : fbo1;
+
+        GameData.uiViewport.apply();
+        GameData.spriteBatch.setProjectionMatrix(GameData.uiCamera.combined);
+        GameData.spriteBatch.begin();
+
+        for (ActiveEffect activeEffect : this.activeEffects) {
+            if (activeEffect.getEffect().getShader() == null) {
+                continue;
+            }
+            destination.begin();
+            ScreenUtils.clear(Color.CLEAR);
+
+            activeEffect.getEffect().getShader().bind();
+            activeEffect.getEffect().getShader().setUniformf("u_resolution", GameData.width, GameData.height);
+            activeEffect.getEffect().getShader().setUniformf("u_time", GameData.time);
+
+            //noinspection GDXJavaFlushInsideLoop
+            GameData.spriteBatch.setShader(activeEffect.getEffect().getShader());
+            GameData.spriteBatch.draw(source.getColorBufferTexture(), 0, GameData.height, GameData.width, -GameData.height);
+            //noinspection GDXJavaFlushInsideLoop
+            GameData.spriteBatch.flush();
+            destination.end();
+
+            FrameBuffer old = source;
+            source = destination;
+            destination = old;
+        }
+
+        fbo = source;
+
+        GameData.spriteBatch.end();
+        GameData.spriteBatch.setShader(null);
+
+        return new TextureRegion(source.getColorBufferTexture());
     }
 
     @Override
     public void dispose() {
-        fbo.dispose();
+        fbo1.dispose();
+        fbo2.dispose();
+        fbo = null;
     }
 
     public void update() {
-        fbo.dispose();
-        fbo = new FrameBuffer(Pixmap.Format.RGBA8888, GameData.width, GameData.height, false);
+        fbo1.dispose();
+        fbo1 = new FrameBuffer(Pixmap.Format.RGBA8888, GameData.width, GameData.height, false);
+        fbo2.dispose();
+        fbo2 = new FrameBuffer(Pixmap.Format.RGBA8888, GameData.width, GameData.height, false);
         gameViewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
+        fbo = fbo1;
     }
 
     public MatchPlayer getPlayer() {

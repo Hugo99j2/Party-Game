@@ -133,10 +133,10 @@ public class CharacterCreatorScreen extends UiScreen {
                 new GenericValuesHolder<Vector2, Runnable, Object, Object, Object>(new Vector2(1, 0), () -> {
                     slidingClothes.clear();
                     futureSlidingClothes.clear();
-                    String newClothing = Looper.previousValue(Costumes.getVariants(costumePart), user.getWearing(costumePart));
+                    String newClothing = ListUtil.previousValue(Costumes.getVariants(costumePart), user.getWearing(costumePart));
                     String oldClothing = user.getWearing(costumePart);
-                    String nextClothingOption = Looper.nextValue(Costumes.getVariants(costumePart), oldClothing);
-                    String previousClothingOption = Looper.previousValue(Costumes.getVariants(costumePart), newClothing);
+                    String nextClothingOption = ListUtil.nextValue(Costumes.getVariants(costumePart), oldClothing);
+                    String previousClothingOption = ListUtil.previousValue(Costumes.getVariants(costumePart), newClothing);
 
                     user.setWearing(costumePart, newClothing);
                     //slide new from left onto center
@@ -151,10 +151,10 @@ public class CharacterCreatorScreen extends UiScreen {
                 new GenericValuesHolder<Vector2, Runnable, Object, Object, Object>(new Vector2(-1, 0), () -> {
                     slidingClothes.clear();
                     futureSlidingClothes.clear();
-                    String newClothing = Looper.nextValue(Costumes.getVariants(costumePart), user.getWearing(costumePart));
+                    String newClothing = ListUtil.nextValue(Costumes.getVariants(costumePart), user.getWearing(costumePart));
                     String oldClothing = user.getWearing(costumePart);
-                    String nextClothingOption = Looper.nextValue(Costumes.getVariants(costumePart), newClothing);
-                    String previousClothingOption = Looper.previousValue(Costumes.getVariants(costumePart), oldClothing);
+                    String nextClothingOption = ListUtil.nextValue(Costumes.getVariants(costumePart), newClothing);
+                    String previousClothingOption = ListUtil.previousValue(Costumes.getVariants(costumePart), oldClothing);
 
                     user.setWearing(costumePart, newClothing);
                     //slide new from right onto center
@@ -167,23 +167,23 @@ public class CharacterCreatorScreen extends UiScreen {
                     futureSlidingClothes.add(new FutureSlidingClothes(new SlidingClothes(nextClothingOption, GameData.time+0.2f, 0.2f, true, playerElement.getX()+100, playerElement.getX()+100, Interpolation.linear, 0, 0.5f), GameData.time+0.2f));
                 }),
                 new GenericValuesHolder<Vector2, Runnable, Object, Object, Object>(new Vector2(0, -1), () -> {
-                    costumePart = Looper.nextValue(costumePart);
+                    costumePart = ListUtil.nextValue(costumePart);
                     addCurrentWearing();
                 }),
                 new GenericValuesHolder<Vector2, Runnable, Object, Object, Object>(new Vector2(0, 1), () -> {
-                    costumePart = Looper.previousValue(costumePart);
+                    costumePart = ListUtil.previousValue(costumePart);
                     addCurrentWearing();
                 })
             ));
         } else {
             options = new ArrayList<>(List.of(
                 new GenericValuesHolder<Vector2, Runnable, Object, Object, Object>(new Vector2(-1, 0), () -> {
-                    user = Looper.previousValue(User.getLoadedUsers(), user);
+                    user = ListUtil.previousValue(User.getLoadedUsers(), user);
                     this.setControllerSelected("player");
                     textInput.setValue(user.getName());
                 }),
                 new GenericValuesHolder<Vector2, Runnable, Object, Object, Object>(new Vector2(1, 0), () -> {
-                    user = Looper.nextValue(User.getLoadedUsers(), user);
+                    user = ListUtil.nextValue(User.getLoadedUsers(), user);
                     this.setControllerSelected("player");
                     textInput.setValue(user.getName());
                 }),
@@ -218,8 +218,8 @@ public class CharacterCreatorScreen extends UiScreen {
         futureSlidingClothes.clear();
 
         String current = user.getWearing(costumePart);
-        String next = Looper.nextValue(Costumes.getVariants(costumePart), current);
-        String previous = Looper.previousValue(Costumes.getVariants(costumePart), current);
+        String next = ListUtil.nextValue(Costumes.getVariants(costumePart), current);
+        String previous = ListUtil.previousValue(Costumes.getVariants(costumePart), current);
 
         //right
         slidingClothes.add(new SlidingClothes(next, GameData.time, 0, true, playerElement.getX()+100, playerElement.getX()+100, Interpolation.linear, 0.5f, 0.5f));
@@ -313,8 +313,8 @@ public class CharacterCreatorScreen extends UiScreen {
             drawUser(playerElement.getX(), playerElement.getY(), playerElement.getWidth(), playerElement.getHeight(), user);
 
             GameData.spriteBatch.setColor(new Color(1, 1, 1, 0.5f));
-            drawUser(playerElement.getX()-100, playerElement.getY(), playerElement.getWidth(), playerElement.getHeight(), Looper.previousValue(User.getLoadedUsers(), user));
-            drawUser(playerElement.getX()+100, playerElement.getY(), playerElement.getWidth(), playerElement.getHeight(), Looper.nextValue(User.getLoadedUsers(), user));
+            drawUser(playerElement.getX()-100, playerElement.getY(), playerElement.getWidth(), playerElement.getHeight(), ListUtil.previousValue(User.getLoadedUsers(), user));
+            drawUser(playerElement.getX()+100, playerElement.getY(), playerElement.getWidth(), playerElement.getHeight(), ListUtil.nextValue(User.getLoadedUsers(), user));
         }
         String hint;
         if (editing) hint = """

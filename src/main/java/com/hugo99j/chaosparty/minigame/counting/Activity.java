@@ -2,14 +2,18 @@ package com.hugo99j.chaosparty.minigame.counting;
 
 import com.badlogic.gdx.math.Vector2;
 import com.hugo99j.chaosparty.entity.Clown;
+import com.hugo99j.chaosparty.util.Logger;
 import com.hugo99j.chaosparty.util.ObjectPathfinder;
+import org.lwjgl.openal.AL;
 
 import java.util.List;
+import java.util.function.Function;
 
 public abstract class Activity {
     private final ObjectPathfinder pathfinder;
     private final Clown clown;
     private boolean hasStarted = false;
+    private int ticksPassed = 0;
 
     public Activity(Clown clown) {
         this.pathfinder = new ObjectPathfinder(clown);
@@ -42,7 +46,12 @@ public abstract class Activity {
     }
 
     protected void tickDuring() {
+        ticksPassed++;
         this.getClown().setVelocity(Vector2.Zero);
+    }
+
+    public int getTicksPassed() {
+        return ticksPassed;
     }
 
     protected abstract Vector2 getStartPos();

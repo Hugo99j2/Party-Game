@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.tools.texturepacker.TexturePacker;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.daniel99j.djutil.pathfinder.PathfindDebugType;
@@ -17,8 +18,11 @@ import com.hugo99j.chaosparty.match.Match;
 import com.hugo99j.chaosparty.match.MatchPlayer;
 import com.hugo99j.chaosparty.minigame.AbstractMinigame;
 import com.hugo99j.chaosparty.ui.debugger.Debuggers;
+import com.hugo99j.chaosparty.util.ImageUtil;
+import com.hugo99j.chaosparty.util.Logger;
 import com.hugo99j.chaosparty.util.PathUtil;
 import com.hugo99j.chaosparty.level.Level;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.nio.file.Files;
@@ -35,8 +39,10 @@ public class GameData {
     public static final SpriteBatch spriteBatch = new SpriteBatch();
     public static final OrthographicCamera uiCamera = new OrthographicCamera();
     public static Viewport uiViewport = new ScreenViewport(uiCamera);
-    public static final TextureAtlas atlas = new TextureAtlas(Gdx.files.internal(PathUtil.generated("atlases/main.atlas")));
     public static final boolean DEBUGGING = Objects.equals(System.getenv("DEBUGGING_GAME"), "1") || Files.exists(Path.of("force_debug_game.txt"));
+    @SuppressWarnings("DataFlowIssue")
+    @NotNull
+    public static TextureAtlas atlas = null;
     public static final ShapeRenderer shapeRenderer = new ShapeRenderer();
     public static float time = 0L;
     public static BitmapFont FONT;
@@ -50,6 +56,39 @@ public class GameData {
 
     public static Match getCurrentMatch() {
         return currentMatch;
+    }
+
+    public static void loadFiles() {
+        PathUtil.clearCache();
+        ImageUtil.clearCache();
+        boolean codingGame = Objects.equals(System.getenv("CODING_GAME"), "1");
+
+        if(atlas != null) atlas.dispose();
+
+        if(codingGame) {
+            try {
+                Path path = Path.of(PathUtil.codingDir(PathUtil.generated("atlases/main.png")));
+                int oldFile = Files.exists(path) ? Arrays.hashCode(Files.readAllBytes(path)) : 0;
+                //Create atlases
+                TexturePacker.Settings settings = new TexturePacker.Settings();
+                settings.combineSubdirectories = true;
+                TexturePacker.process(settings, PathUtil.codingDir(PathUtil.asset("textures")), PathUtil.codingDir(PathUtil.generated("atlases")), "main");
+                int newFile = Arrays.hashCode(Files.readAllBytes(path));
+                if(oldFile != newFile) {
+                    Logger.info("Atlases have changed");
+                } else {
+                    Logger.info("No atlas changes");
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        atlas = new TextureAtlas(codingGame ? Gdx.files.absolute(PathUtil.codingDir(PathUtil.generated("atlases/main.atlas"))) : Gdx.files.internal(PathUtil.generated("atlases/main.atlas")));
+
+        if(codingGame) {
+            ImageUtil.generateImageBounds();
+        }
     }
 
     public static AbstractMinigame getCurrentMinigame() {
@@ -117,6 +156,8 @@ public class GameData {
 
     protected static void init(Main main) {
         MAIN_INSTANCE = main;
+
+        loadFiles();
 
         char current = '\uE000';
         for (String s : PathUtil.getFilesIn(PathUtil.texture("ui/icon"))) {

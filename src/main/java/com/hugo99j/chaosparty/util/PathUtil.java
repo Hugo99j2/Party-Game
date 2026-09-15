@@ -14,7 +14,9 @@ public class PathUtil {
 
     public static String codingDir(String old) {
         if(Objects.equals(System.getenv("CODING_GAME"), "1")) {
-            return Path.of("../").toAbsolutePath()+"/src/main/resources/"+old;
+            String abs = Path.of("../").toAbsolutePath().toString();
+            if(old.startsWith(abs)) return old;
+            return abs+"/src/main/resources/"+old;
         }
         throw new RuntimeException("Game is not being developed");
     }
@@ -57,7 +59,7 @@ public class PathUtil {
     public static String get(String p, boolean cache) {
         if(files.containsKey(p)) return files.get(p);
 
-        try (InputStream in = Gdx.files.internal(p).read()) {
+        try (InputStream in = (Objects.equals(System.getenv("CODING_GAME"), "1") ? Gdx.files.absolute(PathUtil.codingDir(p)) : Gdx.files.internal(p)).read()) {
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
                 String out = "";
                 while (true) {

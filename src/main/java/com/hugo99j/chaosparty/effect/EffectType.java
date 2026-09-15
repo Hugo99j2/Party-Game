@@ -1,5 +1,9 @@
 package com.hugo99j.chaosparty.effect;
 
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.hugo99j.chaosparty.GameData;
+import com.hugo99j.chaosparty.util.Logger;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -167,18 +171,32 @@ pixel = v_color * texture2D(u_texture, uv);
     }
 
     private final String name;
-    private final String shader;
+    private final ShaderProgram shader;
 
-    EffectType(String name, String shader) {
+    EffectType(String name) {
         this.name = name;
-        this.shader = shader;
+        this.shader = null;
+    }
+
+    EffectType(String name, String frag) {
+        this(name, ActiveEffect.DEFAULT_VERT, ActiveEffect.DEFAULT_FRAG.replace("gl_FragColor = v_color * texture2D(u_texture, v_texCoords);", "vec4 pixel = v_color * texture2D(u_texture, v_texCoords);\n"+frag+"\ngl_FragColor = pixel;"));
+    }
+
+    EffectType(String name, String vert, String frag) {
+        this.name = name;
+        this.shader = new ShaderProgram(vert, frag);
+        if (!this.shader.isCompiled()) {
+            Logger.error("Vert:\n"+vert);
+            Logger.error("Frag:\n"+frag);
+            throw new IllegalArgumentException("Error compiling effects shader: " + shader.getLog());
+        }
     }
 
     public String getName() {
         return name;
     }
 
-    public String getShader() {
+    public ShaderProgram getShader() {
         return shader;
     }
 
